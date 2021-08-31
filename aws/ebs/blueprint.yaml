@@ -1,0 +1,57 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/6.1.0/types.yaml
+  - plugin:cloudify-aws-plugin
+
+inputs:
+  aws_region_name:
+    default: us-east-1
+    display_label: AWS Region Name
+    constraints:
+      - valid_values:
+        -us-east-1
+
+  availability_zone_suffix:
+    description: Availability zone suffix
+    display_label: Availability Zone Suffix
+    default: a
+    constraints:
+      - valid_values:
+        - a
+        - b
+        - c
+
+  availability_zone:
+    description: Availability Zone
+    type: string
+    default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }
+    hidden: true
+
+  aws_credentials:
+    description: AWS aws_credentials
+    type: dict
+    default:
+      aws_access_key_id: { get_secret: aws_access_key_id }
+      aws_secret_access_key: { get_secret: aws_secret_access_key }
+      region_name: { get_input: aws_region_name }
+    hidden: true    
+
+node_templates:
+
+  ebs_volume:
+    type: cloudify.nodes.aws.ec2.EBSVolume
+    properties:
+      client_config: { get_input: aws_credentials }
+      resource_config:
+        AvailabilityZone: { get_input: availability_zone }
+        Size: 6
+        kwargs:
+          TagSpecifications:
+            - ResourceType: volume
+              Tags:
+                - Key: First
+                  Value: First Volume
+                - Key: Second
+                  Value: Second Volume
+      

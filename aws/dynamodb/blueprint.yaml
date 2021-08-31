@@ -1,0 +1,51 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: >
+  Example blueprint showing AWS DynamoDB functionality.
+imports:
+  - http://www.getcloudify.org/spec/cloudify/6.1.0/types.yaml
+  - plugin:cloudify-aws-plugin
+
+inputs:
+  aws_region_name:
+    description: AWS Region Name
+    display_label: AWS Region Name
+    type: string
+    default: us-east-1
+    constraints:
+      - valid_values:
+        - us-east-1
+        - us-east-2
+
+  dyname_db_name:
+    description: DynameDM name to be provisioned
+    display_label: DynamoDB Tabel Name
+    type: string
+    default: MyApp
+
+  aws_credenntials:
+    description: AWS credenntials
+    type: dict
+    default:
+      aws_access_key_id: { get_secret: aws_access_key_id }
+      aws_secret_access_key: { get_secret: aws_secret_access_key }
+      region_name: { get_input: aws_region_name }
+    hidden: true
+
+node_templates:
+
+  dynamodb_table:
+    type: cloudify.nodes.aws.dynamodb.Table
+    properties:
+      client_config: { get_input: aws_credentials }
+      resource_config:
+        TableName: { get_input: dyname_db_name }
+        AttributeDefinitions:
+          - AttributeName: RandomKeyUUID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: RandomKeyUUID
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5

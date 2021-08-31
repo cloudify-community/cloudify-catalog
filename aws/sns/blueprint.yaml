@@ -1,0 +1,85 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/4.5/types.yaml
+  - plugin:cloudify-aws-plugin
+
+inputs:
+
+  aws_region_name:
+    description: AWS Region Name
+    display_label: AWS Region Name
+    default: us-east-1
+    constraints:
+      - valid_values:
+        - us-east-1
+
+  sns_topic:
+    description: SNS Topic
+    display_label: SNS Topic
+    type: string
+    default: TestCloudifyTopic
+
+  queue_name:
+    description: SQS Queue Name
+    display_label: Queue Name
+    type: string
+    default: TestQueue
+
+dsl_definitions:
+
+  client_config: &client_config
+    aws_access_key_id: { get_secret: aws_access_key_id }
+    aws_secret_access_key: { get_secret: aws_secret_access_key }
+    region_name: { get_input: aws_region_name }
+
+node_templates:
+
+  subscription:
+    type: cloudify.nodes.aws.SNS.Subscription
+    properties:
+      client_config: *client_config
+      resource_config:
+        kwargs:
+          Protocol: sqs
+          Endpoint: queue # Should match the target of a relationship if it is not arn
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: topic
+      - type: cloudify.relationships.depends_on
+        target: queue
+
+  topic:
+    type: cloudify.nodes.aws.SNS.Topic
+    properties:
+      resource_config:
+        kwargs:
+          Name: { get_input: sns_topic }
+      client_config: *client_config
+
+  queue:
+    type: cloudify.nodes.aws.SQS.Queue
+    properties:
+      resource_config:
+        kwargs:
+          QueueName: { get_input: queue_name }
+          Attributes:
+            Policy: 
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Sid": "Sid1",
+                    "Effect": "Allow",
+                    "Principal": "*",
+                    "Action": [
+                      "SQS:SendMessage",
+                      "SQS:ReceiveMessage"
+                    ],
+                    "Resource": { get_input: queue_name }
+                  }
+                ]
+              }
+            MessageRetentionPeriod: '86400'
+            VisibilityTimeout: '180'
+      client_config: *client_config

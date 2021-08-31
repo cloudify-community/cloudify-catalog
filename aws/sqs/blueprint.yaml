@@ -1,0 +1,60 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/6.1.0/types.yaml
+  - plugin:cloudify-aws-plugin
+
+inputs:
+
+  aws_region_name:
+    description: AWS Region Name
+    display_label: AWS Region Name
+    default: us-east-1
+    constraints:
+      - valid_values:
+        - us-east-1
+
+  queue_name:
+    description: The name of the queue
+    display_label: Queue Name
+    default: test-queue
+
+dsl_definitions:
+  client_config: &client_config
+    aws_access_key_id: { get_secret: aws_access_key_id }
+    aws_secret_access_key: { get_secret: aws_secret_access_key }
+    region_name: { get_input: aws_region_name }
+
+node_templates:
+
+  queue:
+    type: cloudify.nodes.aws.SQS.Queue
+    properties:
+      resource_config:
+        kwargs:
+          QueueName: { get_input: queue_name }
+          Attributes:
+            Policy:
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Sid": "Sid1",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Action": [
+                      "SQS:SendMessage",
+                      "SQS:ReceiveMessage"
+                    ],
+                    "Resource": { get_input: queue_name },
+                    "Condition": {
+                      "DateGreaterThan" : {
+                         "aws:CurrentTime" : "2013-12-15T12:00:00Z"
+                      }
+                    }
+                  }
+                ]
+              }
+            MessageRetentionPeriod: '86400'
+            VisibilityTimeout: '180'
+      client_config: *client_config

@@ -1,0 +1,1 @@
+https://github.com/cloudify-community/blueprint-examples/blob/cdca92e5abdc799bff86d323207df43c8bc2f756/virtual-machine/gcp.yaml
