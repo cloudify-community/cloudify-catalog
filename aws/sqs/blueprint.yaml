@@ -58,3 +58,8 @@ node_templates:
             MessageRetentionPeriod: '86400'
             VisibilityTimeout: '180'
       client_config: *client_config
+
+labels:
+  obj-type: 
+    values: 
+      - aws

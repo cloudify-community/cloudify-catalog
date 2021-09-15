@@ -1,5 +1,12 @@
 tosca_definitions_version: cloudify_dsl_1_3
 
+description: >
+  The blueprint generates SSH public and private keys and stores them in secret store.
+  The public key is used to create Keypair that is attached to the created EC2 instance.
+  In case the SSH key already exists in the secret store they will be used.
+  The blueprint creates VPC, Subnet, Internet Gateway, Security Group, Route Table and EBS.
+  The EC2 instance is created inside the VPC and the EBS is attached to it.
+
 imports:
   - http://www.getcloudify.org/spec/cloudify/6.1.0/types.yaml
   - plugin:cloudify-aws-plugin
@@ -14,9 +21,14 @@ inputs:
     constraints:
       - valid_values:
         - us-east-1
+        - us-west-1
+        - us-west-2
+        - eu-west-1
+        - ca-central-1
 
   availability_zone_suffix:
     description: Availability Zone Suffix
+    display_label: Availability Zone
     type: string
     default: a
     constraints:
@@ -72,6 +84,17 @@ inputs:
     type: string
     default: /dev/sdh
     # constraints: regex
+
+  image_id:
+    description: The map between region and image id, it is used in EC2 instance to select the right image id per selected region
+    type: dict
+    default:
+      ca-central-1: ami-033e6106180a626d0
+      us-east-1: ami-03248a0341eadb1f1
+      us-west-1: ami-01dd5a8ef26e6341d
+      us-west-2: ami-024b56adf74074ca6
+      eu-west-1: ami-0eee6eb870dc1cefa
+    hidden: true
 
   aws_credentials:
     description: AWS Credentials
@@ -138,7 +161,7 @@ node_templates:
       resource_config:
         kwargs:
           DestinationCidrBlock: '0.0.0.0/0'
-      client_config: *client_config
+      client_config: { get_input: aws_credentials }
     relationships:
       - type: cloudify.relationships.contained_in
         target: public_subnet_routetable
@@ -206,20 +229,6 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: nic
 
-  centos_core_ami:
-    type: cloudify.nodes.aws.ec2.Image
-    properties:
-      client_config: { get_input: aws_credentials }
-      resource_config:
-        kwargs:
-          Filters:
-          - Name: owner-id
-            Values:
-            - "057448758665"
-          - Name: name
-            Values:
-            - "CentOS 7.6.1810 x86_64 with cloud-init (HVM)"
-
   key:
     type: cloudify.nodes.aws.ec2.Keypair
     properties:
@@ -237,7 +246,7 @@ node_templates:
       resource_config:
         MaxCount: 1
         MinCount: 1
-        ImageId: { get_attribute: [ centos_core_ami, aws_resource_id ] }
+        ImageId: { get_input: [ image_id, { get_input: aws_region_name } ] }
         InstanceType: { get_input: instance_type }
         kwargs:
           KeyName: { get_input: key_name }
@@ -250,9 +259,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: nic
       - type: cloudify.relationships.depends_on
-        target: ip
-      - type: cloudify.relationships.depends_on
-        target: centos_core_ami
+        target: ip      
 
   ebs_volume:
     type: cloudify.nodes.aws.ec2.EBSVolume
@@ -273,3 +280,8 @@ node_templates:
     relationships:
       - type: cloudify.relationships.aws.ebs.attachment.connected_to
         target: host
+
+labels:
+  obj-type: 
+    values: 
+      - aws

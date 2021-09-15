@@ -5,8 +5,9 @@ description: >
   In case case the SSH key already exists in the secret store they will be used.
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.1.0/types.yaml
+  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
   - plugin:cloudify-aws-plugin
+  - plugin:cloudify-utilities-plugin
 
 inputs:
   region_name:
@@ -94,6 +95,11 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: vm_keypair
+
+labels:
+  obj-type: 
+    values: 
+      - aws
 
 capabilities:
 

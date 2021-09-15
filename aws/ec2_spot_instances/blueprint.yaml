@@ -10,34 +10,65 @@ imports:
 inputs:
 
   aws_region_name:
-      type: string
-      default: 'us-east-1'
+    description: AWS region name
+    display_label: AWS Regionn Name
+    type: string
+    default: us-east-1
+    constraints:
+      - valid_values:
+        - us-east-1
+        - us-west-1
+        - us-west-2
+        - eu-west-1
+        - ca-central-1
+
+  availability_zone_suffix:
+    description: Availability Zone Suffix
+    display_label: Availability Zone
+    type: string
+    default: a
+    constraints:
+      - valid_values:
+        - a
+        - b
+        - c
 
   availability_zone:
+    description: Availability Zone, combination of region and availability zone suffix
     type: string
     description: The availability zone in the AWS Region.
-    default: { concat: [ { get_input: aws_region_name }, 'b' ] }
+    default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }
+    hidden: true
 
   ami_owner_filter:
+    description: AMI Owner Filter
+    display_label: AMi Owner Filter
     type: string
     description: The AWS AMI owner number.
     default: '057448758665'
 
   ami_name_filter:
+    description: AMi Name Filter
+    display_label: AMi Name Filter
     type: string
     description: The name of the AWS AMI in the AWS region.
     default: 'CentOS 7.7.1908 x86_64 with cloud-init (HVM)'
 
   instance_type:
+    description: EC2 instance type
+    display_label: Instane Type
     type: string
     default: t2.micro
 
   agent_user:
     description: >
       The username of the agent running on the instance created from the image.
+    display_label: Agent User
     default: 'centos'
 
   agent_key_name:
+    description: Agent Key Name
+    display_label: Agent Key Name
     type: string
     default: agent_key
 
@@ -239,3 +270,8 @@ node_templates:
           implementation: keys.cloudify_ssh_key.operations.create
           inputs:
             store_private_key_material: true
+
+labels:
+  obj-type: 
+    values: 
+      - aws

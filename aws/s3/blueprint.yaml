@@ -7,23 +7,18 @@ imports:
 inputs:
 
   aws_region_name:
-    description: AWS Region Name
-    display_label: AWS Region Name
+    description: AWS region name
+    display_label: AWS Regionn Name
+    type: string
     default: us-east-1
     constraints:
       - valid_values:
         - us-east-1
+        - us-west-1
+        - us-west-2
+        - eu-west-1
+        - ca-central-1
 
-  availability_zone_suffix:
-    description: Availability Zone Suffix
-    type: string
-    default: a
-    constraints:
-      - valid_values:
-        - a
-        - b
-        - c
-  
   bucket_name:
     description: S3 Bucket Name
     display_label: S3 Bucket Name
@@ -42,10 +37,8 @@ node_templates:
     type: cloudify.nodes.aws.s3.Bucket
     properties:
       resource_config:
-        Bucket: { get_input: test-cloudify-bucket }
+        Bucket: { get_input: bucket_name }
         ACL: public-read-write
-        CreateBucketConfiguration:
-          LocationConstraint: { get_input: aws_region_name }
       client_config: *client_config
 
   bucket_lifecycle_configuration:
@@ -98,49 +91,7 @@ node_templates:
     - type: cloudify.relationships.depends_on
       target: bucket
 
-  bucket_object_bytes:
-    type: cloudify.nodes.aws.s3.BucketObject
-    properties:
-      source_type: 'bytes'
-      resource_config:
-        ACL: 'public-read'
-        Bucket: { get_property: [ bucket, resource_config, Bucket ] }
-        Key: 'test-byte-data.txt'
-        kwargs:
-          Body: 'Test Bytes Mode'
-      client_config: *client_config
-    relationships:
-    - type: cloudify.relationships.depends_on
-      target: bucket
-    - type: cloudify.relationships.depends_on
-      target: bucket_object_local
-
-  bucket_object_local:
-    type: cloudify.nodes.aws.s3.BucketObject
-    properties:
-      source_type: 'local'
-      path: './local-s3-object.txt'
-      resource_config:
-        ACL: 'public-read'
-        Bucket: { get_property: [ bucket, resource_config, Bucket ] }
-        Key: 'local-s3-object.txt'
-      client_config: *client_config
-    relationships:
-    - type: cloudify.relationships.depends_on
-      target: bucket
-    - type: cloudify.relationships.depends_on
-      target: bucket_object_remote
-
-  bucket_object_remote:
-    type: cloudify.nodes.aws.s3.BucketObject
-    properties:
-      source_type: 'remote'
-      path: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
-      resource_config:
-        ACL: 'public-read'
-        Bucket: { get_property: [ bucket, resource_config, Bucket ] }
-        Key: 'dummy.pdf'
-      client_config: *client_config
-    relationships:
-    - type: cloudify.relationships.depends_on
-      target: bucket
+labels:
+  obj-type: 
+    values: 
+      - aws
