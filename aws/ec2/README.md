@@ -26,7 +26,7 @@ cloudify-utilities-plugin Link
 ## Inputs
 
 | Display Lable   | Name          | Type   | Description            | Default   |
-| _______________ | _____________ | ______ | ______________________ | _________ |
+| --------------- | ------------- | ------ | ---------------------- | --------- |
 | AWS Region Name | region_name   | string | Select AWS Region Name | us-east-1 |
 | Instance Type   | instance_type | string | Select instance type   | t2.micro  |
 
