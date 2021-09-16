@@ -9,10 +9,10 @@ topics:
         path: aws/dynamodb
         description: Creating AWS DynamoDB table
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/dynamodb
-        zip_url: 
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/DynamoDB.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/dynamodb/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/dynamodb/dynamodb.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/dynamodb/dynamodb.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
       - id: EBS
@@ -20,10 +20,10 @@ topics:
         path: aws/ebs
         description: Creating EBS volume
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/EBS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ebs/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/ebs/ebs.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ebs/ebs.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
       - id: EC2
@@ -31,10 +31,10 @@ topics:
         path: aws/ec2
         description: Creating generating SSH key, creating a KeyPair and provisioning an EC2 instance
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/EC2.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/ec2/ec2.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2/ec2.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
       - id: EC2_WITH_EBS
@@ -42,10 +42,10 @@ topics:
         path: aws/ec2_with_ebs
         description: Creating EC2 inside VPC and EBS
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/EC2_WITH_EBS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2_with_ebs/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/ec2_with_ebs/ec2.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2_with_ebs/ec2.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
       - id: EC2_SPOT_INSTANCES
@@ -53,10 +53,10 @@ topics:
         path: aws/ec2_spot_instances
         description: Creating EC2 Spot instance
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/EC2_SPOT_INSTANCES.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2_spot_instances/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/ec2_spot_instances/ec2.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2_spot_instances/ec2.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
       - id: ECS
@@ -64,10 +64,10 @@ topics:
         path: aws/ecs
         description: Creating ECS
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/ECS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ecs/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/ecs/ecs.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ecs/ecs.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
       - id: S3
@@ -75,10 +75,10 @@ topics:
         path: aws/s3
         description: Creating S3 Bucket
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/S3.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/s3/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/s3/s3.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/s3/s3.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
       - id: SNS
@@ -86,10 +86,10 @@ topics:
         path: aws/sns
         description: Creating SNS
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/SNS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sns/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/sns/sns.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sns/sns.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
       - id: SQS
@@ -97,10 +97,10 @@ topics:
         path: aws/sqs
         description: Creating SQS
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/SQS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/sqs/sqs.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/sqs.png
         created_at: 2019-10-19T12:44:56Z
         updated_at: 2020-07-16T17:26:16Z
   - name: Azure
