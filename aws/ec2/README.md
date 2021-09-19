@@ -8,15 +8,14 @@ If the secrets already exists the new one won't be generated. It will allow us t
 ## Requirmennts
 In order to run successfully the blueprint you'll need AWS access key id and aceess secret key. The credenntials to the AWS should have permission to describe, update, delete and created Keypair and EC2 instannce.
 
-## Installaltion
+## Secrets
 
-Create secrets for for AWS.
+The blueprint uses secrets to connect to AWS, you need to connfigure them prior running the blueprint.
 
-```
-cfy secrets create -s XXXXX aws_access_key_id
-cfy secrets create -s XXXXX aws_aceess_secret_key
-```
-
+| Name                  | Description           |
+| --------------------- | --------------------- |
+| aws_access_key_id     | AWS Access Key ID     |
+| aws_aceess_secret_key | AWS Access Secret Key |
 
 ## Plugins
 cloudify-aws-plugin Link and descriptionn what node type it coveres in the blueprinnt
