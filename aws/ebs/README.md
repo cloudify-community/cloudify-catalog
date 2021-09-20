@@ -19,9 +19,7 @@ The blueprint uses secrets to connect to AWS, you need to connfigure them prior 
 
 ## Plugins
 
-cloudify-aws-plugin Link and descriptionn what node type it coveres in the blueprinnt
-
-cloudify-utilities-plugin Link
+cloudify-aws-plugin
 
 ## Inputs
 
