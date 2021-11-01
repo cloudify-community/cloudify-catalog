@@ -106,6 +106,52 @@ topics:
   - name: Azure
   - name: GCP
   - name: Terraform
+    target_path: s3_json_file
+    blueprints:
+      - id: terraform-azure-vm
+        name: Azure VM (Terraform)
+        path: terraform/azure
+        description: Create an Azure VM using Terraform automation
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/azure
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform-azure-arm.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/azureREADME.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
+        created_at: 2021-10-26T11:33:16Z
+        updated_at: 2021-10-26T11:33:16Z
+      - id: terraform-gcp-vm
+        name: Google Cloud VM (Terraform)
+        path: terraform/gcp
+        description: Create a GCP VM using Terraform automation
+        html_url: https://github.com/cloudify-community/blueprint-catalog/tree/master/terraform/gcp
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform-gcp-vm.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
+        created_at: 2021-10-26T11:33:16Z
+        updated_at: 2021-10-26T11:33:16Z
+      - id: terraform-openstack-vm
+        name: OpenStack VM (Terraform)
+        path: terraform/openstack
+        description: Create an OpenStack VM using Terraform automation
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/openstack
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform-openstack-vm.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/openstack/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
+        created_at: 2021-10-26T11:33:16Z
+        updated_at: 2021-10-26T11:33:16Z
+      - id: terraform-aws-vm
+        name: AWS VM (Terraform)
+        path: terraform/aws
+        description: Create an AWS VM using Terraform automation
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/aws
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform-aws-vm.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/aws/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
+        created_at: 2021-10-26T11:33:16Z
+        updated_at: 2021-10-26T11:33:16Z
   - name: Helm
   - name: Ansible
   - name: K8S
