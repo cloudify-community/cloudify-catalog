@@ -133,7 +133,7 @@ topics:
         path: terraform/azure
         description: Create an Azure VM using Terraform automation
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/azure
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform-azure-arm.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_azure_arm.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/azure/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
@@ -142,7 +142,7 @@ topics:
         path: terraform/gcp
         description: Create a GCP VM using Terraform automation
         html_url: https://github.com/cloudify-community/blueprint-catalog/tree/master/terraform/gcp
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform-gcp-vm.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_gcp_vm.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
@@ -151,7 +151,7 @@ topics:
         path: terraform/openstack
         description: Create an OpenStack VM using Terraform automation
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/openstack
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform-openstack-vm.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_openstack_vm.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/openstack/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
@@ -160,7 +160,7 @@ topics:
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/aws
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform-aws-vm.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_aws_vm.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/aws/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
