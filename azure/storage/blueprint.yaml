@@ -1,0 +1,114 @@
+tosca_definitions_version: cloudify_dsl_1_3
+description: >
+  This blueprint creates an Azure storage account.  The resulting account name
+  is exposed as a capability for use by other services
+
+imports:
+  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - plugin:cloudify-azure-plugin
+
+inputs:
+  resource_prefix:
+    type: string
+    display_label: Enter prefix to be applied to resource names
+    description: >
+      Resource names created in Azure by the blueprint can be
+      customized by supplying a prefix string (e.g. 'test_') 
+    default: ''
+  subscription_id:
+    type: string
+    display_label: Enter Microsoft Azure subscription ID
+    description: >
+      A Microsoft Azure subscription ID. This is a unique
+      user account in Azure. This can be found in the
+      Subscriptions tab on your dashboard.
+    default: {get_secret: azure_subscription_id }
+  tenant_id:
+    type: string
+    display_label: Enter Microsoft Azure tenant ID
+    description: >
+       A Microsoft Azure tenant ID. This can be found in
+       the Azure Active Directory dashboard by accessing
+       your directory.
+    default: {get_secret: azure_tenant_id }
+  client_id:
+    type: string
+    display_label: Enter Microsoft Azure client ID
+    description: >
+      A Microsoft Azure client ID. This can be found in
+      the Azure Active Directory dashboard by accessing
+      your directory.
+    default: {get_secret: azure_client_id}
+  client_secret:
+    type: string
+    display_label: Microsoft Azure client secret key
+    description: >
+      A Microsoft Azure client secret key. This can be found
+      or generated in the same location as your client ID.
+    default: {get_secret: azure_secret_key}
+  account_type:
+    display_label: Select storage type
+    description: The type of storage to use
+    type: string
+    default: Standard_LRS
+    constraints:
+      - valid_values:
+        - Standard_LRS
+        - Standard_ZRS
+        - Standard_GRS
+        - Standard_RAGRS
+        - Premium_LRS
+  location:
+    type: string
+    display_label: Azure location
+    description: Select Azure location name
+    default: EastUS
+    constraints:
+      - valid_values:
+        - EastUS
+        - CentralUS
+        - WestUS
+        - WestEurope
+        - CanadaCentral
+
+dsl_definitions:
+  azure_credentials: &azure_credentials
+    subscription_id: {get_input: subscription_id}
+    tenant_id: {get_input: tenant_id}
+    client_id: {get_input: client_id}
+    client_secret: {get_input: client_secret}
+
+node_templates:
+  
+  resource_group:
+    type: cloudify.nodes.azure.ResourceGroup
+    properties:
+      client_config: *azure_credentials
+      name: {concat: [ {get_input: resource_prefix}, group ]}
+      location: {get_input: location}
+
+  storage_account:
+    type: cloudify.azure.nodes.storage.StorageAccount
+    properties:
+      client_config: *azure_credentials
+      location: { get_input: location }
+      resource_config:
+        accountType: { get_input: account_type }
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+  obj-type: 
+    values: 
+      - azure
+      - storage
+
+capabilities:
+
+  name:
+    description: The storage account name
+    value: { get_attribute: [ storage_account, name] }

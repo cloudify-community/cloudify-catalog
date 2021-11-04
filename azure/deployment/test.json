@@ -1,0 +1,12 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    { 
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2016-02-01",
+      "location": "UsEast",
+      "name": "group"
+    }
+  ]
+}
