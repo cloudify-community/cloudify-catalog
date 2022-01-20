@@ -13,20 +13,32 @@ Supported Cloud Providers:
 
 ### AWS
 
-In order to run successfully the blueprint you'll need AWS access key id and aceess secret key. The credentials to the AWS should have permission to describe, update, delete and created DynamoDB Table.
+In order to run successfully the blueprint you'll need AWS access key id and aceess secret key. The credentials to the AWS should have permission to describe, update, delete and create VM and VPC.
 
 ### Azure
 
-
+In order to run successfully the blueprint you'll need Azure subscription id, tenant id, client id and client secret value. The credentials to the Azure should have permission to describe, update, delete and create resource group, VM and virtual network.
 
 ## Secrets
 
-The blueprint uses secrets to connect to AWS, you need to connfigure them prior running the blueprint.
+The blueprint uses secrets to connect to cloud, you need to connfigure them prior running the blueprint.
+
+### AWS
 
 | Name                  | Description           |
 | --------------------- | --------------------- |
 | aws_access_key_id     | AWS Access Key ID     |
 | aws_aceess_secret_key | AWS Access Secret Key |
+
+### Azure
+
+| Name                  | Description           |
+| --------------------- | --------------------- |
+| azure_tenant_id       | Azure tenant ID       |
+| azure_subscription_id | Azure subscription ID |
+| azure_client_id       | Azure client ID       |
+| azure_client_secret   | Azure client secret   |
+
 
 
 ## Plugins
