@@ -11,11 +11,11 @@ Supported Cloud Providers:
 
 ## Requirmennts
 
-# AWS
+### AWS
 
 In order to run successfully the blueprint you'll need AWS access key id and aceess secret key. The credentials to the AWS should have permission to describe, update, delete and created DynamoDB Table.
 
-# Azure
+### Azure
 
 
 
