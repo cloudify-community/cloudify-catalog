@@ -41,4 +41,4 @@ N/A
 
 ## Labels
 
-The created deployment will have label `obj-type` equal to `aws`
+The created deployment will have label `obj-type` equal to `environment`
