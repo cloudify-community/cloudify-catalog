@@ -1,0 +1,49 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
+inputs:
+  aws_region_name:
+    type: string
+    description: AWS Region Name
+    display_label: AWS Region Name
+    default: us-west-1
+    default: us-east-1
+    constraints:
+      - valid_values:
+        - us-east-1 #US East (N. Virginia)
+        - us-east-2 #US East (Ohio) 
+        - us-west-1 #US West (N. California)  
+        - us-west-2 #US West (Oregon) 
+        - ca-central-1  #Canada (Central) 
+        - eu-central-1  #Europe (Frankfurt) 
+        - eu-west-1 #Europe (Ireland) 
+        - eu-west-2 #Europe (London)  
+        - eu-south-1  #Europe (Milan) 
+        - eu-west-3 #Europe (Paris) 
+        - eu-north-1  #Europe (Stockholm) 
+        - ap-northeast-3  #Asia Pacific (Osaka) 
+        - ap-northeast-2  #Asia Pacific (Seoul) 
+        - ap-southeast-1  #Asia Pacific (Singapore) 
+        - ap-southeast-2  #Asia Pacific (Sydney)  
+        - ap-northeast-1  #Asia Pacific (Tokyo) 
+
+capabilities:
+  cloud_type:
+    value: aws
+  cloud_credentials:
+    value:
+      aws_access_key_id: { get_secret: aws_access_key_id }
+      aws_keypair: { get_secret: aws_keypair }
+      aws_secret_access_key: { get_secret: aws_secret_access_key }
+      public_key_content: { get_secret: public_key_content }
+      private_key_content: { get_secret: private_key_content }
+      region_name: { get_input: aws_region_name }
+
+
