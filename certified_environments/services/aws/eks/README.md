@@ -19,8 +19,8 @@ The blueprint uses below secret in json format in order to set up service in AWS
 
 ## Plugins
 
-cloudify-aws-plugin
-cloudify-kubernetes-plugin
+* cloudify-aws-plugin
+* cloudify-kubernetes-plugin
 
 ## Inputs
 
