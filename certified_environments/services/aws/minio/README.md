@@ -50,7 +50,7 @@ Derived type is `cloudify.nodes.Root`
 the node type is responsible for configuration minio client
 Derived type is `cloudify.nodes.Root`
 
-### Bucker
+### Bucket
 the node type is responsible for configuration of minio bucket
 Derived type is `cloudify.nodes.Root`
 
