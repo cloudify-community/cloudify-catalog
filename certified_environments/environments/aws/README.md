@@ -13,8 +13,6 @@ In order to run successfully the blueprint you'll need AWS access key id and ace
 
 The blueprint uses secrets to connect to cloud, you need to connfigure them prior running the blueprint.
 
-### AWS
-
 | Name                  | Description                                                                        |
 | --------------------- | ---------------------------------------------------------------------------------- |
 | aws_access_key_id     | AWS Access Key ID                                                                  |
