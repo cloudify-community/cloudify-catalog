@@ -13,7 +13,6 @@ In order to run successfully the blueprint you'll need Azure tenant id, subscrip
 
 The blueprint uses secrets to connect to cloud, you need to connfigure them prior running the blueprint.
 
-### AWS
 
 | Name                  | Description                                                                        |
 | --------------------- | ---------------------------------------------------------------------------------- |
