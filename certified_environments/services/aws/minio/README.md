@@ -38,7 +38,7 @@ The type is `eaas.nodes.UniquePrefixGenerator`.
 For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
 
 ### Network
-the node type is responsible for creating the network & VM form minikube deployment.__
+the node type is responsible for creating the network & VM form minikube deployment.\
 The type is `cloudify.nodes.ServiceComponent`.
 
 ### Minio Server
