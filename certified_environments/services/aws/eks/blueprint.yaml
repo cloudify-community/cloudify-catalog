@@ -12,11 +12,18 @@ dsl_definitions:
     aws_secret_access_key: { get_input: [ cloud_credentials, aws_secret_access_key ] }
     region_name: { get_input: [ cloud_credentials, region_name ] }
 
+labels:
+  csys-obj-type:
+    values:
+      - service
+
 inputs:
   cloud_credentials:
     type: cloud_credentials
+    display_label: Cloud Credentials from AWS env. 
   resource_config:
     type: resource_config
+    display_label: K8s version & service account namespace
   resource_prefix:
     type: string
     description: |
