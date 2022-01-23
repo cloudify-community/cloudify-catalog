@@ -24,7 +24,7 @@ cloudify-aws-plugin
 ## Inputs
 
 | Display Label                      | Name                | Type              | Default Value                                              |
-| ---------------------------------- | ------------------- | ----------------- | ---------------------------------------------------------- | |
+| ---------------------------------- | ------------------- | ----------------- | ---------------------------------------------------------- |
 | Cloud Credentials from AWS env.    | cloud_credentials   | cloud_credentials | (The secrets values from AWS environment)                  |
 | K8s vers. & srv. account namespace | resource_config     | resource_config   | kubernetes_version: '', service_account_namespace: defualt |
 
