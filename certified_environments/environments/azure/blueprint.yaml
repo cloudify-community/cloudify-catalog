@@ -11,12 +11,16 @@ labels:
 inputs:
   azure_location_name:
     type: string
-    description: |
-      Choose Azure location
-    default: westus
+    display_label: Azure location
+    description: Select Azure location name
+    default: EastUS
     constraints:
       - valid_values:
-        - westus
+        - EastUS
+        - CentralUS
+        - WestUS
+        - WestEurope
+        - CanadaCentral
 
 capabilities:
   cloud_type:

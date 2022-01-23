@@ -13,7 +13,6 @@ inputs:
     type: string
     description: AWS Region Name
     display_label: AWS Region Name
-    default: us-west-1
     default: us-east-1
     constraints:
       - valid_values:
