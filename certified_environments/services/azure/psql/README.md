@@ -1,66 +1,50 @@
-# PostgreSQL Provisioning
+# PostgreSQL Service Provisioning
 
 ## General
 
-The blueprint creates PostgreSQL DB with a default postgres user and database. 
+The blueprint creates PostgreSQL database service with default postgres user the virtual machine accessible for the user by SSH protocol.
 
-Supported Cloud Providers:
+## Requirements
 
- * AWS
- * Azure
-
-## Requirmennts
-
-### AWS
-
-In order to run successfully the blueprint you'll need AWS access key id and aceess secret key. The credentials to the AWS should have permission to describe, update, delete and create VM and VPC.
-
-### Azure
-
-In order to run successfully the blueprint you'll need Azure subscription id, tenant id, client id and client secret value. The credentials to the Azure should have permission to describe, update, delete and create resource group, VM and virtual network.
+In order to run successfully the blueprint you'll need to provide the Azure environment - details [here](https://github.com/cloudify-community/eaas-example). 
 
 ## Secrets
 
-The blueprint uses secrets to connect to cloud, you need to connfigure them prior running the blueprint.
+The blueprint uses below secret in json format in order to set up service in Azure cloud - the example of the secret format could be found [here](https://github.com/cloudify-community/eaas-example/blob/master/secret.json).
 
-### AWS
-
-| Name                  | Description           |
-| --------------------- | --------------------- |
-| aws_access_key_id     | AWS Access Key ID     |
-| aws_aceess_secret_key | AWS Access Secret Key |
-
-### Azure
-
-| Name                  | Description           |
-| --------------------- | --------------------- |
-| azure_tenant_id       | Azure tenant ID       |
-| azure_subscription_id | Azure subscription ID |
-| azure_client_id       | Azure client ID       |
-| azure_client_secret   | Azure client secret   |
-
+| Name                  | Description                                            |
+| --------------------- | ------------------------------------------------------ |
+| eeas_params           | The virtual machine & network service configuration    |
 
 
 ## Plugins
 
-cloudify-aws-plugin
+cloudify-fabric-plugin
 
 ## Inputs
 
-| Display Laebel      | Name            | Type   | Default Value |
-| ------------------- | --------------- | ------ | ------------- |
-| AWS Regionn Name    | aws_region_name | string | us-east-1     |
-| DynamoDB Table Name | dynamo_db_name  | string | MyApp         |
+| Display Label                            | Name            | Type   | Default Value  |
+| ---------------------------------------- | --------------- | ------ | -------------- |
+| The resource prefix for resources naming | resource_prefix | string | ''             |
 
+If the user provides empty value of default the prefix will be gerenated automatically.
 
 ## Node Types
 
-### DynamoDB Table
-the node type is responisble to create a DynamoDB Table.
-The type is `cloudify.nodes.aws.dynamodb.Table`. 
+### Prefix
+the node type is responsible to create a Prefix for the purpose of naming resources.\
+The type is `eaas.nodes.UniquePrefixGenerator`.
 
-For more details on the type can be found in the link
+For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
+
+### Network
+the node type is responsible for creating the network & VM form minikube deployment.\
+The type is `cloudify.nodes.ServiceComponent`.
+
+### Database
+the node type responsible for installation, configuration & start PostgreSQL server.\
+Derived type is `cloudify.nodes.Root`
 
 ## Labels
 
-The created deployment will have label `obj-type` equal to `aws`
+The created deployment will have label `obj-type` equal to `service`
