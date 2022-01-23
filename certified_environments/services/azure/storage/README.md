@@ -1,4 +1,4 @@
-# S3 Service Provisioning
+# Storage Service Provisioning
 
 ## General
 
