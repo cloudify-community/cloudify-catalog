@@ -32,21 +32,21 @@ If the user provides empty value of default the prefix will be gerenated automat
 ## Node Types
 
 ### Prefix
-the node type is responsible to create a Prefix for the purpose of naming resources.
+The node type is responsible to create a Prefix for the purpose of naming resources.
 The type is `eaas.nodes.UniquePrefixGenerator`.
 
 For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
 
 ### Network
-the node type is responsible for creating the network & VM form minikube deployment. 
+The node type is responsible for creating the network & VM form minikube deployment. 
 The type is `cloudify.nodes.ServiceComponent`.
 
 ### Docker
-the node type is responsible for installing the docker instance 
+The node type is responsible for installing the docker instance 
 The type is ` cloudify.nodes.Root`
 
 ### Minikube
-the node is responsible for deployment the minikube image of the docker instance
+The node is responsible for deployment the minikube image of the docker instance
 The type is `cloudify.nodes.Root`
 
 ## Labels

@@ -2,7 +2,7 @@
 
 ## General
 
-The blueprint creates S3 service accessible for user on public network.
+The blueprint creates S3 service accessible for user on the public network.
 
 ## Requirements
 
@@ -32,17 +32,17 @@ If the user provides empty value of default the prefix will be gerenated automat
 ## Node Types
 
 ### Prefix
-the node type is responsible to create a Prefix for the purpose of naming resources.\
+The node type is responsible to create a Prefix for the purpose of naming resources.\
 The type is `eaas.nodes.UniquePrefixGenerator`.
 
 For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
 
 ### Terraform
-the node type is responsible for configuration the host for terraform.\
+The node type is responsible for configuration the host for terraform.\
 The type is `cloudify.nodes.terraform`.
 
 ### Terraform Module
-the node type responsible for deploying the terraform code.\
+The node type responsible for deploying the terraform code.\
 Derived type is `cloudify.nodes.terraform.Module`
 
 ## Labels

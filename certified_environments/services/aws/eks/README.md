@@ -32,21 +32,21 @@ The blueprint uses below secret in json format in order to set up service in AWS
 ## Node Types
 
 ### Prefix
-the node type is responsible to create a Prefix for the purpose of naming resources.
+The node type is responsible to create a Prefix for the purpose of naming resources.
 The type is `eaas.nodes.UniquePrefixGenerator`.
 
 For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
 
 ### Network
-the node type is responsible for creating the network for EKS deployment. 
+The node type is responsible for creating the network for EKS deployment. 
 The type is `cloudify.nodes.ServiceComponent`.
 
 ### EKS Service IAM Role
-the node type is responsible for setting up service permissions. 
+The node type is responsible for setting up service permissions. 
 The type is `cloudify.nodes.aws.iam.Role`.
 
 ### EKS Nodegroup IAM Role
-the node type is responsible for setting up node group permissions. 
+The node type is responsible for setting up node group permissions. 
 The type is `cloudify.nodes.aws.iam.Role`.
 
 ### EKS Cluster 
