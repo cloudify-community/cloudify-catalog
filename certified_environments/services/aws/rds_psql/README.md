@@ -26,7 +26,7 @@ cloudify-aws-plugin
 | Display Label                      | Name                | Type              | Default Value                                              |
 | ---------------------------------- | ------------------- | ----------------- | ---------------------------------------------------------- |
 | Cloud Credentials from AWS env.    | cloud_credentials   | cloud_credentials | (The secrets values from AWS environment)                  |
-| K8s vers. & srv. account namespace | resource_config     | resource_config   | kubernetes_version: '', service_account_namespace: defualt |
+| master username                    | resource_config     | resource_config   | (The defualt value is fetched from the eeas_params secret) |
 
 ## Node Types
 
