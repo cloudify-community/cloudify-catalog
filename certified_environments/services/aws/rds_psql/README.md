@@ -1,4 +1,4 @@
-# EKS Service Provisioning
+# RDS PostgreSQL Service Provisioning
 
 ## General
 
