@@ -4,13 +4,13 @@
 
 The blueprint creates Minio service on the virtual machine accessible for the user by SSH protocol.
 
-## Requirmennts
+## Requirements
 
 In order to run successfully the blueprint you'll need to provide the AWS environment - details [here](https://github.com/cloudify-community/eaas-example). 
 
 ## Secrets
 
-The blueprint uses below secret in json format in order to set up service in AWS cloud - the example of the secret format could be found [here](https://github.com/bartoszkosciug/eaas-example/blob/master/secret.json).
+The blueprint uses below secret in json format in order to set up service in AWS cloud - the example of the secret format could be found [here](https://github.com/cloudify-community/eaas-example/blob/master/secret.json).
 
 | Name                  | Description                                            |
 | --------------------- | ------------------------------------------------------ |

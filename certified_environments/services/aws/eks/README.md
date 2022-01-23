@@ -10,7 +10,7 @@ In order to run successfully the blueprint you'll need to provide the AWS enviro
 
 ## Secrets
 
-The blueprint uses below secret in json format in order to set up service in AWS cloud - the example of the secret format could be found [here](https://github.com/bartoszkosciug/eaas-example/blob/master/secret.json).
+The blueprint uses below secret in json format in order to set up service in AWS cloud - the example of the secret format could be found [here](https://github.com/cloudify-community/eaas-example/blob/master/secret.json).
 
 | Name                  | Description                      |
 | --------------------- | -------------------------------- |

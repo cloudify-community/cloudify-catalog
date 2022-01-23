@@ -8,6 +8,9 @@ imports:
 inputs:
  resource_prefix:
     type: string
+    display_label: The resource prefix for resources naming
+    description: |
+      If not provided, it will be auto-generated.
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'

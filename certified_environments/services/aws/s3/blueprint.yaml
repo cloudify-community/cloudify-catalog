@@ -13,14 +13,12 @@ labels:
 inputs:
   resource_prefix:
     type: string
+    display_label: The resource prefix for resources naming
     description: |
       If not provided, it will be auto-generated.
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-  region_name:
-    type: string
-    default: 'us-west-1'
 
 
 node_templates:
@@ -39,12 +37,12 @@ node_templates:
     type: cloudify.nodes.terraform.Module
     properties:
       resource_config:
-        environment_variables:
-          AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
-          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
+        environment_variables: 
+          AWS_ACCESS_KEY_ID: { get_environment_capability: [cloud_credentials, aws_access_key_id] }
+          AWS_SECRET_ACCESS_KEY: { get_environment_capability: [cloud_credentials, aws_secret_access_key] }
         variables:
           bucket_name: { concat: [ { get_attribute: [ prefix, value ] }, bucket ] }
-          bucket_region: { get_input: region_name }
+          bucket_region: { get_environment_capability: [cloud_credentials, region_name] }
         source:
           location: templates/tf-bucket-master.zip
     relationships:
