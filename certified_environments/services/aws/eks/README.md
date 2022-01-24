@@ -31,15 +31,14 @@ The blueprint uses below secret in json format in order to set up service in AWS
 
 ### Custom types
 cloud_credentials
-| Property Name             | Type   | Default Value                         |
-| ------------------------- | ------ | ------------------------------------- |
-| azure_tentant_id          | string | gets from cloud Azure env. capability |
-| azure_subscription_id     | string | gets from cloud Azure env. capability |
-| azure_client_id           | string | gets from cloud Azure env. capability |
-| azure_client_secret       | string | gets from cloud Azure env. capability |
-| public_key_content        | string | gets from cloud Azure env. capability |
-| private_key_content       | string | gets from cloud Azure env. capability |
-| region_name               | string | gets from cloud Azure env. capability |
+| Property Name         | Type   | Default Value                       |
+| --------------------- | ------ | ----------------------------------- |
+| aws_access_key_id     | string | gets from cloud AWS env. capability |
+| aws_keypair           | string | gets from cloud AWS env. capability |
+| aws_secret_access_key | string | gets from cloud AWS env. capability |
+| public_key_content    | string | gets from cloud AWS env. capability |
+| private_key_content   | string | gets from cloud AWS env. capability |
+| region_name           | string | gets from cloud AWS env. capability |
 
 
 resource_config
