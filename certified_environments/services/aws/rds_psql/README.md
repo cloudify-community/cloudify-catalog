@@ -25,8 +25,21 @@ cloudify-aws-plugin
 
 | Display Label                      | Name                | Type              | Default Value                                            |
 | ---------------------------------- | ------------------- | ----------------- | -------------------------------------------------------- |
-| Cloud Credentials from AWS env.    | cloud_credentials   | cloud_credentials | The secrets values from AWS environment                  |
-| master username                    | resource_config     | resource_config   | The defualt value is fetched from the eeas_params secret |
+| Cloud Credentials from AWS env.    | cloud_credentials   | cloud_credentials | Please look at the cloud_credentials type legend         |
+| Master username                    | resource_config     | resource_config   | The defualt value is fetched from the eeas_params secret |
+
+### Custom types
+cloud_credentials
+| Property Name         | Type   | Default Value                       |
+| --------------------- | ------ | ----------------------------------- |
+| aws_access_key_id     | string | gets from cloud AWS env. capability |
+| aws_keypair           | string | gets from cloud AWS env. capability |
+| aws_secret_access_key | string | gets from cloud AWS env. capability |
+| public_key_content    | string | gets from cloud AWS env. capability |
+| private_key_content   | string | gets from cloud AWS env. capability |
+| region_name           | string | gets from cloud AWS env. capability |
+
+
 
 ## Node Types
 
