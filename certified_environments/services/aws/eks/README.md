@@ -24,10 +24,30 @@ The blueprint uses below secret in json format in order to set up service in AWS
 
 ## Inputs
 
-| Display Label                      | Name                | Type              | Default Value                                              |
-| ---------------------------------- | ------------------- | ----------------- | ---------------------------------------------------------- |
-| Cloud Credentials from AWS env.    | cloud_credentials   | cloud_credentials | The secrets values from AWS environment                    |
-| K8s vers. & srv. account namespace | resource_config     | resource_config   | kubernetes_version: '', service_account_namespace: defualt |
+| Display Label                    | Name                | Type              | Default Value                                    |
+| -------------------------------- | ------------------- | ----------------- | ------------------------------------------------ |
+| Cloud Credentials from AWS env.  | cloud_credentials   | cloud_credentials | Please look at the cloud_credentials type legend |
+| K8s configuration                | resource_config     | resource_config   | Please look at the resource_config type legend   |
+
+### Custom types
+cloud_credentials
+| Property Name             | Type   | Default Value                         |
+| ------------------------- | ------ | ------------------------------------- |
+| azure_tentant_id          | string | gets from cloud Azure env. capability |
+| azure_subscription_id     | string | gets from cloud Azure env. capability |
+| azure_client_id           | string | gets from cloud Azure env. capability |
+| azure_client_secret       | string | gets from cloud Azure env. capability |
+| public_key_content        | string | gets from cloud Azure env. capability |
+| private_key_content       | string | gets from cloud Azure env. capability |
+| region_name               | string | gets from cloud Azure env. capability |
+
+
+resource_config
+| Property Name             | Type   | Default Value |
+| ------------------------- | ------ | ------------- |
+| kubernetes_version        | string | ''            |
+| service_account_namespace | string | default       |
+
 
 ## Node Types
 
