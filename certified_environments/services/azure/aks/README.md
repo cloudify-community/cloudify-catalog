@@ -61,7 +61,7 @@ The type is `eaas.nodes.UniquePrefixGenerator`.
 For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
 
 ### Network
-The node type is responsible for creating the network for EKS deployment.\ 
+The node type is responsible for creating the network for EKS deployment.\
 The type is `cloudify.nodes.ServiceComponent`.
 
 ### Aks Cluster
