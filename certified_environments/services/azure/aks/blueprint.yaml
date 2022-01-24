@@ -16,10 +16,13 @@ dsl_definitions:
 inputs:
   resource_config:
     type: resource_config
+    display_label: K8s configuration       
   cloud_credentials:
     type: cloud_credentials
+    display_label: Cloud Credentials from Azure env.  
   resource_prefix:
     type: string
+    display_label: The resource prefix for resources naming
     description: |
       If not provided, it will be auto-generated.
     default: ''

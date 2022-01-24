@@ -24,10 +24,11 @@ The blueprint uses below secret in json format in order to set up service in Azu
 
 ## Inputs
 
-| Display Label                     | Name                | Type              | Default Value                                    |
-| --------------------------------- | ------------------- | ----------------- | ------------------------------------------------ |
-| Cloud Credentials from Azure env. | cloud_credentials   | cloud_credentials | Please look at the cloud_credentials type legend |
-| K8s configuration                 | resource_config     | resource_config   | Please look at the resource_config type legend   |
+| Display Label                            | Name              | Type              | Default Value                                    |
+| ---------------------------------------- | ------------------| ----------------- | ------------------------------------------------ |
+| Cloud Credentials from Azure env.        | cloud_credentials | cloud_credentials | Please look at the cloud_credentials type legend |
+| K8s configuration                        | resource_config   | resource_config   | Please look at the resource_config type legend   |
+| The resource prefix for resources naming | resource_prefix   | string            | ''                                               |
 
 ### Custom types
 cloud_credentials

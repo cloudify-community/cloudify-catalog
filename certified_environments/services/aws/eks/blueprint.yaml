@@ -26,6 +26,7 @@ inputs:
     display_label: K8s version & service account namespace
   resource_prefix:
     type: string
+    display_label: The resource prefix for resources naming
     description: |
       If not provided, it will be auto-generated.
     default: ''
