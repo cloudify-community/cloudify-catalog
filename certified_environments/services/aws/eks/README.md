@@ -52,41 +52,41 @@ resource_config
 ## Node Types
 
 ### Prefix
-The node type is responsible to create a Prefix for the purpose of naming resources.
+The node type is responsible to create a Prefix for the purpose of naming resources.\
 The type is `eaas.nodes.UniquePrefixGenerator`.
 
 For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
 
 ### Network
-The node type is responsible for creating the network for EKS deployment. 
+The node type is responsible for creating the network for EKS deployment.\
 The type is `cloudify.nodes.ServiceComponent`.
 
 ### EKS Service IAM Role
-The node type is responsible for setting up service permissions. 
+The node type is responsible for setting up service permissions.\
 The type is `cloudify.nodes.aws.iam.Role`.
 
 ### EKS Nodegroup IAM Role
-The node type is responsible for setting up node group permissions. 
+The node type is responsible for setting up node group permissions.\
 The type is `cloudify.nodes.aws.iam.Role`.
 
 ### EKS Cluster 
-The node type is responsible for creating EKS cluster service.
+The node type is responsible for creating EKS cluster service.\
 The type is `cloudify.nodes.aws.eks.Cluster`.
 
 ### EKS Node Group
-The node type is responsible for adding the cluster to the specific node group.
+The node type is responsible for adding the cluster to the specific node group.\
 The type is `cloudify.nodes.aws.eks.NodeGroup`
 
 ### Kubernetes Master
-The node type is responsible for setting up the cluster configuration. 
+The node type is responsible for setting up the cluster configuration.\
 The type is `cloudify.kubernetes.nodes.Master`
 
 ### New Service Account
-The node is responible for creating the new service account.
+The node is responible for creating the new service account.\
 The type is `cloudify.kubernetes.resources.ServiceAccount`.
 
 ### New Role Binding
-The node is responsible for resource role binding for created service account. 
+The node is responsible for resource role binding for created service account.\
 The type is `cloudify.kubernetes.resources.RoleBinding`
 
 ## Labels

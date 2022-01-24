@@ -31,15 +31,15 @@ The blueprint uses below secret in json format in order to set up service in Azu
 
 ### Custom types
 cloud_credentials
-| Property Name             | Type   | Default Value                         |
-| ------------------------- | ------ | ------------------------------------- |
-| azure_tentant_id          | string | gets from cloud Azure env. capability |
-| azure_subscription_id     | string | gets from cloud Azure env. capability |
-| azure_client_id           | string | gets from cloud Azure env. capability |
-| azure_client_secret       | string | gets from cloud Azure env. capability |
-| public_key_content        | string | gets from cloud Azure env. capability |
-| private_key_content       | string | gets from cloud Azure env. capability |
-| region_name               | string | gets from cloud Azure env. capability |
+| Property Name             | Type   | Default Value                       |
+| ------------------------- | ------ | ----------------------------------- |
+| azure_tentant_id          | string | gets from cloud AWS env. capability |
+| azure_subscription_id     | string | gets from cloud AWS env. capability |
+| azure_client_id           | string | gets from cloud AWS env. capability |
+| azure_client_secret       | string | gets from cloud AWS env. capability |
+| public_key_content        | string | gets from cloud AWS env. capability |
+| private_key_content       | string | gets from cloud AWS env. capability |
+| region_name               | string | gets from cloud AWS env. capability |
 
 
 resource_config
@@ -55,29 +55,29 @@ resource_config
 ## Node Types
 
 ### Prefix
-The node type is responsible to create a Prefix for the purpose of naming resources.
+The node type is responsible to create a Prefix for the purpose of naming resources.\
 The type is `eaas.nodes.UniquePrefixGenerator`.
 
 For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
 
 ### Network
-The node type is responsible for creating the network for EKS deployment. 
+The node type is responsible for creating the network for EKS deployment.\ 
 The type is `cloudify.nodes.ServiceComponent`.
 
 ### Aks Cluster
-The node type is responsible for creating EKS cluster service.
+The node type is responsible for creating EKS cluster service.\
 The type is `cloudify.azure.nodes.compute.ManagedCluster`.
 
 ### Kubernetes Master
-The node type is responsible for setting up the cluster configuration. 
+The node type is responsible for setting up the cluster configuration.\
 The type is `cloudify.kubernetes.nodes.Master`.
 
 ### New Service Account
-The node is responible for creating the new service account.
+The node is responible for creating the new service account.\
 The type is `cloudify.kubernetes.resources.ServiceAccount`.
 
 ### New Role Binding
-The node is responsible for resource role binding for created service account. 
+The node is responsible for resource role binding for created service account.\
 The type is `cloudify.kubernetes.resources.RoleBinding`
 
 ## Labels
