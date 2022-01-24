@@ -25,7 +25,7 @@ cloudify-terraform-plugin (v0.18.8 or later)
 | Organization name in the TF Cloud/Enterprise                          | tf_organization | string |                  |
 | Workspace name in the TF Cloud/Enterprise                             | tf_workspace    | string | default          |
 | Authentication Token to be used in TF Cloud/Enterprise                | tf_token        | string |                  |
-| Hostname of the TF Cloud/Enterprise (`app.terraform.io` for TF Cloud) | tf_host         | string | app.terraform.io |
+| Hostname of the TF Cloud/Enterprise (`app.terraform.io` for TF Cloud) | tf_hostname     | string | app.terraform.io |
 
 ## Inputs
 
