@@ -1,8 +1,8 @@
-# EKS Service Provisioning
+# AKS Service Provisioning
 
 ## General
 
-The blueprint creates EKS service with one node that is accessible from the public network.
+The blueprint creates AKS service with one node that is accessible from the public network.
 
 ## Requirmennts
 
