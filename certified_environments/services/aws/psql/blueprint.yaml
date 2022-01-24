@@ -8,9 +8,7 @@ imports:
 inputs:
  resource_prefix:
     type: string
-    display_label: The resource prefix for resources naming
-    description: |
-      If not provided, it will be auto-generated.
+    description: The resource prefix for resources naming
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
@@ -81,6 +79,4 @@ capabilities:
   host:
     value: { get_attribute: [ network, capabilities, db_vm_ip ] }
   master_username:
-    value: { get_attribute: [ database, master_username ] }
-  master_password:
-    value: { get_attribute: [ database, master_password ] }
+    value: postgres

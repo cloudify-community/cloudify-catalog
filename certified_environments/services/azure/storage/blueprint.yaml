@@ -13,15 +13,10 @@ labels:
 inputs:
   resource_prefix:
     type: string
-    display_label: The resource prefix for resources naming
-    description: |
-      If not provided, it will be auto-generated.
+    description: The resource prefix for resources naming
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-  region_name:
-    type: string
-    default: 'westus'
 
 
 node_templates:
@@ -41,14 +36,14 @@ node_templates:
     properties:
       resource_config:
         environment_variables:
-          ARM_SUBSCRIPTION_ID: { get_secret: azure_subscription_id }
-          ARM_TENANT_ID: { get_secret: azure_tenant_id }
-          ARM_CLIENT_ID: { get_secret: azure_client_id }
-          ARM_CLIENT_SECRET: { get_secret: azure_client_secret }
+          ARM_SUBSCRIPTION_ID: { get_environment_capability: [ cloud_credentials, azure_subscription_id ] }
+          ARM_TENANT_ID: { get_environment_capabilty: [ cloud_credentials, azure_tenant_id ] }
+          ARM_CLIENT_ID: { get_environment_capability: [ cloud_credentials,  azure_client_id ] }
+          ARM_CLIENT_SECRET: { get_environment_capability: [ cloud_credentials, azure_client_secret ] }
         variables:
           blob_name: { concat: [ { get_attribute: [ prefix, value ] }, bucket ] }
           rg_name: { concat: [ { get_attribute: [ prefix, value ] }, rg ] }
-          rg_location: { get_input: region_name }
+          rg_location: { get_environment_capability: [ cloud_credentials, region_name ] }
         source:
           location: templates/tf-blob-master.zip
     relationships:

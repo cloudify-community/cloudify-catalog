@@ -15,12 +15,15 @@ dsl_definitions:
 inputs:
   cloud_credentials:
     type: cloud_credentials
+    description: Cloud Credentials from AWS env.
+    default: {}
   resource_config:
     type: resource_config
+    description: Master username
+    default: {}
   resource_prefix:
     type: string
-    description: |
-      If not provided, it will be auto-generated.
+    description: The resource prefix for resources naming
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'

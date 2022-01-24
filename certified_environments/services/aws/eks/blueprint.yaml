@@ -20,15 +20,15 @@ labels:
 inputs:
   cloud_credentials:
     type: cloud_credentials
-    display_label: Cloud Credentials from AWS env. 
+    description: Cloud Credentials from AWS env.
+    default: {}
   resource_config:
     type: resource_config
-    display_label: K8s version & service account namespace
+    description: K8s version & service account namespace
+    default: {}
   resource_prefix:
     type: string
-    display_label: The resource prefix for resources naming
-    description: |
-      If not provided, it will be auto-generated.
+    description: The resource prefix for resources naming
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'

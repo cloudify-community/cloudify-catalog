@@ -2,7 +2,7 @@
 
 ## General
 
-The blueprint creates EKS service with one node that is accessible from the public network.
+The blueprint creates PostgreSQL service with masteruser name and password.
 
 ## Requirmennts
 
@@ -23,10 +23,11 @@ cloudify-aws-plugin
 
 ## Inputs
 
-| Display Label                      | Name                | Type              | Default Value                                            |
-| ---------------------------------- | ------------------- | ----------------- | -------------------------------------------------------- |
-| Cloud Credentials from AWS env.    | cloud_credentials   | cloud_credentials | Please look at the cloud_credentials type legend         |
-| Master username                    | resource_config     | resource_config   | The defualt value is fetched from the eeas_params secret |
+| Display Label                            | Name                | Type              | Default Value                                            |
+| ---------------------------------------- | ------------------- | ----------------- | -------------------------------------------------------- |
+| Cloud Credentials from AWS env.          | cloud_credentials   | cloud_credentials | Please look at the cloud_credentials type legend         |
+| Master username                          | resource_config     | resource_config   | The defualt value is fetched from the eeas_params secret |
+| The resource prefix for resources naming | resource_prefix     | string            | ''                                                       |
 
 ### Custom types
 cloud_credentials
@@ -38,7 +39,6 @@ cloud_credentials
 | public_key_content    | string | gets from cloud AWS env. capability |
 | private_key_content   | string | gets from cloud AWS env. capability |
 | region_name           | string | gets from cloud AWS env. capability |
-
 
 
 ## Node Types
