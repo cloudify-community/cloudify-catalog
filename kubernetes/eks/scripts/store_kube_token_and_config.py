@@ -12,3 +12,6 @@ ctx.instance.runtime_properties['token'] = token
 kube_config = json.dumps(inputs['kube_config'])
 client.secrets.create('kubernetes_config', kube_config, update_if_exists=True)
 ctx.instance.runtime_properties['kube_config'] = kube_config
+ssl_ca_cert = base64.b64decode(inputs['kube_config']['clusters'][0]['cluster']['certificate-authority-data']).decode('utf-8')
+client.secrets.create('kubernetes_ca_cert', ssl_ca_cert, update_if_exists=True)
+ctx.instance.runtime_properties['ssl_ca_cert'] = ssl_ca_cert

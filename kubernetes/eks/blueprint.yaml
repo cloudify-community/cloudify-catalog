@@ -722,6 +722,12 @@ capabilities:
   endpoint:
     value: { get_attribute: [eks_cluster, kubeconf, clusters, 0, cluster, server ] }
 
+  token:
+    value: { get_attribute: [ store_token_and_kubeconfig, token ] }
+
+  ssl_ca_cert:
+    value: { get_attribute: [ store_token_and_kubeconfig, ssl_ca_cert ] }
+
   connection_details:
     value: *kubernetes_master_configuration
 
