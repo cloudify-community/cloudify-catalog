@@ -79,6 +79,6 @@ capabilities:
   host:
     value: { get_attribute: [ network, capabilities, db_vm_ip ] }
   master_username:
-    value: { get_attribute: [ database, master_username ] }
+    value: postgres
   vm_username:
     value: centos
