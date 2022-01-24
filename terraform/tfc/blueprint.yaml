@@ -22,6 +22,7 @@ node_templates:
         backend:
           name: remote
           options:
+            hostname: { get_secret: tf_hostname }
             organization: { get_secret: tf_organization }
             workspaces: 
               name: { get_secret: tf_workspace }
