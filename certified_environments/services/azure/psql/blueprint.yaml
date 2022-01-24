@@ -80,5 +80,5 @@ capabilities:
     value: { get_attribute: [ network, capabilities, db_vm_ip ] }
   master_username:
     value: { get_attribute: [ database, master_username ] }
-  master_password:
-    value: { get_attribute: [ database, master_password ] }
+  vm_username:
+    value: centos
