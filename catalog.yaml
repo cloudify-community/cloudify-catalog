@@ -9,7 +9,7 @@ topics:
         path: certified_environments/environments/aws
         description: Creating AWS environment
         html_url:  https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/environments/aws
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/EnvironmentAWS.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/environments/EnvironmentAWS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/environments/aws/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/environments/aws/aws.png
@@ -18,7 +18,7 @@ topics:
         path: certified_environments/services/aws/eks
         description: Creating EKS service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/eks
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/EksAWS.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/aws/EksAWS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/eks/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/eks/eks.png
@@ -27,7 +27,7 @@ topics:
         path: certified_environments/services/aws/minikube
         description: Creating Minikube service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/minikube
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/MinikubeAWS.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/aws/MinikubeAWS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/minikube/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/minikube/minikube.png
@@ -36,7 +36,7 @@ topics:
         path: certified_environments/services/aws/minio
         description: Creating Minio service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/minio
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/MinioAWS.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/aws/MinioAWS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/minio/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/minio/minio.png
@@ -45,7 +45,7 @@ topics:
         path: certified_environments/services/aws/psql
         description: Creating PostgreSQL service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/psql
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/PsqlAWS.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/aws/PsqlAWS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/psql/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/psql/psql.png
@@ -54,7 +54,7 @@ topics:
         path: certified_environments/services/aws/rds_psql
         description: Creating PostgreSQL on RDS service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/rds_psql
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/RdsPsqlAWS.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/aws/RdsPsqlAWS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/rds_psql/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/rds_psql/psql.png
@@ -63,7 +63,7 @@ topics:
         path: certified_environments/services/aws/s3
         description: Creating S3 service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/s3
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/S3AWS.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/aws/S3AWS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/s3/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/s3/psql.png
@@ -72,7 +72,7 @@ topics:
         path: certified_environments/services/azure/aks
         description: Creating AKS service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/aks
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/AksAzure.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/azure/AksAzure.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/aks/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/aks/aks.png
@@ -81,7 +81,7 @@ topics:
         path: certified_environments/services/azure/minikube
         description: Creating Minikube service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/minikube
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/MinikubeAzure.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/azure/MinikubeAzure.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/minikube/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/minikube/minikube.png
@@ -90,7 +90,7 @@ topics:
         path: certified_environments/services/azure/minio
         description: Creating Minio service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/minio
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/MinioAzure.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/azure/MinioAzure.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/minio/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/minio/minio.png
@@ -99,7 +99,7 @@ topics:
         path: certified_environments/services/azure/psql
         description: Creating PostgreSQL service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/psql
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/PsqlAzure.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/azure/PsqlAzure.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/psql/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/psql/psql.png
@@ -108,7 +108,7 @@ topics:
         path: certified_environments/services/azure/rds_psql
         description: Creating PostgreSQL on RDS service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/rds_psql
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/RdsPsqlAzure.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/azure/RdsPsqlAzure.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/rds_psql/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/rds_psql/psql.png
@@ -117,7 +117,7 @@ topics:
         path: certified_environments/services/azure/storage
         description: Creating Storage service
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/storage
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/StorageAzure.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/services/azure/StorageAzure.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/storage/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/storage/storage.png
@@ -126,7 +126,7 @@ topics:
         path: certified_environments/environments/azure
         description: Creating Azure environment
         html_url:  https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/environments/azure
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/EnvironmentAzure.zip
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/environments/EnvironmentAzure.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/environments/azure/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/environments/azure/azure.png
@@ -301,7 +301,7 @@ topics:
         zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_tfc.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/terraform-icon.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/terraform-icon.jpeg
   - name: helm_services
     target_path: s3_json_file
     blueprints:
