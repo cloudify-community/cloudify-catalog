@@ -302,6 +302,16 @@ topics:
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/terraform-icon.jpeg
+      - id: terraform_s3_aws
+        name: Terraform S3 AWS
+        path: terraform/aws_s3
+        description: Create an AWS S3 using Terraform automation
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/aws_s3
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_aws_s3.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/aws_s3/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/terraform-icon.jpeg
+
   - name: helm_services
     target_path: s3_json_file
     blueprints:
