@@ -6,7 +6,7 @@ The blueprint creates S3 AWS service using the clouidfy terraform plugin.
 
 ## Requirements
 
-In order to run successfully the blueprint you'll need AWS subscription id, tenant id, client id and client secret. The credentials to the AWS should have permission to describe, update, delete and create S3 service.
+In order to run successfully the blueprint you'll need AWS access key id and AWS access secret key. The credentials to the AWS should have permission to describe, update, delete and create S3 service.
 
 ## Secrets
 
