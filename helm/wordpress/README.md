@@ -1,4 +1,4 @@
-# Drupal Helm Chart Blueprint
+# Wordpress Helm Chart Blueprint
 
 ## General
 
@@ -12,7 +12,7 @@ In this way, all necessary credentials will be automatically passed to a Helm ch
 
 Example:
 ```shell
-cfy install blueprint.yaml -b helm-drupal -d helm-drupal -l csys-obj-parent=EKS_DEPLOYMENT_ID
+cfy install blueprint.yaml -b helm-wordpress -d helm-wordpress -l csys-obj-parent=EKS_DEPLOYMENT_ID
 ```
 
 Using the GUI, `Deploy On` action can be used for that. It can be found under the `Bulk actions` button in the Deployments view. [Read more](https://docs.cloudify.co/latest/working_with/console/widgets/deploymentsview/#bulk-actions)
