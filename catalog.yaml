@@ -395,6 +395,18 @@ topics:
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/k8s_discovery/gcp/gcp-account/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/k8s_discovery/gcp/gcp-account/gcp.png
+  - name: vmware_services
+    target_path: s3_json_file
+    blueprints:
+      - id: vsphere_vm
+        name: vSphere VM
+        path: vmware/vsphere
+        description: Create vSphere VM
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/vsphere/vm
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/vshere/vm.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/vsphere/vm/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/vsphere/vm.png
 
 
 
