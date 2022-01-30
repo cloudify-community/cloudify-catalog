@@ -293,6 +293,15 @@ topics:
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/aws/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
+      - id: terraform_azure_storage
+        name: Azure Storage
+        path: terraform/azure_storage
+        description: Create an Azure Blob Storage automation
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/azure_storage
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_azure_storage.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/azure_storage/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_tfc
         name: Terraform_Cloud_Enterprise
         path: terraform/tfc
