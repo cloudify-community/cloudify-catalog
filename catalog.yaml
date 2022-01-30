@@ -293,6 +293,15 @@ topics:
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/aws/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
+      - id: terraform_eks
+        name: AWS EKS
+        path: terraform/eks
+        description: Create an EKS AWS using Terraform automation
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/eks
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_eks.0zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/eks/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_tfc
         name: Terraform_Cloud_Enterprise
         path: terraform/tfc
