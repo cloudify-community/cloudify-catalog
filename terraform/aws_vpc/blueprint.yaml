@@ -8,12 +8,14 @@ imports:
 inputs:
   resource_prefix:
     type: string
+    description: The resource prefix for resources naming
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
 
   aws_region_name:
     type: string
+    description: AWS region name
     default: us-east-1
     constraints:
     - valid_values:
@@ -115,8 +117,7 @@ node_templates:
 labels:
   obj-type: 
     values: 
-      - aws
-      - terraform
+      - service
 
 capabilities:
   vpc_id:
