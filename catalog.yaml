@@ -294,7 +294,7 @@ topics:
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_azure_storage
-        name: Azure Storage
+        name: Azure_Storage
         path: terraform/azure_storage
         description: Create an Azure Blob Storage automation
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/azure_storage
