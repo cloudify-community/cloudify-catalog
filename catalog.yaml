@@ -294,7 +294,7 @@ topics:
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_eks
-        name: AWS EKS
+        name: AWS_EKS
         path: terraform/eks
         description: Create an EKS AWS using Terraform automation
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/eks
