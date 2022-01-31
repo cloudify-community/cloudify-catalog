@@ -9,6 +9,7 @@ inputs:
   resource_prefix:
     type: string
     description: The resource prefix for resources naming
+    display_label: The resource prefix 
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
@@ -16,6 +17,7 @@ inputs:
   azure_location_name:
     type: string
     description: Azure location name
+    display_label: Azure location name
     default: EastUS
     constraints:
       - valid_values:
