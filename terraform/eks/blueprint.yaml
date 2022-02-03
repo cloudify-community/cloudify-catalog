@@ -58,7 +58,7 @@ node_templates:
     type: cloudify.nodes.terraform.Module
     properties:
       general_executor_process:
-        max_sleep_time: 1500
+        max_sleep_time: 2500
       max_stored_filesize: 1500000
       resource_config:
         environment_variables:
@@ -76,15 +76,23 @@ node_templates:
         type: cloudify.terraform.relationships.run_on_host
 
 capabilities:
+  kubernetes_cluster_host:
+    description: |
+      Kubernetes Cluster host
+    value: { get_attribute: [ terraform_module, outputs, kubernetes_cluster_host ] }
   token:
     description: |
       Kubernetes Dashboard token
     value: { get_attribute: [ terraform_module, outputs, admin_token ] }
-  hostname:
+  dashboard_hostname:
     description: |
       Kuberenetes Dashboard hostname
     value: { get_attribute: [ terraform_module, outputs, dashboard_hostname ] }
-  eksname:
+  kubernetes_cluster_name:
     description: |
-      Cluster name
+      Kubernetes Cluster name
     value: { get_attribute: [ terraform_module, outputs, cluster_name ] }
+  region:
+    description: |
+      EKS region
+    value: { get_attribute: [ terraform_module, outputs, region ] }
