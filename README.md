@@ -48,7 +48,7 @@ Each item in the `blueprints` has the following structure:
 
 `id` - Blueprint ID
 
-`name` - Blueprint Name
+`name` - Blueprint Name, the name can't contain spaces
 
 `path` - path to the blueprint directory withing the catalog
 
