@@ -152,6 +152,10 @@ topics:
         name: Terraform_Cloud_Enterprise
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
+      - id: terraform_gke
+        name: Terraform_GKE
+        path: terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation
       - id: terraform_s3_aws
         name: Terraform_S3_AWS
         path: terraform/aws_s3
