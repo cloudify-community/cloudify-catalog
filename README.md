@@ -87,3 +87,26 @@ The catalog items structure:
 `crated_at` - is auto calculated with the current date
 
 `updated_at` - is auto calculated with the current date
+
+## Auto generate
+
+The python that generates all the resources is `catalog.py`.
+
+Create a virtual environment `venv` in the root directory.
+
+To run the code it's required to install 2 packages:
+```
+pip install pyyaml
+pip install pygit2
+```
+
+To generate all the resources run the following command:
+```
+python catalog.py
+```
+
+The script will generate all the resources under `build` directory.
+
+All the catalogs will be created in `build/catalogs`
+
+All the blueprint archives will be created in `build/[PATH]/[ID].zip` directory, where the path is the `PATH` and `ID` are properties provided in each blueprint in the `catalog.yaml`
