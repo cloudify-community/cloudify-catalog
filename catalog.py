@@ -7,17 +7,14 @@ import datetime
 
 logging.basicConfig(level=logging.DEBUG)
 
-with open("catalog.yaml", 'r') as stream:
-    try:
-        catalog = yaml.safe_load(stream)
-    except yaml.YAMLError as exc:
-        print(exc)
+def create_build_directories():
+	if not os.path.exists("build"):
+		os.mkdir("build")
 
-git_url = catalog['git_url']
-target_path = catalog['target_path']
-github_url = catalog['github_url']
+	if not os.path.exists("build/catalogs"):
+		os.mkdir("build/catalogs")
 
-def get_zip_url(blueprint):
+def get_zip_url(blueprint, target_path):
 	zip_url = blueprint['zip_url'] if 'zip_url' in blueprint.keys() else None
 
 	if zip_url is None and 'path' in blueprint:
@@ -27,7 +24,7 @@ def get_zip_url(blueprint):
 
 	return zip_url
 
-def get_html_url(blueprint):
+def get_html_url(blueprint, github_url):
 	html_url = blueprint['html_url'] if 'html_url' in blueprint.keys() else None
 
 	if html_url is None and 'path' in blueprint.keys():
@@ -45,38 +42,53 @@ def archive_blueprint(blueprint):
 
 		shutil.make_archive(output_filename, 'zip', path, dir_name)
 
-for package in catalog['topics']:
-	catalog = []
-	logging.info('processing catalog %s' % package['name'])
-	if 'blueprints' in package:
-		result = []
+def create_catalog(catalog_name, catalog):
+	json_object = json.dumps(catalog, indent=4)
+	catalog_filename = "build/catalogs/%s.json" % catalog_name
 
-		for blueprint in package['blueprints']:
-			logging.info("processing blueprint %s" % blueprint['id'])
+	with open(catalog_filename, "w+") as outfile:
+		outfile.write(json_object)
 
-			zip_url = get_zip_url(blueprint)
-			html_url = get_html_url(blueprint)
-			archive_blueprint(blueprint)
+def main():
+	with open("catalog.yaml", 'r') as stream:
+		try:
+			catalog = yaml.safe_load(stream)
+		except yaml.YAMLError as exc:
+			print(exc)
 
-			catalog_item = {
-			  "id": blueprint['id'],
-			  "name": blueprint['name'],
-			  "description": blueprint['description'],
-			  "html_url": html_url,
-			  "zip_url": zip_url,
-			  "readme_url": blueprint['readme_url'],
-			  "main_blueprint": blueprint['main_blueprint'],
-			  "image_url": blueprint["image_url"],
-			  "crated_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
-			  "updated_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-			}
-			catalog.append(catalog_item)
+	git_url = catalog['git_url']
+	target_path = catalog['target_path']
+	github_url = catalog['github_url']
 
-		json_object = json.dumps(catalog, indent=4)
-		catalog_filename = "build/catalogs/%s.json" % package['name']
+	create_build_directories()
+	for package in catalog['topics']:
+		catalog = []
+		logging.info('processing catalog %s' % package['name'])
+		if 'blueprints' in package:
+			result = []
 
-		if not os.path.exists("build/catalogs"):
-			os.mkdir("build/catalogs")
+			for blueprint in package['blueprints']:
+				logging.info("processing blueprint %s" % blueprint['id'])
 
-		with open(catalog_filename, "w+") as outfile:
-			outfile.write(json_object)
+				zip_url = get_zip_url(blueprint, target_path)
+				html_url = get_html_url(blueprint, github_url)
+				archive_blueprint(blueprint)
+
+				catalog_item = {
+				  "id": blueprint['id'],
+				  "name": blueprint['name'],
+				  "description": blueprint['description'],
+				  "html_url": html_url,
+				  "zip_url": zip_url,
+				  "readme_url": blueprint['readme_url'],
+				  "main_blueprint": blueprint['main_blueprint'],
+				  "image_url": blueprint["image_url"],
+				  "crated_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+				  "updated_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+				}
+				catalog.append(catalog_item)
+
+			create_catalog(package['name'], catalog)
+
+if __name__ == "__main__":
+	main()
