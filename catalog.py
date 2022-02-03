@@ -33,6 +33,14 @@ def get_html_url(blueprint, github_url):
 
 	return html_url
 
+def get_readme_url(blueprint, raw_github_url):
+	readme_url = blueprint['readme_url'] if 'readme_url' in blueprint.keys() else None
+
+	if readme_url is None and 'path' in blueprint.keys():
+		readme_url = "{}/{}/README.md".format(raw_github_url, blueprint['path'])
+
+	return readme_url
+
 def archive_blueprint(blueprint):
 	if 'path' in blueprint:
 		path = blueprint['path'][0:blueprint['path'].rfind("/")]
@@ -59,6 +67,7 @@ def main():
 	git_url = catalog['git_url']
 	target_path = catalog['target_path']
 	github_url = catalog['github_url']
+	raw_github_url = catalog['raw_github_url']
 
 	create_build_directories()
 	for package in catalog['topics']:
@@ -72,6 +81,8 @@ def main():
 
 				zip_url = get_zip_url(blueprint, target_path)
 				html_url = get_html_url(blueprint, github_url)
+				readme_url = get_readme_url(blueprint, raw_github_url)
+
 				archive_blueprint(blueprint)
 
 				catalog_item = {
@@ -80,7 +91,7 @@ def main():
 				  "description": blueprint['description'],
 				  "html_url": html_url,
 				  "zip_url": zip_url,
-				  "readme_url": blueprint['readme_url'],
+				  "readme_url": readme_url,
 				  "main_blueprint": blueprint['main_blueprint'],
 				  "image_url": blueprint["image_url"],
 				  "crated_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
