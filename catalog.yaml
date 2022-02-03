@@ -213,8 +213,6 @@ topics:
         name: AWS Account
         path: k8s_discovery/aws/aws-account
         description: AWS Account Representation
-        created_at: 2019-10-19T12:44:56Z
-        updated_at: 2020-07-16T17:26:16Z
       - id: azure_account
         name: Azure account
         path: k8s_discovery/azure/azure-account
