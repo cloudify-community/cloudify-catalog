@@ -36,36 +36,33 @@ def get_html_url(blueprint):
 
 	return html_url
 
+def archive_blueprint(blueprint):
+	if 'path' in blueprint:
+		path = blueprint['path'][0:blueprint['path'].rfind("/")]
+		dir_name = blueprint['path'][blueprint['path'].rfind("/")+1:]
+
+		output_filename = ("build/%s/%s") % (path, blueprint['id'])
+
+		shutil.make_archive(output_filename, 'zip', path, dir_name)
+
 for package in catalog['topics']:
 	catalog = []
 	logging.info('processing catalog %s' % package['name'])
 	if 'blueprints' in package:
 		result = []
-		
 
 		for blueprint in package['blueprints']:
+			logging.info("processing blueprint %s" % blueprint['id'])
+
 			zip_url = get_zip_url(blueprint)
 			html_url = get_html_url(blueprint)
-
-			if 'path' in blueprint:
-				path = blueprint['path'][0:blueprint['path'].rfind("/")]
-				dir_name = blueprint['path'][blueprint['path'].rfind("/")+1:]
-
-				output_filename = ("build/%s/%s") % (path, blueprint['id'])	
-
-
-				shutil.make_archive(output_filename, 'zip', path, dir_name)
-
-				filename_path = ("%s/%s") % (path, blueprint['id'])	
-
-			logging.info("processing blueprint %s" % blueprint['id'])
+			archive_blueprint(blueprint)
 
 			catalog_item = {
 			  "id": blueprint['id'],
 			  "name": blueprint['name'],
 			  "description": blueprint['description'],
 			  "html_url": html_url,
-			  # "zip_url": ("%s/%s.zip") % (target_path, blueprint['id']),
 			  "zip_url": zip_url,
 			  "readme_url": blueprint['readme_url'],
 			  "main_blueprint": blueprint['main_blueprint'],
@@ -77,8 +74,9 @@ for package in catalog['topics']:
 
 		json_object = json.dumps(catalog, indent=4)
 		catalog_filename = "build/catalogs/%s.json" % package['name']
-		# catalog_filename = "build/%s.json" % package['name']
+
 		if not os.path.exists("build/catalogs"):
 			os.mkdir("build/catalogs")
+
 		with open(catalog_filename, "w+") as outfile:
 			outfile.write(json_object)
