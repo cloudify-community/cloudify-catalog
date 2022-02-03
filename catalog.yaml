@@ -79,11 +79,11 @@ topics:
         path: aws/ec2
         description: Creating generating SSH key, creating a KeyPair and provisioning an EC2 instance
       - id: EC2_WITH_EBS
-        name: EC2 with EBS
+        name: EC2_WITH_EBS
         path: aws/ec2_with_ebs
         description: Creating EC2 inside VPC and EBS
       - id: EC2_SPOT_INSTANCES
-        name: EC2 on spot instances
+        name: EC2_SPOT_INSTANCES
         path: aws/ec2_spot_instances
         description: Creating EC2 Spot instance
       - id: ECS
