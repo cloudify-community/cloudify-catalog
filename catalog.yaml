@@ -302,6 +302,15 @@ topics:
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/terraform-icon.jpeg
+      - id: terraform_gke
+        name: Terraform_GKE
+        path: terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/gke
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_gke.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/gke/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/terraform-icon.jpeg
   - name: helm_services
     target_path: s3_json_file
     blueprints:
