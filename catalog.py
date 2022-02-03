@@ -30,8 +30,7 @@ def get_html_url(blueprint, github_url):
 	html_url = blueprint['html_url'] if 'html_url' in blueprint.keys() else None
 
 	if html_url is None and 'path' in blueprint.keys():
-		path = blueprint['path'][0:blueprint['path'].rfind("/")]
-		html_url = "{}/{}".format(github_url, path)
+		html_url = "{}/{}".format(github_url, blueprint['path'])
 
 	return html_url
 
@@ -79,6 +78,7 @@ def main():
 			print(exc)
 
 	head = Repository('.').head.name
+
 	git_url = catalog['git_url']
 	target_path = catalog['target_path']
 	github_url = "{}/{}".format(catalog['github_url'], head)

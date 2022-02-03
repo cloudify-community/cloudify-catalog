@@ -188,24 +188,21 @@ topics:
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
   - name: Ansible
-  - name: K8S
+  - name: k8s_services
     target_path: s3_json_file
     blueprints:
       - id: Kubernetes_AWS_EKS
         name: Kubernetes on AWS EKS
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
-        image_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/images/k8s.png
       - id: Kubernetes_Azure_AKS
         name: Kubernetes on Azure AKS
         path: kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
-        image_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/images/k8s.png
       - id: Kubernetes_GCP_GKE
         name: Kubernetes on GCP GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
-        image_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/images/k8s.png
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
