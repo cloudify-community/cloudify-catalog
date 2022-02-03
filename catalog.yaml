@@ -293,6 +293,15 @@ topics:
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/aws/README.md
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
+      - id: terraform_aws_vpc
+        name: AWS_VPC
+        path: terraform/aws_vpc
+        description: Create an AWS VPC using Terraform automation
+        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/aws_vpc
+        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_aws_vpv.zip
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/aws_vpc/README.md
+        main_blueprint: blueprint.yaml
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_tfc
         name: Terraform_Cloud_Enterprise
         path: terraform/tfc
