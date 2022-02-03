@@ -5,6 +5,8 @@ import shutil
 import logging
 import datetime
 
+from pygit2 import Repository
+
 logging.basicConfig(level=logging.DEBUG)
 
 def create_build_directories():
@@ -45,7 +47,7 @@ def get_image_url(blueprint, raw_github_url):
 	image_url = blueprint['image_url'] if 'image_url' in blueprint.keys() else None
 
 	if image_url is None and 'path' in blueprint.keys():
-		image_url = "{}/{}/logo.png"
+		image_url = "{}/{}/logo.png".format(raw_github_url, blueprint['path'])
 
 	return image_url
 
@@ -76,10 +78,11 @@ def main():
 		except yaml.YAMLError as exc:
 			print(exc)
 
+	head = Repository('.').head.name
 	git_url = catalog['git_url']
 	target_path = catalog['target_path']
-	github_url = catalog['github_url']
-	raw_github_url = catalog['raw_github_url']
+	github_url = "{}/{}".format(catalog['github_url'], head)
+	raw_github_url = "{}/{}".format(catalog['raw_github_url'], head)
 
 	create_build_directories()
 	for package in catalog['topics']:
