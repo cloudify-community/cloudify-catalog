@@ -5,16 +5,37 @@ import shutil
 import logging
 import datetime
 
+logging.basicConfig(level=logging.DEBUG)
+
 with open("catalog.yaml", 'r') as stream:
     try:
         catalog = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
         print(exc)
 
-logging.basicConfig(level=logging.DEBUG)
 git_url = catalog['git_url']
 target_path = catalog['target_path']
 github_url = catalog['github_url']
+
+def get_zip_url(blueprint):
+	zip_url = blueprint['zip_url'] if 'zip_url' in blueprint.keys() else None
+
+	if zip_url is None and 'path' in blueprint:
+		path = blueprint['path'][0:blueprint['path'].rfind("/")]
+		filename_path = ("%s/%s") % (path, blueprint['id'])
+		zip_url = "{}/{}.zip".format(target_path, filename_path)
+
+	return zip_url
+
+def get_html_url(blueprint):
+	html_url = blueprint['html_url'] if 'html_url' in blueprint.keys() else None
+
+	if html_url is None and 'path' in blueprint.keys():
+		path = blueprint['path'][0:blueprint['path'].rfind("/")]
+		html_url = "{}/{}".format(github_url, path)
+
+	return html_url
+
 for package in catalog['topics']:
 	catalog = []
 	logging.info('processing catalog %s' % package['name'])
@@ -23,13 +44,8 @@ for package in catalog['topics']:
 		
 
 		for blueprint in package['blueprints']:
-			zip_url = None
-			html_url = None
-			if 'zip_url' in blueprint.keys():
-				zip_url = blueprint['zip_url']
-
-			if html_url in blueprint.keys():
-				html_url = blueprint['html_url']
+			zip_url = get_zip_url(blueprint)
+			html_url = get_html_url(blueprint)
 
 			if 'path' in blueprint:
 				path = blueprint['path'][0:blueprint['path'].rfind("/")]
@@ -41,9 +57,6 @@ for package in catalog['topics']:
 				shutil.make_archive(output_filename, 'zip', path, dir_name)
 
 				filename_path = ("%s/%s") % (path, blueprint['id'])	
-
-				zip_url = "{}/{}.zip".format(target_path, filename_path) if zip_url is None else None
-				html_url = "{}/{}".format(github_url, path) if html_url is None else None
 
 			logging.info("processing blueprint %s" % blueprint['id'])
 
