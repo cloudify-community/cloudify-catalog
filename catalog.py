@@ -41,6 +41,14 @@ def get_readme_url(blueprint, raw_github_url):
 
 	return readme_url
 
+def get_image_url(blueprint, raw_github_url):
+	image_url = blueprint['image_url'] if 'image_url' in blueprint.keys() else None
+
+	if image_url is None and 'path' in blueprint.keys():
+		image_url = "{}/{}/logo.png"
+
+	return image_url
+
 def get_main_blueprint(blueprint):
 	main_blueprint = blueprint["main_blueprint"] if 'main_blueprint' in blueprint.keys() else "blueprint.yaml"
 	return main_blueprint
@@ -87,6 +95,7 @@ def main():
 				html_url = get_html_url(blueprint, github_url)
 				readme_url = get_readme_url(blueprint, raw_github_url)
 				main_blueprint = get_main_blueprint(blueprint)
+				image_url = get_image_url(blueprint, raw_github_url)
 
 				archive_blueprint(blueprint)
 
@@ -98,7 +107,7 @@ def main():
 				  "zip_url": zip_url,
 				  "readme_url": readme_url,
 				  "main_blueprint": main_blueprint,
-				  "image_url": blueprint["image_url"],
+				  "image_url": image_url,
 				  "crated_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
 				  "updated_at": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 				}
