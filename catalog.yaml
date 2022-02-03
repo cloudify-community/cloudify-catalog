@@ -1,5 +1,8 @@
+s3_base_url: https://repository.cloudifysource.org
+s3_bucket_name: cloudify-release-eu
+s3_bucket_directory: cloudify/blueprints
 git_url: https://github.com/cloudify-community/cloudify-catalog
-target_path: https://repository.cloudifysource.org/cloudify/blueprints/6.3
+target_path: https://repository.cloudifysource.org/cloudify/blueprints
 github_url: https://github.com/cloudify-community/cloudify-catalog/tree
 raw_github_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog
 

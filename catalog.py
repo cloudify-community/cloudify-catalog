@@ -1,3 +1,4 @@
+import re
 import os
 import yaml
 import json
@@ -70,6 +71,11 @@ def create_catalog(catalog_name, catalog):
 	with open(catalog_filename, "w+") as outfile:
 		outfile.write(json_object)
 
+def get_target_sub_folder(branch):
+	pattern = re.compile("(\\d+\\.\\d+)\\.\\d+\\-build")
+	result = re.match(pattern, branch)
+	return result.group(1) if result else "staging/{}".format(branch)
+
 def main():
 	with open("catalog.yaml", 'r') as stream:
 		try:
@@ -77,10 +83,11 @@ def main():
 		except yaml.YAMLError as exc:
 			print(exc)
 
-	head = Repository('.').head.name
+	head = Repository('.').head.shorthand
+	target_path_subfolder = get_target_sub_folder(head)
 
 	git_url = catalog['git_url']
-	target_path = catalog['target_path']
+	target_path = "{}/{}".format(catalog['target_path'], target_path_subfolder)
 	github_url = "{}/{}".format(catalog['github_url'], head)
 	raw_github_url = "{}/{}".format(catalog['raw_github_url'], head)
 
