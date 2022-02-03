@@ -232,7 +232,7 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: terraform_azure_vm
-        name: Azure VM
+        name: Azure_VM
         path: terraform/azure
         description: Create an Azure VM using Terraform automation
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/azure
@@ -240,7 +240,7 @@ topics:
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_gcp_vm
-        name: Google Cloud VM
+        name: Google_Cloud_VM
         path: terraform/gcp
         description: Create a GCP VM using Terraform automation
         html_url: https://github.com/cloudify-community/blueprint-catalog/tree/master/terraform/gcp
@@ -248,7 +248,7 @@ topics:
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_openstack_vm
-        name: OpenStack VM
+        name: OpenStack_VM
         path: terraform/openstack
         description: Create an OpenStack VM using Terraform automation
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/openstack
@@ -256,7 +256,7 @@ topics:
         main_blueprint: blueprint.yaml
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_aws_vm
-        name: AWS VM
+        name: AWS_VM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
         html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/aws
