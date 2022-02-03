@@ -11,13 +11,20 @@ from pygit2 import Repository
 logging.basicConfig(level=logging.DEBUG)
 
 def create_build_directories():
+	"""Creates a build directory and catalogs directory in it
+	"""
 	if not os.path.exists("build"):
 		os.mkdir("build")
 
 	if not os.path.exists("build/catalogs"):
 		os.mkdir("build/catalogs")
 
-def get_zip_url(blueprint, target_path):
+def get_zip_url(blueprint: dict, target_path: str) -> str:
+	"""Retrieves zip_url for blueprint
+
+	:param blueprint: blueprint settings
+	:return: zip_url from blueprint if exists other wise calculated 
+	"""
 	zip_url = blueprint['zip_url'] if 'zip_url' in blueprint.keys() else None
 
 	if zip_url is None and 'path' in blueprint:
@@ -27,7 +34,7 @@ def get_zip_url(blueprint, target_path):
 
 	return zip_url
 
-def get_html_url(blueprint, github_url):
+def get_html_url(blueprint: dict, github_url: str) -> str:
 	html_url = blueprint['html_url'] if 'html_url' in blueprint.keys() else None
 
 	if html_url is None and 'path' in blueprint.keys():
@@ -35,7 +42,7 @@ def get_html_url(blueprint, github_url):
 
 	return html_url
 
-def get_readme_url(blueprint, raw_github_url):
+def get_readme_url(blueprint: dict, raw_github_url: str) -> str:
 	readme_url = blueprint['readme_url'] if 'readme_url' in blueprint.keys() else None
 
 	if readme_url is None and 'path' in blueprint.keys():
@@ -43,7 +50,7 @@ def get_readme_url(blueprint, raw_github_url):
 
 	return readme_url
 
-def get_image_url(blueprint, raw_github_url):
+def get_image_url(blueprint: dict, raw_github_url: str) -> str:
 	image_url = blueprint['image_url'] if 'image_url' in blueprint.keys() else None
 
 	if image_url is None and 'path' in blueprint.keys():
@@ -51,11 +58,11 @@ def get_image_url(blueprint, raw_github_url):
 
 	return image_url
 
-def get_main_blueprint(blueprint):
+def get_main_blueprint(blueprint: dict) -> str:
 	main_blueprint = blueprint["main_blueprint"] if 'main_blueprint' in blueprint.keys() else "blueprint.yaml"
 	return main_blueprint
 
-def archive_blueprint(blueprint):
+def archive_blueprint(blueprint: dict):
 	if 'path' in blueprint:
 		path = blueprint['path'][0:blueprint['path'].rfind("/")]
 		dir_name = blueprint['path'][blueprint['path'].rfind("/")+1:]
@@ -64,14 +71,14 @@ def archive_blueprint(blueprint):
 
 		shutil.make_archive(output_filename, 'zip', path, dir_name)
 
-def create_catalog(catalog_name, catalog):
+def create_catalog(catalog_name: str, catalog: dict):
 	json_object = json.dumps(catalog, indent=4)
 	catalog_filename = "build/catalogs/%s.json" % catalog_name
 
 	with open(catalog_filename, "w+") as outfile:
 		outfile.write(json_object)
 
-def get_target_sub_folder(branch):
+def get_target_sub_folder(branch: str) -> str:
 	pattern = re.compile("(\\d+\\.\\d+)\\.\\d+\\-build")
 	result = re.match(pattern, branch)
 	return result.group(1) if result else "staging/{}".format(branch)
