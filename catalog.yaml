@@ -144,6 +144,10 @@ topics:
         name: AWS_VM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
+      - id: terraform_azure_vpc
+        name: Azure_VPC
+        path: terraform/azure_vpc
+        description: Create an Azure VPC using Terraform automation
       - id: terraform_aws_vpc
         name: AWS_VPC
         path: terraform/aws_vpc
