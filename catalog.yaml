@@ -144,11 +144,18 @@ topics:
         name: AWS_VM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
+      - id: terraform_aws_vpc
+        name: AWS_VPC
+        path: terraform/aws_vpc
+        description: Create an AWS VPC using Terraform automation
       - id: terraform_tfc
         name: Terraform_Cloud_Enterprise
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/tfc
+      - id: terraform_s3_aws
+        name: Terraform_S3_AWS
+        path: terraform/aws_s3
+        description: Create an AWS S3 using Terraform automation
   - name: helm_services
     target_path: s3_json_file
     blueprints:
