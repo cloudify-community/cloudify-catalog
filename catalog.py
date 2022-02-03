@@ -27,10 +27,9 @@ for package in catalog['topics']:
 			html_url = None
 			if 'zip_url' in blueprint.keys():
 				zip_url = blueprint['zip_url']
+
 			if html_url in blueprint.keys():
 				html_url = blueprint['html_url']
-			else:
-				html_url = ""
 
 			if 'path' in blueprint:
 				path = blueprint['path'][0:blueprint['path'].rfind("/")]
@@ -42,7 +41,9 @@ for package in catalog['topics']:
 				shutil.make_archive(output_filename, 'zip', path, dir_name)
 
 				filename_path = ("%s/%s") % (path, blueprint['id'])	
-				zip_url = "{}/{}.zip".format(target_path, filename_path)
+
+				zip_url = "{}/{}.zip".format(target_path, filename_path) if zip_url is None else None
+				html_url = "{}/{}".format(github_url, path) if html_url is None else None
 
 			logging.info("processing blueprint %s" % blueprint['id'])
 
