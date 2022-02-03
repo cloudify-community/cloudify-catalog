@@ -1,0 +1,37 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
+inputs:
+  azure_location_name:
+    type: string
+    display_label: Azure location
+    description: Select Azure location name
+    default: EastUS
+    constraints:
+      - valid_values:
+        - EastUS
+        - CentralUS
+        - WestUS
+        - WestEurope
+        - CanadaCentral
+
+capabilities:
+  cloud_type:
+    value: azure
+  cloud_credentials:
+    value:
+      azure_tenant_id: { get_secret: azure_tenant_id }
+      azure_subscription_id: { get_secret: azure_subscription_id }
+      azure_client_id: { get_secret: azure_client_id }
+      azure_client_secret: { get_secret: azure_client_secret }
+      public_key_content: { get_secret: public_key_content }
+      private_key_content: { get_secret: private_key_content }
+      region_name: { get_input: azure_location_name }
+
