@@ -144,6 +144,10 @@ topics:
         name: AWS_VM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
+      - id: terraform_eks
+        name: AWS_EKS
+        path: terraform/eks
+        description: Create an EKS AWS using Terraform automation
       - id: terraform_azure_vpc
         name: Azure_VPC
         path: terraform/azure_vpc
