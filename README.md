@@ -1,5 +1,6 @@
 # Cloudify Catalog
 
+TODO: Add a pipeline to generate the artifacts and upload to S3 bucket
 
 ## General
 
@@ -94,10 +95,17 @@ The python that generates all the resources is `catalog.py`.
 
 Create a virtual environment `venv` in the root directory.
 
+In the root directory run:
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
 To run the code it's required to install 2 packages:
 ```
 pip install pyyaml
 pip install pygit2
+pip install boto3
 ```
 
 To generate all the resources run the following command:
