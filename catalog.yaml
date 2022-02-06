@@ -175,10 +175,10 @@ topics:
         name: Terraform_S3_AWS
         path: terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
-      - id: terraform_aws_rds_mysql
-        name: Terraform_AWS_RDS_MySql
-        path: terraform/aws_rds_mysql
-        description: Create an AWS MySql database service using Terraform automation
+      - id: terraform_aws_rds_postgresql
+        name: Terraform_AWS_RDS_PostgreSql
+        path: terraform/aws_rds_postgresql
+        description: Create an AWS Postgresql database service using Terraform automation
   - name: helm_services
     target_path: s3_json_file
     blueprints:
