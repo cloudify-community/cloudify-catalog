@@ -9,12 +9,14 @@ inputs:
   resource_prefix:
     type: string
     description: The resource prefix for resources naming
+    display_label: The resource prefix for resources naming
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
   azure_location_name:
     type: string
     description: Azure location name
+    display_label: The resource prefix for resources naming
     default: EastUS
     constraints:
       - valid_values:
@@ -71,3 +73,20 @@ capabilities:
     description: |
       Location of the resources
     value: { get_input : azure_location_name }
+  kubernetes_cluster_host:
+    description: |
+      Kubernetes Cluster host
+    value: { get_attribute: [ terraform_module, outputs, host ] }
+  kube_config:
+    description: |
+      Kubernetes Configuration
+    value: { get_attribute: [ terraform_module, outputs, kube_config ] }
+  kubernetes_cluster_username:
+    description: |
+      Kubernetes Cluster Username
+    value: { get_attribute: [ terraform_module, outputs, cluster_username ] }
+  kubernetes_cluster_password:
+    description: |
+      Kubernetes Cluster Password
+    value: { get_attribute: [ terraform_module, outputs, cluster_password ] }
+  
