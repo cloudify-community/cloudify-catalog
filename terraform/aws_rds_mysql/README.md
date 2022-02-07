@@ -27,7 +27,7 @@ cloudify-terraform-plugin
 | Display Label                            | Name                | Type   | Default Value |
 | ---------------------------------------- | ------------------- | ------ | ------------- |
 | The resource prefix for resources naming | resource_prefix     | string | ''            |
-| AWS region name                          | region_name         | string | us-west-1     |
+| The password for database admin          | db_password         | string | 'password'    |
 
 If the user provides empty value of default the prefix will be gerenated automatically.
 
