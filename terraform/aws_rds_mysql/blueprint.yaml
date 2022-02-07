@@ -13,7 +13,7 @@ labels:
 inputs:
   password:
     type: string
-    descritpion: The password for database user
+    description: The password for database user
     display_label: The password for database user
     default: 'password'
     constraints:
