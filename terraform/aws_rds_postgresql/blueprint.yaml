@@ -62,17 +62,17 @@ node_templates:
 capabilities:
   rds_username:
     description: |
-      RDS MySql username
+      RDS PostgreSql username
     value: { get_attribute: [ terraform_module, outputs, rds_username ] }
   rds_port:
     description: |
-      RDS MySql port
+      RDS PostgreSql port
     value: { get_attribute: [ terraform_module, outputs, rds_port ] }
   rds_hostname:
     description: |
-      RDS MySql hostname
+      RDS PostgreSql hostname
     value: { get_attribute: [ terraform_module, outputs, rds_hostname ] }
   rds_password: 
     description: |
-      RDS MySql password
+      RDS PostgreSql password
     value: { get_attribute: [ terraform_module, outputs, rds_password ] }

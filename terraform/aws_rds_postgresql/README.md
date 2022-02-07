@@ -2,7 +2,7 @@
 
 ## General
 
-The blueprint creates Postgresql datbase service in the AWS cloud provider environment.
+The blueprint creates Postgresql database service in the AWS cloud provider environment.
 
 ## Requirements
 

@@ -2,7 +2,7 @@
 
 ## General
 
-The blueprint creates MySQL datbase service in the AWS cloud provider environment.
+The blueprint creates MySQL database service in the AWS cloud provider environment.
 
 ## Requirements
 
