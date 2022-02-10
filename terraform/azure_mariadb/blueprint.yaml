@@ -15,7 +15,7 @@ inputs:
     type: string
     description: The password for database user
     display_label: The password for database user
-    default: 'Cloudify193!'
+    default: 'P@ssw0rd!9748'
     constraints:
       - pattern: '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,16}$'
   resource_prefix: 
