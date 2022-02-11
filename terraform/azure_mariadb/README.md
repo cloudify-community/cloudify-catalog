@@ -30,10 +30,8 @@ cloudify-terraform-plugin
 | ---------------------------------------- | ----------------| ------ | -------------- |
 | The resource prefix for resources naming | resource_prefix | string | ''             |
 | Azure location name                      | region          | string | EastUS         |
-| The password for database user           | password        | string | 
 
 If the user provides empty value of default the prefix will be gerenated automatically.
-
 
 ## Node Types
 
