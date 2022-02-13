@@ -175,6 +175,10 @@ topics:
         name: Terraform_S3_AWS
         path: terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
+      - id: terraform_azure_postgres
+        name: Terraform_Azure_Postgres
+        path: terraform/azure_postgres
+        description: Create an Azure Postgres DB using Terraform automation
   - name: helm_services
     target_path: s3_json_file
     blueprints:
