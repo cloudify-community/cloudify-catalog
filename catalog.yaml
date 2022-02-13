@@ -206,6 +206,18 @@ topics:
         name: Kubernetes on GCP GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
+     -  id: tf_kube_gke
+        name: Tf_Kube_GKE
+        path: kubernetes/terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation
+     -  id: tf_kube_aks
+        name: Tf_Kube_AKS
+        path: kubernetes/terraform/aks
+        description: Create an Azure Kubernetes using Terraform automation
+      - id: tf_kube_eks
+        name: Tf_Kube_EKS
+        path: kubernetes/terraform/gke
+        description: Create an AWS Kubernetes using Terraform automation
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
