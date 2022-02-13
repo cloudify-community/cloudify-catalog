@@ -11,36 +11,20 @@ labels:
       - service
 
 inputs:
-  resource_prefix:
+  password:
+    type: string
+    description: The password for database user
+    display_label: The password for database user
+    default: 'password'
+    constraints:
+      - pattern: '^[a-zA-Z0-9_.-]*$'
+  resource_prefix: 
     type: string
     description: The resource prefix for resources naming
     display_label: The resource prefix for resources naming
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-  region_name:
-    type: string
-    description: AWS region name
-    display_label: AWS region name
-    default: 'us-west-1'
-    contraints:
-      - valid_values:
-        - us-east-1 #US East (N. Virginia)
-        - us-east-2 #US East (Ohio) 
-        - us-west-1 #US West (N. California)  
-        - us-west-2 #US West (Oregon) 
-        - ca-central-1  #Canada (Central) 
-        - eu-central-1  #Europe (Frankfurt) 
-        - eu-west-1 #Europe (Ireland) 
-        - eu-west-2 #Europe (London)  
-        - eu-south-1  #Europe (Milan) 
-        - eu-west-3 #Europe (Paris) 
-        - eu-north-1  #Europe (Stockholm) 
-        - ap-northeast-3  #Asia Pacific (Osaka) 
-        - ap-northeast-2  #Asia Pacific (Seoul) 
-        - ap-southeast-1  #Asia Pacific (Singapore) 
-        - ap-southeast-2  #Asia Pacific (Sydney)  
-        - ap-northeast-1  #Asia Pacific (Tokyo) 
 
 node_templates:
   prefix:
@@ -57,15 +41,18 @@ node_templates:
   terraform_module:
     type: cloudify.nodes.terraform.Module
     properties:
+      general_executor_process:
+        max_sleep_time: 2500
+      max_stored_filesize: 1500000
       resource_config:
         environment_variables:
           AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
           AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
         variables:
-          bucket_name: { concat: [ { get_attribute: [ prefix, value ] }, bucket ] }
-          bucket_region: { get_input: region_name }
+          prefix: { get_attribute : [prefix, value] } 
+          password: { get_input : password } 
         source:
-          location: templates/tf-bucket-master.zip
+          location: templates/tf-postgresql-master.zip
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on
@@ -73,5 +60,19 @@ node_templates:
         type: cloudify.terraform.relationships.run_on_host
 
 capabilities:
-  bucket_url:
-    value: { concat: [ 'https://', { get_attribute: [ terraform_module, resources, bucket, instances, 0, attributes, bucket_regional_domain_name ] } ] }
+  rds_username:
+    description: |
+      RDS PostgreSql username
+    value: { get_attribute: [ terraform_module, outputs, rds_username ] }
+  rds_port:
+    description: |
+      RDS PostgreSql port
+    value: { get_attribute: [ terraform_module, outputs, rds_port ] }
+  rds_hostname:
+    description: |
+      RDS PostgreSql hostname
+    value: { get_attribute: [ terraform_module, outputs, rds_hostname ] }
+  rds_password: 
+    description: |
+      RDS PostgreSql password
+    value: { get_attribute: [ terraform_module, outputs, rds_password ] }

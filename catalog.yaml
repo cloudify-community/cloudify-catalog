@@ -179,6 +179,14 @@ topics:
         name: Terraform_Azure_Mysql
         path: terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
+      - id: terraform_aws_rds_postgresql
+        name: Terraform_AWS_RDS_PostgreSql
+        path: terraform/aws_rds_postgresql
+        description: Create an AWS Postgresql database service using Terraform automation
+      - id: terraform_azure_postgres
+        name: Terraform_Azure_Postgres
+        path: terraform/azure_postgres
+        description: Create an Azure Postgres DB using Terraform automation
   - name: helm_services
     target_path: s3_json_file
     blueprints:
@@ -210,6 +218,18 @@ topics:
         name: Kubernetes on GCP GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
+     -  id: tf_kube_gke
+        name: Tf_Kube_GKE
+        path: kubernetes/terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation
+     -  id: tf_kube_aks
+        name: Tf_Kube_AKS
+        path: kubernetes/terraform/aks
+        description: Create an Azure Kubernetes using Terraform automation
+      - id: tf_kube_eks
+        name: Tf_Kube_EKS
+        path: kubernetes/terraform/gke
+        description: Create an AWS Kubernetes using Terraform automation
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
@@ -225,6 +245,12 @@ topics:
         name: GCP Account
         path: k8s_discovery/gcp/gcp-account
         description: GCP Account Representation
-
+  - name: vmware_services
+    target_path: s3_json_file
+    blueprints:
+      - id: vsphere_vm
+        name: vSphere_VM
+        path: vmware/vsphere
+        description: Create vSphere VM
 
 
