@@ -131,36 +131,36 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: terraform_azure_vm
-        name: Azure_VM
+        name: Terraform_Azure_VM
         path: terraform/azure
         description: Create an Azure VM using Terraform automation
       - id: terraform_gcp_vm
-        name: Google_Cloud_VM
+        name: Terraform_GCP_VM
         path: terraform/gcp
         description: Create a GCP VM using Terraform automation
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/README.md
       - id: terraform_openstack_vm
-        name: OpenStack_VM
+        name: Terraform_OpenStack_VM
         path: terraform/openstack
         description: Create an OpenStack VM using Terraform automation
       - id: terraform_aws_vm
-        name: AWS_VM
+        name: Terraform_AWS_VM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
       - id: terraform_azure_storage
-        name: Azure_Storage
+        name: Terraform_Azure_Storage
         path: terraform/azure_storage
         description: Create an Azure Blob Storage automation
       - id: terraform_eks
-        name: AWS_EKS
+        name: Terraform_AWS_EKS
         path: terraform/eks
         description: Create an EKS AWS using Terraform automation
       - id: terraform_azure_vpc
-        name: Azure_VPC
+        name: Terraform_Azure_VPC
         path: terraform/azure_vpc
         description: Create an Azure VPC using Terraform automation
       - id: terraform_aws_vpc
-        name: AWS_VPC
+        name: Terraform_AWS_VPC
         path: terraform/aws_vpc
         description: Create an AWS VPC using Terraform automation
       - id: terraform_tfc
@@ -168,11 +168,11 @@ topics:
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
       - id: terraform_gke
-        name: Terraform_GKE
+        name: Terraform_GCP_GKE
         path: terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
       - id: terraform_s3_aws
-        name: Terraform_S3_AWS
+        name: Terraform_AWS_S3
         path: terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
       - id: terraform_aws_rds_mariadb
@@ -188,7 +188,7 @@ topics:
         path: terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
       - id: terraform_aws_rds_postgresql
-        name: Terraform_AWS_RDS_PostgreSql
+        name: Terraform_AWS_RDS_Postgres
         path: terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
       - id: terraform_azure_postgres
@@ -227,15 +227,15 @@ topics:
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
      -  id: tf_kube_gke
-        name: Tf_Kube_GKE
+        name: Terraform_Kubernetes_GCP_GKE
         path: kubernetes/terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
      -  id: tf_kube_aks
-        name: Tf_Kube_AKS
+        name: Terraform_Kubernetes_Azure_AKS
         path: kubernetes/terraform/aks
         description: Create an Azure Kubernetes using Terraform automation
       - id: tf_kube_eks
-        name: Tf_Kube_EKS
+        name: Terraform_Kubernetes_AWS_EKS
         path: kubernetes/terraform/gke
         description: Create an AWS Kubernetes using Terraform automation
   - name: K8S_Discovery
