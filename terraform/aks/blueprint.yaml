@@ -16,7 +16,7 @@ inputs:
   azure_location_name:
     type: string
     description: Azure location name
-    display_label: The resource prefix for resources naming
+    display_label: Azure location name
     default: EastUS
     constraints:
       - valid_values:
