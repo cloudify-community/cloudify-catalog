@@ -266,7 +266,7 @@ topics:
     blueprints:
       - id: vsphere_vm
         name: vSphere_VM
-        path: vmware/vsphere
+        path: vsphere/vm
         description: Create vSphere VM
 
 
