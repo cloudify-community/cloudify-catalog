@@ -175,6 +175,10 @@ topics:
         name: Terraform_AWS_S3
         path: terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
+      - id: terraform_azure_oracale
+        name: Terraform_Azure_Oracle
+        path: terraform/azure_oracle
+        description: Create an Azure Oracle database using Terraform automation
       - id: terraform_aws_rds_mariadb
         name: Terraform_AWS_RDS_MariaDB
         path: terraform/aws_rds_mariadb
