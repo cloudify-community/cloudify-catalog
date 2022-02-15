@@ -167,6 +167,10 @@ topics:
         name: Terraform_Cloud_Enterprise
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
+      - id: terraform_aks
+        name: AKS_Terraform
+        path: terraform/aks
+        description: Create an AKS using Terraform automation
       - id: terraform_gke
         name: Terraform_GCP_GKE
         path: terraform/gke
