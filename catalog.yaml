@@ -234,11 +234,11 @@ topics:
         name: Kubernetes on GCP GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
-     -  id: tf_kube_gke
+      - id: tf_kube_gke
         name: Terraform_Kubernetes_GCP_GKE
         path: kubernetes/terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
-     -  id: tf_kube_aks
+      - id: tf_kube_aks
         name: Terraform_Kubernetes_Azure_AKS
         path: kubernetes/terraform/aks
         description: Create an Azure Kubernetes using Terraform automation
