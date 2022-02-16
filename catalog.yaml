@@ -168,7 +168,7 @@ topics:
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
       - id: terraform_aks
-        name: AKS_Terraform
+        name: Terraform_Azure_AKS
         path: terraform/aks
         description: Create an AKS using Terraform automation
       - id: terraform_gke
@@ -223,15 +223,15 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: Kubernetes_AWS_EKS
-        name: Kubernetes on AWS EKS
+        name: Kubernetes_AWS_EKS
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
       - id: Kubernetes_Azure_AKS
-        name: Kubernetes on Azure AKS
+        name: Kubernetes_Azure_AKS
         path: kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
       - id: Kubernetes_GCP_GKE
-        name: Kubernetes on GCP GKE
+        name: Kubernetes_GCP_GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
       - id: tf_kube_gke
