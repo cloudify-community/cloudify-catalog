@@ -142,6 +142,11 @@ topics:
         path: terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_rds_mysql
+        name: Terraform_AWS_RDS_MySQL
+        path: terraform/aws_rds_mysql
+        description: Create an AWS RDS MySQL using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
   - name: azure_services
     target_path: s3_json_file
     blueprints:
@@ -190,6 +195,11 @@ topics:
         name: Terraform_Azure_Postgres
         path: terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_mariadb
+        name: Terraform_Azure_MariaDB
+        path: terraform/azure_mariadb
+        description: Create an Azure MariaDB using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
   - name: GCP
     target_path: s3_json_file
@@ -274,6 +284,14 @@ topics:
         name: Terraform_Azure_Postgres
         path: terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
+      - id: terraform_azure_mariadb
+        name: Terraform_Azure_MariaDB
+        path: terraform/azure_mariadb
+        description: Create an Azure MariaDB using Terraform automation
+      - id: terraform_aws_rds_mysql
+        name: Terraform_AWS_RDS_MySQL
+        path: terraform/aws_rds_mysql
+        description: Create an AWS RDS MySQL using Terraform automation
   - name: helm_services
     target_path: s3_json_file
     blueprints:
