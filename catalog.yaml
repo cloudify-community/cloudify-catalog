@@ -201,6 +201,11 @@ topics:
         path: terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_aks
+        name: AKS_Terraform
+        path: terraform/aks
+        description: Create an AKS using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
   - name: GCP
     target_path: s3_json_file
     blueprints:
