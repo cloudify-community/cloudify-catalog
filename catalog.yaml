@@ -107,6 +107,41 @@ topics:
         path: aws/sqs
         description: Creating SQS
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/README.md
+      - id: terraform_aws_vm
+        name: Terraform_AWS_VM
+        path: terraform/aws
+        description: Create an AWS VM using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: terraform_eks
+        name: Terraform_AWS_EKS
+        path: terraform/eks
+        description: Create an EKS AWS using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png	
+      - id: terraform_aws_vpc
+        name: Terraform_AWS_VPC
+        path: terraform/aws_vpc
+        description: Create an AWS VPC using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: terraform_s3_aws
+        name: Terraform_AWS_S3
+        path: terraform/aws_s3
+        description: Create an AWS S3 using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: terraform_aws_rds_mariadb
+        name: Terraform_AWS_RDS_MariaDB  
+        path: terraform/aws_rds_mariadb
+        description: Create an AWS RDS MariaDB using Terraform 
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: terraform_rds_oracle
+        name: Terraform_AWS_RDS_Oracle  
+        path: terraform/aws_rds_oracle
+        description: Create an AWS RDS Oracle using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: terraform_aws_rds_postgresql
+        name: Terraform_AWS_RDS_Postgres
+        path: terraform/aws_rds_postgresql
+        description: Create an AWS Postgresql database service using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
   - name: azure_services
     target_path: s3_json_file
     blueprints:
@@ -126,7 +161,43 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
+      - id: terraform_azure_vm
+        name: Terraform_Azure_VM
+        path: terraform/azure
+        description: Create an Azure VM using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: terraform_azure_storage
+        name: Terraform_Azure_Storage
+        path: terraform/azure_storage
+        description: Create an Azure Blob Storage automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: terraform_azure_vpc
+        name: Terraform_Azure_VPC
+        path: terraform/azure_vpc
+        description: Create an Azure VPC using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: terraform_azure_oracale
+        name: Terraform_Azure_Oracle
+        path: terraform/azure_oracle
+        description: Create an Azure Oracle database using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: terraform_azure_mysql
+        name: Terraform_Azure_Mysql
+        path: terraform/azure_mysql
+        description: Create an Azure Mysql database using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: terraform_azure_postgres
+        name: Terraform_Azure_Postgres
+        path: terraform/azure_postgres
+        description: Create an Azure Postgres DB using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
   - name: GCP
+    target_path: s3_json_file
+    blueprints:
+      - id: terraform_gke
+        name: Terraform_GCP_GKE
+        path: terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation 
   - name: terraform_services
     target_path: s3_json_file
     blueprints:
