@@ -69,6 +69,7 @@ node_templates:
           prefix: { get_attribute : [prefix, value] } 
         source:
           location: templates/tf-eks-master.zip
+        source_path: tf-eks-master
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on
