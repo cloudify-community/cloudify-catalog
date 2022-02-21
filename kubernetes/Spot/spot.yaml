@@ -42,8 +42,8 @@ node_templates:
           location: { get_input: module_source }
         source_path: { get_input: terraform_template_location }
         variables:
-          spotinst_account: { get_secret: SPOT_ACCOUNT_ID}
-          spotinst_token: { get_secret: SPOT_TOKEN}
+          spotinst_account: { get_secret: SPOT_ACCOUNT_ID }
+          spotinst_token: { get_secret: SPOT_TOKEN }
         environment_variables:
           AWS_ACCESS_KEY_ID: { get_secret: AWS_ACCESS_KEY_ID }
           AWS_SECRET_ACCESS_KEY: { get_secret: AWS_SECRET_ACCESS_KEY }

@@ -250,7 +250,6 @@ topics:
         name: SpotOcean optimized cluster
         path: kubernetes/spot
         description: Create a Spot Ocean Kubernetes cost optimized Cluster
-        image_url: kubernetes/spot/spot.png
         readme_url: kubernetes/spot/README.md
   - name: K8S_Discovery
     target_path: s3_json_file
