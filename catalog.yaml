@@ -31,7 +31,7 @@ topics:
         path: certified_environments/services/aws/psql
         description: Creating PostgreSQL service
       - id: RdsPsqlAWS
-        name: RdsPsqAWS
+        name: RdsPsqlAWS
         path: certified_environments/services/aws/rds_psql
         description: Creating PostgreSQL on RDS service
       - id: S3AWS
