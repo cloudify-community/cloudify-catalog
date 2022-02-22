@@ -22,6 +22,8 @@ catalog_mandatory_fileds = [
 	RAW_GITHUB_URL
 ]
 
+logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.DEBUG)
+
 
 def validate_url(value: str) -> bool:
 	return value is not None and validators.url(value)
