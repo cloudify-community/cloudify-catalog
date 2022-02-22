@@ -51,6 +51,7 @@ node_templates:
           rg_location: { get_input: region_name }
         source:
           location: templates/tf-blob-master.zip
+        source_path: tf-blob-master
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on

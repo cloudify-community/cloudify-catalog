@@ -89,6 +89,7 @@ node_templates:
           project_id: { get_input: project_id }
         source:
           location: templates/tf-gke-master.zip
+        source_path: tf-gke-master
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on
