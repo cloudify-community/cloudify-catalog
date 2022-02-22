@@ -116,7 +116,7 @@ topics:
         name: Terraform_AWS_EKS
         path: terraform/eks
         description: Create an EKS AWS using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png	
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
       - id: tf_aws_vpc
         name: Terraform_AWS_VPC
         path: terraform/aws_vpc
@@ -361,5 +361,3 @@ topics:
         name: vSphere_VM
         path: vsphere/vm
         description: Create vSphere VM
-
-

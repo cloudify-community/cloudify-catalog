@@ -212,7 +212,9 @@ with open("catalog.yaml", 'r') as stream:
 	try:
 		catalog = yaml.safe_load(stream)
 	except yaml.YAMLError as exc:
-		print(exc)
+		logging.error(exc)
+		logging.error("Failed to process catalog.yaml file")
+		exit(1)
 
 c = Catalog(**catalog)
 if not c.validate():
