@@ -126,7 +126,6 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-  - name: GCP
   - name: terraform_services
     target_path: s3_json_file
     blueprints:
@@ -218,20 +217,19 @@ topics:
         name: NodeJS
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
-  - name: Ansible
   - name: k8s_services
     target_path: s3_json_file
     blueprints:
       - id: Kubernetes_AWS_EKS
-        name: Kubernetes on AWS EKS
+        name: Kubernetes_on_AWS_EKS
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
       - id: Kubernetes_Azure_AKS
-        name: Kubernetes on Azure AKS
+        name: Kubernetes_on_Azure_AKS
         path: kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
       - id: Kubernetes_GCP_GKE
-        name: Kubernetes on GCP GKE
+        name: Kubernetes_on_GCP_GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
       - id: tf_kube_gke
@@ -250,15 +248,15 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: aws_account
-        name: AWS Account
+        name: AWS_Account
         path: k8s_discovery/aws/aws-account
         description: AWS Account Representation
       - id: azure_account
-        name: Azure account
+        name: Azure_Account
         path: k8s_discovery/azure/azure-account
         description: Azure Account Representation
       - id: gcp-account
-        name: GCP Account
+        name: GCP_Account
         path: k8s_discovery/gcp/gcp-account
         description: GCP Account Representation
   - name: vmware_services
