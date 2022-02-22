@@ -247,7 +247,7 @@ topics:
         path: kubernetes/terraform/gke
         description: Create an AWS Kubernetes using Terraform automation
       - id: spot_ocean
-        name: SpotOcean optimized cluster
+        name: SpotOcean_optimized_cluster
         path: kubernetes/spot
         description: Create a Spot Ocean Kubernetes cost optimized Cluster
         readme_url: kubernetes/spot/README.md
