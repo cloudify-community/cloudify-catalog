@@ -116,7 +116,7 @@ topics:
         name: Terraform_AWS_EKS
         path: terraform/eks
         description: Create an EKS AWS using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png	
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
       - id: tf_aws_vpc
         name: Terraform_AWS_VPC
         path: terraform/aws_vpc
@@ -312,7 +312,6 @@ topics:
         name: NodeJS
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
-  - name: Ansible
   - name: k8s_services
     target_path: s3_json_file
     blueprints:
@@ -344,15 +343,15 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: aws_account
-        name: AWS Account
+        name: AWS_Account
         path: k8s_discovery/aws/aws-account
         description: AWS Account Representation
       - id: azure_account
-        name: Azure account
+        name: Azure_Account
         path: k8s_discovery/azure/azure-account
         description: Azure Account Representation
       - id: gcp-account
-        name: GCP Account
+        name: GCP_Account
         path: k8s_discovery/gcp/gcp-account
         description: GCP Account Representation
   - name: vmware_services
@@ -362,5 +361,3 @@ topics:
         name: vSphere_VM
         path: vsphere/vm
         description: Create vSphere VM
-
-
