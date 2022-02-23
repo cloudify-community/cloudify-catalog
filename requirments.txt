@@ -1,2 +1,4 @@
 validators
 pyyaml
+pygit2
+boto3
