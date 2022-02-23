@@ -22,21 +22,43 @@ catalog_mandatory_fileds = [
 	RAW_GITHUB_URL
 ]
 
-logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 
 def validate_url(value: str) -> bool:
+	"""Validates if the value is URL
+
+	:param value: string to be validated
+	:return: True if the vlue is URL
+	"""
 	return value is not None and validators.url(value)
 
 def validate_id_value(value: str) -> bool:
+	"""Validates if the value contains of digits, latters, -, _ only
+
+	:param value: string to be validated
+	:return: True if the value is not None and valid id
+	"""
+
 	regexp = re.compile('^[0-9a-zA-Z\-\_]+$')
 	return value and regexp.search(value)
 
 def validate_path(value: str) -> bool:
+	"""Validates if the value is a path
+
+	:param value: string to be validated
+	:return: True if the value is a path
+	"""
 	regexp = re.compile('^[0-9a-zA-Z\-\_\/]+$')
 	return value and regexp.search(value)
 
 def validate_path_exists(value: str) -> bool:
+
+	"""Validates if the value is a relative path within the directory
+
+	:param value: path to be validated
+	:retrun: True if the value is existing path
+	"""
 	return validate_path(value) and os.path.isdir(value)
 
 class Blueprint:
@@ -44,6 +66,13 @@ class Blueprint:
 		self.__dict__.update(kwargs)
 
 	def validate_mandatory_fields(self) -> bool:
+		"""Validates if the instance's mandatory properties are defined:
+			- id
+			- name
+			- path
+			- description
+		:return: True if all the required properties are defined
+		"""
 		result = True
 		mandatory_fields = ["id", "name", "path", "description"]
 		for mandatory_field in mandatory_fields:
@@ -53,6 +82,19 @@ class Blueprint:
 		return result
 
 	def validate_allowed_properies_only(self) -> bool:
+		"""Validates that the instance has only known properties
+			- id
+			- name
+			- path
+			- description
+			- html_url
+			- zip_url
+			- readme_url
+			- main_blueprint
+			- image_url
+
+		:return: True if only known properties are defined
+		"""
 		result = True
 		allowed_fields = ["id", "name", "path", "description", "html_url", "zip_url", "readme_url", "main_blueprint", "image_url"]
 		for field in self.__dict__.keys():
@@ -62,6 +104,15 @@ class Blueprint:
 		return result
 
 	def validate(self) -> bool:
+		"""Validates if the instance addresses the following criteria:
+			- All the mandatory properties are defined
+			- All the defined properties are known
+			- if and name property are correct
+			- path is valid directory path and exists
+			- html_url, zip_url, readme_url, image_url are valid URLs
+
+		:return: True if all the validations passed
+		"""
 		result = self.validate_mandatory_fields()
 		if not self.validate_allowed_properies_only():
 			result = False
@@ -117,6 +168,13 @@ class Topic:
 
 
 	def validate_mandatory_fields(self) -> bool:
+		"""Validates if the instance's mandatory properties are defined:
+			- name
+			- target_path
+			- blueprints
+
+		:return: True if all the required properties are defined
+		"""
 		result = True
 		mandatory_fields = ["name", "target_path", "blueprints"]
 		for mandatory_filed in mandatory_fields:
@@ -126,6 +184,10 @@ class Topic:
 		return result
 
 	def validate_blueprints_ids_unique(self) -> bool:
+		"""All the blueprints has unique ids
+
+		:return: True if there are no two blueprints with the same id
+		"""
 		result = False
 		blueprints_ids = []
 		if "blueprints" in self.__dict__.keys():
@@ -138,6 +200,13 @@ class Topic:
 		return False
 
 	def validate(self) -> bool:
+		"""Validates if the instance addresses:
+			- all the mandatory properties defined
+			- all the blueprints have unique id
+			- all the blueprints are valid
+
+		:return: True if the instance is valid
+		"""
 		result = self.validate_mandatory_fields()
 		if not validate_id_value(self.name):
 			logging.error("name \"{}\" is not valid".format(self.name))
@@ -159,6 +228,17 @@ class Catalog:
 				self.topics.append(Topic(**topic))
 
 	def validate_mandatory_fields(self) -> bool:
+		"""Validates if the instance's mandatory properties are defined:
+			- s3_base_url
+			- s3_bucket_name
+			- s3_bucket_directory
+			- git_url
+			- target_path
+			- github_url
+			- raw_github_url
+
+		:return: True if all the required properties are defined
+		"""
 		result = True
 		mandatory_fileds = [S3_BASE_URL, S3_BUCKET_NAME, S3_BUCKET_DIRECTORY, GIT_URL, TARGET_PATH, GITHUB_URL, RAW_GITHUB_URL]
 		for mandatory_filed in mandatory_fileds:
@@ -168,6 +248,10 @@ class Catalog:
 		return result
 
 	def validate_topics_names_unique(self) -> bool:
+		"""All the topics has unique name
+
+		:return: True if there are no two topics with the same name
+		"""
 		result = True
 		topic_names = []
 		for topic in self.topics:
@@ -179,6 +263,16 @@ class Catalog:
 		return False
 
 	def validate(self) -> bool:
+		"""Validates if the instance addresses:
+			- all the mandatory properties defined
+			- s3_bucket_name is valid
+			- s3_bucket_directory is a path
+			- git_url, target_path, github_url, raw_github_url are URLs
+			- all the topics have unique names
+			- all the topics are valid
+
+		:return: True if the instance is valid
+		"""
 		result = True
 		result = result or self.validate_mandatory_fields()
 		if not validate_url(self.s3_base_url):
@@ -208,14 +302,18 @@ class Catalog:
 				result = False
 		return result
 
-with open("catalog.yaml", 'r') as stream:
-	try:
-		catalog = yaml.safe_load(stream)
-	except yaml.YAMLError as exc:
-		logging.error(exc)
-		logging.error("Failed to process catalog.yaml file")
+def main():
+	with open("catalog.yaml", 'r') as stream:
+		try:
+			catalog = yaml.safe_load(stream)
+		except yaml.YAMLError as exc:
+			logging.error(exc)
+			logging.error("Failed to process catalog.yaml file")
+			exit(1)
+
+	c = Catalog(**catalog)
+	if not c.validate():
 		exit(1)
 
-c = Catalog(**catalog)
-if not c.validate():
-	exit(1)
+if __name__ == "__main__":
+	main()
