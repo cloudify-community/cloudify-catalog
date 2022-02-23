@@ -54,7 +54,8 @@ pipeline{
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             sh """
               set -eux
-              apk update && apk add python3-dev gcc libc-dev
+              apk update && apk upgrade
+              apk add python3-dev gcc libc-dev
               pip install --upgrade pip
               pip install flake8
               pip install -r requirements.txt
