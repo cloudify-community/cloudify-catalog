@@ -53,6 +53,7 @@ def validate_path(value: str) -> bool:
 	return value and regexp.search(value)
 
 def validate_path_exists(value: str) -> bool:
+
 	"""Validates if the value is a relative path within the directory
 
 	:param value: path to be validated

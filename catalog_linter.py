@@ -12,6 +12,7 @@ EMPTY_VALUE_ERROR_MESSAGE = "Blueprint property {} value can't be empty"
 URL_ERROR_MESSAGE = "Blueprint property {} value must be a valid URL, the value is \"{}\""
 YAML_FILE_ERROR_MESSAGE = "Blueprint property {} value must be a path to a yaml file, the value is \"{}\""
 DATE_ERROR_MESSAGE = "Blueprint property {} value must be a value, the value is \"{}\""
+
 INVALID_VALUE_ERROR_MESSAGE = "invalid {}} value \"{}\""
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
@@ -134,6 +135,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
-
-
