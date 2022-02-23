@@ -10,7 +10,7 @@ def podTemplate = """
                         cpu: 0.3
                         memory: 256Mi
                   - name: python
-                    image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
+                    image: python:3.8-alpine
                     resources:
                       requests:
                         cpu: 1
@@ -54,6 +54,9 @@ pipeline{
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             sh """
               set -eux
+              apk update && apk add python3-dev \
+                        gcc \
+                        libc-dev
               pip install --upgrade pip
               pip install flake8
               pip install -r requirements.txt
