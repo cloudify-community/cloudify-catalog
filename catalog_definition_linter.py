@@ -312,8 +312,8 @@ def main():
 			exit(1)
 
 	c = Catalog(**catalog)
-	if not c.validate():
-		exit(1)
+	# if not c.validate():
+	# 	exit(1)
 
 if __name__ == "__main__":
 	main()
