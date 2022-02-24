@@ -55,9 +55,7 @@ pipeline{
             sh """
               set -eux
               pip install --upgrade pip
-              pip install flake8
               pip install -r requirements.txt
-              pip install .
             """
           }
         }
