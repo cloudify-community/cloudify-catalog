@@ -312,6 +312,7 @@ def main():
 			exit(1)
 
 	c = Catalog(**catalog)
+	c.validate()
 	# if not c.validate():
 	# 	exit(1)
 
