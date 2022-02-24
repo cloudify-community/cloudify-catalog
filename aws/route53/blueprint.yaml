@@ -58,7 +58,7 @@ node_templates:
       target: instance
     interfaces:
       cloudify.interfaces.lifecycle:
-        create:
+        precreate:
           implementation: aws.cloudify_aws.route53.resources.record_set.prepare
           inputs:
             resource_config:
