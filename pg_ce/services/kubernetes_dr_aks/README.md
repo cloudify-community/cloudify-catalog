@@ -14,7 +14,6 @@ The blueprint uses below secret in json format in order to set up service in Azu
 
 | Name                  | Description                        |
 | --------------------- | ---------------------------------- |
-| eeas_params           | The aks service configuration      |
 | datadog_api_key       | API key for the Datadog monitoring |
 
 
@@ -31,7 +30,6 @@ The blueprint uses below secret in json format in order to set up service in Azu
 | -------------------------------------------------- | --------------------| ------------------- | ------------------------------------------------ |
 | Cloud Credentials from Azure env. with location A  | cloud_credentials_a | cloud_credentials_a | Please look at the cloud_credentials type legend |
 | Cloud Credentials from Azure env. with location B  | cloud_credentials_b | cloud_credentials_b | Please look at the cloud_credentials type legend |
-| K8s configuration                                  | resource_config     | resource_config     | Please look at the resource_config type legend   |
 | The resource prefix for resources naming           | resource_prefix     | string              | ''                                               |
 
 ### Custom types

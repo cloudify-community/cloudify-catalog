@@ -16,44 +16,28 @@ dsl_definitions:
 labels:
   csys-obj-parent:
     values:
-      - azure
+      - azure_dr
 
 inputs:
-  resource_config:
-    type: resource_config
+
   cloud_credentials_a:
     type: cloud_credentials_a
+    display_label:
+
   cloud_credentials_b:
     type: cloud_credentials_b
+    display_label:
+
   resource_prefix:
     type: string
     description: |
       If not provided, it will be auto-generated.
+    display_label:
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
 
 data_types:
-  resource_config:
-    properties:
-      kubernetes_version:
-        type: string
-        default: ""
-      service_account_namespace:
-        type: string
-        default: default
-      service_cidr:
-        type: string
-        default: 10.0.8.0/23
-      docker_bridge_cidr:
-        type: string
-        default: 10.0.10.1/23
-      dns_service_ip:
-        type: string
-        default: "10.0.8.2"
-      node_pool_size:
-        type: string
-        default: 1
 
   cloud_credentials:
     properties:
@@ -88,7 +72,7 @@ data_types:
     properties:
       region_name:
         type: string
-        default: WestEurope #{ get_environment_capability: [cloud_credentials, region_name_b ] }
+        default: { get_environment_capability: [cloud_credentials, region_name_b ] }
 
 node_templates:
   prefix:
@@ -106,7 +90,7 @@ node_templates:
         deployment:
           id: aks_cluster_a
           inputs: 
-            resource_config: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, inputs ] }
+            resource_config: {}
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
             cloud_credentials: { get_input: cloud_credentials_a }
           auto_inc_suffix: true
@@ -124,7 +108,7 @@ node_templates:
        deployment:
          id: aks_cluster_b
          inputs: 
-           resource_config: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, inputs ] }
+           resource_config: {}
            resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'bdr' ] }
            cloud_credentials: { get_input: cloud_credentials_b }
          auto_inc_suffix: true
@@ -142,7 +126,6 @@ node_templates:
         deployment:
           id: load_balancer
           inputs: 
-            resource_config: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, inputs ] }
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
             cloud_credentials: { get_input: cloud_credentials_b }
             fqdn_primary: { get_attribute: [ aks_cluster_a, capabilities, hello_world_fqdn ] }
