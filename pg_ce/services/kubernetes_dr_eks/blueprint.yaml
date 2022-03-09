@@ -7,7 +7,7 @@ imports:
 labels:
   csys-obj-parent:
     values:
-      - aws
+      - aws_dr
 
 inputs:
   domain_owned:
@@ -17,11 +17,13 @@ inputs:
     display_label: |
       Owned domain for load balancer creation
     default: "aws.com"
-    
+
   resource_prefix:
     type: string
     description: |
       If not provided, it will be auto-generated.
+    display_label:
+      The prefix for resource name creation
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
