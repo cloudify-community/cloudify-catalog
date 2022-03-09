@@ -204,3 +204,35 @@ node_templates:
        target: aks_cluster_b
      - type: cloudify.relationships.depends_on
        target: aks_cluster_a
+
+outputs:
+  tm_endpoint:
+    value:
+      - { get_attribute: [ load_balancer, capabilities, tm_endpoint ] }
+      
+  database_enpoint:
+    value:
+      - { get_attribute: [ database, capabilities, sql_endpoint ] }
+  
+  database_password:
+    value: 
+      - { get_attribute: [ database, capabilities, database_password ] }
+
+  database_login: 
+    value:
+      - { get_attribute: [ database, capabilities, database_login ] }
+  
+  database_name: 
+    value:
+      - { get_attribute: [ database, capabilities, database_name ] }
+
+  database_port:
+    value: '1433'
+
+  primary_storage_id: 
+    value:
+      - { get_attribute: [ storage, capabilities, primary_storage_id ] }
+
+  failover_storage_id: 
+    value:
+      - { get_attribute: [ storage, capabilities, failover_storage_id ] }

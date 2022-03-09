@@ -2,19 +2,20 @@
 
 ## General
 
-The blueprint creates AKS service across region configuration with one node that is accessible from the public network.
+The blueprint creates AKS service across region configuration. The blueprint deploys EKS service with database, storage and load balancer in failover conifguration across two drifferent regions. 
 
 ## Requirmennts
 
-In order to run successfully the blueprint you'll need to provide the Azure environment - details [here](https://github.com/cloudify-community/eaas-example). 
+In order to run successfully the blueprint you'll need to provide the Azure DR environment - details [here](https://github.com/cloudify-community/eaas-example). 
 
 ## Secrets
 
 The blueprint uses below secret in json format in order to set up service in Azure cloud - the example of the secret format could be found [here](https://github.com/cloudify-community/eaas-example/blob/master/secret.json).
 
-| Name                  | Description                      |
-| --------------------- | -------------------------------- |
-| eeas_params           | The aks service configuration    |
+| Name                  | Description                        |
+| --------------------- | ---------------------------------- |
+| eeas_params           | The aks service configuration      |
+| datadog_api_key       | API key for the Datadog monitoring |
 
 
 ## Plugins
@@ -22,17 +23,19 @@ The blueprint uses below secret in json format in order to set up service in Azu
 * cloudify-azure-plugin
 * cloudify-kubernetes-plugin
 * cloudify-helm-plugin
+* cloudify-terraform-plugin
 
 ## Inputs
 
-| Display Label                            | Name              | Type              | Default Value                                    |
-| ---------------------------------------- | ------------------| ----------------- | ------------------------------------------------ |
-| Cloud Credentials from Azure env.        | cloud_credentials | cloud_credentials | Please look at the cloud_credentials type legend |
-| K8s configuration                        | resource_config   | resource_config   | Please look at the resource_config type legend   |
-| The resource prefix for resources naming | resource_prefix   | string            | ''                                               |
+| Display Label                                      | Name              | Type                  | Default Value                                    |
+| -------------------------------------------------- | --------------------| ------------------- | ------------------------------------------------ |
+| Cloud Credentials from Azure env. with location A  | cloud_credentials_a | cloud_credentials_a | Please look at the cloud_credentials type legend |
+| Cloud Credentials from Azure env. with location B  | cloud_credentials_b | cloud_credentials_b | Please look at the cloud_credentials type legend |
+| K8s configuration                                  | resource_config     | resource_config     | Please look at the resource_config type legend   |
+| The resource prefix for resources naming           | resource_prefix     | string              | ''                                               |
 
 ### Custom types
-cloud_credentials
+cloud_credentials_a
 | Property Name             | Type   | Default Value                         |
 | ------------------------- | ------ | ------------------------------------- |
 | azure_tentant_id          | string | gets from cloud Azure env. capability |
@@ -41,7 +44,18 @@ cloud_credentials
 | azure_client_secret       | string | gets from cloud Azure env. capability |
 | public_key_content        | string | gets from cloud Azure env. capability |
 | private_key_content       | string | gets from cloud Azure env. capability |
-| region_name               | string | gets from cloud Azure env. capability |
+| region_name_a             | string | gets from cloud Azure env. capability |
+
+cloud_credentials_b
+| Property Name             | Type   | Default Value                         |
+| ------------------------- | ------ | ------------------------------------- |
+| azure_tentant_id          | string | gets from cloud Azure env. capability |
+| azure_subscription_id     | string | gets from cloud Azure env. capability |
+| azure_client_id           | string | gets from cloud Azure env. capability |
+| azure_client_secret       | string | gets from cloud Azure env. capability |
+| public_key_content        | string | gets from cloud Azure env. capability |
+| private_key_content       | string | gets from cloud Azure env. capability |
+| region_name_b             | string | gets from cloud Azure env. capability |
 
 
 resource_config
@@ -62,25 +76,26 @@ The type is `eaas.nodes.UniquePrefixGenerator`.
 
 For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
 
-### Network
-The node type is responsible for creating the network for EKS deployment.\
+### AKS Cluster A
+The node type is responsible for creating the AKS primary cluster deployment with the network stack.\
 The type is `cloudify.nodes.ServiceComponent`.
 
-### Aks Cluster
-The node type is responsible for creating EKS cluster service.\
-The type is `cloudify.azure.nodes.compute.ManagedCluster`.
+### AKS Cluster B
+The node type is responsible for creating the AKS failover cluster deployment with the network stack.\
+The type is `cloudify.nodes.ServiceComponent`.
 
-### Kubernetes Master
-The node type is responsible for setting up the cluster configuration.\
-The type is `cloudify.kubernetes.nodes.Master`.
+### Load Balancer
+The nde type is reponsible for creating the application load balancer for EKS DR deployment.\
+The type is `cloudify.nodes.ServiceComponent`.
 
-### New Service Account
-The node is responible for creating the new service account.\
-The type is `cloudify.kubernetes.resources.ServiceAccount`.
+### Storage
+The node type is reponsible for ceating the bucket storage for AKS DR deployment.\
+The type is `cloudify.nodes.ServiceComponent`.
 
-### New Role Binding
-The node is responsible for resource role binding for created service account.\
-The type is `cloudify.kubernetes.resources.RoleBinding`
+### Database
+The node type is reponsible for creating the database for AKS DR deployment.\
+The type is `cloudify.nodes.ServiceComponent`.
+
 
 ## Labels
 
