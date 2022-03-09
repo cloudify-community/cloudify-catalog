@@ -10,6 +10,14 @@ labels:
       - aws
 
 inputs:
+  domain_owned:
+    type: string
+    descritpion: | 
+      Owned domain for load balancer creation
+    display_label: |
+      Owned domain for load balancer creation
+    default: "aws.com"
+    
   resource_prefix:
     type: string
     description: |
@@ -41,44 +49,122 @@ node_templates:
             eks_cluster_name: { concat: [ { get_attribute: [ prefix , value ] }, '-eks-adr' ] }
             eks_nodegroup_name: { concat: [ 'eks_node_group', { get_attribute: [ prefix , value ] }, '-eks-adr' ] }
             service_account_name: "cloudify"
+            agent_key_name: { concat : [ agent_key_name, 'adr']}
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: prefix
+
+  eks_cluster_b:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: blueprints/eks_network.zip
+          external_resource: false
+        deployment:
+          inputs: 
+            aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
+            aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
+            aws_region_name: { get_environment_capability: [ cloud_credentials, region_name_b ] }
+            availability_zone_1: { concat: [ { get_environment_capability: [ cloud_credentials, region_name_b ] }, 'a' ] }
+            availability_zone_2: { concat: [ { get_environment_capability: [ cloud_credentials, region_name_b]  }, 'c' ] }
+            eks_cluster_name: { concat: [ { get_attribute: [ prefix , value ] }, '-eks-bdr' ] }
+            eks_nodegroup_name: { concat: [ 'eks_node_group', { get_attribute: [ prefix , value ] }, '-eks-bdr' ] }
+            service_account_name: "cloudify"
+            agent_key_name: { concat : [ agent_key_name, 'bdr']}
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix
   
-  # s3:
-  #   type: cloudify.nodes.ServiceComponent
-  #   properties:
-  #     resource_config:
-  #       blueprint:
-  #         blueprint_archive: blueprints/s3.zip
-  #         external_resource: false
-  #       deployment:
-  #         inputs: 
-  #           aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
-  #           aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
-  #           aws_region_name_a: { get_environment_capability: [ cloud_credentials, region_name_a ] }
-  #           aws_region_name_b: { get_environment_capability: [ cloud_credentials, region_name_a ] }
-  #           resource_prefix: { get_attribute: [ prefix , value ] }
-  #   relationships:
-  #     - type: cloudify.relationships.depends_on
-  #       target: eks_cluster_a
+  database:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: blueprints/database.zip
+          external_resource: false
+        deployment:
+          inputs: 
+            aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
+            aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
+            aws_region_name_a: { get_environment_capability: [ cloud_credentials, region_name_a ] }
+            aws_region_name_b: { get_environment_capability: [ cloud_credentials, region_name_b ] }
+            resource_prefix: { get_attribute: [ prefix , value ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: eks_cluster_a
+      - type: cloudify.relationships.depends_on
+        target: eks_cluster_b
 
-  # database:
-  #   type: cloudify.nodes.ServiceComponent
-  #   properties:
-  #     resource_config:
-  #       blueprint:
-  #         blueprint_archive: blueprints/database.zip
-  #         external_resource: false
-  #       deployment:
-  #         inputs: 
-  #           aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
-  #           aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
-  #           aws_region_name_a: { get_environment_capability: [ cloud_credentials, region_name_a ] }
-  #           aws_region_name_b: { get_environment_capability: [ cloud_credentials, region_name_a ] }
-  #           resource_prefix: { get_attribute: [ prefix , value ] }
-  #   relationships:
-  #     - type: cloudify.relationships.depends_on
-  #       target: eks_cluster_a
+  s3:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: blueprints/s3.zip
+          external_resource: false
+        deployment:
+          inputs: 
+            aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
+            aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
+            aws_region_name_a: { get_environment_capability: [ cloud_credentials, region_name_a ] }
+            aws_region_name_b: { get_environment_capability: [ cloud_credentials, region_name_b ] }
+            resource_prefix: { get_attribute: [ prefix , value ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: eks_cluster_a
+      - type: cloudify.relationships.depends_on
+        target: eks_cluster_b
 
+  load_balancer:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: blueprints/lb.zip
+          external_resource: false
+        deployment:
+          inputs: 
+            aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
+            aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
+            domain_primary: { get_attribute: [ eks_cluster_a, capabilities, srv_hostname ] }
+            domain_failover: { get_attribute: [ eks_cluster_b, capabilities, srv_hostname ] }
+            domain_owned:  { get_input: domain_owned }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: s3
+    
             
+outputs:
+  lb_endpoint:
+    value: { get_attribute: [ load_balancer, capabilities, endpoint] }
+  
+  s3_failover:
+    value: { get_attribute: [ s3, capabilities, s3_failover ] }
+
+  s3_primary:
+    value: { get_attribute: [ s3, capabilities, s3_primary ] }
+
+  database_login:
+    value: { get_attribute: [ database, capabilities, admin_login ] }
+
+  database_password:
+    value: { get_attribute: [ database, capabilities, admin_password ] }
+
+  database_name:
+    value: { get_attribute: [ database, capabilities, db_name ] }
+
+  database_port:
+    value: { get_attribute: [ database, capabilities, db_port ] }
+
+  db_conn_primary:
+    value: { get_attribute: [ database, capabilities, endpoint_primary ] }
+
+  db_conn_failover:
+    value: { get_attribute: [ database, capabilities, endpoint_failover ] }
+
+
+  
+
+
+  
