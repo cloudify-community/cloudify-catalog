@@ -1,8 +1,8 @@
-# Disk Service Provisioning
+# Container Instance Service Provisioning
 
 ## General
 
-The blueprint creates Disk service with the usage of the ARM template for new ultra managed disk with the ability to specify a sector size - details [here](https://github.com/Azure/azure-quickstart-templates/tree/master/quickstarts/microsoft.compute/ultra-managed-disk). 
+The blueprint creates Disk service with the usage of the ARM template for Create a WordPress site on a Container Instance - details [here](https://github.com/Azure/azure-quickstart-templates/tree/master/application-workloads/wordpress/aci-wordpress). 
 
 ## Requirements
 
@@ -31,7 +31,7 @@ cloudify-azure-plugin
 | Display Label                            | Name               | Type   | Default Value  |
 | ---------------------------------------- | ------------------ | ------ | -------------- |
 | The resource prefix for resources naming | resource_prefix    | string | ''             |
-| Azure region name A                      | azure_region_name  | string | EastUs         |\
+| Azure region name                        | azure_region_name  | string | EastUs         |
 
 If the user provides empty value of default the prefix will be gerenated automatically.
 
@@ -53,7 +53,7 @@ The node type responsible for deploying the terraform code.\
 Derived type is `cloudify.nodes.terraform.Module`.
 
 ### Disk Deployment
-The node type is responsible for deploying the disk in the Azure cloud.\
+The node type is responsible for deploying the container instance in the Azure cloud.\
 Derived type is `cloudify.azure.Deployment`.
 
 
