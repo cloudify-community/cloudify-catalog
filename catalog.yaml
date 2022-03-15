@@ -339,6 +339,10 @@ topics:
         name: Terraform_Kubernetes_AWS_EKS
         path: kubernetes/terraform/gke
         description: Create an AWS Kubernetes using Terraform automation
+      - id: spot_ocean
+        name: SpotOcean_optimized_cluster
+        path: kubernetes/spot
+        description: Create a Spot Ocean Kubernetes cost optimized Cluster
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
