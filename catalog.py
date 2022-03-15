@@ -8,7 +8,7 @@ import datetime
 
 from pygit2 import Repository
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 def create_build_directories():
 	"""Creates a build directory and catalogs directory in it

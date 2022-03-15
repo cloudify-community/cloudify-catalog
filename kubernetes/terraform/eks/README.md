@@ -8,6 +8,8 @@ The blueprint creates EKS service based on the terraform hashicorp [example](htt
 
 In order to run successfully the blueprint you'll need AWS access key id and AWS secret access key. The credentials to the AWS should have permission to describe, update, delete and create EKS and VPC services.
 
+The blueprint use git command so please ensure that git is installed in the cloudify manager.
+
 ## Secrets
 
 The blueprint uses secrets to connect to cloud, you need to connfigure them prior running the blueprint.
