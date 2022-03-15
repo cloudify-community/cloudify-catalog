@@ -69,7 +69,8 @@ node_templates:
           admin_password: { get_input : password } 
           region: { get_input: region }
         source:
-          location: templates/tf-postgresql-master.zip
+          location: templates/tf-postgres-master.zip
+        source_path: tf-postgres-master
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on

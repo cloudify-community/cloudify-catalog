@@ -81,6 +81,7 @@ node_templates:
           sa_name: { concat: [ { get_attribute : [prefix, value] }, 'sa' ] }
         source:
           location: templates/tf-azure-vpc-master.zip
+        source_path: eaas-terraform-main
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
