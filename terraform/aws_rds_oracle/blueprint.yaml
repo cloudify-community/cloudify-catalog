@@ -52,7 +52,8 @@ node_templates:
           prefix: { get_attribute : [prefix, value] } 
           password: { get_input : password } 
         source:
-          location: templates/tf-oracle-master.zip
+          location: templates/tf_oracle_master.zip
+        source_path: tf_oracle_master
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on
