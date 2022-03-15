@@ -70,6 +70,7 @@ node_templates:
           region: { get_input: region }
         source:
           location: templates/tf-mysql-master.zip
+        source_path: tf-mysql-master
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on
