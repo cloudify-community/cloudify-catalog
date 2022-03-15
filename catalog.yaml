@@ -126,6 +126,10 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
+      - id: CosmosDB
+        name: Cosmos_DB
+        path: azure/cosmos_db
+        description: Create a CosmosDB instance using ARM teplate
   - name: GCP
   - name: terraform_services
     target_path: s3_json_file
