@@ -31,7 +31,7 @@ topics:
         path: certified_environments/services/aws/psql
         description: Creating PostgreSQL service
       - id: RdsPsqlAWS
-        name: RdsPsqAWS
+        name: RdsPsqlAWS
         path: certified_environments/services/aws/rds_psql
         description: Creating PostgreSQL on RDS service
       - id: S3AWS
@@ -107,6 +107,46 @@ topics:
         path: aws/sqs
         description: Creating SQS
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/README.md
+      - id: tf_aws_vm
+        name: Terraform_AWS_VM
+        path: terraform/aws
+        description: Create an AWS VM using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_eks
+        name: Terraform_AWS_EKS
+        path: terraform/eks
+        description: Create an EKS AWS using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_vpc
+        name: Terraform_AWS_VPC
+        path: terraform/aws_vpc
+        description: Create an AWS VPC using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_s3_aws
+        name: Terraform_AWS_S3
+        path: terraform/aws_s3
+        description: Create an AWS S3 using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_rds_mariadb
+        name: Terraform_AWS_RDS_MariaDB  
+        path: terraform/aws_rds_mariadb
+        description: Create an AWS RDS MariaDB using Terraform 
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_rds_oracle
+        name: Terraform_AWS_RDS_Oracle  
+        path: terraform/aws_rds_oracle
+        description: Create an AWS RDS Oracle using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_rds_postgresql
+        name: Terraform_AWS_RDS_Postgres
+        path: terraform/aws_rds_postgresql
+        description: Create an AWS Postgresql database service using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_rds_mysql
+        name: Terraform_AWS_RDS_MySQL
+        path: terraform/aws_rds_mysql
+        description: Create an AWS RDS MySQL using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
   - name: azure_services
     target_path: s3_json_file
     blueprints:
@@ -130,7 +170,53 @@ topics:
         name: Spot_Instance
         path: azure/spot_instance
         description: Create a Windows VM Spot Instance using ARM template
+      - id: tf_azure_vm
+        name: Terraform_Azure_VM
+        path: terraform/azure
+        description: Create an Azure VM using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_storage
+        name: Terraform_Azure_Storage
+        path: terraform/azure_storage
+        description: Create an Azure Blob Storage automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_vpc
+        name: Terraform_Azure_VPC
+        path: terraform/azure_vpc
+        description: Create an Azure VPC using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_oracale
+        name: Terraform_Azure_Oracle
+        path: terraform/azure_oracle
+        description: Create an Azure Oracle database using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_mysql
+        name: Terraform_Azure_Mysql
+        path: terraform/azure_mysql
+        description: Create an Azure Mysql database using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_postgres
+        name: Terraform_Azure_Postgres
+        path: terraform/azure_postgres
+        description: Create an Azure Postgres DB using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_mariadb
+        name: Terraform_Azure_MariaDB
+        path: terraform/azure_mariadb
+        description: Create an Azure MariaDB using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_aks
+        name: AKS_Terraform
+        path: terraform/aks
+        description: Create an AKS using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
   - name: GCP
+    target_path: s3_json_file
+    blueprints:
+      - id: tf_gke
+        name: Terraform_GCP_GKE
+        path: terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation 
   - name: terraform_services
     target_path: s3_json_file
     blueprints:
@@ -172,7 +258,7 @@ topics:
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
       - id: terraform_aks
-        name: AKS_Terraform
+        name: Terraform_Azure_AKS
         path: terraform/aks
         description: Create an AKS using Terraform automation
       - id: terraform_gke
@@ -207,6 +293,14 @@ topics:
         name: Terraform_Azure_Postgres
         path: terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
+      - id: terraform_azure_mariadb
+        name: Terraform_Azure_MariaDB
+        path: terraform/azure_mariadb
+        description: Create an Azure MariaDB using Terraform automation
+      - id: terraform_aws_rds_mysql
+        name: Terraform_AWS_RDS_MySQL
+        path: terraform/aws_rds_mysql
+        description: Create an AWS RDS MySQL using Terraform automation
   - name: helm_services
     target_path: s3_json_file
     blueprints:
@@ -222,20 +316,19 @@ topics:
         name: NodeJS
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
-  - name: Ansible
   - name: k8s_services
     target_path: s3_json_file
     blueprints:
       - id: Kubernetes_AWS_EKS
-        name: Kubernetes on AWS EKS
+        name: Kubernetes_AWS_EKS
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
       - id: Kubernetes_Azure_AKS
-        name: Kubernetes on Azure AKS
+        name: Kubernetes_Azure_AKS
         path: kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
       - id: Kubernetes_GCP_GKE
-        name: Kubernetes on GCP GKE
+        name: Kubernetes_GCP_GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
       - id: tf_kube_gke
@@ -250,19 +343,23 @@ topics:
         name: Terraform_Kubernetes_AWS_EKS
         path: kubernetes/terraform/gke
         description: Create an AWS Kubernetes using Terraform automation
+      - id: spot_ocean
+        name: SpotOcean_optimized_cluster
+        path: kubernetes/spot
+        description: Create a Spot Ocean Kubernetes cost optimized Cluster
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
       - id: aws_account
-        name: AWS Account
+        name: AWS_Account
         path: k8s_discovery/aws/aws-account
         description: AWS Account Representation
       - id: azure_account
-        name: Azure account
+        name: Azure_Account
         path: k8s_discovery/azure/azure-account
         description: Azure Account Representation
       - id: gcp-account
-        name: GCP Account
+        name: GCP_Account
         path: k8s_discovery/gcp/gcp-account
         description: GCP Account Representation
   - name: vmware_services
@@ -272,5 +369,3 @@ topics:
         name: vSphere_VM
         path: vsphere/vm
         description: Create vSphere VM
-
-
