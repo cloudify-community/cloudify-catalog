@@ -5,7 +5,7 @@ imports:
 
 inputs:
   webserver_port:
-    display_name: The HTTP web server port
+    display_label: The HTTP web server port
     description: The HTTP web server port
     default: 8000
 

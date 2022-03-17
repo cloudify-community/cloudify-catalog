@@ -9,15 +9,15 @@ imports:
 
 inputs:
   webserver_port_1:
-    dsiplay_label: The HTTP web server 1 port.
+    display_label: The HTTP web server 1 port.
     description: The HTTP web server 1 port.
     default: 8001
   webserver_port_2: 
-    dsiplay_label: The HTTP web server 2 port.
+    display_label: The HTTP web server 2 port.
     description: The HTTP web server 2 port.
     default: 8002
   webserver_port_3: 
-    dsiplay_label: The HTTP web server 2 port.
+    display_label: The HTTP web server 2 port.
     description: The HTTP web server 3 port.
     default: 8003
 
