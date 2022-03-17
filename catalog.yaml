@@ -7,6 +7,37 @@ github_url: https://github.com/cloudify-community/cloudify-catalog/tree
 raw_github_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog
 
 topics:
+  - name: getting_started
+    target_path: s3_json_file
+    blueprints:
+      - id: Gen_SSH_Cert_Example
+        name: Gen_SSH_Cert_Example
+        path: getting_started/gen_ssh_cert
+        description: Creating SSH certificates as a secrets
+      - id: Hello_world_Example
+        name: Hello_World_Example
+        path: getting_started/hello_world
+        description: Hello world application module example
+      - id: Multi_Tier_Example
+        name: Multi_Tier_Example
+        path: getting_started/multi_tier_example
+        description: Creating Multi Tier applicaiton example 
+      - id: Nested_Example
+        name: Nested_Example
+        path: getting_started/nested_example
+        description: Creating Nested Example using Multi_Tier_Example childs
+      - id: Simple_Web_Server_Example
+        name: Simple_Web_Server_Example
+        path: getting_started/simple_web_server
+        description: Creating web server application example
+      - id: Web_App_From_Git_Example
+        name: Web_App_From_Git_Example
+        path: getting_started/web_app_from_git
+        description: Creating the application from the git repository
+      - id: Webserver_With_Certificate
+        name: Webserver_With_Certificate
+        path: getting_started/webserver_and_certificate
+        description: Creating webserver application with SSH certificate
   - name: certified_environments
     target_path: s3_json_file
     blueprints:
