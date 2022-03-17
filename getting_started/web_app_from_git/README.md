@@ -2,7 +2,7 @@
 
 ## General
 
-The blueprint is an example how to use cloudify WebServer and cloudify Application Module nodes for provisioning the example Calculator application. 
+The blueprint is an example how to use cloudify WebServer and cloudify ApplicationModule nodes for provisioning the example Calculator application. 
 
 ## Requirements
 
