@@ -46,6 +46,7 @@ pipeline{
   environment{
     PROJECT = 'cloudify-catalog'
     WORKSPACE = "${env.WORKSPACE}"
+    CREDS = credentials("aws-key")
   }
   stages{
     stage('install dependencies'){
@@ -97,15 +98,13 @@ pipeline{
       }
     }
     stage('upload_artifacts'){
-      withCredentials([string(credentialsId: 'aws-key', variable: 'NUSER'),string(credentialsId: 'aws-key', variable: 'NPASS')]){
-        steps{
-          container('python'){
-            dir("${env.WORKSPACE}/${env.PROJECT}"){
-              setupGithubSSHKey()
-              sh """
-                python upload_artifacts.py
-              """
-            }
+      steps{
+        container('python'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            setupGithubSSHKey()
+            sh """
+              python upload_artifacts.py
+            """
           }
         }
       }
