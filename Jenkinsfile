@@ -96,8 +96,8 @@ pipeline{
         }
       }
     }
-    withCredentials([string(credentialsId: 'aws-key', variable: 'NUSER'),string(credentialsId: 'aws-key', variable: 'NPASS')]){
-      stage('upload_artifacts'){
+    stage('upload_artifacts'){
+      withCredentials([string(credentialsId: 'aws-key', variable: 'NUSER'),string(credentialsId: 'aws-key', variable: 'NPASS')]){
         steps{
           container('python'){
             dir("${env.WORKSPACE}/${env.PROJECT}"){
