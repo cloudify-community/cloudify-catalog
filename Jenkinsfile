@@ -1,3 +1,5 @@
+@Library('github.com/releaseworks/jenkinslib') _
+
 def podTemplate = """
                 apiVersion: v1
                 kind:
@@ -96,6 +98,7 @@ pipeline{
         }
       }
     }
+    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'aws-key', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY']]) {
     stage('upload_artifacts'){
       steps{
         container('python'){
@@ -107,6 +110,7 @@ pipeline{
           }
         }
       }
+    }
     }
   }
 }
