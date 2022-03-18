@@ -50,18 +50,15 @@ pipeline{
   stages{
     stage('install dependencies'){
       steps {
-        withCredentials([string(credentialsId: 'aws-key', variable: 'NUSER'),string(credentialsId: 'aws-key', variable: 'NPASS')]) {
-          container('python'){
-            dir("${env.WORKSPACE}/${env.PROJECT}"){
-              sh """
-                set -eux
-                pip install --upgrade pip
-                pip install -r requirements.txt
-              """
-            }
+        container('python'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            sh """
+              set -eux
+              pip install --upgrade pip
+              pip install -r requirements.txt
+            """
           }
         }
-        
       }
     }
     stage('validate_catalog_yaml'){
@@ -99,19 +96,19 @@ pipeline{
         }
       }
     }
-    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'aws-key', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-    stage('upload_artifacts'){
-      steps{
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-              python upload_artifacts.py
-            """
+    withCredentials([string(credentialsId: 'aws-key', variable: 'NUSER'),string(credentialsId: 'aws-key', variable: 'NPASS')]){
+      stage('upload_artifacts'){
+        steps{
+          container('python'){
+            dir("${env.WORKSPACE}/${env.PROJECT}"){
+              setupGithubSSHKey()
+              sh """
+                python upload_artifacts.py
+              """
+            }
           }
         }
       }
-    }
     }
   }
 }
