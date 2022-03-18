@@ -60,7 +60,10 @@ def upload_directory(source_directory: str, bucket: str, directory: str):
     catalogs = []
     for root,dirs,files in os.walk(source_directory):
         for file in files:
-            target_file = "{}/{}/{}".format(directory, root[root.find("/")+1:], file)
+            if "catalogs" in root:
+                target_file = "{}/{}".format(directory, file)
+            else:
+                target_file = "{}/{}/{}".format(directory, root[root.find("/")+1:], file)
             source_file = "{}/{}".format(root,file)
             upload_file(source_file, bucket, target_file)
 
@@ -76,7 +79,7 @@ def print_catalogs_urls(build_directory: str, base_url: str, directory: str):
         for file in files:
     
             if root == 'build/catalogs':
-                target_file = "{}/{}/{}".format(directory, root[root.find("/")+1:], file)
+                target_file = "{}/{}".format(directory, file)
                 print("{}/{}".format(base_url, target_file))
 
 def main():
