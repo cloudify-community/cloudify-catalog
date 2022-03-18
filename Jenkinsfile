@@ -1,5 +1,3 @@
-@Library('github.com/releaseworks/jenkinslib') _
-
 def podTemplate = """
                 apiVersion: v1
                 kind:
@@ -52,15 +50,18 @@ pipeline{
   stages{
     stage('install dependencies'){
       steps {
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            sh """
-              set -eux
-              pip install --upgrade pip
-              pip install -r requirements.txt
-            """
+        withCredentials([string(credentialsId: 'aws-key', variable: 'NUSER'),string(credentialsId: 'aws-key', variable: 'NPASS')]) {
+          container('python'){
+            dir("${env.WORKSPACE}/${env.PROJECT}"){
+              sh """
+                set -eux
+                pip install --upgrade pip
+                pip install -r requirements.txt
+              """
+            }
           }
         }
+        
       }
     }
     stage('validate_catalog_yaml'){
