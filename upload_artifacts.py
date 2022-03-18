@@ -63,7 +63,6 @@ def set_target_path(directory: str, root: str, file: str):
         target_file = "{}/{}/{}".format(directory, root[root.find("/")+1:], file)
     return target_file
 
-
 def upload_directory(source_directory: str, bucket: str, directory: str):
     """Uploads directories and files in the build to S3
 
@@ -108,7 +107,7 @@ def main():
     s3_bucket_name = catalog[S3_BUCKET_NAME]
     s3_bucket_directory = "{}/{}".format(catalog[S3_BUCKET_DIRECTORY], target_path_subfolder)
     
-    #upload_directory(BUILD_DIRECTORY, s3_bucket_name, s3_bucket_directory)
+    upload_directory(BUILD_DIRECTORY, s3_bucket_name, s3_bucket_directory)
     print_catalogs_urls(BUILD_DIRECTORY, base_url, s3_bucket_directory)
 
 if __name__ == "__main__":
