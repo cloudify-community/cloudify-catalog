@@ -74,6 +74,21 @@ pipeline{
     WORKSPACE = "${env.WORKSPACE}"
   }
   stages{
+    stage('only') {
+      steps {
+          withCredentials([
+              usernamePassword(
+                  credentialsId: 'aws-cli', 
+                  usernameVariable: 'USER', 
+                  passwordVariable: 'PASS'
+                  )]) {
+              sh '''
+                  echo "The username is: ${USER}"
+                  echo "The password is : ${PASS}"
+              '''
+          }
+      }
+    }
     stage('install dependencies'){
       steps {
         container('python'){
