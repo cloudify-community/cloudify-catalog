@@ -76,7 +76,7 @@ pipeline{
       steps{
         withCredentials([
                     usernamePassword(
-                        credentialsId: 'aws-key', 
+                        credentialsId: 'aws-cli', 
                         usernameVariable: 'USER', 
                         passwordVariable: 'PASS'
                         )]) {
