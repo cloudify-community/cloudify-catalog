@@ -74,17 +74,6 @@ pipeline{
     }
     stage('build'){
       steps{
-        withCredentials([
-                    usernamePassword(
-                        credentialsId: 'aws-cli', 
-                        usernameVariable: 'USER', 
-                        passwordVariable: 'PASS'
-                        )]) {
-                    sh '''
-                        echo "The username is: ${USER}"
-                        echo "The password is : ${PASS}"
-                    '''
-                }
         container('python'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             setupGithubSSHKey()
