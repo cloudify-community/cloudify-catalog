@@ -99,7 +99,13 @@ def main():
         except yaml.YAMLError as exc:
             print(exc)
 
-    head = os.environ["GIT_BRANCH"] #Repository('.').head.shorthand
+    try:
+        head = os.environ["GIT_BRANCH"]
+    except KeyError:
+        head = Repository('.').head.shorthand
+        print(
+            "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
+
     target_path_subfolder = get_target_sub_folder(head)
 
     base_url = catalog[S3_BASE_URL]
@@ -107,7 +113,7 @@ def main():
     s3_bucket_directory = "{}/{}".format(
         catalog[S3_BUCKET_DIRECTORY], target_path_subfolder)
 
-    #upload_directory(BUILD_DIRECTORY, s3_bucket_name, s3_bucket_directory)
+    upload_directory(BUILD_DIRECTORY, s3_bucket_name, s3_bucket_directory)
     print_catalogs_urls(BUILD_DIRECTORY, base_url, s3_bucket_directory)
 
 
