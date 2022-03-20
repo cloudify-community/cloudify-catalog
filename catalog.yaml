@@ -134,6 +134,10 @@ topics:
         name: Instance_Ubuntu
         path: azure/ubuntu
         description: Create a Ubuntu VM using ARM template
+      - id: InstanceUbuntuDiskStorage
+        name: Instance_Ubuntu_Disk_Storage
+        path: azure/ubuntu_disk_storage
+        description: Create a u Ubuntu VM with managed disk storage 
   - name: GCP
   - name: terraform_services
     target_path: s3_json_file
