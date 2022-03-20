@@ -74,21 +74,6 @@ pipeline{
     WORKSPACE = "${env.WORKSPACE}"
   }
   stages{
-    stage('only') {
-      steps {
-          withCredentials([
-              usernamePassword(
-                  credentialsId: 'aws-cli', 
-                  usernameVariable: 'USER', 
-                  passwordVariable: 'PASS'
-                  )]) {
-              sh '''
-                  echo "The username is: ${USER}"
-                  echo "The password is : ${PASS}"
-              '''
-          }
-      }
-    }
     stage('install dependencies'){
       steps {
         container('python'){
@@ -139,14 +124,21 @@ pipeline{
     }
     stage('upload_artifacts'){
       steps{
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-              python upload_artifacts.py
-            """
+        withCredentials([
+              usernamePassword(
+                  credentialsId: 'aws-cli', 
+                  usernameVariable: 'USER', 
+                  passwordVariable: 'PASS'
+                  )]) {
+              container('python'){
+                dir("${env.WORKSPACE}/${env.PROJECT}"){
+                  setupGithubSSHKey()
+                  sh """
+                    python upload_artifacts.py
+                  """
+                }
+              }
           }
-        }
       }
     }
   }
