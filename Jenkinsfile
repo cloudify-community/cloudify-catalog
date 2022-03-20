@@ -127,15 +127,15 @@ pipeline{
         withCredentials([
               usernamePassword(
                   credentialsId: 'aws-cli', 
-                  usernameVariable: 'USER', 
-                  passwordVariable: 'PASS'
+                  usernameVariable: 'ID', 
+                  passwordVariable: 'SECRET'
                   )]) {
               container('python'){
                 dir("${env.WORKSPACE}/${env.PROJECT}"){
                   setupGithubSSHKey()
                   sh '''
-                    export secret="$PASS"
-                    echo $secret
+                    export ID="$ID"
+                    export SECRET="$SECRET"
                     python upload_artifacts.py 
                   '''
                 }
