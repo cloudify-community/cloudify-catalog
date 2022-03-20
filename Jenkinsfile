@@ -34,7 +34,33 @@ pipeline{
   agent{
     kubernetes{
       defaultContainer 'jnlp'
-      yaml "${podTemplate}"
+      yaml '''
+          spec:
+            containers:
+            - name: jnlp
+              image: jenkins/inbound-agent:4.3-4
+              resources:
+                limits:
+                  cpu: 0.3
+                  memory: 256Mi
+            - name: python
+              image: python:3.8
+              resources:
+                requests:
+                  cpu: 1
+                  memory: 2Gi
+                limits:
+                  cpu: 1
+                  memory: 2Gi
+              command:
+              - cat
+              tty: true
+              securityContext:
+                runAsUser: 0
+                privileged: true
+            nodeSelector:
+              instance-type: spot
+          '''
     }
   }
   options {
