@@ -43,10 +43,9 @@ pipeline{
     timeout(time: 60, unit: 'MINUTES')
     timestamps()
   }
-  environment{
+  environment {
     PROJECT = 'cloudify-catalog'
     WORKSPACE = "${env.WORKSPACE}"
-    CREDS = credentials("aws-key")
   }
   stages{
     stage('install dependencies'){
@@ -75,6 +74,17 @@ pipeline{
     }
     stage('build'){
       steps{
+        withCredentials([
+                    usernamePassword(
+                        credentialsId: 'aws-key', 
+                        usernameVariable: 'USER', 
+                        passwordVariable: 'PASS'
+                        )]) {
+                    sh '''
+                        echo "The username is: ${USER}"
+                        echo "The password is : ${PASS}"
+                    '''
+                }
         container('python'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             setupGithubSSHKey()
