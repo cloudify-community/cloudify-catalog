@@ -130,6 +130,10 @@ topics:
         name: Spot_Instance_Ubuntu
         path: azure/ubuntu_spot_instance
         description: Create a Ubuntu VM Spot Instance using ARM template
+      - id: InstanceUbuntu
+        name: Instance_Ubuntu
+        path: azure/ubuntu
+        description: Create a Ubuntu VM using ARM template
   - name: GCP
   - name: terraform_services
     target_path: s3_json_file
