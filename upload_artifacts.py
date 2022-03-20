@@ -99,7 +99,7 @@ def main():
         except yaml.YAMLError as exc:
             print(exc)
 
-    head = os.environ("GIT_BRANCH") #Repository('.').head.shorthand
+    head = os.environ["GIT_BRANCH"] #Repository('.').head.shorthand
     target_path_subfolder = get_target_sub_folder(head)
 
     base_url = catalog[S3_BASE_URL]
