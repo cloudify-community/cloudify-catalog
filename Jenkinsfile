@@ -133,9 +133,11 @@ pipeline{
               container('python'){
                 dir("${env.WORKSPACE}/${env.PROJECT}"){
                   setupGithubSSHKey()
-                  sh """
-                    python upload_artifacts.py
-                  """
+                  sh '''
+                    export secret="$PASS"
+                    echo $secret
+                    python upload_artifacts.py 
+                  '''
                 }
               }
           }
