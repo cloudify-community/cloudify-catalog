@@ -7,6 +7,24 @@ github_url: https://github.com/cloudify-community/cloudify-catalog/tree
 raw_github_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog
 
 topics:
+  - name: production_grade_certified_environments
+    target_path: s3_json_file
+      - id: DrAksAzure
+        name: DR_AKS_Azure
+        path: pg_ce/services/kubernetes_dr_aks
+        description: Creating Disaster Recovery AKS service
+      - id: DR_EKS_AWS
+        name: DR_EKS_AWS
+        path: pg_ce/services/kubernetes_dr_eks
+        description: Creating Disaster Recovery EKS service
+      - id: Environment_AWS_DR
+        name: Environment_AWS_DR
+        path: pg_ce/environments/aws
+        description: Creating Disaster Recovery AWS environment
+      - id: Environment_Azure_DR
+        name: Environment_Azure_DR
+        path: pg_ce/environments/azure
+        description: Creating Disaster Recovery Azure environment
   - name: certified_environments
     target_path: s3_json_file
     blueprints:
@@ -170,6 +188,10 @@ topics:
         name: Disk_Storage
         path: azure/data_disk
         description: Create a Disk Storage instance using ARM template
+      - id: CosmosDB
+        name: Cosmos_DB
+        path: azure/cosmos_db
+        description: Create a CosmosDB instance using ARM teplate
       - id: tf_azure_vm
         name: Terraform_Azure_VM
         path: terraform/azure
@@ -343,10 +365,10 @@ topics:
         name: Terraform_Kubernetes_AWS_EKS
         path: kubernetes/terraform/gke
         description: Create an AWS Kubernetes using Terraform automation
-      - id: spot_ocean
-        name: SpotOcean_optimized_cluster
-        path: kubernetes/spot
-        description: Create a Spot Ocean Kubernetes cost optimized Cluster
+      # - id: spot_ocean
+      #   name: SpotOcean_optimized_cluster
+      #   path: kubernetes/spot
+      #   description: Create a Spot Ocean Kubernetes cost optimized Cluster
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
