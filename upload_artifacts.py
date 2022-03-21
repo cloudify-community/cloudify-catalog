@@ -57,6 +57,19 @@ def upload_file(file_name: str, bucket: str, object_name: str = None) -> bool:
         return False
     return True
 
+def check_branch(directory: str):
+    if "6.3" in directory:
+        return True
+    elif "6.2" in directory:
+        return True
+    return False
+
+def set_target_path(directory: str, root: str, file: str):
+    if "catalogs" in root and check_branch(directory):
+        target_file = "{}/{}".format(directory, file)
+    else:
+        target_file = "{}/{}/{}".format(directory, root[root.find("/")+1:], file)
+    return target_file
 
 def upload_directory(source_directory: str, bucket: str, directory: str):
     """Uploads directories and files in the build to S3
@@ -69,9 +82,8 @@ def upload_directory(source_directory: str, bucket: str, directory: str):
     catalogs = []
     for root, dirs, files in os.walk(source_directory):
         for file in files:
-            target_file = "{}/{}/{}".format(directory,
-                                            root[root.find("/")+1:], file)
-            source_file = "{}/{}".format(root, file)
+            target_file = set_target_path(directory, root, file)
+            source_file = "{}/{}".format(root,file)
             upload_file(source_file, bucket, target_file)
 
 
@@ -87,8 +99,7 @@ def print_catalogs_urls(build_directory: str, base_url: str, directory: str):
         for file in files:
 
             if root == 'build/catalogs':
-                target_file = "{}/{}/{}".format(directory,
-                                                root[root.find("/")+1:], file)
+                target_file = set_target_path(directory, root, file)
                 print("{}/{}".format(base_url, target_file))
 
 
