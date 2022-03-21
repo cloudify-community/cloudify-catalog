@@ -17,7 +17,7 @@ topics:
       - id: Hello_world_Example
         name: Hello_World_Example
         path: getting_starte/hello_world
-        description: "Hello world" example of how to use cloudify ApplicationModule
+        description: Hello world example of how to use cloudify ApplicationModule
       - id: Multi_Tier_Example
         name: Multi_Tier_Example
         path: getting_started/multi_tier_example
