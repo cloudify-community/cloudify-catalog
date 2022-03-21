@@ -184,6 +184,10 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
+      - id: DiskStorage
+        name: Disk_Storage
+        path: azure/data_disk
+        description: Create a Disk Storage instance using ARM template
       - id: CosmosDB
         name: Cosmos_DB
         path: azure/cosmos_db
