@@ -184,6 +184,10 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
+      - id: notification_hub
+        name: Notification_Hub
+        path: azure/notification_hub
+        description: Create a Notification Hub using ARM template
       - id: ServiceBus
         name: Service_Bus
         path: azure/service_bus
