@@ -7,6 +7,24 @@ github_url: https://github.com/cloudify-community/cloudify-catalog/tree
 raw_github_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog
 
 topics:
+  - name: production_grade_certified_environments
+    target_path: s3_json_file
+      - id: DrAksAzure
+        name: DR_AKS_Azure
+        path: pg_ce/services/kubernetes_dr_aks
+        description: Creating Disaster Recovery AKS service
+      - id: DR_EKS_AWS
+        name: DR_EKS_AWS
+        path: pg_ce/services/kubernetes_dr_eks
+        description: Creating Disaster Recovery EKS service
+      - id: Environment_AWS_DR
+        name: Environment_AWS_DR
+        path: pg_ce/environments/aws
+        description: Creating Disaster Recovery AWS environment
+      - id: Environment_Azure_DR
+        name: Environment_Azure_DR
+        path: pg_ce/environments/azure
+        description: Creating Disaster Recovery Azure environment
   - name: certified_environments
     target_path: s3_json_file
     blueprints:
