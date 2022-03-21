@@ -16,7 +16,7 @@ topics:
         description: Creating SSH certificates as a secrets
       - id: Hello_world_Example
         name: Hello_World_Example
-        path: getting_starte/hello_world
+        path: getting_started/hello_world
         description: Hello world example of how to use cloudify ApplicationModule
       - id: Multi_Tier_Example
         name: Multi_Tier_Example
