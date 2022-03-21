@@ -7,7 +7,7 @@ The nested blueprint example illustrates how you can create a multi-tier or dist
 To do that we are using a feature that is referred to as  Service Composition. The Service Composition node type allows us to wrap an external service and expose it as a local node type. This allows us to leverage the relationship and dependency management and the rest of the  blueprint feature just as you would with a regular blueprint.
 
 In the following example we are using two blueprints.
-ChildBP1, and ChildBP2 are node types that are pointing to a blueprint with different params. The two node types  act as two independent services and a parent blueprint that will use the service component feature to call the child services.
+first_blueprint_child, and second_blueprint_child are node types that are pointing to a blueprint with different params. The two node types  act as two independent services and a parent blueprint that will use the service component feature to call the child services.
 
 
 ## Requirements
