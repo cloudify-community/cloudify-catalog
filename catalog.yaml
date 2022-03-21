@@ -189,6 +189,14 @@ topics:
         name: Spot_Instance_Ubuntu
         path: azure/ubuntu_spot_instance
         description: Create a Ubuntu VM Spot Instance using ARM template
+      - id: InstanceUbuntu
+        name: Instance_Ubuntu
+        path: azure/ubuntu
+        description: Create a Ubuntu VM using ARM template
+      - id: InstanceUbuntuDiskStorage
+        name: Instance_Ubuntu_Disk_Storage
+        path: azure/ubuntu_disk_storage
+        description: Create a u Ubuntu VM with managed disk storage 
       - id: SpotInstance
         name: Spot_Instance
         path: azure/spot_instance
@@ -386,10 +394,10 @@ topics:
         name: Terraform_Kubernetes_AWS_EKS
         path: kubernetes/terraform/gke
         description: Create an AWS Kubernetes using Terraform automation
-      # - id: spot_ocean
-      #   name: SpotOcean_optimized_cluster
-      #   path: kubernetes/spot
-      #   description: Create a Spot Ocean Kubernetes cost optimized Cluster
+      - id: spot_ocean
+        name: SpotOcean_optimized_cluster
+        path: kubernetes/spot
+        description: Create a Spot Ocean Kubernetes cost optimized Cluster
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
