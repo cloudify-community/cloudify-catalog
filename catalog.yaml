@@ -184,6 +184,10 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
+      - id: SpotInstance
+        name: Spot_Instance
+        path: azure/spot_instance
+        description: Create a Windows VM Spot Instance using ARM template
       - id: notification_hub
         name: Notification_Hub
         path: azure/notification_hub
