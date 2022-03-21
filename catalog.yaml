@@ -184,6 +184,10 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
+      - id: ContainerInstance
+        name: Container_Instance
+        path: azure/container_instances
+        description: Create a sample container instance with Wordpress & MySQL using ARM template
       - id: DiskStorage
         name: Disk_Storage
         path: azure/data_disk
