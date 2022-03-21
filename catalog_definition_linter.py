@@ -188,7 +188,7 @@ class Topic:
 
 		:return: True if there are no two blueprints with the same id
 		"""
-		result = False
+		result = True
 		blueprints_ids = []
 		if "blueprints" in self.__dict__.keys():
 			for blueprint in self.blueprints:
@@ -197,7 +197,7 @@ class Topic:
 					result = False
 				else:
 					blueprints_ids.append(blueprint.id)
-		return False
+		return result
 
 	def validate(self) -> bool:
 		"""Validates if the instance addresses:

@@ -42,6 +42,25 @@ topics:
         path: getting_started/webserver_and_certificate
         description: |
           The example illustrates the power of service composition in the use case of automation web service and ssh certificate creation
+  - name: production_grade_certified_environments
+    target_path: s3_json_file
+    blueprints:
+      - id: DrAksAzure
+        name: DR_AKS_Azure
+        path: pg_ce/services/kubernetes_dr_aks
+        description: Creating Disaster Recovery AKS service
+      - id: DR_EKS_AWS
+        name: DR_EKS_AWS
+        path: pg_ce/services/kubernetes_dr_eks
+        description: Creating Disaster Recovery EKS service
+      - id: Environment_AWS_DR
+        name: Environment_AWS_DR
+        path: pg_ce/environments/aws
+        description: Creating Disaster Recovery AWS environment
+      - id: Environment_Azure_DR
+        name: Environment_Azure_DR
+        path: pg_ce/environments/azure
+        description: Creating Disaster Recovery Azure environment
   - name: certified_environments
     target_path: s3_json_file
     blueprints:
@@ -201,6 +220,34 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
+      - id: SpotInstanceUbuntu
+        name: Spot_Instance_Ubuntu
+        path: azure/ubuntu_spot_instance
+        description: Create a Ubuntu VM Spot Instance using ARM template
+      - id: SpotInstance
+        name: Spot_Instance
+        path: azure/spot_instance
+        description: Create a Windows VM Spot Instance using ARM template
+      - id: notification_hub
+        name: Notification_Hub
+        path: azure/notification_hub
+        description: Create a Notification Hub using ARM template
+      - id: ServiceBus
+        name: Service_Bus
+        path: azure/service_bus
+        description: Create a Service Bus using ARM template
+      - id: ContainerInstance
+        name: Container_Instance
+        path: azure/container_instances
+        description: Create a sample container instance with Wordpress & MySQL using ARM template
+      - id: DiskStorage
+        name: Disk_Storage
+        path: azure/data_disk
+        description: Create a Disk Storage instance using ARM template
+      - id: CosmosDB
+        name: Cosmos_DB
+        path: azure/cosmos_db
+        description: Create a CosmosDB instance using ARM teplate
       - id: tf_azure_vm
         name: Terraform_Azure_VM
         path: terraform/azure
