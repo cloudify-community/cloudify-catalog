@@ -184,6 +184,10 @@ topics:
         name: Storage
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
+      - id: ServiceBus
+        name: Service_Bus
+        path: azure/service_bus
+        description: Create a Service Bus using ARM template
       - id: ContainerInstance
         name: Container_Instance
         path: azure/container_instances
