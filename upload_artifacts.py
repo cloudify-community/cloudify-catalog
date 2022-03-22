@@ -102,6 +102,17 @@ def print_catalogs_urls(build_directory: str, base_url: str, directory: str):
                 target_file = set_target_path(directory, root, file)
                 print("{}/{}".format(base_url, target_file))
 
+def set_head():
+    try: 
+        head = os.environ["GIT_BRANCH"]
+        if re.match(r"^PR-[\d]{1,4}-(merge|head)$", head):
+            # it means that we are on the prs branches
+            head = os.environ["CHANGE_BRANCH"]
+    except KeyError:
+        # we are on local machine
+        head = Repository('.').head.shorthand
+        print(
+            "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
 
 def main():
     with open(CATALOG_FILE_NAME, 'r') as stream:
@@ -110,13 +121,7 @@ def main():
         except yaml.YAMLError as exc:
             print(exc)
 
-    try:
-        head = os.environ["CHANGE_BRANCH"]
-    except KeyError:
-        head = Repository('.').head.shorthand
-        print(
-            "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
-
+    head = set_head()
     target_path_subfolder = get_target_sub_folder(head)
 
     base_url = catalog[S3_BASE_URL]
