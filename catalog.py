@@ -86,11 +86,9 @@ def get_target_sub_folder(branch: str) -> str:
 def set_head():
     try: 
         head = os.environ["GIT_BRANCH"]
-        print(head)
         if re.match("^PR-[\\d]{1,4}-(merge|head)$", head):
             # it means that we are on the prs branches
             head = os.environ["CHANGE_BRANCH"]
-            print(head)
     except KeyError:
         # we are on local machine
         head = Repository('.').head.shorthand
