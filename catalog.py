@@ -91,7 +91,7 @@ def main():
 			print(exc)
 
 	try:
-		head = os.environ["BRANCH_NAME"]
+		head = os.environ["CHANGE_BRANCH"]
 	except KeyError:
 		head = Repository('.').head.shorthand
 		print(

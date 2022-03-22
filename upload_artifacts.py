@@ -111,7 +111,7 @@ def main():
             print(exc)
 
     try:
-        head = os.environ["GITHUB_PR_SOURCE_BRANCH"]
+        head = os.environ["CHANGE_BRANCH"]
     except KeyError:
         head = Repository('.').head.shorthand
         print(
