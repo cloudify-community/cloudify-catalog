@@ -113,6 +113,7 @@ def set_head():
         head = Repository('.').head.shorthand
         print(
             "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
+    return head
 
 def main():
     with open(CATALOG_FILE_NAME, 'r') as stream:
