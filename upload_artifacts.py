@@ -105,7 +105,7 @@ def print_catalogs_urls(build_directory: str, base_url: str, directory: str):
 def set_head():
     try: 
         head = os.environ["GIT_BRANCH"]
-        if re.match(r"^PR-[\d]{1,4}-(merge|head)$", head):
+        if re.match("^PR-[\\d]{1,4}-(merge|head)$", head):
             # it means that we are on the prs branches
             head = os.environ["CHANGE_BRANCH"]
     except KeyError:
