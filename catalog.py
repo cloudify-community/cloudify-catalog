@@ -90,7 +90,12 @@ def main():
 		except yaml.YAMLError as exc:
 			print(exc)
 
-	head = Repository('.').head.shorthand
+	try:
+		head = os.environ["GIT_BRANCH"]
+	except KeyError:
+		head = Repository('.').head.shorthand
+		print(
+            "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
 	target_path_subfolder = get_target_sub_folder(head)
 
 	git_url = catalog['git_url']
