@@ -111,7 +111,7 @@ def main():
             print(exc)
 
     try:
-        head = os.environ["BRANCH_NAME"]
+        head = os.environ["GITHUB_PR_SOURCE_BRANCH"]
     except KeyError:
         head = Repository('.').head.shorthand
         print(
