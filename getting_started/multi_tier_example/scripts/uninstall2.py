@@ -1,1 +1,0 @@
-print('Uninstall script number 2')
