@@ -1,0 +1,54 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: >
+  This blueprint was automatically created from a Terraform template.
+
+imports:
+  - http://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - plugin:cloudify-terraform-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+inputs:
+  terraform_version:
+    type: string
+    default: "0.14.11"
+
+  module_source:
+    type: string
+    required: true
+    default: "https://github.com/spotinst/terraform-spotinst-ocean-eks/archive/refs/heads/master.zip"
+
+  terraform_template_location:
+    type: string
+    default: "./examples/simple-cluster"
+
+  aws_default_region:
+    type: string
+    default: "us-east-1"
+
+
+node_templates:
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/0.14.11/terraform_0.14.11_linux_amd64.zip
+
+  cloud_resources:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        source:
+          location: { get_input: module_source }
+        source_path: { get_input: terraform_template_location }
+        variables:
+          spotinst_account: { get_secret: SPOT_ACCOUNT_ID }
+          spotinst_token: { get_secret: SPOT_TOKEN }
+        environment_variables:
+          AWS_ACCESS_KEY_ID: { get_secret: AWS_ACCESS_KEY_ID }
+          AWS_SECRET_ACCESS_KEY: { get_secret: AWS_SECRET_ACCESS_KEY }
+          AWS_DEFAULT_REGION: { get_input: aws_default_region }
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+

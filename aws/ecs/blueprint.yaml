@@ -188,7 +188,7 @@ node_templates:
         target: ecs_service_iam_role
     interfaces:
       cloudify.interfaces.lifecycle:
-        configure:
+        create:
           inputs:
             resource_config:
               serviceName: 'service_name_1'
@@ -268,7 +268,7 @@ node_templates:
         Priority: 101
     interfaces:
       cloudify.interfaces.lifecycle:
-        configure:
+        create:
           inputs:
             resource_config:
               Priority: 101
