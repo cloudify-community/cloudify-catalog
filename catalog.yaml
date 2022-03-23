@@ -11,7 +11,7 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: gen-ssh-cert-service-component
-        name: Gen-SSH-Cert-Service-Component-Example
+        name: Gen-SSH-Cert-Example
         path: getting_started/ssh_cert
         description: |
           This blueprint creates SSH key

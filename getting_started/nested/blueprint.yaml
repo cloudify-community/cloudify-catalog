@@ -49,7 +49,7 @@ node_templates:
       resource_config:
         blueprint:
           external_resource: False
-          id: Gen-SSH-Cert-Service-Component-Example
+          id: Gen-SSH-Cert-Example
           blueprint_archive: { get_input:  blueprint_archive }
           main_file_name: blueprint.yaml
         deployment:
