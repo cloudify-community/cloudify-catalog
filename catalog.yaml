@@ -7,6 +7,41 @@ github_url: https://github.com/cloudify-community/cloudify-catalog/tree
 raw_github_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog
 
 topics:
+  - name: getting_started
+    target_path: s3_json_file
+    blueprints:
+      - id: Gen_SSH_Cert_Example
+        name: Gen_SSH_Cert_Example
+        path: getting_started/gen_ssh_cert
+        description: Creating SSH certificates as a secrets
+      - id: Hello_world_Example
+        name: Hello_World_Example
+        path: getting_started/hello_world
+        description: Hello world example of how to use cloudify ApplicationModule
+      - id: Multi_Tier_Example
+        name: Multi_Tier_Example
+        path: getting_started/multi_tier_example
+        description: Creating Multi Tier application example that illustrates the power of the cloudify node releationships 
+      - id: Nested_Example
+        name: Nested_Example
+        path: getting_started/nested_example
+        description: |
+          Nested blueprint that illustrates how to create distributed service/multi tier services with indepenent blueprints and lifecycles
+      - id: Simple_Web_Server_Example
+        name: Simple_Web_Server_Example
+        path: getting_started/simple_web_server
+        description: | 
+          The example illustrates how to create simple web server
+      - id: Web_App_From_Git_Example
+        name: Web_App_From_Git_Example
+        path: getting_started/web_app_from_git
+        description: | 
+          The example illustrates how we can utilise ready-to-go code from git repository in order to create the cloudify service
+      - id: Webserver_With_Certificate
+        name: Webserver_With_Certificate
+        path: getting_started/webserver_and_certificate
+        description: |
+          The example illustrates the power of service composition in the use case of automation web service and ssh certificate creation
   - name: production_grade_certified_environments
     target_path: s3_json_file
     blueprints:

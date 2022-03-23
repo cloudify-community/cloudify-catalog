@@ -83,6 +83,19 @@ def get_target_sub_folder(branch: str) -> str:
 	result = re.match(pattern, branch)
 	return result.group(1) if result else "staging/{}".format(branch)
 
+def set_head():
+    try: 
+        head = os.environ["GIT_BRANCH"]
+        if re.match("^PR-[\\d]{1,4}-(merge|head)$", head):
+            # it means that we are on the prs branches
+            head = os.environ["CHANGE_BRANCH"]
+    except KeyError:
+        # we are on local machine
+        head = Repository('.').head.shorthand
+        print(
+            "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
+    return head
+
 def main():
 	with open("catalog.yaml", 'r') as stream:
 		try:
@@ -90,7 +103,7 @@ def main():
 		except yaml.YAMLError as exc:
 			print(exc)
 
-	head = Repository('.').head.shorthand
+	head = set_head()
 	target_path_subfolder = get_target_sub_folder(head)
 
 	git_url = catalog['git_url']
