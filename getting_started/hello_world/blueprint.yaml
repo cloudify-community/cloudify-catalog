@@ -1,0 +1,29 @@
+#This is the blueprint header that defines the DSL version
+tosca_definitions_version: cloudify_dsl_1_3
+
+#This is the import section here plugins and otehr blueprint files are imported
+imports:
+  #The types.yaml contains the basic building blicks of a blueprint
+  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+
+# Here we are defining inputs that will be populated at the deplyment creation time
+inputs:
+  #This is our input hello, a deafult value world is defined to it
+  hello:
+    description: Say Hello to
+    display_label: Example input value
+    description: Example input value 
+    default: World
+
+#This is the topolog section here the managed resources and relationships between them are defined
+node_templates:
+  #Every blueprint ash to have at least one node defined, we have defined an empty Application Module for this examnple, it will not perform any actions
+  MyResource:
+    #Here the resource types is defined, the types are building blocks that can be used in the blueprint the come from plugins, types.yaml and can be also customized in the blueprint it self.
+    type:  cloudify.nodes.ApplicationModule
+
+#Here we are defining the outputs of a blueprint, those will contain values fomr the resources managed by the blueprint, they are updated during the deplyment lifecycle.
+capabilities:
+  #we have defined the output hellow and assigned it a the value of the input hello
+  hello:
+    value:  { get_input: hello }
