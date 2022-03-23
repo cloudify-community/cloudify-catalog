@@ -11,12 +11,12 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: gen-ssh-cert-service-component
-        name: Gen_SSH_Cert_Example
+        name: Gen-SSH-Cert-Example
         path: getting_started/ssh_cert
         description: |
           This blueprint creates SSH key
       - id: ex4-nested-blueprint
-        name: Service_Composition_Example
+        name: Service-Composition-Example
         path: getting_started/nested
         description: |
             Service Composition - describing how to create relationship between independent services
@@ -24,7 +24,7 @@ topics:
             and were adding an SSH certificate generator to that service.
             The example will also demonstrate how we can upload and instantiate all nested services on demand.
       - id: ex3-relationship-blueprint
-        name: Relationship_Example
+        name: Relationship-Example
         path: getting_started/relationship
         description: |
             The relationship blueprint - describes how to create dependencies between multiple node types resources
@@ -33,7 +33,7 @@ topics:
             See the app_scripts/create.sh to see how this is done.
             The webserver and application will run on the <manager host>:8000
       - id: ex2-node-type-blueprint
-        name: Node_Types_Example
+        name: Node-Types-Example
         path: getting_started/node_types
         description: |
             Node types - describing how to map the lifecycle of simple resource.
@@ -41,7 +41,7 @@ topics:
             The webserver/start.sh and stop.sh will be called to instantiate and decommission the service
             The web server will run on the <manager host>:8000
       - id: ex1-input-output-blueprint
-        name: Input_Outputs_Example
+        name: Input-Outputs-Example
         path: getting_started/input_outputs 
         description: | 
           Input and outputs - describing the most basic blueprint structure
