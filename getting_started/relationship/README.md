@@ -2,7 +2,7 @@
 
 ## General
 
-The relationship blueprint describes how to create dependencies between multiple node types resources
+The relationship blueprint - describes how to create dependencies between multiple node types resources
 In this case were adding a web application node (web calculator) that will be contained_in the http_web_server resource
 Note that the application is pulled from a git repository and can be easily modified to any other application as needed.
 See the app_scripts/create.sh to see how this is done.
