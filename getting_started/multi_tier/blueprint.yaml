@@ -1,0 +1,110 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: >
+ The multi tier blueprint example shows how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types. 
+ We will use a multi tier topology of a classic web application
+
+imports:
+  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+
+inputs:
+  webserver_port_1:
+    description: The HTTP web server 1 port.
+    default: 8001
+  webserver_port_2:
+    description: The HTTP web server 2 port.
+    default: 8002
+  webserver_port_3:
+    description: The HTTP web server 1 port.
+    default: 8003
+
+node_templates:
+  demo_http_web_server_1:
+    type: cloudify.nodes.WebServer
+    properties:
+      port: { get_input: webserver_port_1 }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/install1.py
+          executor: central_deployment_agent
+        delete:
+          implementation: scripts/uninstall1.py
+          executor: central_deployment_agent
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: DB
+        
+  demo_http_web_server_2:
+    type: cloudify.nodes.WebServer
+    properties:
+      port: { get_input: webserver_port_2 }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/install2.py
+          executor: central_deployment_agent
+        delete:
+          implementation: scripts/uninstall2.py
+          executor: central_deployment_agent
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: DB
+        
+  demo_http_web_server_3:
+    type: cloudify.nodes.WebServer
+    properties:
+      port: { get_input: webserver_port_3 }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/install3.py
+          executor: central_deployment_agent
+        delete:
+          implementation: scripts/uninstall3.py
+          executor: central_deployment_agent
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: DB
+        
+  DB:
+    type: cloudify.nodes.Database
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/install1.py
+          executor: central_deployment_agent
+        delete:
+          implementation: scripts/uninstall1.py
+          executor: central_deployment_agent
+  demo_load_balancer:
+    type: cloudify.nodes.LoadBalancer
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/install1.py
+          executor: central_deployment_agent
+        delete:
+          implementation: scripts/uninstall1.py
+          executor: central_deployment_agent
+    relationships:
+      - target: demo_http_web_server_1
+        type: cloudify.relationships.depends_on
+      - target: demo_http_web_server_2
+        type: cloudify.relationships.depends_on
+      - target: demo_http_web_server_3
+        type: cloudify.relationships.depends_on
+
+outputs:
+  application_endpoint:
+    description: The external endpoint of the application.
+    value:
+      {
+        concat:
+          [
+            "http://",
+            { get_attribute: [demo_http_web_server_1, ip] },
+            ":",
+            { get_input: webserver_port_1 },
+          ],
+      }

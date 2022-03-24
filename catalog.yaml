@@ -17,7 +17,7 @@ topics:
           This blueprint creates SSH key
       - id: ex4-nested-blueprint
         name: Service-Composition-Example
-        path: getting_started/nested
+        path: getting_started/service_composition
         description: |
             Service Composition - describing how to create relationship between independent services
             In this case we run the same web server and application from ex3 as an independent deployment

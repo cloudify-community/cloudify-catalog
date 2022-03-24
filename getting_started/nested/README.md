@@ -1,16 +1,14 @@
-# Service Composition Example
+# Nested Application Creation Example
 
 ## General
 
-Service Composition - describing how to create relationship between independent services
-In this case we run the same web server and application from ex3 as an independent deployment
-and were adding an SSH certificate generator to that service.
-The example will also demonstrate how we can upload and instantiate all nested services on demand.
+The nested blueprint example illustrates how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
+We will illustrate how we can create a dependency and relationship between those services , pass inputs/output parameters etc.
 
 
 ## Requirements
 
-Gen-SSH-Cert-Example and Relationship-Example from Getting Started Tab imported to the Cloudify Manager.
+Multi-Tier-Example needs to be imported from Getting Started Tab imported to the Cloudify Manager.
 
 ## Secrets
 
@@ -26,12 +24,17 @@ N/A
 
 ## Node Types
 
-### WebServiceComponent
-The node type is responsible for creation of the Web Service.\
+### Parent Blueprint
+The node type is responsible for creation the example parent blueprint.\
 Derived type is `cloudify.nodes.ServiceComponent`
 
-### Certificate
-The node type is responsible for creation of the SSH Certificate.\
+### First Child Blueprint
+
+The node type is responsible for creation the example child blueprint #1.\
+Derived type is `cloudify.nodes.ServiceComponent`
+
+### Second Child Blupeprint
+The node type is responsible for creation the example child blueprint #2.\
 Derived type is `cloudify.nodes.ServiceComponent`
 
 ## Labels
