@@ -1,11 +1,9 @@
-# SSH Certificates Creation
+# Node Types Example
 
 ## General
 
-Node types  - describing how to map the lifecycle of simple resource.
-In this specific example we use an http daemon as the resource.
-The webserver/start.sh and stop.sh will be called to instantiate and decommission the service
-The web server will run on the <manager host>:8000
+Node types blueprint example - describes how to map the lifecycle of simple resource. In this specific example we use an http daemon as the resource.
+The webserver/start.sh and stop.sh will be called to instantiate and decommission the service. The web server will run on the <manager host>:8000
 
 ## Requirements
 

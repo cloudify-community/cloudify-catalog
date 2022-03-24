@@ -19,7 +19,7 @@ topics:
         name: Service-Composition-Example
         path: getting_started/service_composition
         description: |
-            Service Composition - describing how to create relationship between independent services
+            Service Composition blueprint example - describes how to create relationship between independent services
             In this case we run the same web server and application from ex3 as an independent deployment
             and were adding an SSH certificate generator to that service.
             The example will also demonstrate how we can upload and instantiate all nested services on demand.
@@ -27,7 +27,7 @@ topics:
         name: Relationship-Example
         path: getting_started/relationship
         description: |
-            The relationship blueprint - describes how to create dependencies between multiple node types resources
+            The relationship blueprint example - describes how to create dependencies between multiple node types resources
             In this case were adding a web application node (web calculator) that will be contained_in the http_web_server resource
             Note that the application is pulled from a git repository and can be easily modified to any other application as needed.
             See the app_scripts/create.sh to see how this is done.
@@ -36,7 +36,7 @@ topics:
         name: Node-Types-Example
         path: getting_started/node_types
         description: |
-            Node types - describing how to map the lifecycle of simple resource.
+            Node types blueprint example - describes how to map the lifecycle of simple resource.
             In this specific example we use an http daemon as the resource.
             The webserver/start.sh and stop.sh will be called to instantiate and decommission the service
             The web server will run on the <manager host>:8000
@@ -45,6 +45,18 @@ topics:
         path: getting_started/input_outputs 
         description: | 
           Input and outputs - describing the most basic blueprint structure
+      - id: Multi-Tier-Example
+        name: Multi-Tier-Example
+        path: getting_started/multi_tier
+        description: |
+          The multi tier blueprint example - describes how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types. 
+          We will use a multi tier topology of a classic web application
+      - id: Nested-Example
+        name: Nested-Example
+        path: getting_started/nested
+        description: |
+          The nested blueprint example - describes how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
+          We will illustrate how we can create a dependency and relationship between those services , pass inputs/output parameters etc.
   - name: production_grade_certified_environments
     target_path: s3_json_file
     blueprints:

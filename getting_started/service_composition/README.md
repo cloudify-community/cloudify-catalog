@@ -2,10 +2,8 @@
 
 ## General
 
-Service Composition - describing how to create relationship between independent services
-In this case we run the same web server and application from ex3 as an independent deployment
-and were adding an SSH certificate generator to that service.
-The example will also demonstrate how we can upload and instantiate all nested services on demand.
+Service Composition blueprint example - describes how to create relationship between independent services
+In this case we run the same web server and application from ex3 as an independent deployment and were adding an SSH certificate generator to that service. The example will also demonstrate how we can upload and instantiate all nested services on demand.
 
 
 ## Requirements

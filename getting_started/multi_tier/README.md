@@ -1,8 +1,8 @@
-# Multi Tier Applicaiton Creation Example
+# Multi Tier Example
 
 ## General
 
-The multi tier blueprint example shows how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types. 
+The multi tier blueprint example - describes how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types. 
 We will use a multi tier topology of a classic web application
 
 ## Requirements

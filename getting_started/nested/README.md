@@ -1,8 +1,8 @@
-# Nested Application Creation Example
+# Nested Example
 
 ## General
 
-The nested blueprint example illustrates how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
+The nested blueprint example - describes how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
 We will illustrate how we can create a dependency and relationship between those services , pass inputs/output parameters etc.
 
 
