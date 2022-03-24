@@ -66,7 +66,7 @@ topics:
         zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/S3AWS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/s3/README.md
         main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/s3/psql.png
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/s3/s3.png
       - id: AksAzure
         name: AksAzure
         path: certified_environments/services/azure/aks
