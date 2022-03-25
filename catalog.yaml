@@ -418,8 +418,8 @@ topics:
         name: Kubernetes_Azure_AKS_DR
         path: pg_ce/services/kubernetes_dr_aks
         description: Creating Disaster Recovery AKS service
-      - id: Kubernetes_EKS_AWS_DR
-        name: Kubernetes_EKS_AWS_DR
+      - id: Kubernetes_AWS_EKS_DR
+        name: Kubernetes_AWS_EKS_DR
         path: pg_ce/services/kubernetes_dr_eks
         description: Creating Disaster Recovery EKS service
       - id: Environment_AWS_DR
