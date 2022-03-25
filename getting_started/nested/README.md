@@ -8,7 +8,7 @@ We will illustrate how we can create a dependency and relationship between those
 
 ## Requirements
 
-Multi-Tier-Example needs to be imported from Getting Started Tab imported to the Cloudify Manager.
+N/A
 
 ## Secrets
 

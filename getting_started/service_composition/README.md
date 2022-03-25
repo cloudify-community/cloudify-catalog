@@ -8,7 +8,7 @@ In this case we run the same web server and application from ex3 as an independe
 
 ## Requirements
 
-Gen-SSH-Cert-Example & Relationship-Example from Getting Started Tab needs to be imported to the Cloudify Manager.
+N/A
 
 ## Secrets
 

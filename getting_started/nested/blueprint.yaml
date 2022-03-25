@@ -12,8 +12,8 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          external_resource: true
-          id: Multi-Tier-Example
+          external_resource: false
+          blueprint_archive: blueprints/multi_tier.zip
         deployment:
           id: Parent-Bp-Deployment
           auto_inc_suffix: true
@@ -28,8 +28,8 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          external_resource: true
-          id: Multi-Tier-Example
+          external_resource: false
+          blueprint_archive: blueprints/multi_tier.zip
         deployment:
           id: Child-Bp-Deployment-1
           auto_inc_suffix: true  
@@ -38,8 +38,8 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          external_resource: true
-          id: Multi-Tier-Example
+          external_resource: false
+          blueprint_archive: blueprints/multi_tier.zip
         deployment:
           id: Child-Bp-Deployment-2
           auto_inc_suffix: true
