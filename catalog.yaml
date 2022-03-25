@@ -220,8 +220,8 @@ topics:
         name: Storage-Az-Plugin
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-      - id: Spot-Instance-Ubuntu-Arm
-        name: Spot_Instance_Ubuntu-Arm
+      - id: Instance-Ubuntu-Spot-Arm
+        name: Instance-Ubuntu-Spot-Arm
         path: azure/ubuntu_spot_instance
         description: Create a Ubuntu VM Spot Instance using ARM template
       - id: Instance-Ubuntu-Disk-Storage-Arm
@@ -229,7 +229,7 @@ topics:
         path: azure/ubuntu_disk_storage
         description: Create a u Ubuntu VM with managed disk storage 
       - id: Spot-Instance-Windows-Arm
-        name: Spot_Instance
+        name: Spot-Instance-Windows-Arm
         path: azure/spot_instance
         description: Create a Windows VM Spot Instance using ARM template
       - id: Notification-Hub-Arm
