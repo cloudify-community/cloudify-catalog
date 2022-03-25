@@ -414,12 +414,12 @@ topics:
         name: SpotOcean_optimized_cluster
         path: kubernetes/spot
         description: Create a Spot Ocean Kubernetes cost optimized Cluster
-      - id: DrAksAzure
-        name: DR_AKS_Azure
+      - id: Kubernetes_Azure_AKS_DR
+        name: Kubernetes_Azure_AKS_DR
         path: pg_ce/services/kubernetes_dr_aks
         description: Creating Disaster Recovery AKS service
-      - id: DR_EKS_AWS
-        name: DR_EKS_AWS
+      - id: Kubernetes_EKS_AWS_DR
+        name: Kubernetes_EKS_AWS_DR
         path: pg_ce/services/kubernetes_dr_eks
         description: Creating Disaster Recovery EKS service
       - id: Environment_AWS_DR
