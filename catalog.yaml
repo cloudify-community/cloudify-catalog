@@ -42,25 +42,6 @@ topics:
         path: getting_started/webserver_and_certificate
         description: |
           The example illustrates the power of service composition in the use case of automation web service and ssh certificate creation
-  - name: production_grade_certified_environments
-    target_path: s3_json_file
-    blueprints:
-      - id: DrAksAzure
-        name: DR_AKS_Azure
-        path: pg_ce/services/kubernetes_dr_aks
-        description: Creating Disaster Recovery AKS service
-      - id: DR_EKS_AWS
-        name: DR_EKS_AWS
-        path: pg_ce/services/kubernetes_dr_eks
-        description: Creating Disaster Recovery EKS service
-      - id: Environment_AWS_DR
-        name: Environment_AWS_DR
-        path: pg_ce/environments/aws
-        description: Creating Disaster Recovery AWS environment
-      - id: Environment_Azure_DR
-        name: Environment_Azure_DR
-        path: pg_ce/environments/azure
-        description: Creating Disaster Recovery Azure environment
   - name: certified_environments
     target_path: s3_json_file
     blueprints:
@@ -433,6 +414,22 @@ topics:
         name: SpotOcean_optimized_cluster
         path: kubernetes/spot
         description: Create a Spot Ocean Kubernetes cost optimized Cluster
+      - id: DrAksAzure
+        name: DR_AKS_Azure
+        path: pg_ce/services/kubernetes_dr_aks
+        description: Creating Disaster Recovery AKS service
+      - id: DR_EKS_AWS
+        name: DR_EKS_AWS
+        path: pg_ce/services/kubernetes_dr_eks
+        description: Creating Disaster Recovery EKS service
+      - id: Environment_AWS_DR
+        name: Environment_AWS_DR
+        path: pg_ce/environments/aws
+        description: Creating Disaster Recovery AWS environment
+      - id: Environment_Azure_DR
+        name: Environment_Azure_DR
+        path: pg_ce/environments/azure
+        description: Creating Disaster Recovery Azure environment
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
