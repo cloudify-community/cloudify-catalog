@@ -1,7 +1,7 @@
 tosca_definitions_version: cloudify_dsl_1_3
 
 description: >
-  This blueprint creates an AWS infrastructure environment.
+  This blueprint creates SSH key.
 imports:
   - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
@@ -9,9 +9,6 @@ imports:
 inputs:
   key_name:
     default: 'MyKey'
-    display_label: 'The prefix name for the keypair'
-    description: |
-      'The prefix name for the keypair, created secret will be in the format: MyKey_public & MyKey_private'
 
 node_templates:
 

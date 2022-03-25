@@ -2,7 +2,7 @@
 
 ## General
 
-The blueprint creates a pair of SSH keys and saves them in the cloudify manager as secrets.
+This blueprint creates SSH key.
 
 ## Requirements
 

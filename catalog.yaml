@@ -10,38 +10,53 @@ topics:
   - name: getting_started
     target_path: s3_json_file
     blueprints:
-      - id: Gen_SSH_Cert_Example
-        name: Gen_SSH_Cert_Example
-        path: getting_started/gen_ssh_cert
-        description: Creating SSH certificates as a secrets
-      - id: Hello_world_Example
-        name: Hello_World_Example
-        path: getting_started/hello_world
-        description: Hello world example of how to use cloudify ApplicationModule
-      - id: Multi_Tier_Example
-        name: Multi_Tier_Example
-        path: getting_started/multi_tier_example
-        description: Creating Multi Tier application example that illustrates the power of the cloudify node releationships 
-      - id: Nested_Example
-        name: Nested_Example
-        path: getting_started/nested_example
+      - id: gen-ssh-cert-service-component
+        name: Gen-SSH-Cert-Example
+        path: getting_started/ssh_cert
         description: |
-          Nested blueprint that illustrates how to create distributed service/multi tier services with indepenent blueprints and lifecycles
-      - id: Simple_Web_Server_Example
-        name: Simple_Web_Server_Example
-        path: getting_started/simple_web_server
-        description: | 
-          The example illustrates how to create simple web server
-      - id: Web_App_From_Git_Example
-        name: Web_App_From_Git_Example
-        path: getting_started/web_app_from_git
-        description: | 
-          The example illustrates how we can utilise ready-to-go code from git repository in order to create the cloudify service
-      - id: Webserver_With_Certificate
-        name: Webserver_With_Certificate
-        path: getting_started/webserver_and_certificate
+          This blueprint creates SSH key
+      - id: ex4-nested-blueprint
+        name: Service-Composition-Example
+        path: getting_started/service_composition
         description: |
-          The example illustrates the power of service composition in the use case of automation web service and ssh certificate creation
+            Service Composition blueprint example - describes how to create relationship between independent services
+            In this case we run the same web server and application from ex3 as an independent deployment
+            and were adding an SSH certificate generator to that service.
+            The example will also demonstrate how we can upload and instantiate all nested services on demand.
+      - id: ex3-relationship-blueprint
+        name: Relationship-Example
+        path: getting_started/relationship
+        description: |
+            The relationship blueprint example - describes how to create dependencies between multiple node types resources
+            In this case were adding a web application node (web calculator) that will be contained_in the http_web_server resource
+            Note that the application is pulled from a git repository and can be easily modified to any other application as needed.
+            See the app_scripts/create.sh to see how this is done.
+            The webserver and application will run on the <manager host>:8000
+      - id: ex2-node-type-blueprint
+        name: Node-Types-Example
+        path: getting_started/node_types
+        description: |
+            Node types blueprint example - describes how to map the lifecycle of simple resource.
+            In this specific example we use an http daemon as the resource.
+            The webserver/start.sh and stop.sh will be called to instantiate and decommission the service
+            The web server will run on the <manager host>:8000
+      - id: ex1-input-output-blueprint
+        name: Input-Outputs-Example
+        path: getting_started/input_outputs 
+        description: | 
+          Input and outputs - describing the most basic blueprint structure
+      - id: Multi-Tier-Example
+        name: Multi-Tier-Example
+        path: getting_started/multi_tier
+        description: |
+          The multi tier blueprint example - describes how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types. 
+          We will use a multi tier topology of a classic web application
+      - id: Nested-Example
+        name: Nested-Example
+        path: getting_started/nested
+        description: |
+          The nested blueprint example - describes how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
+          We will illustrate how we can create a dependency and relationship between those services , pass inputs/output parameters etc.
   - name: certified_environments
     target_path: s3_json_file
     blueprints:
@@ -185,95 +200,91 @@ topics:
   - name: azure_services
     target_path: s3_json_file
     blueprints:
-      - id: deployment
-        name: Deployment
+      - id: Instance-Ubuntu-Arm
+        name: Instance-Ubuntu-Arm
         path: azure/deployment
         description: This blueprint creates a Linux instance on Microsoft Azure, along with necessary networking services and a public IP using an Azure ARM template (template.json).  The blueprint generates public and private SSH keys. A keypair (for SSH) is created, stored in the secret store, and attached to the provisioned instance, via the Azure template inputs.  If a secret with the same name(s) is present in the secret store, it is used.
-      - id: instance
-        name: Instance
+      - id: instance-Ubuntu-Azure-Plugin
+        name: Instance-Ubuntu-Azure-Plugin
         path: azure/instance
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-      - id: loadbalance
-        name: Loadbalance
+      - id: Loadbalancer-Azure-Plugin
+        name: Loadbalancer-Azure-Plugin
         path: azure/lb
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-      - id: storage
-        name: Storage
+      - id: Storage-Azure-Plugin
+        name: Storage-Az-Plugin
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-      - id: SpotInstanceUbuntu
-        name: Spot_Instance_Ubuntu
+      - id: Instance-Ubuntu-Spot-Arm
+        name: Instance-Ubuntu-Spot-Arm
         path: azure/ubuntu_spot_instance
         description: Create a Ubuntu VM Spot Instance using ARM template
-      - id: InstanceUbuntu
-        name: Instance_Ubuntu
-        path: azure/ubuntu
-        description: Create a Ubuntu VM using ARM template
-      - id: InstanceUbuntuDiskStorage
-        name: Instance_Ubuntu_Disk_Storage
+      - id: Instance-Ubuntu-Disk-Storage-Arm
+        name: Instance-Ubuntu-Disk-Storage-Arm
         path: azure/ubuntu_disk_storage
         description: Create a u Ubuntu VM with managed disk storage 
-      - id: SpotInstance
-        name: Spot_Instance
+      - id: Spot-Instance-Windows-Arm
+        name: Spot-Instance-Windows-Arm
         path: azure/spot_instance
         description: Create a Windows VM Spot Instance using ARM template
-      - id: notification_hub
-        name: Notification_Hub
+      - id: Notification-Hub-Arm
+        name: Notification-Hub-Arm
         path: azure/notification_hub
         description: Create a Notification Hub using ARM template
-      - id: ServiceBus
-        name: Service_Bus
+      - id: Service-Bus-Arm
+        name: Service-Bus-Arm
         path: azure/service_bus
         description: Create a Service Bus using ARM template
-      - id: ContainerInstance
-        name: Container_Instance
+      - id: Container-Instance-Arm
+        name: Container-Instance-Arm
         path: azure/container_instances
         description: Create a sample container instance with Wordpress & MySQL using ARM template
-      - id: DiskStorage
-        name: Disk_Storage
+      - id: Disk-Storage-Arm
+        name: Disk-Storage-Arm
         path: azure/data_disk
         description: Create a Disk Storage instance using ARM template
-      - id: CosmosDB
-        name: Cosmos_DB
+      - id: CosmosDB-Arm
+        name: CosmosDB-Arm
         path: azure/cosmos_db
         description: Create a CosmosDB instance using ARM teplate
       - id: tf_azure_vm
-        name: Terraform_Azure_VM
+        name: Terraform-Azure-VM
         path: terraform/azure
         description: Create an Azure VM using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
       - id: tf_azure_storage
-        name: Terraform_Azure_Storage
+        name: Terraform-Azure-Storage
         path: terraform/azure_storage
         description: Create an Azure Blob Storage automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
       - id: tf_azure_vpc
-        name: Terraform_Azure_VPC
+        name: Terraform-Azure-VPC
         path: terraform/azure_vpc
         description: Create an Azure VPC using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
       - id: tf_azure_oracale
-        name: Terraform_Azure_Oracle
+        name: Terraform-Azure-Oracle
         path: terraform/azure_oracle
         description: Create an Azure Oracle database using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
       - id: tf_azure_mysql
-        name: Terraform_Azure_Mysql
+        name: Terraform-Azure-Mysql
         path: terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
       - id: tf_azure_postgres
-        name: Terraform_Azure_Postgres
+        name: Terraform-Azure-Postgres
         path: terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
       - id: tf_azure_mariadb
-        name: Terraform_Azure_MariaDB
+        name: Terraform-Azure-MariaDB
         path: terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
       - id: tf_aks
-        name: AKS_Terraform
+        name: Terraform-Azure-Aks
         path: terraform/aks
         description: Create an AKS using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
