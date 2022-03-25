@@ -1,8 +1,8 @@
-# Webserver with Certificate Creation Example
+# Input outputs Example
 
 ## General
 
-The blueprint is an example how to use cloudify ApplicationModule node.
+Input and outputs - describing the most basic blueprint structure
 
 ## Requirements
 
@@ -24,7 +24,7 @@ N/A
 
 ## Node Types
 
-### My Resource
+### MyResource
 The node type responsible for creation the Hello world application module.\
 Derived type is `cloudify.nodes.ApplicationModule`
 

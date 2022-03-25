@@ -13,9 +13,9 @@ node_templates:
       resource_config:
         blueprint:
           external_resource: true
-          id: multi-tier-example-2  
+          id: Multi-Tier-Example
         deployment:
-          id: parent-bp-deployment
+          id: Parent-Bp-Deployment
           auto_inc_suffix: true
     relationships:
       - type: cloudify.relationships.connected_to
@@ -29,9 +29,9 @@ node_templates:
       resource_config:
         blueprint:
           external_resource: true
-          id: multi-tier-example
+          id: Multi-Tier-Example
         deployment:
-          id: child-bp-deployment-1
+          id: Child-Bp-Deployment-1
           auto_inc_suffix: true  
   second_child_blueprint:
     type: cloudify.nodes.ServiceComponent
@@ -39,7 +39,7 @@ node_templates:
       resource_config:
         blueprint:
           external_resource: true
-          id: multi-tier-example
+          id: Multi-Tier-Example
         deployment:
-          id: child-bp-deployment-2
+          id: Child-Bp-Deployment-2
           auto_inc_suffix: true
