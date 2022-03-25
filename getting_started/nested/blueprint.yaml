@@ -32,7 +32,8 @@ node_templates:
           blueprint_archive: blueprints/multi_tier.zip
         deployment:
           id: Child-Bp-Deployment-1
-          auto_inc_suffix: true  
+          auto_inc_suffix: true
+          
   second_child_blueprint:
     type: cloudify.nodes.ServiceComponent
     properties:
