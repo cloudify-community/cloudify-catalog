@@ -12,11 +12,7 @@ labels:
 inputs:
   domain_owned:
     type: string
-<<<<<<< HEAD
-    descritpion: | 
-=======
     description: | 
->>>>>>> master
       Owned domain for load balancer creation
     display_label: |
       Owned domain for load balancer creation
