@@ -10,59 +10,6 @@ topics:
   - name: getting_started
     target_path: s3_json_file
     blueprints:
-<<<<<<< HEAD
-      - id: Gen_SSH_Cert_Example
-        name: Gen_SSH_Cert_Example
-        path: getting_started/gen_ssh_cert
-        description: Creating SSH certificates as a secrets
-      - id: Hello_world_Example
-        name: Hello_World_Example
-        path: getting_started/hello_world
-        description: Hello world example of how to use cloudify ApplicationModule
-      - id: Multi_Tier_Example
-        name: Multi_Tier_Example
-        path: getting_started/multi_tier_example
-        description: Creating Multi Tier application example that illustrates the power of the cloudify node releationships 
-      - id: Nested_Example
-        name: Nested_Example
-        path: getting_started/nested_example
-        description: |
-          Nested blueprint that illustrates how to create distributed service/multi tier services with indepenent blueprints and lifecycles
-      - id: Simple_Web_Server_Example
-        name: Simple_Web_Server_Example
-        path: getting_started/simple_web_server
-        description: | 
-          The example illustrates how to create simple web server
-      - id: Web_App_From_Git_Example
-        name: Web_App_From_Git_Example
-        path: getting_started/web_app_from_git
-        description: | 
-          The example illustrates how we can utilise ready-to-go code from git repository in order to create the cloudify service
-      - id: Webserver_With_Certificate
-        name: Webserver_With_Certificate
-        path: getting_started/webserver_and_certificate
-        description: |
-          The example illustrates the power of service composition in the use case of automation web service and ssh certificate creation
-  - name: production_grade_certified_environments
-    target_path: s3_json_file
-    blueprints:
-      - id: DrAksAzure
-        name: DR_AKS_Azure
-        path: pg_ce/services/kubernetes_dr_aks
-        description: Creating Disaster Recovery AKS service
-      - id: DR_EKS_AWS
-        name: DR_EKS_AWS
-        path: pg_ce/services/kubernetes_dr_eks
-        description: Creating Disaster Recovery EKS service
-      - id: Environment_AWS_DR
-        name: Environment_AWS_DR
-        path: pg_ce/environments/aws
-        description: Creating Disaster Recovery AWS environment
-      - id: Environment_Azure_DR
-        name: Environment_Azure_DR
-        path: pg_ce/environments/azure
-        description: Creating Disaster Recovery Azure environment
-=======
       - id: gen-ssh-cert-service-component
         name: Gen-SSH-Cert-Example
         path: getting_started/ssh_cert
@@ -110,7 +57,6 @@ topics:
         description: |
           The nested blueprint example - describes how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
           We will illustrate how we can create a dependency and relationship between those services , pass inputs/output parameters etc.
->>>>>>> master
   - name: certified_environments
     target_path: s3_json_file
     blueprints:
@@ -270,42 +216,6 @@ topics:
         name: Storage-Az-Plugin
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-<<<<<<< HEAD
-      - id: SpotInstanceUbuntu
-        name: Spot_Instance_Ubuntu
-        path: azure/ubuntu_spot_instance
-        description: Create a Ubuntu VM Spot Instance using ARM template
-      - id: InstanceUbuntu
-        name: Instance_Ubuntu
-        path: azure/ubuntu
-        description: Create a Ubuntu VM using ARM template
-      - id: InstanceUbuntuDiskStorage
-        name: Instance_Ubuntu_Disk_Storage
-        path: azure/ubuntu_disk_storage
-        description: Create a u Ubuntu VM with managed disk storage 
-      - id: SpotInstance
-        name: Spot_Instance
-        path: azure/spot_instance
-        description: Create a Windows VM Spot Instance using ARM template
-      - id: notification_hub
-        name: Notification_Hub
-        path: azure/notification_hub
-        description: Create a Notification Hub using ARM template
-      - id: ServiceBus
-        name: Service_Bus
-        path: azure/service_bus
-        description: Create a Service Bus using ARM template
-      - id: ContainerInstance
-        name: Container_Instance
-        path: azure/container_instances
-        description: Create a sample container instance with Wordpress & MySQL using ARM template
-      - id: DiskStorage
-        name: Disk_Storage
-        path: azure/data_disk
-        description: Create a Disk Storage instance using ARM template
-      - id: CosmosDB
-        name: Cosmos_DB
-=======
       - id: Instance-Ubuntu-Spot-Arm
         name: Instance-Ubuntu-Spot-Arm
         path: azure/ubuntu_spot_instance
@@ -336,7 +246,6 @@ topics:
         description: Create a Disk Storage instance using ARM template
       - id: CosmosDB-Arm
         name: CosmosDB-Arm
->>>>>>> master
         path: azure/cosmos_db
         description: Create a CosmosDB instance using ARM teplate
       - id: tf_azure_vm
