@@ -27,6 +27,8 @@ node_templates:
           main_file_name: blueprint.yaml
         deployment:
           id: Relationship-Example
+          auto_inc_suffix: true
+
 
   # Run the certificate generator as a service component
   # The ServiceComponent apears as yet another node type by the parent deployment.

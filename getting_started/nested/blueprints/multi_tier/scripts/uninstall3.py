@@ -1,0 +1,1 @@
+print('Uninstall script number 3')
