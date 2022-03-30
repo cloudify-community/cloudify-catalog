@@ -213,7 +213,7 @@ topics:
         path: azure/lb
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
       - id: Storage-Azure-Plugin
-        name: Storage-Az-Plugin
+        name: Storage-Azure-Plugin
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
       - id: Instance-Ubuntu-Spot-Arm
@@ -288,9 +288,16 @@ topics:
         path: terraform/aks
         description: Create an AKS using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
-  - name: GCP
+  - name: gcp_services
     target_path: s3_json_file
     blueprints:
+      - id: gcp_vm
+        name: GCP-Basics-VM-Setup
+        path: gcp/vm
+        description: Create a Centos VM using GCP plugin
+      - id: gcp_simple_service
+        name: GCP-Basics-Simple-Service-Setup
+        description: Create a VM using GCP plugin and setting up Hello World service using Ansible Plugin
       - id: tf_gke
         name: Terraform_GCP_GKE
         path: terraform/gke
