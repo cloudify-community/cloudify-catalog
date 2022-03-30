@@ -297,6 +297,7 @@ topics:
         description: Create a Centos VM using GCP plugin
       - id: gcp_simple_service
         name: GCP-Basics-Simple-Service-Setup
+        path: gcp/simple_service
         description: Create a VM using GCP plugin and setting up Hello World service using Ansible Plugin
       - id: tf_gke
         name: Terraform_GCP_GKE
