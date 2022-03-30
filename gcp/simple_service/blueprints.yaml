@@ -1,0 +1,187 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: >
+  This blueprint installs an application using Cloudify on GCP.
+
+imports:
+  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - plugin:cloudify-gcp-plugin?version= >=1.6.0
+  - plugin:cloudify-ansible-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+inputs:
+
+  region:
+    type: string
+    description: The GCP region to deploy the application in, such as europe-west1.
+    default: 'europe-west1'
+
+  zone:
+    type: string
+    description: The GCP zone to deploy the application in, such as europe-west1-b.
+    default: 'europe-west1-b'
+
+  network_name:
+    type: string
+    description: The name of your GCP Virtual Network.
+    default: hellovnet
+
+  subnet_name:
+    type: string
+    description: The name of your GCP Virtual Network.
+    default: hellosubnet
+
+  image:
+    type: string
+    description: A Ubuntu Trusty 14.04 image.
+    default: https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1404-trusty-v20170517
+
+  instance_type:
+    type: string
+    description: A small GCP machine type.
+    default: n1-standard-1
+
+  agent_user:
+    description: >
+      The username of the agent running on the instance created from the image.
+    default: 'ubuntu'
+
+  agent_key_name:
+    type: string
+    default: agent_key
+
+dsl_definitions:
+
+  client_config: &gcp_config
+    auth:
+      type: service_account
+      auth_uri: https://accounts.google.com/o/oauth2/auth
+      token_uri: https://accounts.google.com/o/oauth2/token
+      auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs
+      client_x509_cert_url: { get_secret: gcp_client_x509_cert_url }
+      client_email: { get_secret: gcp_client_email }
+      client_id: { get_secret: gcp_client_id }
+      project_id: { get_secret: gcp_project_id }
+      private_key_id: { get_secret: gcp_private_key_id }
+      private_key: { get_secret: gcp_private_key }
+    project: { get_secret: gcp_project_id }
+    zone: { get_input: zone }
+
+
+node_templates:
+
+  vm:
+    type: cloudify.gcp.nodes.Instance
+    properties:
+      gcp_config: *gcp_config
+      agent_config:
+        install_method: none
+        key: { get_attribute: [agent_key, private_key_export] }
+        user: { get_input: agent_user }
+      use_public_ip: true
+      image_id: { get_input: image }
+      instance_type: { get_input: instance_type }
+      zone: { get_input: zone }
+      external_ip: true
+    relationships:
+    - type: cloudify.relationships.depends_on
+      target: subnet
+    - type: cloudify.relationships.depends_on
+      target: agent_key
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/key.py
+          executor: central_deployment_agent
+          inputs:
+            user: { get_input: agent_user }
+            ssh_keys:
+            - { get_attribute: [agent_key, public_key_export] }
+
+  firewall:
+    type: cloudify.gcp.nodes.FirewallRule
+    properties:
+      gcp_config: *gcp_config
+      allowed:
+        tcp:
+          - 22
+          - 80
+      sources:
+        - 0.0.0.0/0
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: network
+
+  subnet:
+    type: cloudify.gcp.nodes.SubNetwork
+    properties:
+      name: { get_input: subnet_name }
+      region: { get_input: region }
+      subnet: 10.11.12.0/22
+      gcp_config: *gcp_config
+    relationships:
+    - type: cloudify.gcp.relationships.contained_in_network
+      target: network
+
+  network:
+    type: cloudify.gcp.nodes.Network
+    properties:
+      name: { get_input: network_name }
+      gcp_config: *gcp_config
+      auto_subnets: false
+
+  agent_key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { get_input: agent_key_name }
+        openssh_format: true
+      use_secret_store: true
+      use_secrets_if_exist: true
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: keys.cloudify_ssh_key.operations.create
+          inputs:
+            store_private_key_material: true
+
+  hello-world:
+    type: cloudify.nodes.ansible.Playbook
+    properties:
+      playbook_path: apache2/playbook.yaml
+      start_at_task: "install apache2"
+      #save_playbook: true
+      ansible_env_vars:
+        ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED: "False"
+        ANSIBLE_HOST_KEY_CHECKING: "False"
+        ANSIBLE_STDOUT_CALLBACK: dense
+      store_facts: false
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: {}
+        configure: {}
+        poststart: {}
+    relationships:
+      - type: cloudify.ansible.relationships.run_on_host
+        target: vm
+        source_interfaces:
+          cloudify.interfaces.relationship_lifecycle:
+            establish:
+              inputs:
+                log_stdout: false
+                store_facts: false
+                sources:
+                  vms:
+                    hosts:
+                      vm:
+                        ansible_host: { get_attribute: [ vm, ip ] }
+                        ansible_user: { get_input: agent_user }
+                        ansible_ssh_private_key_file: { get_attribute: [agent_key, private_key_export] }
+                        ansible_become: True
+                        ansible_ssh_common_args: -o StrictHostKeyChecking=no
+
+outputs:
+
+  application_endpoint:
+    description: The external endpoint of the application.
+    value: { concat: [ 'http://', { get_attribute: [ vm, ip ] }, ':80' ] }
