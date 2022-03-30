@@ -1,8 +1,8 @@
-# VM Provisioning
+# VM with Hello World Service Provisioning
 
 ## General
 
-The blueprint creates Centos VM with the usage of the GCP Cloudify plugin.
+The blueprint creates Centos VM and the Hello World app with the usage of the GCP Cloudify plugin and Ansible plugin.
 
 ## Requirements
 
@@ -19,11 +19,12 @@ The blueprint uses below secrets in order to set up service in GCP cloud.
 | gcp_client_id            | client id from the GCP secret json file        |
 | gcp_project_id           | project id from the GCP secret json file       |
 | gcp_private_key_id       | private key id from the GCP secret json file   |
-| gcp_private_key          | private key from the GCP secret json file      |                                  
+| gcp_private_key          | private key from the GCP secret json file   |                                  
 
 ## Plugins
 
 cloudify-gcp-plugin
+cloudify-ansible-plugin
 cloudify-utilities-plugin
 
 ## Inputs
@@ -67,6 +68,10 @@ The type is `cloudify.gcp.nodes.SubNetwork`.
 ### Agent Key
 The node is responsible for generation of ssh keys for the VM.\
 The type is `cloudify.gcp.nodes.RSAkey`.
+
+### Hello World
+The node is responsible for running the ansible code in the VM.\
+The types is `cloudify.nodes.ansible.Playbook`
 
 ## Labels
 
