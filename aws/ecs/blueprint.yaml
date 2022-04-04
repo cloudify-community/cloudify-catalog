@@ -188,7 +188,7 @@ node_templates:
         target: ecs_service_iam_role
     interfaces:
       cloudify.interfaces.lifecycle:
-        configure:
+        create:
           inputs:
             resource_config:
               serviceName: 'service_name_1'
@@ -212,7 +212,7 @@ node_templates:
           DesiredCapacity: 1
           DefaultCooldown: 20
           AvailabilityZones:
-            - { get_property: [ subnet1, resource_config, kwargs, AvailabilityZone ] }
+            - { get_property: [ subnet1, resource_config, AvailabilityZone ] }
           VPCZoneIdentifier: { concat: [ { get_attribute: [ subnet1, aws_resource_id ] }  ] }
 
     relationships:
@@ -268,7 +268,7 @@ node_templates:
         Priority: 101
     interfaces:
       cloudify.interfaces.lifecycle:
-        configure:
+        create:
           inputs:
             resource_config:
               Priority: 101
@@ -404,10 +404,9 @@ node_templates:
     type: cloudify.nodes.aws.ec2.SecurityGroup
     properties:
       resource_config:
-        kwargs:
           GroupName: SecurityGroup1
           Description: Example Security Group 1
-      client_config: *client_config
+      client_config: *client_config 
     relationships:
       - type: cloudify.relationships.depends_on
         target: vpc
@@ -451,9 +450,8 @@ node_templates:
     type: cloudify.nodes.aws.ec2.Subnet
     properties:
       resource_config:
-        kwargs:
-          CidrBlock: '10.0.0.0/24'
-          AvailabilityZone: { concat: [ { get_input: aws_region_name}, 'a' ] }
+        CidrBlock: '10.0.0.0/24'
+        AvailabilityZone: { concat: [ { get_input: aws_region_name}, 'a' ] }
       client_config: *client_config
       Tags:
         - Key: Name
@@ -468,9 +466,8 @@ node_templates:
     type: cloudify.nodes.aws.ec2.Subnet
     properties:
       resource_config:
-        kwargs:
-          CidrBlock: '10.0.2.0/24'
-          AvailabilityZone: { concat: [ { get_input: aws_region_name}, 'c' ] }
+        CidrBlock: '10.0.2.0/24'
+        AvailabilityZone: { concat: [ { get_input: aws_region_name}, 'c' ] }
       client_config: *client_config
     relationships:
       - type: cloudify.relationships.depends_on
@@ -483,9 +480,8 @@ node_templates:
     type: cloudify.nodes.aws.ec2.Subnet
     properties:
       resource_config:
-        kwargs:
-          CidrBlock: '10.0.1.0/24'
-          AvailabilityZone: { concat: [ { get_input: aws_region_name}, 'b' ] }
+        CidrBlock: '10.0.1.0/24'
+        AvailabilityZone: { concat: [ { get_input: aws_region_name}, 'b' ] }
       client_config: *client_config
     relationships:
       - type: cloudify.relationships.depends_on
@@ -497,8 +493,7 @@ node_templates:
     type: cloudify.nodes.aws.ec2.Vpc
     properties:
       resource_config:
-        kwargs:
-          CidrBlock: '10.0.0.0/16'
+        CidrBlock: '10.0.0.0/16'
       client_config: *client_config
       Tags:
         - Key: Name

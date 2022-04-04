@@ -45,7 +45,7 @@ node_templates:
         target: forward_target_group
     interfaces:
       cloudify.interfaces.lifecycle:
-        configure:
+        create:
           implementation: aws.cloudify_aws.elb.resources.rule.create
           inputs:
             resource_config:

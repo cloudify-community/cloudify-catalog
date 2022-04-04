@@ -1,5 +1,11 @@
+s3_base_url: https://repository.cloudifysource.org
+s3_bucket_name: cloudify-release-eu
+s3_bucket_directory: cloudify/blueprints
 git_url: https://github.com/cloudify-community/cloudify-catalog
-target_path: https://repository.cloudifysource.org/cloudify/blueprints/6.2
+target_path: https://repository.cloudifysource.org/cloudify/blueprints
+github_url: https://github.com/cloudify-community/cloudify-catalog/tree
+raw_github_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog
+
 topics:
   - name: getting_started
     target_path: s3_json_file
@@ -58,128 +64,58 @@ topics:
         name: EnvironmentAWS
         path: certified_environments/environments/aws
         description: Creating AWS environment
-        html_url:  https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/environments/aws
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/EnvironmentAWS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/environments/aws/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/environments/aws/aws.png
       - id: EksAWS
         name: EksAWS
         path: certified_environments/services/aws/eks
         description: Creating EKS service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/eks
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/EksAWS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/eks/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/eks/eks.png
       - id: MinikubeAWS
         name: MinikubeAWS
         path: certified_environments/services/aws/minikube
         description: Creating Minikube service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/minikube
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/MinikubeAWS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/minikube/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/minikube/minikube.png
       - id: MinioAWS
         name: MinioAWS
         path: certified_environments/services/aws/minio
         description: Creating Minio service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/minio
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/MinioAWS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/minio/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/minio/minio.png
       - id: PsqlAWS
         name: PsqlAWS
         path: certified_environments/services/aws/psql
         description: Creating PostgreSQL service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/psql
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/PsqlAWS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/psql/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/psql/psql.png
       - id: RdsPsqlAWS
-        name: RdsPsqAWS
+        name: RdsPsqlAWS
         path: certified_environments/services/aws/rds_psql
         description: Creating PostgreSQL on RDS service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/rds_psql
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/RdsPsqlAWS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/rds_psql/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/rds_psql/psql.png
       - id: S3AWS
         name: S3AWS
         path: certified_environments/services/aws/s3
         description: Creating S3 service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/aws/s3
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/S3AWS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/s3/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/aws/s3/s3.png
       - id: AksAzure
         name: AksAzure
         path: certified_environments/services/azure/aks
         description: Creating AKS service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/aks
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/AksAzure.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/aks/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/aks/aks.png
       - id: MinikubeAzure
         name: MinikubeAzure
         path: certified_environments/services/azure/minikube
         description: Creating Minikube service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/minikube
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/MinikubeAzure.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/minikube/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/minikube/minikube.png
       - id: MinioAzure
         name: MinioAzure
         path: certified_environments/services/azure/minio
         description: Creating Minio service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/minio
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/MinioAzure.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/minio/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/minio/minio.png
       - id: PsqlAzure
         name: PsqlAzure
         path: certified_environments/services/azure/psql
         description: Creating PostgreSQL service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/psql
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/PsqlAzure.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/psql/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/psql/psql.png
       - id: RdsPsqlAzure
         name: RdsPsqlAzure
         path: certified_environments/services/azure/rds_psql
         description: Creating PostgreSQL on RDS service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/rds_psql
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/RdsPsqlAzure.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/rds_psql/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/rds_psql/psql.png
       - id: StorageAzure
         name: StorageAzure
         path: certified_environments/services/azure/storage
         description: Creating Storage service
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/services/azure/storage
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/StorageAzure.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/storage/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/services/azure/storage/storage.png
       - id: EnvironmentAzure
         name: EnvironmentAzure
         path: certified_environments/environments/azure
         description: Creating Azure environment
-        html_url:  https://github.com/cloudify-community/cloudify-catalog/tree/master/certified_environments/environments/azure
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/certified_environments/EnvironmentAzure.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/environments/azure/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/certified_environments/environments/azure/azure.png
   - name: aws_services
     target_path: s3_json_file
     blueprints:
@@ -187,171 +123,270 @@ topics:
         name: DynamoDB
         path: aws/dynamodb
         description: Creating AWS DynamoDB table
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/dynamodb
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/DynamoDB.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/dynamodb/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/dynamodb/dynamodb.png
       - id: EBS
         name: EBS
         path: aws/ebs
         description: Creating EBS volume
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/aws/ebs
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/EBS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ebs/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ebs/ebs.png
       - id: EC2
         name: EC2
         path: aws/ec2
         description: Creating generating SSH key, creating a KeyPair and provisioning an EC2 instance
-        html_url: https://github.com/cloudify-community/cloudify-catalog/master/aws/ec2
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/EC2.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2/ec2.png
       - id: EC2_WITH_EBS
-        name: EC2 with EBS
+        name: EC2_WITH_EBS
         path: aws/ec2_with_ebs
         description: Creating EC2 inside VPC and EBS
-        html_url: https://github.com/cloudify-community/cloudify-catalog/master/aws/ec2_with_ebs
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/EC2_WITH_EBS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2_with_ebs/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2_with_ebs/ec2.png
       - id: EC2_SPOT_INSTANCES
-        name: EC2 on spot instances
+        name: EC2_SPOT_INSTANCES
         path: aws/ec2_spot_instances
         description: Creating EC2 Spot instance
-        html_url: https://github.com/cloudify-community/cloudify-catalog/master/aws/ec2_spot_instances
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/EC2_SPOT_INSTANCES.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2_spot_instances/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ec2_spot_instances/ec2.png
       - id: ECS
         name: ECS
         path: aws/ecs
         description: Creating ECS
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/ECS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ecs/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/ecs/ecs.png
       - id: S3
         name: S3
         path: aws/s3
         description: Creating S3 Bucket
-        html_url: https://github.com/cloudify-community/cloudify-catalog/master/aws/s3
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/S3.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/s3/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/s3/s3.png
       - id: SNS
         name: SNS
         path: aws/sns
         description: Creating SNS
-        html_url: https://github.com/cloudify-community/cloudify-catalog/master/aws/sns
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/SNS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sns/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sns/sns.png
       - id: SQS
         name: SQS
         path: aws/sqs
         description: Creating SQS
-        html_url: https://github.com/cloudify-community/cloudify-catalog/master/aws/sqs
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/SQS.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/sqs.png
+      - id: tf_aws_vm
+        name: Terraform_AWS_VM
+        path: terraform/aws
+        description: Create an AWS VM using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_eks
+        name: Terraform_AWS_EKS
+        path: terraform/eks
+        description: Create an EKS AWS using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_vpc
+        name: Terraform_AWS_VPC
+        path: terraform/aws_vpc
+        description: Create an AWS VPC using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_s3_aws
+        name: Terraform_AWS_S3
+        path: terraform/aws_s3
+        description: Create an AWS S3 using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_rds_mariadb
+        name: Terraform_AWS_RDS_MariaDB  
+        path: terraform/aws_rds_mariadb
+        description: Create an AWS RDS MariaDB using Terraform 
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_rds_oracle
+        name: Terraform_AWS_RDS_Oracle  
+        path: terraform/aws_rds_oracle
+        description: Create an AWS RDS Oracle using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_rds_postgresql
+        name: Terraform_AWS_RDS_Postgres
+        path: terraform/aws_rds_postgresql
+        description: Create an AWS Postgresql database service using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
+      - id: tf_aws_rds_mysql
+        name: Terraform_AWS_RDS_MySQL
+        path: terraform/aws_rds_mysql
+        description: Create an AWS RDS MySQL using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
   - name: azure_services
     target_path: s3_json_file
     blueprints:
-      - id: deployment
-        name: Deployment
+      - id: Instance-Ubuntu-Arm
+        name: Instance-Ubuntu-Arm
         path: azure/deployment
         description: This blueprint creates a Linux instance on Microsoft Azure, along with necessary networking services and a public IP using an Azure ARM template (template.json).  The blueprint generates public and private SSH keys. A keypair (for SSH) is created, stored in the secret store, and attached to the provisioned instance, via the Azure template inputs.  If a secret with the same name(s) is present in the secret store, it is used.
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/azure/deployment
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/azure/deployment.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/azure/deployment/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/raw/master/azure/deployment/azure.png
-      - id: instance
-        name: Instance
+      - id: instance-Ubuntu-Azure-Plugin
+        name: Instance-Ubuntu-Azure-Plugin
         path: azure/instance
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/azure/instance
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/azure/instance.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/azure/instance/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/raw/master/azure/instance/azure.png
-      - id: loadbalance
-        name: Loadbalance
+      - id: Loadbalancer-Azure-Plugin
+        name: Loadbalancer-Azure-Plugin
         path: azure/lb
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/azure/lb
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/azure/loadbalnce.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/azure/lb/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/raw/master/azure/lb/azure.png
-      - id: storage
-        name: Storage
+      - id: Storage-Azure-Plugin
+        name: Storage-Azure-Plugin
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/azure/storage
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/azure/storage.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/azure/storage/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://github.com/cloudify-community/cloudify-catalog/raw/master/azure/storage/azure.png
-  - name: GCP
+      - id: Instance-Ubuntu-Spot-Arm
+        name: Instance-Ubuntu-Spot-Arm
+        path: azure/ubuntu_spot_instance
+        description: Create a Ubuntu VM Spot Instance using ARM template
+      - id: Instance-Ubuntu-Disk-Storage-Arm
+        name: Instance-Ubuntu-Disk-Storage-Arm
+        path: azure/ubuntu_disk_storage
+        description: Create a u Ubuntu VM with managed disk storage 
+      - id: Spot-Instance-Windows-Arm
+        name: Spot-Instance-Windows-Arm
+        path: azure/spot_instance
+        description: Create a Windows VM Spot Instance using ARM template
+      - id: Notification-Hub-Arm
+        name: Notification-Hub-Arm
+        path: azure/notification_hub
+        description: Create a Notification Hub using ARM template
+      - id: Service-Bus-Arm
+        name: Service-Bus-Arm
+        path: azure/service_bus
+        description: Create a Service Bus using ARM template
+      - id: Container-Instance-Arm
+        name: Container-Instance-Arm
+        path: azure/container_instances
+        description: Create a sample container instance with Wordpress & MySQL using ARM template
+      - id: Disk-Storage-Arm
+        name: Disk-Storage-Arm
+        path: azure/data_disk
+        description: Create a Disk Storage instance using ARM template
+      - id: CosmosDB-Arm
+        name: CosmosDB-Arm
+        path: azure/cosmos_db
+        description: Create a CosmosDB instance using ARM teplate
+      - id: tf_azure_vm
+        name: Terraform-Azure-VM
+        path: terraform/azure
+        description: Create an Azure VM using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_storage
+        name: Terraform-Azure-Storage
+        path: terraform/azure_storage
+        description: Create an Azure Blob Storage automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_vpc
+        name: Terraform-Azure-VPC
+        path: terraform/azure_vpc
+        description: Create an Azure VPC using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_oracale
+        name: Terraform-Azure-Oracle
+        path: terraform/azure_oracle
+        description: Create an Azure Oracle database using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_mysql
+        name: Terraform-Azure-Mysql
+        path: terraform/azure_mysql
+        description: Create an Azure Mysql database using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_postgres
+        name: Terraform-Azure-Postgres
+        path: terraform/azure_postgres
+        description: Create an Azure Postgres DB using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_azure_mariadb
+        name: Terraform-Azure-MariaDB
+        path: terraform/azure_mariadb
+        description: Create an Azure MariaDB using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+      - id: tf_aks
+        name: Terraform-Azure-Aks
+        path: terraform/aks
+        description: Create an AKS using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
+  - name: gcp_services
+    target_path: s3_json_file
+    blueprints:
+      - id: gcp_vm
+        name: GCP-Basics-VM-Setup
+        path: gcp/vm
+        description: Create a Centos VM using GCP plugin
+      - id: gcp_simple_service
+        name: GCP-Basics-Simple-Service-Setup
+        path: gcp/simple_service
+        description: Create a VM using GCP plugin and setting up Hello World service using Ansible Plugin
+      - id: tf_gke
+        name: Terraform_GCP_GKE
+        path: terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation 
   - name: terraform_services
     target_path: s3_json_file
     blueprints:
       - id: terraform_azure_vm
-        name: Azure VM
+        name: Terraform_Azure_VM
         path: terraform/azure
         description: Create an Azure VM using Terraform automation
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/azure
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_azure_arm.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/azure/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_gcp_vm
-        name: Google Cloud VM
+        name: Terraform_GCP_VM
         path: terraform/gcp
         description: Create a GCP VM using Terraform automation
-        html_url: https://github.com/cloudify-community/blueprint-catalog/tree/master/terraform/gcp
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_gcp_vm.zip
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_openstack_vm
-        name: OpenStack VM
+        name: Terraform_OpenStack_VM
         path: terraform/openstack
         description: Create an OpenStack VM using Terraform automation
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/openstack
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_openstack_vm.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/openstack/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
       - id: terraform_aws_vm
-        name: AWS VM
+        name: Terraform_AWS_VM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/aws
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_aws_vm.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/aws/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/terraform-icon.jpeg
+      - id: terraform_azure_storage
+        name: Terraform_Azure_Storage
+        path: terraform/azure_storage
+        description: Create an Azure Blob Storage automation
+      - id: terraform_eks
+        name: Terraform_AWS_EKS
+        path: terraform/eks
+        description: Create an EKS AWS using Terraform automation
+      - id: terraform_azure_vpc
+        name: Terraform_Azure_VPC
+        path: terraform/azure_vpc
+        description: Create an Azure VPC using Terraform automation
+      - id: terraform_aws_vpc
+        name: Terraform_AWS_VPC
+        path: terraform/aws_vpc
+        description: Create an AWS VPC using Terraform automation
       - id: terraform_tfc
         name: Terraform_Cloud_Enterprise
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/terraform/tfc
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform/terraform_tfc.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/tfc/terraform-icon.png
+      - id: terraform_aks
+        name: Terraform_Azure_AKS
+        path: terraform/aks
+        description: Create an AKS using Terraform automation
+      - id: terraform_gke
+        name: Terraform_GCP_GKE
+        path: terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation
+      - id: terraform_s3_aws
+        name: Terraform_AWS_S3
+        path: terraform/aws_s3
+        description: Create an AWS S3 using Terraform automation
+      - id: terraform_azure_oracale
+        name: Terraform_Azure_Oracle
+        path: terraform/azure_oracle
+        description: Create an Azure Oracle database using Terraform automation
+      - id: terraform_aws_rds_mariadb
+        name: Terraform_AWS_RDS_MariaDB
+        path: terraform/aws_rds_mariadb
+        description: Create an AWS RDS MariaDB using Terraform automation
+      - id: terraform_rds_oracle
+        name: Terraform_AWS_RDS_Oracle
+        path: terraform/aws_rds_oracle
+        description: Create an AWS RDS Oracle using Terraform automation
+      - id: terraform_azure_mysql
+        name: Terraform_Azure_Mysql
+        path: terraform/azure_mysql
+        description: Create an Azure Mysql database using Terraform automation
+      - id: terraform_aws_rds_postgresql
+        name: Terraform_AWS_RDS_Postgres
+        path: terraform/aws_rds_postgresql
+        description: Create an AWS Postgresql database service using Terraform automation
+      - id: terraform_azure_postgres
+        name: Terraform_Azure_Postgres
+        path: terraform/azure_postgres
+        description: Create an Azure Postgres DB using Terraform automation
+      - id: terraform_azure_mariadb
+        name: Terraform_Azure_MariaDB
+        path: terraform/azure_mariadb
+        description: Create an Azure MariaDB using Terraform automation
+      - id: terraform_aws_rds_mysql
+        name: Terraform_AWS_RDS_MySQL
+        path: terraform/aws_rds_mysql
+        description: Create an AWS RDS MySQL using Terraform automation
   - name: helm_services
     target_path: s3_json_file
     blueprints:
@@ -359,92 +394,80 @@ topics:
         name: Wordpress
         path: helm/wordpress
         description: Installing Wordpress helm chart on top of K8s cluster
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/helm/wordpress
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/helm/Wordpress.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/helm/wordpress/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/helm/wordpress/wordpress.png
       - id: Drupal
         name: Drupal
         path: helm/drupal
         description: Installing Drupal helm chart on top of K8s cluster
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/helm/drupal
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/helm/Drupal.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/helm/drupal/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/helm/drupal/drupal.png
       - id: NodeJS
         name: NodeJS
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/helm/nodejs
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/helm/NodeJS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/helm/nodejs/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/helm/nodejs/nodejs.png
-  - name: Ansible
-  - name: K8S
+  - name: k8s_services
     target_path: s3_json_file
     blueprints:
       - id: Kubernetes_AWS_EKS
-        name: Kubernetes on AWS EKS
+        name: Kubernetes_AWS_EKS
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/kubernetes/eks
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/Kubernetes_AWS_EKS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/kubernetes/eks/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/images/k8s.png
       - id: Kubernetes_Azure_AKS
-        name: Kubernetes on Azure AKS
+        name: Kubernetes_Azure_AKS
         path: kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/kubernetes/aks
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/Kubernetes_Azure_AKS.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/kubernetes/aks/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/images/k8s.png
       - id: Kubernetes_GCP_GKE
-        name: Kubernetes on GCP GKE
+        name: Kubernetes_GCP_GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/kubernetes
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws/Kubernetes_GCP-GKE.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/kubernetes/gke/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/images/k8s.png
+      - id: tf_kube_gke
+        name: Terraform_Kubernetes_GCP_GKE
+        path: kubernetes/terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation
+      - id: tf_kube_aks
+        name: Terraform_Kubernetes_Azure_AKS
+        path: kubernetes/terraform/aks
+        description: Create an Azure Kubernetes using Terraform automation
+      - id: tf_kube_eks
+        name: Terraform_Kubernetes_AWS_EKS
+        path: kubernetes/terraform/gke
+        description: Create an AWS Kubernetes using Terraform automation
+      - id: spot_ocean
+        name: SpotOcean_optimized_cluster
+        path: kubernetes/spot
+        description: Create a Spot Ocean Kubernetes cost optimized Cluster
+      - id: Kubernetes_Azure_AKS_DR
+        name: Kubernetes_Azure_AKS_DR
+        path: pg_ce/services/kubernetes_dr_aks
+        description: Creating Disaster Recovery AKS service
+      - id: Kubernetes_AWS_EKS_DR
+        name: Kubernetes_AWS_EKS_DR
+        path: pg_ce/services/kubernetes_dr_eks
+        description: Creating Disaster Recovery EKS service
+      - id: Environment_AWS_DR
+        name: Environment_AWS_DR
+        path: pg_ce/environments/aws
+        description: Creating Disaster Recovery AWS environment
+      - id: Environment_Azure_DR
+        name: Environment_Azure_DR
+        path: pg_ce/environments/azure
+        description: Creating Disaster Recovery Azure environment
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
       - id: aws_account
-        name: AWS Account
+        name: AWS_Account
         path: k8s_discovery/aws/aws-account
         description: AWS Account Representation
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/k8s_discovery/aws/aws-account
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s_discovery/aws_account.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/k8s_discovery/aws/aws-account/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/k8s_discovery/aws/aws-account/aws.png
-        created_at: 2019-10-19T12:44:56Z
-        updated_at: 2020-07-16T17:26:16Z
       - id: azure_account
-        name: Azure account
+        name: Azure_Account
         path: k8s_discovery/azure/azure-account
         description: Azure Account Representation
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/k8s_discovery/azure/azure-account
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s_discovery/azure_account.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/k8s_discovery/azure/azure-account/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/k8s_discovery/azure/azure-account/azure.png
       - id: gcp-account
-        name: GCP Account
+        name: GCP_Account
         path: k8s_discovery/gcp/gcp-account
         description: GCP Account Representation
-        html_url: https://github.com/cloudify-community/cloudify-catalog/tree/master/k8s_discovery/gcp/gcp-account
-        zip_url: https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s_discovery/gcp_account.zip
-        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/k8s_discovery/gcp/gcp-account/README.md
-        main_blueprint: blueprint.yaml
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/k8s_discovery/gcp/gcp-account/gcp.png
-
-
-
+  - name: vmware_services
+    target_path: s3_json_file
+    blueprints:
+      - id: vsphere_vm
+        name: vSphere_VM
+        path: vsphere/vm
+        description: Create vSphere VM

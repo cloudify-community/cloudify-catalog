@@ -1,21 +1,9 @@
 tosca_definitions_version: cloudify_dsl_1_3
 description: >
-  Service Composition- describing how to create relationship between independent services
+  Service Composition - describing how to create relationship between independent services
   In this case we run the same web server and application from ex3 as an independent deployment
   and were adding an SSH certificate generator to that service.
   The example will also demonstrate how we can upload and instantiate all nested services on demand.
-
-inputs:
-
-  # The blueprint archive is needed to enable on demand uploading and instantiation of a service component
-  # The archive usually points to a URL of an external (git) repository
-  # In this example we are using the PARENT deployment as the archive source.
-  # Note that in this case we assume that the parent was deployed using a tar archive.
-  # If your using a zip archive you should change the suffix of the archive from .tar to .zip
-  blueprint_archive:
-    description: zip/tar archive of the blueprint, By default pointing to the archive of the curent parent deployments
-    default: { concat : [ '../../../uploaded-blueprints/', { get_sys: [tenant, name] },  '/',  { get_sys: [deployment, blueprint] },  '/',  { get_sys: [deployment, blueprint] },  '.tar'  ] }
-    hidden: true
 
 imports:
   - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
@@ -34,7 +22,7 @@ node_templates:
         blueprint:
           external_resource: False
           id: Relationship-Example
-          blueprint_archive: { get_input:  blueprint_archive }
+          blueprint_archive: blueprints/relationship.zip
           main_file_name: blueprint.yaml
         deployment:
           id: Relationship-Example
@@ -50,7 +38,7 @@ node_templates:
         blueprint:
           external_resource: False
           id: Gen-SSH-Cert-Example
-          blueprint_archive: { get_input:  blueprint_archive }
+          blueprint_archive: blueprints/ssh_cert.zip
           main_file_name: blueprint.yaml
         deployment:
           inputs:

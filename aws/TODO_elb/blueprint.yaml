@@ -60,7 +60,7 @@ node_templates:
         target: classic_elb
     interfaces:
       cloudify.interfaces.lifecycle:
-        configure:
+        create:
           implementation: aws.cloudify_aws.ec2.resources.instances.create
           inputs:
             resource_config:
@@ -92,7 +92,7 @@ node_templates:
         target: classic_elb
     interfaces:
       cloudify.interfaces.lifecycle:
-        configure:
+        create:
           implementation: aws.cloudify_aws.ec2.resources.instances.create
           inputs:
             resource_config:
