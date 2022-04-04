@@ -58,9 +58,10 @@ def upload_file(file_name: str, bucket: str, object_name: str = None) -> bool:
     return True
 
 def check_branch(directory: str):
-    for version in ['6.4','6.3','6.2']:
-        if version in directory:
-            return True
+    if "6.3" in directory:
+        return True
+    elif "6.2" in directory:
+        return True
     return False
 
 def set_target_path(directory: str, root: str, file: str):
