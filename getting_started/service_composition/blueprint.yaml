@@ -5,9 +5,8 @@ description: >
   and were adding an SSH certificate generator to that service.
   The example will also demonstrate how we can upload and instantiate all nested services on demand.
 
-
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
 
 node_templates:
 

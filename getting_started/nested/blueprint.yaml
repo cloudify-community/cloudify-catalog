@@ -4,7 +4,7 @@ description: >
   The nested blueprint example illustrates how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
   We will illustrate how we can create a dependency and relationship between those services , pass inputs/output parameters etc.
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
 
 node_templates:
   parent_blueprint:
