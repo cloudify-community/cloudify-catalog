@@ -132,11 +132,11 @@ topics:
         path: aws/ec2
         description: Creating generating SSH key, creating a KeyPair and provisioning an EC2 instance
       - id: EC2_WITH_EBS
-        name: EC2 with EBS
+        name: EC2-with-EBS
         path: aws/ec2_with_ebs
         description: Creating EC2 inside VPC and EBS
       - id: EC2_SPOT_INSTANCES
-        name: EC2 on spot instances
+        name: EC2-on-spot-instances
         path: aws/ec2_spot_instances
         description: Creating EC2 Spot instance
       - id: ECS
@@ -178,23 +178,23 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: terraform_azure_vm
-        name: Azure VM
+        name: Azure-VM
         path: terraform/azure
         description: Create an Azure VM using Terraform automation
       - id: terraform_gcp_vm
-        name: Google Cloud VM
+        name: Google-Cloud-VM
         path: terraform/gcp
         description: Create a GCP VM using Terraform automation
       - id: terraform_openstack_vm
-        name: OpenStack VM
+        name: OpenStack-VM
         path: terraform/openstack
         description: Create an OpenStack VM using Terraform automation
       - id: terraform_aws_vm
-        name: AWS VM
+        name: AWS-VM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
       - id: terraform_tfc
-        name: Terraform_Cloud_Enterprise
+        name: Terraform-Cloud-Enterprise
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
   - name: helm_services
@@ -212,35 +212,34 @@ topics:
         name: NodeJS
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
-  - name: Ansible
   - name: K8S
     target_path: s3_json_file
     blueprints:
       - id: Kubernetes_AWS_EKS
-        name: Kubernetes on AWS EKS
+        name: Kubernetes-on-AWS-EKS
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
       - id: Kubernetes_Azure_AKS
-        name: Kubernetes on Azure AKS
+        name: Kubernetes-on-Azure-AKS
         path: kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
       - id: Kubernetes_GCP_GKE
-        name: Kubernetes on GCP GKE
+        name: Kubernetes-on-GCP-GKE
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
       - id: aws_account
-        name: AWS Account
+        name: AWS-Account
         path: k8s_discovery/aws/aws-account
         description: AWS Account Representation
       - id: azure_account
-        name: Azure account
+        name: Azure-account
         path: k8s_discovery/azure/azure-account
         description: Azure Account Representation
       - id: gcp-account
-        name: GCP Account
+        name: GCP-Account
         path: k8s_discovery/gcp/gcp-account
         description: GCP Account Representation
 
