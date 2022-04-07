@@ -303,6 +303,26 @@ topics:
         name: Terraform_GCP_GKE
         path: terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
+      - id: tf_gcp_network
+        name: Terraform-GCP-Network
+        path: terraform/gcp_network
+        description: Create a Google Platform Network using Terraform automation
+      - id: tf_gcp_storage
+        name: Terraform-GCP-Storage
+        path: terraform/gcp_storage
+        description: Create a Google Platform Storage using Terraform automation
+      - id: tf_gcp_queue
+        name: Terraform-GCP-Queue
+        path: terraform/gcp_queue
+        description: Create a Google Platform Queue service using Terraform automation
+      - id: tf_gcp_bigtable
+        name: Terraform-GCP-Bigtable
+        path: terraform/gcp_bigtable
+        description: Create a Google Platform Bigtable service using Terraform automation
+      - id: tf_gcp_disk
+        name: Terraform-GCP-Disk
+        path: terraform/gcp_disk
+        description: Create a Google Platfrom Disk service using Terraform automation
   - name: terraform_services
     target_path: s3_json_file
     blueprints:
@@ -387,6 +407,26 @@ topics:
         name: Terraform_AWS_RDS_MySQL
         path: terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
+      - id: tf_gcp_network
+        name: Terraform-GCP-Network
+        path: terraform/gcp_network
+        description: Create a Google Platform Network using Terraform automation
+      - id: tf_gcp_storage
+        name: Terraform-GCP-Storage
+        path: terraform/gcp_storage
+        description: Create a Google Platform Storage using Terraform automation
+      - id: tf_gcp_queue
+        name: Terraform-GCP-Queue
+        path: terraform/gcp_queue
+        description: Create a Google Platform Queue service using Terraform automation
+      - id: tf_gcp_bigtable
+        name: Terraform-GCP-Bigtable
+        path: terraform/gcp_bigtable
+        description: Create a Google Platform Bigtable service using Terraform automation
+      - id: tf_gcp_disk
+        name: Terraform-GCP-Disk
+        path: terraform/gcp_disk
+        description: Create a Google Platfrom Disk service using Terraform automation
   - name: helm_services
     target_path: s3_json_file
     blueprints:
