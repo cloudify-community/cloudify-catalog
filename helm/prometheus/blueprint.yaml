@@ -88,4 +88,4 @@ labels:
 
 capabilities:
   main_page:
-    value: { concat: [ { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip ] }, "/graph"] }
+    value: { concat: [ { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip ] }, ":9090/graph"] }
