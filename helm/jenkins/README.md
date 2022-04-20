@@ -12,7 +12,7 @@ In this way, all necessary credentials will be automatically passed to a Helm ch
 
 Example:
 ```shell
-cfy install blueprint.yaml -b helm-Jenkins -d helm-Jenkins -l csys-obj-parent=EKS_DEPLOYMENT_ID
+cfy install blueprint.yaml -b helm-Jenkins -d helm-Jenkins -l csys-obj-parent=K8S_DEPLOYMENT_ID
 ```
 
 Using the GUI, `Deploy On` action can be used for that. It can be found under the `Bulk actions` button in the Deployments view. [Read more](https://docs.cloudify.co/latest/working_with/console/widgets/deploymentsview/#bulk-actions)
@@ -30,7 +30,7 @@ cloudify-kubernetes-plugin
 
 ## Node Types
 
-### Password Generation
+### Password Generator
 the node type is responsible for password generation for Jnkins admin
 The type is `cloudify.nodes.Root`
 
