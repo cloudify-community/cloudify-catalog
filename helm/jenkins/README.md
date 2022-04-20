@@ -1,8 +1,8 @@
-# Wordpress Helm Chart Blueprint
+# Jenkins Helm Chart Blueprint
 
 ## General
 
-The blueprint installs Wordpress on top of Kubernetes cluster using the official Bitnami Helm chart.
+The blueprint installs Jenkins on top of Kubernetes cluster using the official Bitnami Helm chart.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ In this way, all necessary credentials will be automatically passed to a Helm ch
 
 Example:
 ```shell
-cfy install blueprint.yaml -b helm-wordpress -d helm-wordpress -l csys-obj-parent=EKS_DEPLOYMENT_ID
+cfy install blueprint.yaml -b helm-Jenkins -d helm-Jenkins -l csys-obj-parent=EKS_DEPLOYMENT_ID
 ```
 
 Using the GUI, `Deploy On` action can be used for that. It can be found under the `Bulk actions` button in the Deployments view. [Read more](https://docs.cloudify.co/latest/working_with/console/widgets/deploymentsview/#bulk-actions)
@@ -26,12 +26,13 @@ cloudify-kubernetes-plugin
 
 | Display Label                     | Name          | Type   | Default Value    |
 | --------------------------------- | ------------- | ------ | ---------------- |
-| Username to be set in application | username      | string | admin            |
-| Password to be set in application | password      | string | Cl0ud1fY!        |
-| Email to be set in application    | email         | string | user@cloudify.co |
-| Name of the helm release          | release_name  | string | examplewordpress |
+| Name of the helm release          | release_name  | string | example          |
 
 ## Node Types
+
+### Password Generation
+the node type is responsible for password generation for Jnkins admin
+The type is `cloudify.nodes.Root`
 
 ### Helm install
 the node type is responisble for installation of the helm binary in v3.7.2
@@ -42,7 +43,7 @@ the node type is responisble for downloading the Bitnami repository.
 The type is `cloudify.nodes.helm.Repo`. 
 
 ### Release
-the node type is responisble for installing the Wordpress deployment using the official Bitnami chart.
+the node type is responisble for installing the Jenkins deployment using the official Bitnami chart.
 The type is `cloudify.nodes.helm.Release`. 
 
 ### Svc
@@ -57,5 +58,5 @@ The created deployment will have label `obj-type` equal to `helm`
 
 | Name          | Description                           |
 | ------------- | ------------------------------------- |
-| url           | URL of the Wordpress app              |
-| login_page    | Login page of the Wordpress console   |
+| url           | URL of the Jenkins app              |
+| login_page    | Login page of the Jenkins console   |

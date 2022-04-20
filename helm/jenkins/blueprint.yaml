@@ -13,7 +13,7 @@ inputs:
     description: |
       Name of the helm release
     type: string
-    default: example8
+    default: example
 
 node_templates:
 
