@@ -104,7 +104,7 @@ capabilities:
   project_id:
     description: |
       GCP project id
-    value: { get_attribute: [ terraform_module, outputs, project_id] }
+    value: { get_attribute: [ terraform_module, outputs, project_id ] }
   kubernetes_cluster_name:
     description: |
       Kubernetes Cluster name
@@ -121,3 +121,7 @@ capabilities:
     description: |
       Kuberenetes Dashboard hostname
     value: { get_attribute: [ terraform_module, outputs, dashboard_ip ] }
+  ssl_ca_cert:
+    description: |
+      SSL CA Cert
+    value: { get_attribute: [ terraform_module, outputs, ssl_ca_cert ] }
