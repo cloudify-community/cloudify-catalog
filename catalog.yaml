@@ -427,7 +427,7 @@ topics:
         description: Create an Azure Kubernetes using Terraform automation
       - id: tf_kube_eks
         name: Terraform_Kubernetes_AWS_EKS
-        path: kubernetes/terraform/gke
+        path: kubernetes/terraform/eks
         description: Create an AWS Kubernetes using Terraform automation
       - id: spot_ocean
         name: SpotOcean_optimized_cluster
