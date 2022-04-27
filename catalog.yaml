@@ -492,7 +492,7 @@ topics:
         description: Installing Nginx helm chart on top of K8s cluster
       - id: postgres
         name: PostgresSQL
-        path: helm/postgresgl
+        path: helm/postgresql
         description: Installing PostgreSQL helm chart on top of K8s cluster
       - id: prometheus
         name: Prometheus
