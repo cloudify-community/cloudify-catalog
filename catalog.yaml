@@ -442,6 +442,14 @@ topics:
         name: NodeJS
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
+      - id: autoscaler
+        name: Autoscaler
+        path: helm/autoscaler
+        description: Installing Autoscaler helm chart on top of K8s cluster
+      - id:  cert_manager
+        name: Cert-Manager
+        path: helm/cert_manager
+        description: Installing Cert-Manager helm chart on top of K8s cluster
   - name: k8s_services
     target_path: s3_json_file
     blueprints:
