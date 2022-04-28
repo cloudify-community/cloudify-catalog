@@ -335,7 +335,7 @@ topics:
         name: Terraform-GCP-PostgreSQL
         path: terraform/gcp_postgresql
         description: Create a Google Platform PostgresSQL Database the spot configuration using Terraform automation
-      - id: tf_gcp_oracle
+      - id: tf_gcp_mariadb
         name: Terraform-GCP-MariaDB
         path: terraform/gcp_mariadb
         description: Create a Google Platform MariaDB Database the spot configuration using Terraform automation
