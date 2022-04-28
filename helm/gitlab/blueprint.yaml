@@ -1,0 +1,115 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: Cloudify gitlab-wordpress blueprint. Installs Gitlab Helm chart on top of Kubernetes cluster.
+
+imports:
+  - https://cloudify.co/spec/cloudify/6.4.0/types.yaml
+  - plugin:cloudify-helm-plugin
+  - plugin:cloudify-kubernetes-plugin
+
+inputs:
+
+  issuer_email:
+    description: |
+      Email to associate with your TLS certificates
+    type: string
+    default: abc@cloudify.co
+
+  release_name:
+    description: |
+      Name of the helm release
+    type: string
+    default: example
+
+  domain:
+    description: |
+      Domain which will contain records to resolve gitlab, registry, and minio
+    type: string
+    default: "abc.example.co"
+
+  static_ip: 
+    description: |
+      Static IP that DNS record point to
+    default: "10.10.10.10"
+  
+node_templates:
+
+  password_generator:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          executor: central_deployment_agent
+          implementation: scripts/generate-password.sh
+
+  helm_install:
+    type: cloudify.nodes.helm.Binary
+    properties:
+      use_existing_resource: false
+      installation_source: 'https://get.helm.sh/helm-v3.7.2-linux-amd64.tar.gz'
+
+  repo:
+    type: cloudify.nodes.helm.Repo
+    properties:
+      resource_config:
+        name: gitlab
+        repo_url: https://charts.gitlab.io/
+    relationships:
+      - target: helm_install
+        type: cloudify.helm.relationships.run_on_host
+
+  release:
+    type: cloudify.nodes.helm.Release
+    properties:
+      client_config:
+        configuration:
+          api_options:
+            host: { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
+            api_key: { get_environment_capability: token }
+            ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
+      resource_config:
+        name: { get_input: release_name }
+        chart: gitlab/gitlab
+        set_values:
+          - name: global.initialRootPassword.secret
+            value: { get_attribute: [ password_generator, master_password ] }
+          - name: global.initialRootPassword.key
+            value: password
+          - name: certmanager-issuer.email
+            value: { get_input: issuer_email }
+          - name: global.hosts.domain
+            value: { get_input: domain }
+          - name: global.hosts.externalIP
+            value: { get_input: static_ip }
+          - name: gitlab.sidekiq.resources.requests.cpu
+            value: "50m"
+          - name: gitlab.sidekiq.resources.requests.memory
+            value: "650M"
+          - name: gitlab.webservice.resources.requests.memory
+            value: "1.5G"
+        flags:
+          - name: timeout
+            value: "1200s"
+          - name: version
+            value: "4.10.2"
+    relationships:
+      - target: helm_install
+        type: cloudify.helm.relationships.run_on_host
+      - target: repo
+        type: cloudify.relationships.depends_on
+
+labels:
+  obj-type: 
+    values: 
+      - helm
+
+capabilities:
+  root_password:
+    value: { get_attribute: [ password_generator, master_password ] }
+  gitlab_domain:
+    value: { concat: [ gitlab., { get_input:  domain  } ] }
+  gitlab_registry:
+    value: { concat: [ registry., { get_input:  domain  } ] }
+  gitlab_minio:
+    value: { concat: [ minio., { get_input:  domain  } ] }
+ 

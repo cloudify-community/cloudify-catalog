@@ -402,6 +402,82 @@ topics:
         name: NodeJS
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
+      - id: autoscaler
+        name: Autoscaler
+        path: helm/autoscaler
+        description: Installing Autoscaler helm chart on top of K8s cluster
+      - id:  cert_manager
+        name: Cert-Manager
+        path: helm/cert_manager
+        description: Installing Cert Manager helm chart on top of K8s cluster
+      - id: elastic
+        name: Elasticsearch
+        path: helm/elastic
+        description: Installing Elastic helm chart on top of K8s cluster
+      - id: externaldns
+        name: Extenraldns
+        path: helm/externaldns
+        description: Installing Externaldns helm chart on top of K8s cluster
+      - id: gitlab
+        name: Gitlab
+        path: helm/gitlab
+        description: Installing Gitlab helm chart on top of K8s cluster
+      - id: grafana
+        name: Grafana
+        path: helm/grafana
+        description: Installing Grafana helm chart on top of K8s cluster
+      - id: jenkins
+        name: Jenkins
+        path: helm/jenkins
+        description: Installing Jenkins helm chart on top of K8s cluster
+      - id: kafka
+        name: Kafka
+        path: helm/kafka
+        description: Installing Kafka helm chart on top of K8s cluster
+      - id: kube_dash
+        name: Kubernetes-Dashboard
+        path: helm/kube_dash
+        description: Installing Kubernetes Darshboard helm chart on top of K8s cluster
+      - id: mongodb
+        name: MongoDB
+        path: helm/mongodb
+        description: Installing MongoDB helm chart on top of K8s cluster
+      - id: Mysql
+        name: MySQL
+        path: helm/mysql
+        description: Installing MySQL helm chart on top of K8s cluster
+      - id: nginx
+        name: Nginx
+        path: helm/nginx
+        description: Installing Nginx helm chart on top of K8s cluster
+      - id: postgres
+        name: PostgresSQL
+        path: helm/postgresql
+        description: Installing PostgreSQL helm chart on top of K8s cluster
+      - id: prometheus
+        name: Prometheus
+        path: helm/prometheus
+        description: Installing Prometheus helm chart on top of K8s cluster
+      - id: prometheus_stack
+        name: Prometheus-Stack
+        path: helm/prometheus_stack
+        description: Installing Prometheus Stack helm chart on top of K8s cluster
+      - id: rabbitmq
+        name: Rabbitmq
+        path: helm/rabbitmq
+        description: Installing Rabbitmq helm chart on top of K8s cluster
+      - id: redis
+        name: Redis
+        path: helm/redis
+        description: Installing Redis helm chart on top of K8s cluster
+      - id: traefik
+        name: Traefik
+        path: helm/traefik
+        description: Installing Traefik helm chart on top of K8s cluster
+      - id: vault
+        name: Vault
+        path: helm/vault
+        description: Installing Vault helm chart on top of K8s cluste
   - name: k8s_services
     target_path: s3_json_file
     blueprints:
@@ -427,7 +503,7 @@ topics:
         description: Create an Azure Kubernetes using Terraform automation
       - id: tf_kube_eks
         name: Terraform_Kubernetes_AWS_EKS
-        path: kubernetes/terraform/gke
+        path: kubernetes/terraform/eks
         description: Create an AWS Kubernetes using Terraform automation
       - id: spot_ocean
         name: SpotOcean_optimized_cluster
