@@ -300,9 +300,53 @@ topics:
         path: gcp/simple_service
         description: Create a VM using GCP plugin and setting up Hello World service using Ansible Plugin
       - id: tf_gke
-        name: Terraform_GCP_GKE
+        name: Terraform-GCP-GKE
         path: terraform/gke
-        description: Create a Google Platform Kubernetes using Terraform automation 
+        description: Create a Google Platform Kubernetes using Terraform automation
+      - id: tf_gcp_network
+        name: Terraform-GCP-Network
+        path: terraform/gcp_network
+        description: Create a Google Platform Network using Terraform automation
+      - id: tf_gcp_storage
+        name: Terraform-GCP-Storage
+        path: terraform/gcp_storage
+        description: Create a Google Platform Storage using Terraform automation
+      - id: tf_gcp_queue
+        name: Terraform-GCP-Queue
+        path: terraform/gcp_queue
+        description: Create a Google Platform Queue service using Terraform automation
+      - id: tf_gcp_bigtable
+        name: Terraform-GCP-Bigtable
+        path: terraform/gcp_bigtable
+        description: Create a Google Platform Bigtable service using Terraform automation
+      - id: tf_gcp_disk
+        name: Terraform-GCP-Disk
+        path: terraform/gcp_disk
+        description: Create a Google Platfrom Disk service using Terraform automation
+      - id: tf_gcp_vm_spot
+        name: Terraform-GCP-VM-Spot
+        path: terraform/gcp_vm_spot
+        description: Create a Google Platform VM with the spot configuration using Terraform automation
+      - id: tf_gcp_oracle
+        name: Terraform-GCP-Oracle
+        path: terraform/gcp_oracle
+        description: Create a Google Platform Oracle Database the spot configuration using Terraform automation
+      - id: tf_gcp_postgresql
+        name: Terraform-GCP-PostgreSQL
+        path: terraform/gcp_postgresql
+        description: Create a Google Platform PostgresSQL Database the spot configuration using Terraform automation
+      - id: tf_gcp_mariadb
+        name: Terraform-GCP-MariaDB
+        path: terraform/gcp_mariadb
+        description: Create a Google Platform MariaDB Database the spot configuration using Terraform automation
+      - id: tf_gcp_mysql
+        name: Terraform-GCP-MySQL
+        path: terraform/gcp_mysql
+        description: Create a Google Platform MySQL Database the spot configuration using Terraform automation
+      - id: tf_gcp_container_instance
+        name: Terraform-GCP-Container-Instance
+        path: terraform/gcp_container_instance
+        description: Create a Google Platform Container Instance the spot configuration using Terraform automation
   - name: terraform_services
     target_path: s3_json_file
     blueprints:
