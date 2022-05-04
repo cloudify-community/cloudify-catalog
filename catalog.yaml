@@ -537,14 +537,17 @@ topics:
         name: Terraform_Kubernetes_GCP_GKE
         path: terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/gke.png
       - id: tf_kube_aks
         name: Terraform_Kubernetes_Azure_AKS
         path: terraform/aks
         description: Create an Azure Kubernetes using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/aks.png
       - id: tf_kube_eks
         name: Terraform_Kubernetes_AWS_EKS
         path: terraform/eks
         description: Create an AWS Kubernetes using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/eks.png
       - id: spot_ocean
         name: SpotOcean_optimized_cluster
         path: kubernetes/spot
