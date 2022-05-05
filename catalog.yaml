@@ -542,7 +542,7 @@ topics:
         name: Vault
         path: helm/vault
         description: Installing Vault helm chart on top of K8s cluster
-  - name: k8s_services
+  - name: k8s-examples
     target_path: s3_json_file
     blueprints:
       - id: tf_kube_gke
