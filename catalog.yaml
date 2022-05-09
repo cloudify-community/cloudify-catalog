@@ -477,22 +477,22 @@ topics:
         description: Create an Azure VPC using Terraform automation
 
       - id: tf_gcp_network
-        name: Terraform-GCP-Network
+        name: Network-GCP-TFM
         path: terraform/gcp_network
         description: Create a Google Platform Network using Terraform automation
 
       - id: terraform_aws_vpc
-        name: Terraform_AWS_VPC
+        name: VPC-AWS-TFM
         path: terraform/aws_vpc
         description: Create an AWS VPC using Terraform automation
     #K8s
       - id: terraform_aks
-        name: Terraform_Azure_AKS
+        name: AKS-Azure-TFM
         path: terraform/aks
         description: Create an AKS using Terraform automation
 
       - id: terraform_gke
-        name: Terraform_GCP_GKE
+        name: GKE-GCP-TFM
         path: terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
 
