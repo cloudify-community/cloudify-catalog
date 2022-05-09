@@ -68,72 +68,72 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: EnvironmentAWS
-        name: EnvironmentAWS
+        name: Production-ENV-AWS-CFY
         path: certified_environments/environments/aws
         description: Creating AWS environment
 
       - id: EksAWS
-        name: EksAWS
+        name: EKS-AWS-CFY
         path: certified_environments/services/aws/eks
         description: Creating EKS service
 
       - id: MinikubeAWS
-        name: MinikubeAWS
+        name: Minikube-AWS-CFY
         path: certified_environments/services/aws/minikube
         description: Creating Minikube service
 
       - id: MinioAWS
-        name: MinioAWS
+        name: Minio-AWS-CFY
         path: certified_environments/services/aws/minio
         description: Creating Minio service
 
       - id: PsqlAWS
-        name: PsqlAWS
+        name: PostgreSQL-AWS-CFY
         path: certified_environments/services/aws/psql
         description: Creating PostgreSQL service
 
       - id: RdsPsqlAWS
-        name: RdsPsqlAWS
+        name: PostgreSQL-RDS-AWS-CFY
         path: certified_environments/services/aws/rds_psql
         description: Creating PostgreSQL on RDS service
 
       - id: S3AWS
-        name: S3AWS
+        name: S3-AWS-TFM
         path: certified_environments/services/aws/s3
         description: Creating S3 service
 
       - id: AksAzure
-        name: AksAzure
+        name: AKS-Azure-CFY
         path: certified_environments/services/azure/aks
         description: Creating AKS service
 
       - id: MinikubeAzure
-        name: MinikubeAzure
+        name: Minikube-Azure-CFY
         path: certified_environments/services/azure/minikube
         description: Creating Minikube service
 
       - id: MinioAzure
-        name: MinioAzure
+        name: Minio-Azure-CFY
         path: certified_environments/services/azure/minio
         description: Creating Minio service
 
       - id: PsqlAzure
-        name: PsqlAzure
+        name: PostgreSQL-Azure-CFY
         path: certified_environments/services/azure/psql
         description: Creating PostgreSQL service
 
       - id: RdsPsqlAzure
-        name: RdsPsqlAzure
+        name: PostgreSQL-RDS-Azure-ARM
         path: certified_environments/services/azure/rds_psql
         description: Creating PostgreSQL on RDS service
 
       - id: StorageAzure
-        name: StorageAzure
+        name: Storage-Azure-TFM
         path: certified_environments/services/azure/storage
         description: Creating Storage service
 
       - id: EnvironmentAzure
-        name: EnvironmentAzure
+        name: Production-ENV-Azure-CFY
         path: certified_environments/environments/azure
         description: Creating Azure environment
 
