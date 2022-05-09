@@ -30,7 +30,7 @@ topics:
         path: getting_started/relationship
         description: |
             The relationship blueprint example - describes how to create dependencies between multiple node types resources
-            In this case were adding a web application node (web calculator) that will be contained_in the http_web_server resource
+            In this case were adding a web application node web calculator that will be contained_in the http_web_server resource
             Note that the application is pulled from a git repository and can be easily modified to any other application as needed.
             See the app_scripts/create.sh to see how this is done.
             The webserver and application will run on the <manager host>:8000
@@ -141,96 +141,96 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: DynamoDB
-        name: DynamoDB-(AWS.CFY)
+        name: DynamoDB-AWS-CFY
         path: aws/dynamodb
         description: Creating AWS DynamoDB table
 
       - id: EBS
-        name: EBS-(AWS.CFY)
+        name: EBS-AWS-CFY
         path: aws/ebs
         description: Creating EBS volume
 
       - id: EC2
-        name: EC2-(AWS.CFY)
+        name: EC2-AWS-CFY
         path: aws/ec2
         description: Creating generating SSH key, creating a KeyPair and provisioning an EC2 instance
 
       - id: EC2_WITH_EBS
-        name: EC2-WITH-EBS-(AWS.CFY)
+        name: EC2-WITH-EBS-AWS-CFY
         path: aws/ec2_with_ebs
         description: Creating EC2 inside VPC and EBS
 
       - id: EC2_SPOT_INSTANCES
-        name: EC2-SPOT-INSTANCES-(AWS.CFY)
+        name: EC2-SPOT-INSTANCES-AWS-CFY
         path: aws/ec2_spot_instances
         description: Creating EC2 Spot instance
 
       - id: ECS
-        name: ECS-(AWS.CFY)
+        name: ECS-AWS-CFY
         path: aws/ecs
         description: Creating ECS
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
 
       - id: S3
-        name: S3-(AWS.CFY)
+        name: S3-AWS-CFY
         path: aws/s3
         description: Creating S3 Bucket
 
       - id: SNS
-        name: SNS-(AWS.CFY)
+        name: SNS-AWS-CFY
         path: aws/sns
         description: Creating SNS
 
       - id: SQS
-        name: SQS-(AWS.CFY)
+        name: SQS-AWS-CFY
         path: aws/sqs
         description: Creating SQS
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/README.md
 
       - id: tf_aws_vm
-        name: VM-(AWS.TFM)
+        name: VM-AWS-TFM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_eks
-        name: EKS-(AWS.TFM)
+        name: EKS-AWS-TFM
         path: terraform/eks
         description: Create an EKS AWS using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_aws_vpc
-        name: VPC-(AWS.TFM)
+        name: VPC-AWS-TFM
         path: terraform/aws_vpc
         description: Create an AWS VPC using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_s3_aws
-        name: S3-(AWS.TFM)
+        name: S3-AWS-TFM
         path: terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_aws_rds_mariadb
-        name: MariaDB-RDS-(AWS.TFM)  
+        name: MariaDB-RDS-AWS-TFM  
         path: terraform/aws_rds_mariadb
         description: Create an AWS RDS MariaDB using Terraform 
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_rds_oracle
-        name: Oracle-RDS-(AWS.TFM)  
+        name: Oracle-RDS-AWS-TFM  
         path: terraform/aws_rds_oracle
         description: Create an AWS RDS Oracle using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_aws_rds_postgresql
-        name: Postgres-RDS-(AWS.TFM)
+        name: Postgres-RDS-AWS-TFM
         path: terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
       
       - id: tf_aws_rds_mysql
-        name: MySQL-RDS-(AWS.CFY)
+        name: MySQL-RDS-AWS-CFY
         path: terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
@@ -240,109 +240,109 @@ topics:
     blueprints:
       
       - id: Instance-Ubuntu-Arm
-        name: VM-Ubuntu-(Azure.ARM)
+        name: VM-Ubuntu-Azure-ARM
         path: azure/deployment
-        description: This blueprint creates a Ubuntu instance on Microsoft Azure, along with necessary networking services and a public IP using an Azure ARM template (template.json).  The blueprint generates public and private SSH keys. A keypair (for SSH) is created, stored in the secret store, and attached to the provisioned instance, via the Azure template inputs.  If a secret with the same name(s) is present in the secret store, it is used.
+        description: This blueprint creates a Ubuntu instance on Microsoft Azure, along with necessary networking services and a public IP (using an Azure ARM template template.json).  The blueprint generates public and private SSH keys. A keypair (for SSH) is created, stored in the secret store, and attached to the provisioned instance, via the Azure template inputs.  If a secret with the same name(s) is present in the secret store, it is used.
       
       - id: instance-Ubuntu-Azure-Plugin
-        name: VM-Ubuntu-(Azure.CFY)
+        name: VM-Ubuntu-Azure-CFY
         path: azure/instance
         description: This blueprint starts a Ubuntu VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
       
       - id: Instance-Ubuntu-Spot-Arm
-        name: VM-Ubuntu-Spot-(Azure.ARM)
+        name: VM-Ubuntu-Spot-Azure-ARM
         path: azure/ubuntu_spot_instance
         description: Create a Ubuntu VM Spot Instance using ARM template
       
       - id: Instance-Ubuntu-Disk-Storage-Arm
-        name: VM-Ubuntu-Disk-Storage-(Azure.ARM)
+        name: VM-Ubuntu-Disk-Storage-Azure-ARM
         path: azure/ubuntu_disk_storage
         description: Create a u Ubuntu VM with managed disk storage 
       
       - id: Spot-Instance-Windows-Arm
-        name: VM-Windows-Spot-(Azure.ARM)
+        name: VM-Windows-Spot-Azure-ARM
         path: azure/spot_instance
         description: Create a Windows VM Spot Instance using ARM template
       
       - id: Loadbalancer-Azure-Plugin
-        name: LB-(Azure.CFY)
+        name: LB-Azure-CFY
         path: azure/lb
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
       
       - id: Storage-Azure-Plugin
-        name: Storage-(Azure.CFY)
+        name: Storage-Azure-CFY
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
       
       - id: Notification-Hub-Arm
-        name: Notification-Hub-(Azure.ARM)
+        name: Notification-Hub-Azure-ARM
         path: azure/notification_hub
         description: Create a Notification Hub using ARM template
 
       - id: Service-Bus-Arm
-        name: Service-Bus-(Azure.ARM)
+        name: Service-Bus-Azure-ARM
         path: azure/service_bus
         description: Create a Service Bus using ARM template
 
       - id: Container-Instance-Arm
-        name: Container-Instance-(Azure.ARM)
+        name: Container-Instance-Azure-ARM
         path: azure/container_instances
         description: Create a sample container instance with Wordpress & MySQL using ARM template
 
       - id: Disk-Storage-Arm
-        name: Disk-Storage-(Azure.ARM)
+        name: Disk-Storage-Azure-ARM
         path: azure/data_disk
         description: Create a Disk Storage instance using ARM template
 
       - id: CosmosDB-Arm
-        name: CosmosDB-(Azure.ARM)
+        name: CosmosDB-Azure-ARM
         path: azure/cosmos_db
         description: Create a CosmosDB instance using ARM teplate
 
       - id: tf_azure_vm
-        name: VM-Ubuntu-(Azure.TFM)
+        name: VM-Ubuntu-Azure-TFM
         path: terraform/azure
         description: Create an Azure Ubuntu VM using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_storage
-        name: Storage-(Azure.TFM)
+        name: Storage-Azure-TFM
         path: terraform/azure_storage
         description: Create an Azure Blob Storage automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_vpc
-        name: VPC-(Azure.TFM)
+        name: VPC-Azure-TFM
         path: terraform/azure_vpc
         description: Create an Azure VPC using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_oracale
-        name: Oracle-(Azure.TFM)
+        name: Oracle-Azure-TFM
         path: terraform/azure_oracle
         description: Create an Azure Oracle database using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_mysql
-        name: Mysql-(Azure.TFM)
+        name: Mysql-Azure-TFM
         path: terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_postgres
-        name: Postgres-(Azure.TFM)
+        name: Postgres-Azure-TFM
         path: terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_mariadb
-        name: MariaDB-(Azure.TFM)
+        name: MariaDB-Azure-TFM
         path: terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_aks
-        name: AKS-(Azure.TFM)
+        name: AKS-Azure-TFM
         path: terraform/aks
         description: Create an AKS using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
@@ -351,78 +351,78 @@ topics:
     target_path: s3_json_file
     blueprints:
       - id: gcp_vm
-        name: VM-Centos-(GCP.CFY)
+        name: VM-Centos-GCP-CFY
         path: gcp/vm
         description: Create a Centos VM using GCP plugin
 
       - id: gcp_simple_service
-        name: VM-Centos-(GCP.CFY.Ansible)
+        name: VM-Centos-GCP-CFY-Ansible
         path: gcp/simple_service
         description: Create a VM using GCP plugin and setting up Hello World service using Ansible Plugin
 
       - id: tf_gke
-        name: GKE-(GCP.TFM)
+        name: GKE-GCP-TFM
         path: terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
 
       - id: tf_gcp_network
-        name: Network-(GCP.TFM)
+        name: Network-GCP-TFM
         path: terraform/gcp_network
         description: Create a Google Platform Network using Terraform automation
 
       - id: tf_gcp_storage
-        name: Storage-(GCP.TFM)
+        name: Storage-GCP-TFM
         path: terraform/gcp_storage
         description: Create a Google Platform Storage using Terraform automation
 
-      - id: Queue-(GCP.TFM)
+      - id: Queue-GCP-TFM
         name: Terraform-GCP-Queue
         path: terraform/gcp_queue
         description: Create a Google Platform Queue service using Terraform automation
 
       - id: tf_gcp_bigtable
-        name: Bigtable-(GCP.TFM)
+        name: Bigtable-GCP-TFM
         path: terraform/gcp_bigtable
         description: Create a Google Platform Bigtable service using Terraform automation
 
       - id: tf_gcp_disk
-        name:  Disk-(GCP.TFM)
+        name:  Disk-GCP-TFM
         path: terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
 
       - id: terraform_gcp_vm
-        name: VM-Ubuntu-(GCP.TFM)
+        name: VM-Ubuntu-GCP-TFM
         path: terraform/gcp
         description: Create a GCP VM using Terraform automation
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/README.md
 
       - id: tf_gcp_vm_spot
-        name: VM-Ubuntu-Spot-(GCP.TFM)
+        name: VM-Ubuntu-Spot-GCP-TFM
         path: terraform/gcp_vm_spot
         description: Create a Google Platform VM with the spot configuration using Terraform automation
 
       - id: tf_gcp_oracle
-        name: Oracle-(GCP.TFM)
+        name: Oracle-GCP-TFM
         path: terraform/gcp_oracle
         description: Create a Google Platform Oracle Database the spot configuration using Terraform automation
 
       - id: tf_gcp_postgresql
-        name: PostgreSQL-(GCP.TFM)
+        name: PostgreSQL-GCP-TFM
         path: terraform/gcp_postgresql
         description: Create a Google Platform PostgresSQL Database the spot configuration using Terraform automation
 
       - id: tf_gcp_mariadb
-        name: MariaDB-(GCP.TFM)
+        name: MariaDB-GCP-TFM
         path: terraform/gcp_mariadb
         description: Create a Google Platform MariaDB Database the spot configuration using Terraform automation
 
       - id: tf_gcp_mysql
-        name: MySQL-(GCP.TFM)
+        name: MySQL-GCP-TFM
         path: terraform/gcp_mysql
         description: Create a Google Platform MySQL Database the spot configuration using Terraform automation
 
       - id: tf_gcp_container_instance
-        name: Container-Instance-(GCP.TFM)
+        name: Container-Instance-GCP-TFM
         path: terraform/gcp_container_instance
         description: Create a Google Platform Container Instance the spot configuration using Terraform automation
 
@@ -431,48 +431,48 @@ topics:
     blueprints:
     #virtual machines
       - id: terraform_azure_vm
-        name: VM-Ubuntu-(Azure.TFM)
+        name: VM-Ubuntu-Azure-TFM
         path: terraform/azure
         description: Create an Azure VM using Terraform automation
 
       - id: terraform_gcp_vm
-        name: VM-Ubuntu-(GCP.TFM)
+        name: VM-Ubuntu-GCP-TFM
         path: terraform/gcp
         description: Create a GCP VM using Terraform automation
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/README.md
 
       - id: terraform_openstack_vm
-        name: VM-Ubuntu-(Openstack.TFM)
+        name: VM-Ubuntu-Openstack-TFM
         path: terraform/openstack
         description: Create an OpenStack VM using Terraform automation
 
       - id: terraform_aws_vm
-        name: VM-Ubuntu-(AWS.TFM)
+        name: VM-Ubuntu-AWS-TFM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
       
       - id: terraform_tfc
-        name: VM-Ubuntu-(CloudEnterprise.TFM)
+        name: VM-Ubuntu-CloudEnterprise-TFM
         path: terraform/tfc
         description: Install Terraform Cloud/Enterprise example
     #storages
       - id: terraform_azure_storage
-        name: Storage-(Azure.TFM)
+        name: Storage-Azure-TFM
         path: terraform/azure_storage
         description: Create an Azure Blob Storage automation
 
       - id: tf_gcp_storage
-        name: Storage-(GCP.TFM)
+        name: Storage-GCP-TFM
         path: terraform/gcp_storage
         description: Create a Google Platform Storage using Terraform automation
 
       - id: terraform_s3_aws
-        name: S3-(AWS.TFM)
+        name: S3-AWS-TFM
         path: terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
     #networks
       - id: terraform_azure_vpc
-        name: VPC-(Azure.TFM)
+        name: VPC-Azure-TFM
         path: terraform/azure_vpc
         description: Create an Azure VPC using Terraform automation
 
@@ -497,83 +497,83 @@ topics:
         description: Create a Google Platform Kubernetes using Terraform automation
 
       - id: terraform_eks
-        name: EKS-(AWS.TFM)
+        name: EKS-AWS-TFM
         path: terraform/eks
         description: Create an EKS AWS using Terraform automation
     #Databases
     #Oracle
       - id: terraform_azure_oracale
-        name: Oracle-(Azure.TFM)
+        name: Oracle-Azure-TFM
         path: terraform/azure_oracle
         description: Create an Azure Oracle database using Terraform automation
       
       - id: tf_gcp_oracle
-        name: Oracle-(GCP.TFM)
+        name: Oracle-GCP-TFM
         path: terraform/gcp_oracle
         description: Create a Google Platform Oracle Database the spot configuration using Terraform automation
 
       - id: terraform_rds_oracle
-        name: Oracle-RDS-(AWS.TFM)
+        name: Oracle-RDS-AWS-TFM
         path: terraform/aws_rds_oracle
         description: Create an AWS RDS Oracle using Terraform automation
     #MariaDB
       - id: terraform_azure_mariadb
-        name: MariaDB-(Azure.TFM)
+        name: MariaDB-Azure-TFM
         path: terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
       
       - id: tf_gcp_mariadb
-        name: MariaDB-(GCP.TFM)
+        name: MariaDB-GCP-TFM
         path: terraform/gcp_mariadb
         description: Create a Google Platform MariaDB Database the spot configuration using Terraform automation
 
       - id: terraform_aws_rds_mariadb
-        name: MariaDB-RDS-(AWS.TFM)
+        name: MariaDB-RDS-AWS-TFM
         path: terraform/aws_rds_mariadb
         description: Create an AWS RDS MariaDB using Terraform automation
     #Mysql
       - id: terraform_azure_mysql
-        name: MySQL-(AWS.TFM)
+        name: MySQL-AWS-TFM
         path: terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
       
       - id: tf_gcp_mysql
-        name: MySQL-(GCP.TFM)
+        name: MySQL-GCP-TFM
         path: terraform/gcp_mysql
         description: Create a Google Platform MySQL Database the spot configuration using Terraform automation
 
       - id: terraform_aws_rds_mysql
-        name: MySQL-RDS-(AWS.TFM)
+        name: MySQL-RDS-AWS-TFM
         path: terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
     #Postgres
       - id: terraform_azure_postgres
-        name: PostgreSQL-(Azure.TFM)
+        name: PostgreSQL-Azure-TFM
         path: terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
 
       - id: terraform_aws_rds_postgresql
-        name: PostgreSQL-(AWS.TFM)
+        name: PostgreSQL-AWS-TFM
         path: terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
       
       - id: tf_gcp_postgresql
-        name: PostgreSQL-(GCP.TFM)
+        name: PostgreSQL-GCP-TFM
         path: terraform/gcp_postgresql
         description: Create a Google Platform PostgresSQL Database the spot configuration using Terraform automation
     #GCP others
       - id: tf_gcp_queue
-        name: Queue-(GCP.TFM)
+        name: Queue-GCP-TFM
         path: terraform/gcp_queue
         description: Create a Google Platform Queue service using Terraform automation
 
       - id: tf_gcp_bigtable
-        name: Bigtable-(GCP.TFM)
+        name: Bigtable-GCP-TFM
         path: terraform/gcp_bigtable
         description: Create a Google Platform Bigtable service using Terraform automation
 
       - id: tf_gcp_disk
-        name: Disk-(GCP.TFM)
+        name: Disk-GCP-TFM
         path: terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
 
@@ -582,112 +582,112 @@ topics:
     blueprints:
 
       - id: Wordpress
-        name: Wordpress-(K8s.HLM)
+        name: Wordpress-K8s-HLM
         path: helm/wordpress
         description: Installing Wordpress helm chart on top of K8s cluster
 
       - id: Drupal
-        name: Drupal-(K8s.HLM)
+        name: Drupal-K8s-HLM
         path: helm/drupal
         description: Installing Drupal helm chart on top of K8s cluster
 
       - id: NodeJS
-        name: NodeJS-(K8s.HLM)
+        name: NodeJS-K8s-HLM
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
 
       - id: autoscaler
-        name: Autoscaler-(K8s.HLM)
+        name: Autoscaler-K8s-HLM
         path: helm/autoscaler
         description: Installing Autoscaler helm chart on top of K8s cluster
 
       - id:  cert_manager
-        name: Cert-Manager-(K8s.HLM)
+        name: Cert-Manager-K8s-HLM
         path: helm/cert_manager
         description: Installing Cert Manager helm chart on top of K8s cluster
 
       - id: elastic
-        name: Elasticsearch-(K8s.HLM)
+        name: Elasticsearch-K8s-HLM
         path: helm/elastic
         description: Installing Elastic helm chart on top of K8s cluster
 
       - id: externaldns
-        name: Extenraldns-(K8s.HLM)
+        name: Extenraldns-K8s-HLM
         path: helm/externaldns
         description: Installing Externaldns helm chart on top of K8s cluster
 
       - id: gitlab
-        name: Gitlab-(K8s.HLM)
+        name: Gitlab-K8s-HLM
         path: helm/gitlab
         description: Installing Gitlab helm chart on top of K8s cluster
 
       - id: grafana
-        name: Grafana-(K8s.HLM)
+        name: Grafana-K8s-HLM
         path: helm/grafana
         description: Installing Grafana helm chart on top of K8s cluster
 
       - id: jenkins
-        name: Jenkins-(K8s.HLM)
+        name: Jenkins-K8s-HLM
         path: helm/jenkins
         description: Installing Jenkins helm chart on top of K8s cluster
 
       - id: kafka
-        name: Kafka-(K8s.HLM)
+        name: Kafka-K8s-HLM
         path: helm/kafka
         description: Installing Kafka helm chart on top of K8s cluster
 
       - id: kube_dash
-        name: Kubernetes-Dashboard-(K8s.HLM)
+        name: Kubernetes-Dashboard-K8s-HLM
         path: helm/kube_dash
         description: Installing Kubernetes Darshboard helm chart on top of K8s cluster
 
       - id: mongodb
-        name: MongoDB-(K8s.HLM)
+        name: MongoDB-K8s-HLM
         path: helm/mongodb
         description: Installing MongoDB helm chart on top of K8s cluster
 
       - id: Mysql
-        name: MySQL-(K8s.HLM)
+        name: MySQL-K8s-HLM
         path: helm/mysql
         description: Installing MySQL helm chart on top of K8s cluster
 
       - id: nginx
-        name: Nginx-(K8s.HLM)
+        name: Nginx-K8s-HLM
         path: helm/nginx
         description: Installing Nginx helm chart on top of K8s cluster
 
       - id: postgres
-        name: PostgresSQL-(K8s.HLM)
+        name: PostgresSQL-K8s-HLM
         path: helm/postgresql
         description: Installing PostgreSQL helm chart on top of K8s cluster
 
       - id: prometheus
-        name: Prometheus-(K8s.HLM)
+        name: Prometheus-K8s-HLM
         path: helm/prometheus
         description: Installing Prometheus helm chart on top of K8s cluster
 
       - id: prometheus_stack
-        name: Prometheus-Stack-(K8s.HLM)
+        name: Prometheus-Stack-K8s-HLM
         path: helm/prometheus_stack
         description: Installing Prometheus Stack helm chart on top of K8s cluster
 
       - id: rabbitmq
-        name: Rabbitmq-(K8s.HLM)
+        name: Rabbitmq-K8s-HLM
         path: helm/rabbitmq
         description: Installing Rabbitmq helm chart on top of K8s cluster
 
       - id: redis
-        name: Redis-(K8s.HLM)
+        name: Redis-K8s-HLM
         path: helm/redis
         description: Installing Redis helm chart on top of K8s cluster
 
       - id: traefik
-        name: Traefik-(K8s.HLM)
+        name: Traefik-K8s-HLM
         path: helm/traefik
         description: Installing Traefik helm chart on top of K8s cluster
 
       - id: vault
-        name: Vault-(K8s.HLM)
+        name: Vault-K8s-HLM
         path: helm/vault
         description: Installing Vault helm chart on top of K8s cluster
 
@@ -696,60 +696,60 @@ topics:
     blueprints:
 
       - id: tf_kube_gke
-        name: GKE-(GCP.TFM)
+        name: GKE-GCP-TFM
         path: terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/gke.png
 
       - id: tf_kube_aks
-        name: AKS-(Azure.TFM)
+        name: AKS-Azure-TFM
         path: terraform/aks
         description: Create an Azure Kubernetes using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/aks.png
 
       - id: tf_kube_eks
-        name: EKS-(AWS.TFM)
+        name: EKS-AWS-TFM
         path: terraform/eks
         description: Create an AWS Kubernetes using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/eks.png
 
       - id: Kubernetes_AWS_EKS
-        name: EKS-(AWS.CFY)
+        name: EKS-AWS-CFY
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
 
       - id: Kubernetes_Azure_AKS
-        name: AKS-(Azure.CFY)
+        name: AKS-Azure-CFY
         path: kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
 
       - id: Kubernetes_GCP_GKE
-        name: GKE-(GCP.CFY)
+        name: GKE-GCP-CFY
         path: kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
 
       - id: spot_ocean
-        name: Optimized-Cluster-(SpotOcean.TFM)
+        name: Optimized-Cluster-SpotOcean-TFM
         path: kubernetes/spot
         description: Create a Spot Ocean Kubernetes cost optimized Cluster
 
       - id: Kubernetes_Azure_AKS_DR
-        name: AKS-DR-(Azure.TFM)
+        name: AKS-DR-Azure-TFM
         path: pg_ce/services/kubernetes_dr_aks
         description: Creating Disaster Recovery AKS service
 
       - id: Kubernetes_AWS_EKS_DR
-        name: EKS-DR-(AWS.TFM)
+        name: EKS-DR-AWS-TFM
         path: pg_ce/services/kubernetes_dr_eks
         description: Creating Disaster Recovery EKS service
 
       - id: Environment_AWS_DR
-        name: Production-Env-DR-(AWS.CFY)
+        name: Production-Env-DR-AWS-CFY
         path: pg_ce/environments/aws
         description: Creating Disaster Recovery AWS environment
 
       - id: Environment_Azure_DR
-        name:  Production-Env-DR-(Azure.CFY)
+        name:  Production-Env-DR-Azure-CFY
         path: pg_ce/environments/azure
         description: Creating Disaster Recovery Azure environment
 
@@ -777,6 +777,6 @@ topics:
     blueprints:
     
       - id: vsphere_vm
-        name: VM-Centos-(vSphere.CFY)
+        name: VM-Centos-vSphere-CFY
         path: vsphere/vm
         description: Create vSphere VM
