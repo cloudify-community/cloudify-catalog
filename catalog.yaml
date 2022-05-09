@@ -525,18 +525,6 @@ topics:
   - name: k8s_services
     target_path: s3_json_file
     blueprints:
-      - id: Kubernetes_AWS_EKS
-        name: Kubernetes_AWS_EKS
-        path: kubernetes/eks
-        description: Setup a Kubernetes cluster in AWS leveraging EKS
-      - id: Kubernetes_Azure_AKS
-        name: Kubernetes_Azure_AKS
-        path: kubernetes/aks
-        description: Setup a Kubernetes cluster in Azure leveraging AKS
-      - id: Kubernetes_GCP_GKE
-        name: Kubernetes_GCP_GKE
-        path: kubernetes/gke
-        description: Setup a Kubernetes cluster in GCP leveraging GKE
       - id: tf_kube_gke
         name: Terraform_Kubernetes_GCP_GKE
         path: terraform/gke
@@ -552,6 +540,18 @@ topics:
         path: terraform/eks
         description: Create an AWS Kubernetes using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/eks.png
+      - id: Kubernetes_AWS_EKS
+        name: Kubernetes_AWS_EKS
+        path: kubernetes/eks
+        description: Setup a Kubernetes cluster in AWS leveraging EKS
+      - id: Kubernetes_Azure_AKS
+        name: Kubernetes_Azure_AKS
+        path: kubernetes/aks
+        description: Setup a Kubernetes cluster in Azure leveraging AKS
+      - id: Kubernetes_GCP_GKE
+        name: Kubernetes_GCP_GKE
+        path: kubernetes/gke
+        description: Setup a Kubernetes cluster in GCP leveraging GKE
       - id: spot_ocean
         name: SpotOcean_optimized_cluster
         path: kubernetes/spot
