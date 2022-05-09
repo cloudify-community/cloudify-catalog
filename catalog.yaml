@@ -67,10 +67,16 @@ topics:
   - name: certified_environments
     target_path: s3_json_file
     blueprints:
+
       - id: EnvironmentAWS
         name: Production-ENV-AWS-CFY
         path: certified_environments/environments/aws
         description: Creating AWS environment
+
+      - id: EnvironmentAzure
+        name: Production-ENV-Azure-CFY
+        path: certified_environments/environments/azure
+        description: Creating Azure environment
 
       - id: EksAWS
         name: EKS-AWS-CFY
@@ -131,11 +137,6 @@ topics:
         name: Storage-Azure-TFM
         path: certified_environments/services/azure/storage
         description: Creating Storage service
-
-      - id: EnvironmentAzure
-        name: Production-ENV-Azure-CFY
-        path: certified_environments/environments/azure
-        description: Creating Azure environment
 
   - name: aws_services
     target_path: s3_json_file
@@ -242,7 +243,7 @@ topics:
       - id: Instance-Ubuntu-Arm
         name: VM-Ubuntu-Azure-ARM
         path: azure/deployment
-        description: This blueprint creates a Ubuntu instance on Microsoft Azure, along with necessary networking services and a public IP (using an Azure ARM template template.json).  The blueprint generates public and private SSH keys. A keypair (for SSH) is created, stored in the secret store, and attached to the provisioned instance, via the Azure template inputs.  If a secret with the same name(s) is present in the secret store, it is used.
+        description: This blueprint creates a Ubuntu instance on Microsoft Azure, along with necessary networking services and a public IP using an Azure ARM template (template.json).  The blueprint generates public and private SSH keys. A keypair (for SSH) is created, stored in the secret store, and attached to the provisioned instance, via the Azure template inputs.  If a secret with the same name(s) is present in the secret store, it is used.
       
       - id: instance-Ubuntu-Azure-Plugin
         name: VM-Ubuntu-Azure-CFY
@@ -255,7 +256,7 @@ topics:
         description: Create a Ubuntu VM Spot Instance using ARM template
       
       - id: Instance-Ubuntu-Disk-Storage-Arm
-        name: VM-Ubuntu-Disk-Storage-Azure-ARM
+        name: VM-Ubuntu-Disk-Azure-ARM
         path: azure/ubuntu_disk_storage
         description: Create a u Ubuntu VM with managed disk storage 
       
@@ -477,22 +478,22 @@ topics:
         description: Create an Azure VPC using Terraform automation
 
       - id: tf_gcp_network
-        name: Terraform-GCP-Network
+        name: Network-GCP-TFM
         path: terraform/gcp_network
         description: Create a Google Platform Network using Terraform automation
 
       - id: terraform_aws_vpc
-        name: Terraform_AWS_VPC
+        name: VPC-AWS-TFM
         path: terraform/aws_vpc
         description: Create an AWS VPC using Terraform automation
     #K8s
       - id: terraform_aks
-        name: Terraform_Azure_AKS
+        name: AKS-Azure-TFM
         path: terraform/aks
         description: Create an AKS using Terraform automation
 
       - id: terraform_gke
-        name: Terraform_GCP_GKE
+        name: GKE-GCP-TFM
         path: terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
 
