@@ -13,14 +13,17 @@ labels:
 
 inputs:
   aws_access_key_id:
+    display_label: AWS account secret key
     type: string
     default: { get_secret: aws_access_key_id }
 
   aws_secret_access_key:
+    display_label: AWS account access key
     type: string
     default: { get_secret: aws_secret_access_key }
 
   aws_region_name:
+    display_label: AWS region name
     type: string
     default: "us-east-1"
 
@@ -50,8 +53,8 @@ inputs:
     hidden: true
 
   availability_zone_2_suffix:
-    description: Availability Zone 1
-    display_label: Availability Zone 1
+    description: Availability Zone 2
+    display_label: Availability Zone 2
     type: string
     default: b
     constraints:
@@ -75,30 +78,37 @@ inputs:
     hidden: true
 
   eks_cluster_name:
+    display_label: EKS Cluster name
     type: string
     default: "k8s-cloudify"
 
   eks_nodegroup_name:
+    display_label: EKS node group name
     type: string
-    default: { concat: ["eks_node_group", { get_input: eks_cluster_name }] }
+    default: { concat: ["eks_node_group_", { get_input: eks_cluster_name }] }
 
   kubernetes_version:
+    display_label: Kubernetes version
     type: string
     default: ""
 
   service_account_name:
+    display_label: Service account name
     type: string
     default: examples-user
 
   service_account_namespace:
+    display_label: Namespace to create
     type: string
     default: default
 
   ssh_keypair:
+    display_label: SSH key name 
     type: string
     default: { concat: ["eks_key", { get_input: eks_cluster_name }] }
 
   agent_key_name:
+    display_label: Agent key name
     type: string
     default: agent_key
 
