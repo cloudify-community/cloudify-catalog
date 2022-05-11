@@ -1,4 +1,4 @@
-# Azure AKS Example
+# AWS EKS Example
 
 ## General 
 
@@ -6,7 +6,7 @@ The blueprint creates EKS service with one node that is accessible from the publ
 
 ## Requirements
 
-  * Cloudify Manager with Latest Azure and Kubernetes Plugins.
+  * Cloudify Manager with Latest AWS and Kubernetes Plugins.
 
 ### Secrets
 
