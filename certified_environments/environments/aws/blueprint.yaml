@@ -2,6 +2,8 @@ tosca_definitions_version: cloudify_dsl_1_3
 
 imports:
   - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - plugin:cloudify-aws-plugin
+  - plugin:cloudify-utilities-plugin
 
 labels:
   csys-obj-type:
@@ -33,16 +35,42 @@ inputs:
         - ap-southeast-2  #Asia Pacific (Sydney)  
         - ap-northeast-1  #Asia Pacific (Tokyo) 
 
+node_templates:
+  key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { concat: ["RSA-", { get_sys: [deployment, id] }] }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          inputs:
+            store_public_key_material: true
+            store_private_key_material: true
+
+  keypair:
+    type: cloudify.nodes.aws.ec2.Keypair
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: aws_region_name }
+      resource_config:
+        PublicKeyMaterial: { get_attribute: [key, public_key_export] }
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: key
+
 capabilities:
   cloud_type:
     value: aws
   cloud_credentials:
     value:
       aws_access_key_id: { get_secret: aws_access_key_id }
-      aws_keypair: { get_secret: aws_keypair }
+      aws_keypair: { get_attribute: [keypair, aws_resource_id] }
       aws_secret_access_key: { get_secret: aws_secret_access_key }
-      public_key_content: { get_secret: public_key_content }
-      private_key_content: { get_secret: private_key_content }
+      public_key_content: { get_attribute: [key, public_key_export] }
+      private_key_content: { get_attribute: [key, private_key_export] }
       region_name: { get_input: aws_region_name }
 
 

@@ -17,9 +17,6 @@ The blueprint uses secrets to connect to cloud, you need to connfigure them prio
 | --------------------- | ---------------------------------------------------------------------------------- |
 | aws_access_key_id     | AWS Access Key ID                                                                  |
 | aws_aceess_secret_key | AWS Access Secret Key                                                              |
-| aws_keypair           | AWS Keypair Name                                                                   |
-| public_key_content    | The SSH public key (the actual contents) for the keypair specified by aws_keypair  |
-| private_key_content   | The SSH private key (the actual contents) for the keypair specified by aws_keypair |
 
 
 ## Plugins
