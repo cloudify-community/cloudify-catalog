@@ -192,49 +192,41 @@ topics:
         name: VM-AWS-TFM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
-
+       
       - id: tf_eks
         name: EKS-AWS-TFM
         path: terraform/eks
         description: Create an EKS AWS using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_aws_vpc
         name: VPC-AWS-TFM
         path: terraform/aws_vpc
         description: Create an AWS VPC using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_s3_aws
         name: S3-AWS-TFM
         path: terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_aws_rds_mariadb
         name: MariaDB-RDS-AWS-TFM  
         path: terraform/aws_rds_mariadb
         description: Create an AWS RDS MariaDB using Terraform 
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_rds_oracle
         name: Oracle-RDS-AWS-TFM  
         path: terraform/aws_rds_oracle
         description: Create an AWS RDS Oracle using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
       - id: tf_aws_rds_postgresql
         name: Postgres-RDS-AWS-TFM
         path: terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
       
       - id: tf_aws_rds_mysql
         name: MySQL-RDS-AWS-CFY
         path: terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_aws.png
 
   - name: azure_services
     target_path: s3_json_file
@@ -304,49 +296,41 @@ topics:
         name: VM-Ubuntu-Azure-TFM
         path: terraform/azure
         description: Create an Azure Ubuntu VM using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_storage
         name: Storage-Azure-TFM
         path: terraform/azure_storage
         description: Create an Azure Blob Storage automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_vpc
         name: VPC-Azure-TFM
         path: terraform/azure_vpc
         description: Create an Azure VPC using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_oracale
         name: Oracle-Azure-TFM
         path: terraform/azure_oracle
         description: Create an Azure Oracle database using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_mysql
         name: Mysql-Azure-TFM
         path: terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_postgres
         name: Postgres-Azure-TFM
         path: terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_azure_mariadb
         name: MariaDB-Azure-TFM
         path: terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
       - id: tf_aks
         name: AKS-Azure-TFM
         path: terraform/aks
         description: Create an AKS using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/tf_azure.png
 
   - name: gcp_services
     target_path: s3_json_file
