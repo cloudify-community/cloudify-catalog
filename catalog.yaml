@@ -186,12 +186,13 @@ topics:
         name: SQS-AWS-CFY
         path: aws/sqs
         description: Creating SQS
+        readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/README.md
 
       - id: tf_aws_vm
         name: VM-AWS-TFM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
-
+       
       - id: tf_eks
         name: EKS-AWS-TFM
         path: terraform/eks
@@ -330,7 +331,7 @@ topics:
         name: AKS-Azure-TFM
         path: terraform/aks
         description: Create an AKS using Terraform automation
-        
+
   - name: gcp_services
     target_path: s3_json_file
     blueprints:
