@@ -2,6 +2,7 @@ tosca_definitions_version: cloudify_dsl_1_3
 
 imports:
   - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - plugin:cloudify-utilities-plugin
 
 labels:
   csys-obj-type:
@@ -22,6 +23,20 @@ inputs:
         - WestEurope
         - CanadaCentral
 
+node_templates:
+  key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { concat: ["RSA-", { get_sys: [deployment, id] }] }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          inputs:
+            store_public_key_material: true
+            store_private_key_material: true
+
+
 capabilities:
   cloud_type:
     value: azure
@@ -31,7 +46,7 @@ capabilities:
       azure_subscription_id: { get_secret: azure_subscription_id }
       azure_client_id: { get_secret: azure_client_id }
       azure_client_secret: { get_secret: azure_client_secret }
-      public_key_content: { get_secret: public_key_content }
-      private_key_content: { get_secret: private_key_content }
+      public_key_content: { get_attribute: [key, public_key_export] }
+      private_key_content: { get_attribute: [key, private_key_export] }
       region_name: { get_input: azure_location_name }
 
