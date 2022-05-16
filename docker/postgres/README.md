@@ -47,7 +47,7 @@ The blueprint uses secrets to connect to Azure, you need to connfigure them prio
 
 ### Infrastructure
 The node type is responisble to create a Virtual Machine.
-The type is `cloudify.nodes.aws.dynamodb.Table`. 
+The type is `cloudify.nodes.Component`. 
 
 ### Docker
 The node type is responisble to install Docker on the VM.
