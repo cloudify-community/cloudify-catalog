@@ -38,7 +38,6 @@ node_templates:
   kubernetes-cluster-attributes:
     type: cloudify.gcp.nodes.KubernetesCluster
     properties:
-      use_external_resource: true
       name: { concat: [ { get_input: resource_prefix }, '-cluster']}
       gcp_config: *gcp_config
     relationships:
