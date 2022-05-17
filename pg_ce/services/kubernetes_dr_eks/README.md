@@ -7,7 +7,7 @@ The blueprint creates EKS service across region configuration. The blueprint dep
 ## Requirmennts
 
 1. In order to run successfully this blueprint you'll need to deploy the Azure DR production environment (Production-Env-DR-AWS-CFY) from Kubernetes tab.
-2. Then you need upload this blueprint and create the deployment. During the deployment the environment will be assumed as 'aws_dr' and the process will proceed.
+2. Then you need to upload this blueprint and create the deployment. During the deployment the environment will be assumed as 'aws_dr' and the process will proceed.
 
 ## Secrets
 
