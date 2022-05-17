@@ -679,7 +679,7 @@ topics:
   - name: k8s-examples
     target_path: s3_json_file
     blueprints:
-
+    
       - id: tf_kube_gke
         name: GKE-GCP-TFM
         path: terraform/gke
