@@ -28,9 +28,10 @@ node_templates:
     type: cloudify.nodes.ServiceComponent
     properties:
       resource_config:
-        blueprint:
-          id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, dev-small, network, blueprint ] }
-          external_resource: true          
+        blueprint:          
+          id: { concat: [ { get_attribute: [ prefix, value ] }, '-network' ] }
+          blueprint_archive: https://github.com/cloudify-community/eaas-example/releases/download/2.0rc1/single_node.zip
+          main_file_name: azure-blueprint.yaml          
         deployment:
           id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, dev-small, network, deployment ] }
           inputs: 
