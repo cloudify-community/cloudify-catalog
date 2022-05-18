@@ -27,7 +27,6 @@ inputs:
     description: Resource Suffix to be used, must be a letter.
     display_label: Resource Suffix
     type: string
-    description: 
     default: a
 
   resource_group_name:
@@ -188,7 +187,6 @@ node_templates:
     properties:
       client_config:
         configuration: *kubernetes_master_configuration
-      use_external_resource: true
       definition:
         apiVersion: v1
         kind: Secret
