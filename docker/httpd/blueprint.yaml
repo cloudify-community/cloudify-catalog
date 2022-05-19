@@ -85,37 +85,27 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-
-  password_generator:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
     
-  docker_redis_container:
+  docker_nextcloud_container:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
         docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
         docker_rest_port: '2375'
       resource_config:
-        image_tag: "mysql:8.0"
+        image_tag: "httpd:2.4"
         container_args:
-          name: mysql
-          environment: [ { concat: [ "MYSQL_ROOT_PASSWORD=", { get_attribute: [ password_generator, master_password ] } ] } ]
+          name: httpd
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker
-      - type: cloudify.relationships.depends_on
-        target: password_generator
 
 outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
-  rabbitmq_password:
-    description: Postgres password
-    value: { get_attribute: [ password_generator, master_password ] }
+
+  httpd_endpoint:
+    description: Nextcloud URL
+    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8080' ] }
