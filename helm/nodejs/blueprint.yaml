@@ -3,9 +3,9 @@ tosca_definitions_version: cloudify_dsl_1_3
 description: Cloudify helm-nodejs blueprint. Installs NodeJS Helm chart on top of Kubernetes cluster.
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
   - plugin:cloudify-helm-plugin
-  - plugin:cloudify-kubernetes-plugin
+  - plugin:cloudify-kubernetes-plugin?version= ==2.13.7
 
 inputs:
   username:
@@ -82,6 +82,7 @@ node_templates:
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       use_external_resource: true
+      resource_id: ''
       allow_node_redefinition: false
       definition:
         apiVersion: v1
