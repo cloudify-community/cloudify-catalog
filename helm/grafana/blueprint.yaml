@@ -47,7 +47,7 @@ node_templates:
       client_config:
         configuration:
           api_options:
-            host: { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
+            host: { get_environment_capability: kubernetes_cluster_host }
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       resource_config:
@@ -70,7 +70,7 @@ node_templates:
       client_config:
         configuration:
           api_options:
-            host: { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
+            host: { get_environment_capability: kubernetes_cluster_host }
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       use_external_resource: true
