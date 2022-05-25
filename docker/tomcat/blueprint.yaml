@@ -46,7 +46,6 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          id: { get_input: infra_deployment_id }
           blueprint_archive: { get_input: infra_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }
@@ -105,6 +104,11 @@ node_templates:
         container_args:
           name: tomcat
           detach: True
+          command: "catalina.sh run"
+          ports: [ 8080]
+          host_config:
+            port_bindings: { 8080 : 8080 }
+            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker
@@ -116,6 +120,6 @@ outputs:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
 
-  wordpress_endpoint:
-    description: Wordpress URL
+  tomcat_endpoint:
+    description: Tomcat URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':80' ] }

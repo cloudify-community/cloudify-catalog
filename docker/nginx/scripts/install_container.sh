@@ -1,3 +1,3 @@
 #!/bin/bash -e
 
-docker pull nginx
+docker pull nginx:latest

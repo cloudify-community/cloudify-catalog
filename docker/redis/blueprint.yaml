@@ -39,7 +39,6 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          id: { get_input: infra_deployment_id }
           blueprint_archive: { get_input: infra_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }
@@ -86,6 +85,9 @@ node_templates:
         container_args:
           name: redis
           command: redis-server
+          ports: [ 6379, 6379 ]
+          host_config:
+            port_bindings: { 6379 : 6379 }
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on
@@ -95,3 +97,7 @@ outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { get_input: infra_deployment_id }, endpoint] }, ':2375' ] }
+  
+  redis_endpoint:
+    description: redis endpoint
+    value: { concat: [ { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':6379' ] }

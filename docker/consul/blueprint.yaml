@@ -46,7 +46,6 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          id: { get_input: infra_deployment_id }
           blueprint_archive: { get_input: infra_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }

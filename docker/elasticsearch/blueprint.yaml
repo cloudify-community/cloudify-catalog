@@ -46,7 +46,6 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          id: { get_input: infra_deployment_id }
           blueprint_archive: { get_input: infra_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }
@@ -93,11 +92,16 @@ node_templates:
         docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
         docker_rest_port: '2375'
       resource_config:
-        image_tag: "elasticsearch:latest"
+        image_tag: "elasticsearch:8.2.0"
         container_args:
           name: elastic
+          command: "/bin/tini -- /usr/local/bin/docker-entrypoint.sh eswrapper"
+          ports: [ 9200, 9300 ]
+          host_config:
+            port_bindings: { 9200 : 9200 , 9300 : 9300 }
           environment: [ "discovery.type=single-node" ]
           detach: True
+          restart_policy: always
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker
@@ -108,8 +112,8 @@ outputs:
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
   
   elastic_port_1:
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9200' ] }
+    value: { concat: [ 'https://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9200' ] }
 
   elastic_port_2:
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9300' ] }
+    value: { concat: [ 'https://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9300' ] }
 

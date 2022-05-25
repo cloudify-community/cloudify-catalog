@@ -199,15 +199,26 @@ node_templates:
             priority: 100
             access: 'Allow'
             direction: Inbound
-        - name: mysql
+        - name: elastic200
           properties:
             description: HTTP access
             protocol: Tcp
             sourcePortRange: '*'
-            destinationPortRange: 3306
+            destinationPortRange: 9200
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
             priority: 101
+            access: 'Allow'
+            direction: Inbound
+        - name: elastic300
+          properties:
+            description: HTTP access
+            protocol: Tcp
+            sourcePortRange: '*'
+            destinationPortRange: 9300
+            sourceAddressPrefix: '*'
+            destinationAddressPrefix: '*'
+            priority: 102
             access: 'Allow'
             direction: Inbound
         - name: docker_api_port
@@ -218,7 +229,7 @@ node_templates:
             destinationPortRange: 2375
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
-            priority: 104
+            priority: 103
             access: 'Allow'
             direction: Inbound
 

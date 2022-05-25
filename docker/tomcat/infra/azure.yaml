@@ -204,7 +204,7 @@ node_templates:
             description: HTTP access
             protocol: Tcp
             sourcePortRange: '*'
-            destinationPortRange: 8888
+            destinationPortRange: 8080
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
             priority: 101
@@ -218,7 +218,7 @@ node_templates:
             destinationPortRange: 2375
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
-            priority: 104
+            priority: 102
             access: 'Allow'
             direction: Inbound
 

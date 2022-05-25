@@ -1,3 +1,3 @@
 #!/bin/bash -e
 
-docker pull mysql:8.0
+docker pull elasticsearch:8.2.0

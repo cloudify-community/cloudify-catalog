@@ -46,7 +46,6 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          id: { get_input: infra_deployment_id }
           blueprint_archive: { get_input: infra_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }
@@ -105,6 +104,9 @@ node_templates:
         container_args:
           name: mysql
           environment: [ { concat: [ "MYSQL_ROOT_PASSWORD=", { get_attribute: [ password_generator, master_password ] } ] } ]
+          ports: [ 3306, 3306 ]
+          host_config:
+            port_bindings: { 3306 : 3306 }
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on
@@ -116,6 +118,9 @@ outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
-  rabbitmq_password:
-    description: Postgres password
+  mysql_endpoint:
+    description: MySQL endpoint
+    value: { concat: [ { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':3306' ] }
+  mysql_password:
+    description: MYSQL root password
     value: { get_attribute: [ password_generator, master_password ] }
