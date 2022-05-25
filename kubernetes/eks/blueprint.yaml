@@ -750,7 +750,7 @@ node_templates:
             store_private_key_material: true
 
 capabilities:
-  endpoint:
+  kubernetes_cluster_host:
     value:
       { get_attribute: [eks_cluster, kubeconf, clusters, 0, cluster, server] }
 
