@@ -96,6 +96,7 @@ node_templates:
         container_args:
           name: registry
           detach: True
+          restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker

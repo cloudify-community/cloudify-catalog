@@ -18,6 +18,7 @@ inputs:
       - valid_values:
           - azure
           - aws
+    default: aws
 
   infra_archive:
     description: >
@@ -55,7 +56,6 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
 
-
   docker:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -84,7 +84,6 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-
     
   docker_wordpress_container:
     type: cloudify.nodes.docker.container
@@ -97,11 +96,15 @@ node_templates:
         container_args:
           name: wordpress
           detach: True
+          command: "docker-entrypoint.sh apache2-foreground"
+          ports: [ 80 ]
+          host_config:
+            port_bindings: { 80 : 80 }
+            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
+        
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker
-      - type: cloudify.relationships.depends_on
-        target: password_generator
 
 outputs:
   docker_api_url:

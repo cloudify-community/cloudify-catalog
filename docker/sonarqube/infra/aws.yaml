@@ -41,11 +41,9 @@ inputs:
 
   instance_type:
     type: string
-    default: t2.micro
+    default: t2.medium
     constraints:
       - valid_values:
-          - t2.micro
-          - t2.small
           - t2.medium
           - t2.large
           - t2.xlarge
@@ -154,8 +152,13 @@ node_templates:
           IpRanges:
           - CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 9000
+          ToPort: 9000
+          IpRanges:
+          - CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9092
+          ToPort: 9092
           IpRanges:
           - CidrIp: 0.0.0.0/0
         - IpProtocol: tcp

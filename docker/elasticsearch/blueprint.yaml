@@ -99,9 +99,10 @@ node_templates:
           ports: [ 9200, 9300 ]
           host_config:
             port_bindings: { 9200 : 9200 , 9300 : 9300 }
+            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
           environment: [ "discovery.type=single-node" ]
           detach: True
-          restart_policy: always
+          
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker

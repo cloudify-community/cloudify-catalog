@@ -18,6 +18,7 @@ inputs:
       - valid_values:
           - azure
           - aws
+    default: aws
 
   infra_archive:
     description: >
@@ -100,14 +101,17 @@ node_templates:
         docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
         docker_rest_port: '2375'
       resource_config:
-        image_tag: "mysql:8.0"
+        image_tag: "mysql:5.7"
         container_args:
           name: mysql
           environment: [ { concat: [ "MYSQL_ROOT_PASSWORD=", { get_attribute: [ password_generator, master_password ] } ] } ]
-          ports: [ 3306, 3306 ]
+          ports: [ 3306 ]
           host_config:
             port_bindings: { 3306 : 3306 }
+            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
+          command:  "docker-entrypoint.sh mysqld"
           detach: True
+          
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker

@@ -112,9 +112,10 @@ node_templates:
            { concat: [ "MONGO_INITDB_ROOT_PASSWORD=", { get_attribute: [ password_generator, master_password ] } ] }, 
            { concat: [ "MONGO_INITDB_ROOT_USERNAME=", { get_input: user_name } ] } 
           ]
-          ports: [ 27017, 27017 ]
+          ports: [ 27017 ]
           host_config:
             port_bindings: { 27017 : 27017 }
+            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on

@@ -1,3 +1,3 @@
 #!/bin/bash -e
 
-docker pull wordpress
+docker pull wordpress:latest

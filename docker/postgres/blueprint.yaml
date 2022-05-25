@@ -91,12 +91,14 @@ node_templates:
       resource_config:
         image_tag: "postgres:latest"
         container_args:
+          command:  "docker-entrypoint.sh postgres"
           name: postgres
           environment: [ { concat: [ "POSTGRES_PASSWORD=", { get_attribute: [ password_generator, master_password ] } ] } ]
           detach: True
-          ports: [ 5432, 5432 ]
+          ports: [ 5432 ]
           host_config:
             port_bindings: { 5432 : 5432 }
+            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker

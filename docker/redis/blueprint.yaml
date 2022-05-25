@@ -85,10 +85,11 @@ node_templates:
         container_args:
           name: redis
           command: redis-server
-          ports: [ 6379, 6379 ]
+          ports: [ 6379 ]
           host_config:
             port_bindings: { 6379 : 6379 }
-          detach: True
+            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
+          detach: True  
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker

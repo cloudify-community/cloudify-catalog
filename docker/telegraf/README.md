@@ -1,8 +1,8 @@
-# Wordpress Provisioning
+# Telegraf Provisioning
 
 ## General
 
-The blueprint creates Wordpress service with the Docker plugin in the AWS/Azure cloud provider environment.
+The blueprint creates Telegraf service with the Docker plugin in the AWS/Azure cloud provider environment.
 
 ## Requirmennts
 

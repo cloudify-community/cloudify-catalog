@@ -93,7 +93,7 @@ node_templates:
         container_args:
           name: rabbitmq
           environment: [ "RABBITMQ_DEFAULT_USER=cloudify", { concat: [ "RABBITMQ_DEFAULT_PASS=", { get_attribute: [ password_generator, master_password ] } ] } ]
-          ports: [ 5672, 5672 ]
+          ports: [ 5672 ]
           host_config:
             port_bindings: { 5672 : 5672 }
           detach: True
