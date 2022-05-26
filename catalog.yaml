@@ -765,3 +765,33 @@ topics:
         name: VM-Centos-vSphere-CFY
         path: vsphere/vm
         description: Create vSphere VM
+  
+  - name: other_services
+    target_path: s3_json_file
+    blueprints:
+
+      - id: openstack_basic_vm
+        name: OpenStack-Basics-VM-Setup
+        path: other/openstack/vm
+        description: Create vSphere VM
+      
+      - id: openstack_basic_service
+        name: OpenStack-Basics-Simple-Service-Setup
+        path: other/openstack/simple_service
+        description: Create vSphere Service 
+
+      - id: multicloud_nodejs_app
+        name: Multi-Cloud-NodeJS-Application-Server-Setup
+        path: other/multicloud/nodejs
+        description: Create Multicloud Nodejs appliction with Server Setup 
+
+      - id: multicloud_jboss
+        name: Multi-Cloud-JBoss-Application-Server-Setup
+        path: other/multicloud/jboss
+        description: Create Multicloud JBoss appliction with Server Setup 
+
+      - id: multicloud_localstack
+        name: Multi-Cloud-LocalStack-Application-Server-Setup
+        path: other/multicloud/localstack
+        description: Create Multicloud Localstack appliction with Server Setup 
+
