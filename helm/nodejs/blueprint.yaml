@@ -82,6 +82,7 @@ node_templates:
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       use_external_resource: true
+      resource_id: "resource_id"
       allow_node_redefinition: false
       definition:
         apiVersion: v1
