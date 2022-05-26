@@ -5,7 +5,7 @@ description: Cloudify helm-nodejs blueprint. Installs NodeJS Helm chart on top o
 imports:
   - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
   - plugin:cloudify-helm-plugin
-  - plugin:cloudify-kubernetes-plugin?version= ==2.13.6
+  - plugin:cloudify-kubernetes-plugin?version= >=2.13.7
 
 inputs:
   username:
