@@ -199,17 +199,6 @@ node_templates:
             priority: 100
             access: 'Allow'
             direction: Inbound
-        - name: mysql
-          properties:
-            description: HTTP access
-            protocol: Tcp
-            sourcePortRange: '*'
-            destinationPortRange: 3306
-            sourceAddressPrefix: '*'
-            destinationAddressPrefix: '*'
-            priority: 101
-            access: 'Allow'
-            direction: Inbound
         - name: docker_api_port
           properties:
             description: HTTP access
@@ -218,7 +207,7 @@ node_templates:
             destinationPortRange: 2375
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
-            priority: 104
+            priority: 102
             access: 'Allow'
             direction: Inbound
 

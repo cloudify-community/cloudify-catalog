@@ -199,34 +199,12 @@ node_templates:
             priority: 100
             access: 'Allow'
             direction: Inbound
-        - name: stashd
+        - name: wordpress
           properties:
             description: HTTP access
             protocol: Tcp
             sourcePortRange: '*'
-            destinationPortRange: 8125
-            sourceAddressPrefix: '*'
-            destinationAddressPrefix: '*'
-            priority: 101
-            access: 'Allow'
-            direction: Inbound
-        - name: udp
-          properties:
-            description: HTTP access
-            protocol: Tcp
-            sourcePortRange: '*'
-            destinationPortRange: 8092
-            sourceAddressPrefix: '*'
-            destinationAddressPrefix: '*'
-            priority: 101
-            access: 'Allow'
-            direction: Inbound
-        - name: tcp
-          properties:
-            description: HTTP access
-            protocol: Tcp
-            sourcePortRange: '*'
-            destinationPortRange: 8094
+            destinationPortRange: 8086
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
             priority: 101

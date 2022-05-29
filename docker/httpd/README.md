@@ -1,8 +1,8 @@
-# MySQL Provisioning
+# Httpd Provisioning
 
 ## General
 
-The blueprint creates MySQL service with the Docker plugin in the AWS/Azure cloud provider environment.
+The blueprint creates Httpd service with the Docker plugin in the AWS/Azure cloud provider environment.
 
 ## Requirmennts
 
@@ -52,10 +52,6 @@ The type is `cloudify.nodes.Component`.
 ### Docker
 The node type is responisble to install Docker on the VM.
 The type is `cloudify.nodes.ApplicationServer`. 
-
-### Password Generator
-The node type is responisble to generate random password.
-The type is `cloudify.nodes.Root`
 
 ### Docker Container
 the node type is responisble to deploy container on the VM.

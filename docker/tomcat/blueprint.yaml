@@ -93,7 +93,7 @@ node_templates:
           executor: central_deployment_agent
           implementation: scripts/generate-password.sh
     
-  docker_redis_container:
+  docker_tomcat_container:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
@@ -105,7 +105,7 @@ node_templates:
           name: tomcat
           detach: True
           command: "catalina.sh run"
-          ports: [ 8080]
+          ports: [ 8080 ]
           host_config:
             port_bindings: { 8080 : 8080 }
             restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }

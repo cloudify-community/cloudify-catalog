@@ -1,3 +1,4 @@
 #!/bin/bash -e
 
-docker pull wordpress:latest
+docker pull influxdb:2.0
+docker pull telegraf:latest

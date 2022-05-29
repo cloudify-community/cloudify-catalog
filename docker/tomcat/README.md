@@ -53,10 +53,6 @@ The type is `cloudify.nodes.Component`.
 The node type is responisble to install Docker on the VM.
 The type is `cloudify.nodes.ApplicationServer`. 
 
-### Password Generator
-The node type is responisble to generate random password.
-The type is `cloudify.nodes.Root`.
-
 ### Docker Container
 the node type is responisble to deploy container on the VM.
 The type is `cloudify.nodes.docker.container`. 

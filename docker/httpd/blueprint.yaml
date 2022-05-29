@@ -86,7 +86,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infrastructure
     
-  docker_nextcloud_container:
+  docker_httpd_container:
     type: cloudify.nodes.docker.container
     properties:
       client_config:

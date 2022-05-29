@@ -199,12 +199,12 @@ node_templates:
             priority: 100
             access: 'Allow'
             direction: Inbound
-        - name: wordpress
+        - name: influxdb
           properties:
             description: HTTP access
             protocol: Tcp
             sourcePortRange: '*'
-            destinationPortRange: 80
+            destinationPortRange: 8086
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
             priority: 101
@@ -218,7 +218,7 @@ node_templates:
             destinationPortRange: 2375
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
-            priority: 104
+            priority: 102
             access: 'Allow'
             direction: Inbound
 
