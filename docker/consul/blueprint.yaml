@@ -101,8 +101,6 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker
-      - type: cloudify.relationships.depends_on
-        target: password_generator
 
 outputs:
   docker_api_url:
