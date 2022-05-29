@@ -140,7 +140,7 @@ node_templates:
   
 
 outputs:
-  influxdb_endpoint:
+  docker_endpoint:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
   
