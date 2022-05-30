@@ -41,11 +41,9 @@ inputs:
 
   instance_type:
     type: string
-    default: t2.micro
+    default: t2.medium
     constraints:
       - valid_values:
-          - t2.micro
-          - t2.small
           - t2.medium
           - t2.large
           - t2.xlarge
