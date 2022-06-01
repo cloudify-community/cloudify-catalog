@@ -72,8 +72,9 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, blueprint ] }
-          external_resource: true
+          id: { concat: [ { get_attribute: [ prefix, value ] }, '-network' ] }
+          blueprint_archive: https://github.com/cloudify-community/eaas-example/releases/download/2.0rc1/prod_network.zip
+          main_file_name: aws-blueprint.yaml
         deployment:
           id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, deployment ] }
           inputs: 

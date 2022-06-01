@@ -1,0 +1,120 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: Cloudify Docker blueprint. Deploys Docker.
+
+imports:
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-docker-plugin
+
+inputs:
+
+  infra_name:
+    description: >
+      Name of infrastructure blueprint to deploy.
+    type: string
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+
+  infra_archive:
+    description: >
+      URL of infra zip file.
+    type: string
+    default: 'infra.zip'
+
+  infra_exists:
+    description: >
+      Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
+    default: false
+
+  infra_deployment_id:
+    description: The blueprint name, the deployment name.
+    default: { concat: [ 'infra-', { get_input: infra_name } ] }
+
+node_templates:
+
+  infra_prefix:
+    type: eaas.nodes.UniquePrefixGenerator
+    properties:
+      predefined_value: ""
+
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: { get_input: infra_exists }
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
+
+
+  docker:
+    type: cloudify.nodes.ApplicationServer
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/install_docker.sh
+            fabric_env: &fabric_env
+              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
+              user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
+              key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+            use_sudo: true
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs: 
+            script_path: scripts/install_container.sh
+            fabric_env: *fabric_env
+            use_sudo: true
+        delete:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/uninstall_docker.sh
+            fabric_env: *fabric_env
+            use_sudo: true
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+    
+  docker_elastic_container:
+    type: cloudify.nodes.docker.container
+    properties:
+      client_config:
+        docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+        docker_rest_port: '2375'
+      resource_config:
+        image_tag: "elasticsearch:8.2.0"
+        container_args:
+          name: elastic
+          command: "/bin/tini -- /usr/local/bin/docker-entrypoint.sh eswrapper"
+          ports: [ 9200, 9300 ]
+          host_config:
+            port_bindings: { 9200 : 9200 , 9300 : 9300 }
+            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
+          environment: [ "discovery.type=single-node" ]
+          detach: True
+          
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: docker
+
+outputs:
+  docker_api_url:
+    description: Administration console URL
+    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
+  
+  elastic_port_1:
+    value: { concat: [ 'https://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9200' ] }
+
+  elastic_port_2:
+    value: { concat: [ 'https://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9300' ] }
+

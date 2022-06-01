@@ -43,6 +43,7 @@ node_templates:
           bucket_region: { get_environment_capability: [cloud_credentials, region_name] }
         source:
           location: templates/tf-bucket-master.zip
+        source_path: tf-bucket-master
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on

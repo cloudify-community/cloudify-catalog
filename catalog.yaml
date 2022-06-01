@@ -849,3 +849,91 @@ topics:
           The nested blueprint example - describes how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
           We will illustrate how we can create a dependency and relationship between those services , pass inputs/output parameters etc.
 
+  - name: docker_services
+    target_path: s3_json_file
+    blueprints:
+      - id: consul_docker
+        name: Docker-Consul-CFY
+        path: docker/consul
+        description: Creating Consul serivce using Docker plugin
+
+      - id: elastic_docker
+        name: Docker-Elastic-CFY
+        path: docker/elasticsearch
+        description: Creating Elasticsearch serivce using Docker plugin
+    
+      - id: hello_docker
+        name: Docker-HelloWorld-CFY
+        path: docker/helloworld
+        description: Creating Helloworld service using Docker plugin
+
+      - id: httpd_docker
+        name: Docker-Httpd-CFY
+        path: docker/httpd
+        description: Creating Httpd service using Docker plugin
+
+      - id: influxdb_docker
+        name: Docker-Influxdb-CFY
+        path: docker/influxdb
+        description: Creating Httpd service using Docker plugin
+      
+      - id: mariadb_docker
+        name: Docker-MariaDB-CFY
+        path: docker/mariadb
+        description: Creating MariaDB service using Docker plugin
+      
+      - id: memcached_docker
+        name: Docker-Memcached-CFY
+        path: docker/memcached
+        description: Creating Memcached service using Docker plugin
+      
+      - id: mongo_docker
+        name: Docker-MongoDB-CFY
+        path: docker/mongo
+        description: Creating MongoDB service using Docker plugin
+      
+      - id: mysql_docker
+        name: Docker-MySQL-CFY
+        path: docker/mysql
+        description: Creating MySQL service using Docker plugin
+
+      - id: nextcloud_docker
+        name: Docker-Nextcloud-CFY
+        path: docker/nextcloud
+        description: Creating Nextcloud service using Docker plugin
+      
+      - id: nginx_docker
+        name: Docker-Nginx-CFY
+        path: docker/nginx
+        description: Creating Nginx service using Docker plugin
+      
+      - id: postgres_docker
+        name: Docker-Postgres-CFY
+        path: docker/postgres
+        description: Creating PostgresSQL service using Docker plugin
+      
+      - id: rabbitmq_docker
+        name: Docker-RabbitMQ-CFY
+        path: docker/rabbitmq
+        description: Creating RabbitMQ service using Docker plugin
+
+      - id: sonarquebe_docker
+        name: Docker-Sonarquebe-CFY
+        path: docker/sonarqube
+        description: Creating Sonarquebe service using Docker plugin
+      
+      - id: telegraf_docker
+        name: Docker-Telegraf-CFY
+        path: docker/telegraf
+        description: Creating Telegraf service using Docker plugin
+      
+      - id: traefik_docker
+        name: Docker-Traefik-CFY
+        path: docker/traefik
+        description: Creating Traefik service using Docker plugin
+      
+      - id: wordpress_docker
+        name: Docker-Wordpress-CFY
+        path: docker/wordpress
+        description: Creating Wordpress service using Docker plugin
+
