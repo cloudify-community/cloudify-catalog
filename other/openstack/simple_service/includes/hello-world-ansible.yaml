@@ -1,0 +1,40 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: Installs HTTPD with Ansible.
+
+node_templates:
+
+  hello-world:
+    type: cloudify.nodes.ansible.Playbook
+    properties:
+      playbook_path: apache2/playbook.yaml
+      start_at_task: "install apache2"
+      # save_playbook: true
+      ansible_env_vars:
+        ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED: "False"
+        ANSIBLE_HOST_KEY_CHECKING: "False"
+        ANSIBLE_STDOUT_CALLBACK: dense
+      store_facts: false
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: {}
+        configure: {}
+        poststart: {}
+    relationships:
+      - type: cloudify.ansible.relationships.run_on_host
+        target: vm
+        source_interfaces:
+          cloudify.interfaces.relationship_lifecycle:
+            establish:
+              inputs:
+                log_stdout: false
+                store_facts: false
+                sources:
+                  vms:
+                    hosts:
+                      vm:
+                        ansible_host: { get_attribute: [ vm, ip ] }
+                        ansible_user: { get_input: agent_user }
+                        ansible_ssh_private_key_file: { get_attribute: [agent_key, private_key_export] }
+                        ansible_become: True
+                        ansible_ssh_common_args: -o StrictHostKeyChecking=no
