@@ -1,0 +1,111 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: Cloudify Docker blueprint. Deploys Docker.
+
+imports:
+  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-docker-plugin
+
+inputs:
+  infra_name:
+    description: >
+      Name of infrastructure blueprint to deploy.
+    type: string
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+
+  infra_archive:
+    description: >
+      URL of infra zip file.
+    type: string
+    default: 'infra.zip'
+
+  infra_exists:
+    description: >
+      Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
+    default: false
+
+  infra_deployment_id:
+    description: The blueprint name, the deployment name.
+    default: { concat: [ 'infraz-', { get_input: infra_name } ] }
+
+node_templates:
+
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: { get_input: infra_exists }
+        deployment:
+          id: { get_input: infra_deployment_id }
+
+  docker:
+    type: cloudify.nodes.ApplicationServer
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/install_docker.sh
+            fabric_env: &fabric_env
+              host_string: { get_capability: [ { get_input: infra_deployment_id } , endpoint ] }
+              user: { get_capability: [ { get_input: infra_deployment_id }, user ] }
+              key: { get_capability: [ { get_input: infra_deployment_id }, key_content ] }
+            use_sudo: true
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs: 
+            script_path: scripts/install_container.sh
+            fabric_env: *fabric_env
+            use_sudo: true
+        delete:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/uninstall_docker.sh
+            fabric_env: *fabric_env
+            use_sudo: true
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+    
+  docker_container:
+    type: cloudify.nodes.docker.container
+    properties:
+      client_config:
+        docker_host: { get_capability: [ { get_input: infra_deployment_id }, endpoint] }
+        docker_rest_port: '2375'
+      resource_config:
+        image_tag: "traefik:v2.5"
+        container_args:
+          name: traefik-front
+          detach: True
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: docker
+  
+  docker_traefik_container:
+    type: cloudify.nodes.docker.container
+    properties:
+      client_config:
+        docker_host: { get_capability: [ { get_input: infra_deployment_id }, endpoint] }
+        docker_rest_port: '2375'
+      resource_config:
+        image_tag: "traefik/whoami"
+        container_args:
+          name: traefik-back
+          detach: True
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: docker
+
+outputs:
+
+  docker_api_url:
+    description: Administration console URL
+    value: { concat: [ 'http://', { get_capability: [ { get_input: infra_deployment_id }, endpoint] }, ':2375' ] }

@@ -1,0 +1,13 @@
+[
+    {
+        "blueprint_name" : "eks_aws",
+        "blueprint_path" : "kubernetes/eks",
+        "inputs" : {
+            "aws_region_name" : "us-west-1"
+        }
+    }, 
+    {
+        "blueprint_name" : "aks_azure",
+        "blueprint_path" : "kubernetes/aks"
+    }
+]
