@@ -31,7 +31,7 @@ The blueprint uses secrets to connect to Azure, you need to connfigure them prio
 ## Plugins
 
   - plugin:cloudify-fabric-plugin
-  - plugin:cloudify-docker-plugin
+  - plugin:cloudify-ansible-plugin
 
 ## Inputs
 
