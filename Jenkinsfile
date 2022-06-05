@@ -43,7 +43,7 @@ pipeline{
                   runAsUser: 0
                   privileged: true
               - name: cloudify
-                image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
+                image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.8
                 volumeMounts:
                 - mountPath: /dev/shm
                   name: dshm
@@ -52,10 +52,10 @@ pipeline{
                 tty: true
                 resources:
                   requests:
-                    cpu: 2.5
-                    memory: 4Gi
+                    cpu: 1
+                    memory: 2Gi
                   limits:
-                    memory: 5Gi
+                    memory: 2Gi
                 securityContext:
                   runAsUser: 0
                   privileged: true
