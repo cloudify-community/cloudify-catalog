@@ -73,7 +73,7 @@ pipeline{
   environment {
     PROJECT = 'cloudify-catalog'
     WORKSPACE = "${env.WORKSPACE}"
-    BP_ID = "ec2-cloudify-catalog-blueprint-${env.BRANCH}-${env.BUILD_NUMBER}"
+    BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.3.0-.dev1" 
   }
   stages{
