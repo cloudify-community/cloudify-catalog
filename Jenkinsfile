@@ -40,9 +40,6 @@ pipeline{
                 privileged: true
             - name: cloudify
               image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
-              volumeMounts:
-              - mountPath: /dev/shm
-                name: dshm
               command:
               - cat
               tty: true
