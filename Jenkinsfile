@@ -184,7 +184,6 @@ pipeline{
         }
       }
     }
-
     stage('test_blueprints'){
       steps {
         script { 
@@ -192,7 +191,6 @@ pipeline{
           catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
           'FAILURE') {
             container('cloudify') {
-              setupGithubSSHKey()
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
