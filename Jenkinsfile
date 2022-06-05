@@ -82,6 +82,9 @@ pipeline{
         script{ 
           container('cloudify'){
             dir("${env.WORKSPACE}/${env.PROJECT}"){
+              sh """
+                pip install -U pytest
+              """
               common = load "common.groovy"
             }
           }

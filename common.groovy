@@ -19,7 +19,7 @@ def createEc2Instance(){
 
 def configureCloudifyManager(){
   sh """#!/bin/bash
-    scp -i ~/.ssh/ec2_ssh_key ${env.WORKSPACE}/license/cfy-license.yaml centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
+    scp -i ~/.ssh/ec2_ssh_key license/cfy-license.yaml centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 for i in {1..16}; do [[ \$(curl https://localhost/api/v3.1/ok --insecure -s) == *"OK"* ]] && break || echo "Waiting for api.." && sleep 10; done\n
 cfy_manager configure --private-ip \$(curl ${env.EC2_META_DATA}/local-ipv4) --public-ip \$(curl ${env.EC2_META_DATA}/public-ipv4) -a admin\n
