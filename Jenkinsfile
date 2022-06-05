@@ -184,5 +184,27 @@ pipeline{
         }
       }
     }
+
+    stage('test_blueprints'){
+      steps {
+        script { 
+          buildState = 'FAILURE'
+          catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
+          'FAILURE') {
+            container('cloudify') {
+              setupGithubSSHKey()
+              dir("${env.WORKSPACE}/${env.PROJECT}") {
+                withVault([configuration: configuration, vaultSecrets: secrets]){
+                  echo 'Test blueprints'
+                  common.testBlueprints()
+                  }
+                }
+            }
+            // If we reach here that means all of the above passed
+            buildState = 'SUCCESS'
+          }
+        }
+      }
+    }
   }
 }
