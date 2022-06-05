@@ -64,7 +64,7 @@ pipeline{
               imagePullSecrets:
                 - name: dockerhub
               nodeSelector:
-                instance-type: spot-large
+                instance-type: xlarge
           '''
     }
   }
