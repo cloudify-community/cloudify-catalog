@@ -15,8 +15,6 @@ pipeline{
     kubernetes{
       defaultContainer 'jnlp'
       yaml '''
-          apiVersion: v1
-          kind: Pod
           spec:
             volumes:
               - name: dshm
@@ -61,8 +59,6 @@ pipeline{
                 securityContext:
                   runAsUser: 0
                   privileged: true
-            imagePullSecrets:
-              - name: dockerhub
             nodeSelector:
               instance-type: xlarge
           '''

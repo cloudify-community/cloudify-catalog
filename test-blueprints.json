@@ -1,0 +1,10 @@
+[
+    {
+        "blueprint_name" : "docker_telegraf",
+        "blueprint_path" : "docker/telegraf",
+        "blueprint_inputs" : {
+            "infra_name" : "aws"
+        }
+    }
+
+]
