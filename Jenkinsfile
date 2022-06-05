@@ -61,10 +61,10 @@ pipeline{
               securityContext:
                 runAsUser: 0
                 privileged: true
-              imagePullSecrets:
-                - name: dockerhub
-              nodeSelector:
-                instance-type: xlarge
+          imagePullSecrets:
+            - name: dockerhub
+          nodeSelector:
+            instance-type: xlarge
           '''
     }
   }
