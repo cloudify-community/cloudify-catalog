@@ -23,48 +23,48 @@ pipeline{
                 emptyDir:
                   medium: Memory
             containers:
-              - name: jnlp
-                image: jenkins/inbound-agent:4.3-4
-                resources:
-                  limits:
-                    cpu: 0.3
-                    memory: 256Mi
-              - name: python
-                image: python:3.8
-                resources:
-                  requests:
-                    cpu: 1
-                    memory: 2Gi
-                  limits:
-                    cpu: 1
-                    memory: 2Gi
-                command:
-                - cat
-                tty: true
-                securityContext:
-                  runAsUser: 0
-                  privileged: true
-              - name: cloudify
-                image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
-                volumeMounts:
-                - mountPath: /dev/shm
-                  name: dshm
-                command:
-                - cat
-                tty: true
-                resources:
-                  requests:
-                    cpu: 2.5
-                    memory: 4Gi
-                  limits:
-                    memory: 5Gi
-                securityContext:
-                  runAsUser: 0
-                  privileged: true
-            imagePullSecrets:
-              - name: dockerhub
-            nodeSelector:
-              instance-type: spot
+            - name: jnlp
+              image: jenkins/inbound-agent:4.3-4
+              resources:
+                limits:
+                  cpu: 0.3
+                  memory: 256Mi
+            - name: python
+              image: python:3.8
+              resources:
+                requests:
+                  cpu: 1
+                  memory: 2Gi
+                limits:
+                  cpu: 1
+                  memory: 2Gi
+              command:
+              - cat
+              tty: true
+              securityContext:
+                runAsUser: 0
+                privileged: true
+            - name: cloudify
+              image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
+              volumeMounts:
+              - mountPath: /dev/shm
+                name: dshm
+              command:
+              - cat
+              tty: true
+              resources:
+                requests:
+                  cpu: 2.5
+                  memory: 4Gi
+                limits:
+                  memory: 5Gi
+              securityContext:
+                runAsUser: 0
+                privileged: true
+              imagePullSecrets:
+                - name: dockerhub
+              nodeSelector:
+                instance-type: spot
           '''
     }
   }
