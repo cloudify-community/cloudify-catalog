@@ -3,8 +3,9 @@ import subprocess
 import pytest
 
 blueprints = ParseTestData.load_data() 
+ids = [ item.get("name") for item in blueprints ]
 
-@pytest.mark.parametrize('blueprint', blueprints)
+@pytest.mark.parametrize('blueprint', blueprints, ids=ids)
 def test_blueprints(blueprint):
     args = [ "cfy","install","-b", blueprint.get("name"), blueprint.get("path")+"/blueprint.yaml" ] 
     if blueprint.get("inputs"):
