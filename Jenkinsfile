@@ -74,6 +74,7 @@ pipeline{
     PROJECT = 'cloudify-catalog'
     WORKSPACE = "${env.WORKSPACE}"
     BP_ID = "ec2-system-ui-stage-tests-blueprint-${env.BRANCH}-${env.BUILD_NUMBER}"
+    SUFFIX = "xyz" //generate random suffix
   }
   stages{
     stage('prepare'){
