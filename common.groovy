@@ -31,7 +31,7 @@ EOT
 }
 
 def testBlueprints(){
-    sh """"#!/bin/bash
+    sh """#!/bin/bash
     scp -i ~/.ssh/ec2_ssh_key -r docker centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
     scp -i ~/.ssh/ec2_ssh_key test_blueprints.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
     scp -i ~/.ssh/ec2_ssh_key test-blueprints.json centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
