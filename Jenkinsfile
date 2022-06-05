@@ -15,7 +15,13 @@ pipeline{
     kubernetes{
       defaultContainer 'jnlp'
       yaml '''
+          apiVersion: v1
+          kind: Pod
           spec:
+            volumes:
+              - name: dshm
+                emptyDir:
+                  medium: Memory
             containers:
             - name: jnlp
               image: jenkins/inbound-agent:4.3-4
@@ -38,8 +44,27 @@ pipeline{
               securityContext:
                 runAsUser: 0
                 privileged: true
+              - name: cloudify
+                image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
+                volumeMounts:
+                - mountPath: /dev/shm
+                  name: dshm
+                command:
+                - cat
+                tty: true
+                resources:
+                  requests:
+                    cpu: 2.5
+                    memory: 4Gi
+                  limits:
+                    memory: 5Gi
+                securityContext:
+                  runAsUser: 0
+                  privileged: true
+            imagePullSecrets:
+              - name: dockerhub
             nodeSelector:
-              instance-type: spot
+              instance-type: spot-xlarge
           '''
     }
   }
@@ -57,7 +82,7 @@ pipeline{
     stage('prepare'){
       steps {
         script{ 
-          container('python'){
+          container('cloudify'){
             common = load "${env.WORKSPACE}/common.groovy"
           }
         }
