@@ -38,20 +38,6 @@ pipeline{
               securityContext:
                 runAsUser: 0
                 privileged: true
-            - name: cloudify
-              image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
-              command:
-              - cat
-              tty: true
-              resources:
-                requests:
-                  cpu: 2.5
-                  memory: 4Gi
-                limits:
-                  memory: 5Gi
-              securityContext:
-                runAsUser: 0
-                privileged: true
             nodeSelector:
               instance-type: spot-xlarge
           '''
@@ -71,7 +57,7 @@ pipeline{
     stage('prepare'){
       steps {
         script{ 
-          container('cloudify'){
+          container('python'){
             common = load "${env.WORKSPACE}/common.groovy"
           }
         }
