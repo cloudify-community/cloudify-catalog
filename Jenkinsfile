@@ -156,13 +156,13 @@ pipeline{
       }
     }
 
-    stage('Deploy Cloudify Manager') {
+    stage('deploy_cloudify_manager') {
       steps {
         script {
           buildState = 'FAILURE'
           catchError(message: 'Failure on: Deploy Cloudify Manager', buildResult: 'SUCCESS', stageResult:
           'FAILURE') {
-            container('python') {
+            container('cloudify') {
               setupGithubSSHKey()
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
