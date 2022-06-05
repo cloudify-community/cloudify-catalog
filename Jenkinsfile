@@ -27,6 +27,21 @@ pipeline{
                   limits:
                     cpu: 0.3
                     memory: 256Mi
+              - name: python
+                image: python:3.8
+                resources:
+                  requests:
+                    cpu: 0.5
+                    memory: 1Gi
+                  limits:
+                    cpu: 1
+                    memory: 1Gi
+                command:
+                - cat
+                tty: true
+                securityContext:
+                  runAsUser: 0
+                  privileged: true
               - name: cloudify
                 image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
                 volumeMounts:
