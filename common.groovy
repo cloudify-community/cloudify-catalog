@@ -24,6 +24,20 @@ def configureCloudifyManager(){
 for i in {1..16}; do [[ \$(curl https://localhost/api/v3.1/ok --insecure -s) == *"OK"* ]] && break || echo "Waiting for api.." && sleep 10; done\n
 cfy_manager configure --private-ip \$(curl ${env.EC2_META_DATA}/local-ipv4) --public-ip \$(curl ${env.EC2_META_DATA}/public-ipv4) -a admin\n
 cfy license upload /tmp/cfy-license.yaml
+cfy secrets create aws_access_key_id -s AKIA2WJZG64BCRIWOK5K
+cfy secrets create aws_secret_access_key -s 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
+EOT
+"""
+}
+
+def testBlueprints(){
+    sh """"#!/bin/bash
+    scp -i ~/.ssh/ec2_ssh_key -r docker centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
+    scp -i ~/.ssh/ec2_ssh_key test_blueprints.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
+    scp -i ~/.ssh/ec2_ssh_key test-blueprints.json centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
+    scp -i ~/.ssh/ec2_ssh_key parse_tests.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
+    ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
+python -m pytest tests_blueprints.py
 EOT
 """
 }

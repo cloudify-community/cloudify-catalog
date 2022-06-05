@@ -1,10 +1,16 @@
 [
     {
-        "blueprint_name" : "docker_telegraf",
-        "blueprint_path" : "docker/telegraf",
-        "blueprint_inputs" : {
+        "name" : "docker_telegraf",
+        "path" : "docker/telegraf",
+        "inputs" : {
+            "infra_name" : "aws"
+        }
+    },
+    {
+        "name" : "docker_mysql",
+        "path" : "docker/mysql",
+        "inputs" : {
             "infra_name" : "aws"
         }
     }
-
 ]
