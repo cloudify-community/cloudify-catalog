@@ -37,10 +37,10 @@ pipeline{
                 tty: true
                 resources:
                   requests:
-                    cpu: 1
-                    memory: 2Gi
+                    cpu: 0.5
+                    memory: 1Gi
                   limits:
-                    memory: 2Gi
+                    memory: 1Gi
                 securityContext:
                   runAsUser: 0
                   privileged: true
@@ -64,7 +64,9 @@ pipeline{
       steps {
         script{ 
           container('cloudify'){
-            common = load "${env.WORKSPACE}/common.groovy"
+            dir("${env.WORKSPACE}/${env.PROJECT}"){
+              common = load "common.groovy"
+            }
           }
         }
       }
