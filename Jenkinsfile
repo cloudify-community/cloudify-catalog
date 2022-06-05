@@ -55,8 +55,12 @@ pipeline{
   }
   stages{
     stage('prepare'){
-      container('python'){
-        common = load "${env.WORKSPACE}/common.groovy"
+      steps {
+        script{ 
+          container('python'){
+            common = load "${env.WORKSPACE}/common.groovy"
+          }
+        }
       }
     }
     stage('install dependencies'){
