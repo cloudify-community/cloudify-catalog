@@ -24,8 +24,8 @@ def configureCloudifyManager(){
 for i in {1..16}; do [[ \$(curl https://localhost/api/v3.1/ok --insecure -s) == *"OK"* ]] && break || echo "Waiting for api.." && sleep 10; done\n
 cfy_manager configure --private-ip \$(curl ${env.EC2_META_DATA}/local-ipv4) --public-ip \$(curl ${env.EC2_META_DATA}/public-ipv4) -a admin\n
 cfy license upload /tmp/cfy-license.yaml
-cfy secrets create aws_access_key_id -s AKIAT2ZYGUHWCDT2U5Z6
-cfy secrets create aws_secret_access_key -s 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
+cfy secrets create aws_access_key_id -s AKIAT2ZYGUHWL7YL625Z
+cfy secrets create aws_secret_access_key -s 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
 EOT
 """
 }
