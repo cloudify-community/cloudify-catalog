@@ -37,6 +37,7 @@ def testBlueprints(){
     scp -i ~/.ssh/ec2_ssh_key test-blueprints.json centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
     scp -i ~/.ssh/ec2_ssh_key parse_tests.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/tmp/
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
+pip install -U pytest
 cd /tmp
 python -m pytest tests_blueprints.py
 EOT
