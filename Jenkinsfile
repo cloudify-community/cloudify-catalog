@@ -158,14 +158,13 @@ pipeline{
 
     stage('Deploy Cloudify Manager') {
       steps {
-        repoCheckout('https://github.com/cloudify-cosmo/cloudify-build-system.git','cloudify-build-system',"${env.BRANCH}")
         script {
           buildState = 'FAILURE'
           catchError(message: 'Failure on: Deploy Cloudify Manager', buildResult: 'SUCCESS', stageResult:
           'FAILURE') {
             container('python') {
               setupGithubSSHKey()
-              dir("${env.WORKSPACE}/pipelines-k8s/system-ui-tests") {
+              dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Create EC2 instance'
                   common.createEc2Instance()
