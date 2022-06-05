@@ -1,3 +1,13 @@
+def configuration = [vaultUrl: "${VAULT_URL}",  vaultCredentialId: "vault-app-role", engineVersion: 2]
+
+def secrets = [
+  [path: 'secret/jenkins/cloudifyaws', engineVersion: 2, secretValues: [
+    [envVar: 'AWS_MANAGER_USERNAME', vaultKey: 'username'],
+    [envVar: 'AWS_MANAGER_TENANT', vaultKey: 'tenant'],
+    [envVar: 'AWS_MANAGER_IP', vaultKey: 'ip'],
+    [envVar: 'AWS_MANAGER_PASSWORD', vaultKey: 'password']]],
+]
+
 @Library('pipeline-shared-library') _
 
 pipeline{
@@ -44,6 +54,11 @@ pipeline{
     WORKSPACE = "${env.WORKSPACE}"
   }
   stages{
+    stage('prepare'){
+      container('python'){
+        common = load "${env.WORKSPACE}/common.groovy"
+      }
+    }
     stage('install dependencies'){
       steps {
         container('python'){
