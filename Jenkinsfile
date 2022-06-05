@@ -39,7 +39,7 @@ pipeline{
                 runAsUser: 0
                 privileged: true
             nodeSelector:
-              instance-type: spot-xlarge
+              instance-type: spot
           '''
     }
   }
