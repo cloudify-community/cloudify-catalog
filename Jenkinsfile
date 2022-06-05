@@ -55,8 +55,6 @@ pipeline{
               securityContext:
                 runAsUser: 0
                 privileged: true
-            imagePullSecrets:
-              - name: dockerhub
             nodeSelector:
               instance-type: spot-xlarge
           '''
