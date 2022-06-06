@@ -5,7 +5,12 @@ def secrets = [
     [envVar: 'AWS_MANAGER_USERNAME', vaultKey: 'username'],
     [envVar: 'AWS_MANAGER_TENANT', vaultKey: 'tenant'],
     [envVar: 'AWS_MANAGER_IP', vaultKey: 'ip'],
-    [envVar: 'AWS_MANAGER_PASSWORD', vaultKey: 'password']]],
+    [envVar: 'AWS_MANAGER_PASSWORD', vaultKey: 'password']]
+  ],
+  [path: 'secret/jenkins/aws', engineVersion: 2, secretValues: [
+    [envVar: 'AWS_ACCESS_KEY_ID', vaultKey: 'aws_access_key_id'],
+    [envVar: 'AWS_SECRET_ACCESS_KEY', vaultKey: 'aws_secret_acceess_key']
+  ]]
 ]
 
 @Library('pipeline-shared-library') _
@@ -74,6 +79,7 @@ pipeline{
   parameters {
     booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: false, description: 'Test blueprints from marketplace')
   }
+
   environment {
     PROJECT = 'cloudify-catalog'
     WORKSPACE = "${env.WORKSPACE}"
