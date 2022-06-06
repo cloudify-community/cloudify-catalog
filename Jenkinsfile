@@ -70,6 +70,10 @@ pipeline{
     timeout(time: 60, unit: 'MINUTES')
     timestamps()
   }
+  
+  parameters {
+    booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: false, description: 'Test blueprints from marketplace')
+  }
   environment {
     PROJECT = 'cloudify-catalog'
     WORKSPACE = "${env.WORKSPACE}"
@@ -78,6 +82,7 @@ pipeline{
   }
   stages{
     stage('prepare'){
+      when { expression { params.TEST_BLUEPRINTS } }
       steps {
         script{ 
           container('cloudify'){
@@ -159,6 +164,7 @@ pipeline{
     }
 
     stage('deploy_cloudify_manager') {
+      when { expression { params.TEST_BLUEPRINTS } }
       steps {
         script {
           buildState = 'FAILURE'
@@ -182,6 +188,7 @@ pipeline{
       }
     }
     stage('test_blueprints'){
+      when { expression { params.TEST_BLUEPRINTS } }
       steps {
         script { 
           buildState = 'FAILURE'
