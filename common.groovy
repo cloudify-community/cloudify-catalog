@@ -24,8 +24,6 @@ def configureCloudifyManager(){
 for i in {1..16}; do [[ \$(curl https://localhost/api/v3.1/ok --insecure -s) == *"OK"* ]] && break || echo "Waiting for api.." && sleep 10; done\n
 cfy_manager configure --private-ip \$(curl ${env.EC2_META_DATA}/local-ipv4) --public-ip \$(curl ${env.EC2_META_DATA}/public-ipv4) -a admin\n
 cfy license upload /tmp/cfy-license.yaml
-cfy secrets create aws_access_key_id -s AKIAT2ZYGUHWL7YL625Z
-cfy secrets create aws_secret_access_key -s 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
 EOT
 """
 }
@@ -39,7 +37,7 @@ def testBlueprints(){
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 sudo pip3 install -U pytest
 cd /tmp
-python3 -m pytest --tb=long -v -ra test_blueprints.py
+python3 -m pytest --tb=long -v -ra test_blueprints.py 
 EOT
 """
 }
