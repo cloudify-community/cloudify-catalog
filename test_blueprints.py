@@ -2,18 +2,12 @@ from parse_tests import ParseTestData
 import subprocess
 import pytest
 
-blueprints = ParseTestData.load_data() 
-ids = [ item.get("name") for item in blueprints ]
+test_data = ParseTestData() 
+ids = test_data.get_ids()
+args = test_data.get_args()
 
-@pytest.mark.parametrize('blueprint', blueprints, ids=ids)
+@pytest.mark.parametrize('blueprint', ids, ids=ids)
 def test_blueprints(blueprint):
-    args = [ "cfy","install","-b", blueprint.get("name"), blueprint.get("path")+"/blueprint.yaml" ] 
-    if blueprint.get("inputs"):
-        args_inputs = []
-        for k, v in blueprint.get('inputs').items():
-            args_inputs.append("-i")
-            args_inputs.append("=".join([k, v]))
-        args = args+args_inputs
-    proc = subprocess.run(args)
+    proc = subprocess.run(args.get(blueprint))
     assert proc.returncode == 0
    
