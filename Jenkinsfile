@@ -187,8 +187,6 @@ pipeline{
                   common.createEc2Instance()
                   echo 'Configure Cloudify Manager'
                   common.configureCloudifyManager()
-                  echo 'Setup Secrets'
-                  common.setupManagerSecrets()
                   }
                 }
             }
