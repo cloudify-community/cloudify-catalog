@@ -1,6 +1,6 @@
 [
     {
-        "name" : "docker_telegraf",
+        "name" : "docker_telegraf11",
         "path" : "docker/telegraf",
         "inputs" : {
             "infra_name" : "aws"
