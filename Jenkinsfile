@@ -9,7 +9,7 @@ def secrets = [
   ],
   [path: 'secret/jenkins/aws', engineVersion: 2, secretValues: [
     [envVar: 'AWS_ACCESS_KEY_ID', vaultKey: 'aws_access_key_id'],
-    [envVar: 'AWS_SECRET_ACCESS_KEY', vaultKey: 'aws_secret_acceess_key']]
+    [envVar: 'AWS_SECRET_ACCESS_KEY', vaultKey: 'aws_secret_access_key']]
   ],
   [path: 'secret/jenkins/cloudify', engineVersion: 2, secretValues: [
     [envVar: 'LICENSE', vaultKey: 'license']]
@@ -187,6 +187,8 @@ pipeline{
                   common.createEc2Instance()
                   echo 'Configure Cloudify Manager'
                   common.configureCloudifyManager()
+                  echo 'Setup Secrets'
+                  common.setupManagerSecrets()
                   }
                 }
             }
