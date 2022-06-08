@@ -24,7 +24,7 @@ class ParseTestData():
     def get_args_uninstall(self):
         args = {}
         for blueprint in self._json_data:
-            command = ["cfy", "exec", "start", "uninstall", "--force", "-d", blueprint.get("name")]
+            command = ["cfy", "exec", "start", "uninstall", "--force", "-d", blueprint.get("name") ,"-p", "ignore_failure=True"]
             args[blueprint.get("name")] = command
         return args
 
