@@ -21,6 +21,13 @@ class ParseTestData():
             args[blueprint.get("name")] = command+args_inputs
         return args
 
+    def get_args_uninstall(self):
+        args = {}
+        for blueprint in self._json_data:
+            command = ["cfy", "exec", "start", "uninstall", "--force", "-d", blueprint.get("name")]
+            args[blueprint.get("name")] = command
+        return args
+
 
     
 if __name__ == "__main__":
