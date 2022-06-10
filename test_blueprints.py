@@ -25,7 +25,7 @@ class TestBlueprints(unittest.TestCase):
                     args_uninstall.get(blueprint), timeout=300)
                 self.assertTrue(proc_install.returncode ==
                             0 and proc_uninstall.returncode == 0)
-    
 
+                
 if __name__ == "__main__":
     unittest.main()

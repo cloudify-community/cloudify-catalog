@@ -36,7 +36,6 @@ class ParseTestData():
         return args
 
 
-    
 if __name__ == "__main__":
     
     data = ParseTestData()

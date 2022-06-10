@@ -44,10 +44,6 @@ EOT
 """
 }
 
-def uploadBlueprints(){
-
-}
-
 def terminateCloudifyManager(){
   sh """#!/bin/bash
     source .venv/bin/activate
