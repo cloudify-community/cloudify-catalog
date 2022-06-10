@@ -9,15 +9,15 @@ args = test_data.get_args()
 args_uninstall = test_data.get_args_uninstall()
 args_upload = test_data.get_args_upload()
 
-class TestBlueprint(unittest.TestCase):
+class TestBlueprints(unittest.TestCase):
 
-    def upload_blueprints(self):
+    def upload(self):
         for blueprint in ids: 
             with self.SubTest(blueprint):
                 proc_upload = subprocess.run(args_upload(blueprint))
                 self.assertTrue(proc_upload.returncode == 0)
     
-    def test_blueprints(self):
+    def install(self):
         for blueprint in ids:
             with self.subTest(blueprint):
                 proc_install = subprocess.run(args.get(blueprint))
