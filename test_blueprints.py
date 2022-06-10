@@ -14,7 +14,7 @@ class TestBlueprints(unittest.TestCase):
     def upload(self):
         for blueprint in ids: 
             with self.subTest(blueprint):
-                proc_upload = subprocess.run(args_upload(blueprint))
+                proc_upload = subprocess.run(args_upload.get(blueprint))
                 self.assertTrue(proc_upload.returncode == 0)
     
     def install(self):
