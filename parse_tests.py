@@ -27,9 +27,15 @@ class ParseTestData():
             command = ["cfy", "exec", "start", "uninstall", "--force", "-d", blueprint.get("name") ,"-p", "ignore_failure=True"]
             args[blueprint.get("name")] = command
         return args
-
-
     
+    def get_args_upload(self):
+        args = {}
+        for blueprint in self._json_data:
+            command = ["cfy", "blueprints", "upload", "-b", blueprint.get("name"), blueprint.get("path")+"/blueprint.yaml" ]
+            args[blueprint.get("name")] = command
+        return args
+
+
 if __name__ == "__main__":
     
     data = ParseTestData()

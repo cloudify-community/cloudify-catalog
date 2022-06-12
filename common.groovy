@@ -39,7 +39,7 @@ def testBlueprints(){
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 sudo pip3 install -U parameterized
 cd /home/centos
-python3 test_blueprints.py
+python3 test_blueprints.py TestBlueprints.${env.TEST_CASE}
 EOT
 """
 }

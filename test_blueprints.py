@@ -7,11 +7,17 @@ test_data = ParseTestData()
 ids = test_data.get_ids()
 args = test_data.get_args()
 args_uninstall = test_data.get_args_uninstall()
+args_upload = test_data.get_args_upload()
 
+class TestBlueprints(unittest.TestCase):
 
-class TestBlueprint(unittest.TestCase):
-
-    def test_blueprints(self):
+    def upload(self):
+        for blueprint in ids: 
+            with self.subTest(blueprint):
+                proc_upload = subprocess.run(args_upload.get(blueprint))
+                self.assertTrue(proc_upload.returncode == 0)
+    
+    def install(self):
         for blueprint in ids:
             with self.subTest(blueprint):
                 proc_install = subprocess.run(args.get(blueprint))
@@ -20,5 +26,6 @@ class TestBlueprint(unittest.TestCase):
                 self.assertTrue(proc_install.returncode ==
                             0 and proc_uninstall.returncode == 0)
 
+                
 if __name__ == "__main__":
     unittest.main()
