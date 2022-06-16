@@ -1,9 +1,9 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   This blueprint creates infrastructure on Azure using Terraform.
 imports:
-  - https://cloudify.co/spec/cloudify/5.1.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin?version= >=0.15.0
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
@@ -13,16 +13,19 @@ inputs:
     description: >
       The username of the agent running on the instance created from the image.
     type: string
+    display_label: Agent User
     default: 'ubuntu'
 
   region_name:
     type: string
+    display_label: Region Name
     default: 'eastus'
     constraints:
     - valid_values: [westus,westus2,eastus,centralus,centraluseuap,southcentralus,northcentralus,westcentralus,eastus2,eastus2euap,brazilsouth,brazilus,northeurope,westeurope,eastasia,southeastasia,japanwest,japaneast,koreacentral,koreasouth,southindia,westindia,centralindia,australiaeast,australiasoutheast,canadacentral,canadaeast,uksouth,ukwest,francecentral,francesouth,australiacentral,australiacentral2,uaecentral,uaenorth,southafricanorth,southafricawest,switzerlandnorth,switzerlandwest,germanynorth,germanywestcentral,norwayeast,norwaywest,brazilsoutheast,westus3,swedencentral,swedensouth]
 
   image:
     description: Azure Image reference
+    display_label: Image
     default: 
       publisher: Canonical
       offer: UbuntuServer
@@ -31,18 +34,22 @@ inputs:
 
   agent_key_name:
     type: string
+    display_label: Agent Key Name
     default: agent_key
 
   location:
     type: string
+    display_label: Location
     default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
 
   source_path:
     type: string
+    display_label: Source Path
     default: template/modules/azure/public_vm
 
   prefix:
     type: string
+    display_label: Prefix
     default: cfy
 
 node_templates:

@@ -1,10 +1,10 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   This blueprint creates infrastructure on AWS using Terraform.
 
 imports:
-  - https://cloudify.co/spec/cloudify/5.1.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin?version= >=0.15.0
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
@@ -14,10 +14,12 @@ inputs:
     description: >
       The username of the agent running on the instance created from the image.
     type: string
+    display_label: Agent User
     default: 'centos'
 
   aws_region_name:
     type: string
+    display_label: AWS Region Name
     default: 'us-east-1'
     constraints:
       - valid_values:
@@ -47,18 +49,24 @@ inputs:
 
   agent_key_name:
     type: string
+    display_label: Agent Key Name
     default: agent_key
 
   location:
     type: string
+    display_label: Location
     default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
   source_path:
     type: string
+    display_label: Source Path
     default: template/modules/public_vm
 
   env_name:
     type: string
+    display_label: Environment Name
     default: 'example'
 
 node_templates:
