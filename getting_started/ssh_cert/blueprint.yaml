@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   This blueprint creates SSH key.
@@ -8,7 +8,9 @@ imports:
 
 inputs:
   key_name:
+    display_label: Key Name
     default: 'MyKey'
+    type: string
 
 node_templates:
 

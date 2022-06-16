@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   The relationship blueprint describes how to create dependencies between multiple node types resources
@@ -17,10 +17,12 @@ inputs:
     description: The HTTP web server port
     display_label: The HTTP web server port
     default: 8000
+    type: integer
 
   app_git:
     description: A url of a web based javascript application
     default:  https://github.com/zxcodes/Calculator
+    type: string
 
 
 node_templates:

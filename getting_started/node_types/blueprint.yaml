@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   Node types  - describing how to map the lifecycle of simple resource.
@@ -14,6 +14,7 @@ inputs:
     display_label: The HTTP web server port
     description: The HTTP web server port
     default: 8000
+    type: integer
 
 node_templates:
 

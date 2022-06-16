@@ -1,5 +1,5 @@
 #This is the blueprint header that defines the DSL version
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   Input and outputs - describing the most basic blueprint structure
@@ -15,6 +15,8 @@ inputs:
   hello:
     description: Say Hello to
     default: World
+    type: string
+    display_label: Hello
 
 #This is the topology section where we define the managed resources (node_templates) and relationships between them
 node_templates:
