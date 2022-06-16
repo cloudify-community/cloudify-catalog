@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin?version= >=3.0.10
   - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
@@ -22,17 +22,19 @@ inputs:
 
   cloud_credentials_a:
     type: cloud_credentials_a
-    display_label:
+    display_label: Cloud Credentials A
+    description: Credentials to the cloud A
 
   cloud_credentials_b:
     type: cloud_credentials_b
-    display_label:
+    display_label: Cloud Credentials B
+    description: Credentials to the cloud B
 
   resource_prefix:
     type: string
     description: |
       If not provided, it will be auto-generated.
-    display_label:
+    display_label: Resource Prefix
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
