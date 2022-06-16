@@ -18,12 +18,17 @@ inputs:
     display_label: The HTTP web server port
     default: 8000
     type: integer
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
 
   app_git:
     description: A url of a web based javascript application
     default:  https://github.com/zxcodes/Calculator
     type: string
     display_label: Application git URL
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
 node_templates:
 

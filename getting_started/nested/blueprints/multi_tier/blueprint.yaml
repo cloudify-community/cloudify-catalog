@@ -13,16 +13,27 @@ inputs:
     default: 8001
     type: integer
     display_label: Webserver1 Port
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
+
   webserver_port_2:
     description: The HTTP web server 2 port.
     default: 8002
     type: integer
     display_label: Webserver2 Port
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
+
   webserver_port_3:
     description: The HTTP web server 1 port.
     default: 8003
     type: integer
     display_label: Webserver3 Port
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
 
 node_templates:
   demo_http_web_server_1:

@@ -15,6 +15,9 @@ inputs:
     description: The HTTP web server port
     default: 8000
     type: integer
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
 
 node_templates:
 
