@@ -13,7 +13,6 @@ inputs:
     type: string
 
 node_templates:
-
   ssh_key:
     type: cloudify.keys.nodes.RSAKey
     properties:

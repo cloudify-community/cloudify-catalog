@@ -22,7 +22,8 @@ inputs:
   app_git:
     description: A url of a web based javascript application
     default:  https://github.com/zxcodes/Calculator
-
+    type: string
+    display_label: Application git URL
 
 node_templates:
 
