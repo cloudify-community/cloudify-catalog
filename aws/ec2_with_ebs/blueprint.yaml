@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   The blueprint generates SSH public and private keys and stores them in secret store.
@@ -8,7 +8,7 @@ description: >
   The EC2 instance is created inside the VPC and the EBS is attached to it.
 
 imports:
-  - http://www.getcloudify.org/spec/cloudify/6.1.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
 
 inputs:
@@ -20,11 +20,22 @@ inputs:
     default: us-east-1
     constraints:
       - valid_values:
-        - us-east-1
-        - us-west-1
-        - us-west-2
-        - eu-west-1
-        - ca-central-1
+        - us-east-1 #US East (N. Virginia)
+        - us-east-2 #US East (Ohio)
+        - us-west-1 #US West (N. California)
+        - us-west-2 #US West (Oregon)
+        - ca-central-1  #Canada (Central)
+        - eu-central-1  #Europe (Frankfurt)
+        - eu-west-1 #Europe (Ireland)
+        - eu-west-2 #Europe (London)
+        - eu-south-1  #Europe (Milan)
+        - eu-west-3 #Europe (Paris)
+        - eu-north-1  #Europe (Stockholm)
+        - ap-northeast-3  #Asia Pacific (Osaka)
+        - ap-northeast-2  #Asia Pacific (Seoul)
+        - ap-southeast-1  #Asia Pacific (Singapore)
+        - ap-southeast-2  #Asia Pacific (Sydney)
+        - ap-northeast-1  #Asia Pacific (Tokyo)
 
   availability_zone_suffix:
     description: Availability Zone Suffix
@@ -48,21 +59,24 @@ inputs:
     display_label: VPC CIDR
     type: string
     default: 10.10.0.0/16
-    # constraints: regex []
+    constraints:
+      - pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}($|/(16|24))$
 
   public_subnet_cidr:
     description: Public subnet CIDR
     display_label: Public Subnet CIDR
     type: string
     default: 10.10.0.0/24
-    # constraints: regex []
+    constraints:
+      - pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}($|/(16|24))$
 
   ebs_volume_attachment_device:
     description: EBS Volume Attachment Device
     display_label: EBS Volume Attachment Device
     type: string
     default: /dev/sdh
-    # constraints: regex
+    constraints:
+      - pattern: ^(.+)\/([^\/]+)$
 
   key_name:
     description: Key name
@@ -76,14 +90,18 @@ inputs:
     default: t2.medium
     constraints:
       - valid_values:
+        - t2.micro
+        - t2.small
         - t2.medium
+        - t2.large
 
   volume_attachment_device:
     description: Volume Attachment Device
     display_label: Volume Attachment Device
     type: string
     default: /dev/sdh
-    # constraints: regex
+    constraints:
+      - pattern: ^(.+)\/([^\/]+)$
 
   image_id:
     description: The map between region and image id, it is used in EC2 instance to select the right image id per selected region
