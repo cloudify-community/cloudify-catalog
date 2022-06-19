@@ -53,7 +53,7 @@ inputs:
 
   env_name:
     type: string
-    display_name: Control parameters for names in resources.
+    display_label: Control parameters for names in resources.
     description: Control parameters for names in resources.
     default: 'example'
 
