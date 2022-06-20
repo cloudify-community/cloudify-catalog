@@ -1,39 +1,47 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: Cloudify helm-kafka blueprint. Installs Kafka Helm chart on top of Kubernetes cluster.
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.4.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-helm-plugin
   - plugin:cloudify-kubernetes-plugin
 
 inputs:
 
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string
     default: example
 
   access_port:
+    display_label: Access Port
     description: |
       The port number used for broker access
-    type: string
-    default: "8805"
+    type: integer
+    default: 8805
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
 
-  autoscaler_name: 
+  autoscaler_name:
+    display_label: Autoscaler Name
     description: |
       The autoscaler group name
     type: string
     default: cloudify
 
-  cluster_name: 
+  cluster_name:
+    display_label: Cluster Name
     description: |
       The K8s name
     type: string
     default: k8sname
   
   max_size:
+    display_label: Max Size
     description: |
       The group max size
     type: string

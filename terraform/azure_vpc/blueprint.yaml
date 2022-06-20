@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin?version= >=0.15.0
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
 
@@ -29,16 +29,19 @@ inputs:
 
   cidr_block:
     type: string
+    display_label: CIDR Block
     default: 10.0.0.0/16
     hidden: true
 
   subnet_1_cidr:
     type: string
+    display_label: Subnet 1 CIDR
     default: 10.0.0.0/24
     hidden: true
 
   subnet_2_cidr:
     type: string
+    display_label: Subnet 2 CIDR
     default: 10.0.1.0/24
     hidden: true
 

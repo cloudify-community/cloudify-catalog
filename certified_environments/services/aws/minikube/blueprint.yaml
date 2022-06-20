@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin?version= >=2.0.7
   - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
@@ -14,6 +14,7 @@ labels:
 inputs:
   resource_prefix:
     type: string
+    display_label: Resource Prefix
     description: The resource prefix for resources naming
     default: ''
     constraints:

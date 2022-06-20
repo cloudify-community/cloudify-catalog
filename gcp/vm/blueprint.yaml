@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-gcp-plugin?version= >=1.6.0
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
@@ -30,6 +30,8 @@ inputs:
     display_label: URL to the Centos image.
     description: Centos image.
     default: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20191210
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
   instance_type:
     type: string
@@ -39,8 +41,7 @@ inputs:
 
   agent_user:
     type: string
-    display_label: >
-      The username of the agent running on the instance created from the image.
+    display_label: Username
     description: >
       The username of the agent running on the instance created from the image.
     default: 'centos'
@@ -48,12 +49,12 @@ inputs:
   agent_key_name:
     type: string
     display_label: Agent key name
-    description: Agent key name
+    description: Agent key that will be generated for username
     default: agent_key
 
   env_name:
     type: string
-    display_name: Control parameters for names in resources.
+    display_label: Control parameters for names in resources.
     description: Control parameters for names in resources.
     default: 'example'
 

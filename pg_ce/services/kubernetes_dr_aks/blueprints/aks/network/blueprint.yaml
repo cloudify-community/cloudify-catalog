@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin?version= >=3.0.10
   - plugin:cloudify-terraform-plugin?version= >=0.18.8
 
@@ -12,11 +12,40 @@ dsl_definitions:
     client_id: { get_input: [ cloud_credentials, azure_client_id ] }
     client_secret: { get_input: [ cloud_credentials, azure_client_secret ] }
 
+data_types:
+  cloud_credentials:
+    properties:
+      azure_tenant_id:
+        type: string
+        default: { get_environment_capability: [cloud_credentials, azure_tenant_id] }
+      azure_subscription_id:
+        type: string
+        default: { get_environment_capability: [cloud_credentials, azure_subscription_id] }
+      azure_client_id:
+        type: string
+        default: { get_environment_capability: [cloud_credentials, azure_client_id] }
+      azure_client_secret:
+        type: string
+        default: { get_environment_capability: [cloud_credentials, azure_client_secret] }
+      public_key_content:
+        type: string
+        default: { get_environment_capability: [cloud_credentials, public_key_content] }
+      private_key_content:
+        type: string
+        default: { get_environment_capability: [cloud_credentials, private_key_content] }
+      region_name:
+        type: string
+        default: { get_environment_capability: [cloud_credentials, region_name] }
 inputs:
   cloud_credentials:
-    type: dict
+    type: cloud_credentials
+    display_label: Cloud Credentials
+    description: Cloud Credentials
+
   resource_prefix:
     type: string
+    display_label: Resource Prefix
+    description: Resource Prefix
 
 node_templates:
 

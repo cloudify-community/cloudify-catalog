@@ -1,30 +1,43 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: A simple GCP example network.
 
 imports:
-  - http://cloudify.co/spec/cloudify/5.0.5/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-gcp-plugin?version= >=1.6.0
 
 inputs:
 
   zone:
     type: string
+    display_label: Zone
     description: A GCP zone such as `us-west1-a`.
     default: 'us-west1-a'
 
   region:
     type: string
+    display_label: Region
     description: A GCP region such as `us-west1`.
     default: 'us-west1'
 
   subnet_cidr:
+    type: string
+    display_label: Subnet CIDR
+    description: Subnet CIDR
     default: 10.11.12.0/22
+    constraints:
+      - pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}($|/(16|24))$
 
   resource_prefix:
+    type: string
+    display_label: Resource Prefix
+    description: The value will be used as prefix for Network and Subnet names
     default: cfy
 
   resource_suffix:
+    type: string
+    display_label: Resource Suffix
+    description: The value will be used as suffix for Network and Subnet names
     default: ex0
 
 dsl_definitions:

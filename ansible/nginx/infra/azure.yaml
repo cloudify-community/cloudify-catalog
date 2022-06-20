@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
@@ -9,17 +9,23 @@ inputs:
 
   env_name:
     type: string
+    display_label: Environment Name
     description: Control parameters for names in resources.
     default: 'cfyinfra'
 
   resource_prefix:
+    type: string
+    display_label: Resource Prefox
     default: {  get_input: env_name }
 
   resource_suffix:
+    type: string
+    display_label: Resource Suffix
     default: '0'
 
   location:
     type: string
+    display_label: Location
     description: Your Azure Region.
     default: eastus2
     constraints:
@@ -66,6 +72,7 @@ inputs:
           - australiacentral2
 
   image:
+    display_label: Image
     description: >
       Image to use.
     default:
@@ -78,6 +85,7 @@ inputs:
     description: >
        Name of Virtual Machine Size in Azure.
     type: string
+    default_label: Size
     default: Standard_B1s
     constraints:
       - valid_values:
@@ -93,14 +101,18 @@ inputs:
 
   retry_after:
     type: integer
+    default_label: Retry After
     default: 60
 
   agent_user:
+    type: string
+    display_label: Agent User
     description: The user name of the agent on the instance created from the image.
     default: centos
 
   agent_key_name:
     type: string
+    display_label: Agent Key Name
     default: agent_key
 
 dsl_definitions:

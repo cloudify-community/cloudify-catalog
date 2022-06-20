@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin?version= >=3.0.10
   - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
   - plugin:cloudify-helm-plugin
@@ -17,12 +17,14 @@ dsl_definitions:
 inputs:
   resource_config:
     type: resource_config
+    display_label: Resource Config
 
   cloud_credentials:
     type: cloud_credentials
 
   resource_prefix:
     type: string
+    display_label: Resource Prefix
     description: |
       If not provided, it will be auto-generated.
     default: ''
@@ -30,27 +32,36 @@ inputs:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
 
   chart_name:
+    type: string
+    display_label: Chart Name
     description: >
       Chart package name to deploy from repo.
     default: datadog
 
   repo_name:
+    display_label: Repo Name
     description: >
       Name of the repo to add.
     type: string
     default: datadog
 
   repo_url:
+    display_label: Repo URL
     description: >
-      Name of the repo to add.
+      URL to the repo
     type: string
     default: 'https://helm.datadoghq.com'
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
   helm_installation_source:
+    display_label: Helm Installation Source
     description: >
       Helm download link.
     type: string
     default: 'https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz'
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
 data_types:
   resource_config:

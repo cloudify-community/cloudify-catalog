@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/5.1.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-kubernetes-plugin?version= >=2.13.0
 
 blueprint_labels:
@@ -20,6 +20,8 @@ inputs:
 
   deployment:
     type: string
+    display_label: Deployment
+    description: Deplyoment
     default: eks
 
 node_templates:

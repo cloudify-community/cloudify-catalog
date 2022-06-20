@@ -1,22 +1,39 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
  The multi tier blueprint example shows how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types. 
  We will use a multi tier topology of a classic web application
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
 
 inputs:
   webserver_port_1:
     description: The HTTP web server 1 port.
     default: 8001
+    type: integer
+    display_label: Webserver1 Port
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
+
   webserver_port_2:
     description: The HTTP web server 2 port.
     default: 8002
+    type: integer
+    display_label: Webservier2 Port
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
+
   webserver_port_3:
     description: The HTTP web server 1 port.
     default: 8003
+    type: integer
+    display_label: Webserver3 Port
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
 
 node_templates:
   demo_http_web_server_1:

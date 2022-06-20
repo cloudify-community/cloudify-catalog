@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin?version= >=2.9.0
   - plugin:cloudify-kubernetes-plugin?version= >=2.11.0
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
@@ -67,20 +67,26 @@ inputs:
     description: Availability Zone 2
     display_label: Availability Zone 2
     type: string
-    default:
-      {
-        concat:
-          [
-            { get_input: aws_region_name },
-            { get_input: availability_zone_2_suffix },
-          ],
-      }
-    hidden: true
+    default: { concat: [ { get_input: aws_region_name}, { get_input: availability_zone_2_suffix } ] }
+
+  resource_suffix:
+    description: Resource Suffix
+    display_label: Resource Suffix
+    type: string
+    default: '-1'
+
+  eks_cluster_name_prefix:
+    description: EKS Cluster Name
+    display_label: EKS Cluster Name
+    type: string
+    default: eks_cluster
 
   eks_cluster_name:
-    display_label: EKS Cluster name
+    description: EKS cluster full name
+    display_label: EKS Cluster Name
     type: string
-    default: "k8s-cloudify"
+    default: { concat: [ { get_input: eks_cluster_name_prefix }, { get_input: resource_suffix } ] }
+    hidden: true
 
   eks_nodegroup_name:
     display_label: EKS node group name

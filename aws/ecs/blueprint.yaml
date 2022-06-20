@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - http://www.getcloudify.org/spec/cloudify/6.1.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
 
 inputs:
@@ -12,14 +12,14 @@ inputs:
     default: us-east-1
     constraints:
       - valid_values:
-        - us-east-1
-        - us-east-2
-        - us-west-1
-        - us-west-2
-        - ca-central-1
-        - eu-central-1
-        - eu-west-1
-        - eu-west-2
+        - us-east-1 #US East (N. Virginia)
+        - us-east-2 #US East (Ohio)
+        - us-west-1 #US West (N. California)
+        - us-west-2 #US West (Oregon)
+        - ca-central-1  #Canada (Central)
+        - eu-central-1  #Europe (Frankfurt)
+        - eu-west-1 #Europe (Ireland)
+        - eu-west-2 #Europe (London)
 
   ecs_cluster_name:
     description: ECS Cluster Name
@@ -32,6 +32,12 @@ inputs:
     display_label: Container Instance Type
     type: string
     default: t2.large
+    constraints:
+      - valid_values:
+        - t2.micro
+        - t2.small
+        - t2.medium
+        - t2.large
 
   container_name:
     description: Container Name
@@ -44,6 +50,9 @@ inputs:
     display_label: Container Port
     type: integer
     default: 80
+    constraints:
+      - greater_or_equal: 0
+      - less_or_equal: 65535
   
   container_instance_image:
     description: Container Instance Image (Amazon Linux AMI 2.0.20181112 x86_64 ECS HVM GP2 - amzn2-ami-ecs-hvm-2.0.20181112-x86_64-ebs)

@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - http://www.getcloudify.org/spec/cloudify/6.1.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
   - http://www.getcloudify.org/spec/fabric-plugin/1.5.2/plugin.yaml
 

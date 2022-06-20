@@ -1,32 +1,38 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: Cloudify helm-drupal blueprint. Installs Drupal Helm chart on top of Kubernetes cluster.
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-helm-plugin
   - plugin:cloudify-kubernetes-plugin
 
 inputs:
   username:
+    display_label: Username
     description: |
       Username to be set in application
     type: string
     default: admin
   
   password:
+    display_label: Password
     description: |
       Password to be set in application
     type: string
     default: Cl0ud1fY!
 
   email:
+    display_label: Email
     description: |
       Email to be set in application
     type: string
     default: user@cloudify.co
+    constraints:
+      - pattern: ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
 
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string

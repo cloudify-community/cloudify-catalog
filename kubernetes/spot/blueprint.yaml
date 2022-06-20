@@ -1,29 +1,39 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   This blueprint was automatically created from a Terraform template.
 
 imports:
-  - http://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
   terraform_version:
     type: string
+    display_label: Terraform Version
+    description: Terraform Version to be used
     default: "0.14.11"
 
   module_source:
     type: string
+    display_label: Module Srouce
+    description: URL to your terraform module archive
     required: true
     default: "https://github.com/spotinst/terraform-spotinst-ocean-eks/archive/refs/heads/master.zip"
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
   terraform_template_location:
     type: string
+    display_label: Terraform Template Location
+    description: The directory path to the module withing the module source
     default: "./examples/simple-cluster"
 
   aws_default_region:
     type: string
+    display_label: AWS Region
+    description: AWS Region
     default: "us-east-1"
 
 

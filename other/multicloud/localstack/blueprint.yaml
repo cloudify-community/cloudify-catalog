@@ -1,10 +1,10 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   Cloudify Getting Started blueprint for localstack deployment. Localstack is a cloud service emulator that runs in a single container on your local environment
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-utilities-plugin
 
