@@ -1,24 +1,29 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   This blueprint installs helm client and add repository to it.
 imports:
-  - http://cloudify.co/spec/cloudify/5.0.5/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-helm-plugin
 
 inputs:
   repo_name:
+    display_label: Repository Name
     description: >
-      Name of the repo to add.
+      Name of the repository to add.
     type: string
 
   helm_installation_source:
+    display_label: Helm Installation Source
     description: >
       Helm download link.
     type: string
     default: 'https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz'
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
   repo_url:
+    display_label: Repository URL
     description: >
       URL of the repo to add. For example:
       https://kubernetes-charts.storage.googleapis.com/

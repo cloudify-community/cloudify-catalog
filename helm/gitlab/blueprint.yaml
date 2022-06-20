@@ -1,36 +1,47 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: Cloudify gitlab-wordpress blueprint. Installs Gitlab Helm chart on top of Kubernetes cluster.
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-helm-plugin
   - plugin:cloudify-kubernetes-plugin
 
 inputs:
 
   issuer_email:
+    display_label: Issuer Email
     description: |
       Email to associate with your TLS certificates
     type: string
-    default: abc@cloudify.co
+    default: gitlab@cloudify.co
+    constraints:
+      - pattern: ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
 
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string
     default: example
 
   domain:
+    display_label: Domain
     description: |
       Domain which will contain records to resolve gitlab, registry, and minio
     type: string
     default: "abc.example.co"
+    constraints:
+      - pattern: ^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,1}\.(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,})$
 
-  static_ip: 
+  static_ip:
+    type: string
+    display_label: Static IP
     description: |
       Static IP that DNS record point to
     default: "10.10.10.10"
+    constraints:
+      - pattern: ^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$
   
 node_templates:
 

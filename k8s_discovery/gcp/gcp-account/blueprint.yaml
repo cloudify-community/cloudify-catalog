@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/5.1.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-gcp-plugin
   - plugin:cloudify-utilities-plugin?version= >=1.25.0
 
@@ -9,6 +9,8 @@ inputs:
 
   gcp-credentials-secret:
     type: string
+    display_label: GCP Credentials Secret
+    description: The secret name with your GCP Credentials value
     required: false
     default: gcp_credentials
 
