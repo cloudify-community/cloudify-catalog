@@ -1,17 +1,18 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   This blueprint creates SSH key.
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
   key_name:
     default: 'MyKey'
+    display_label: Key Name
+    type: string
 
 node_templates:
-
   ssh_key:
     type: cloudify.keys.nodes.RSAKey
     properties:
