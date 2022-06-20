@@ -1,11 +1,11 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 description: >
   The blueprint generates SSH public and private keys and stores them in secret store.
   The public key is used to create Keypair that is attached to the created EC2 instance.
   In case case the SSH key already exists in the secret store they will be used.
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
   - plugin:cloudify-utilities-plugin
 
@@ -17,11 +17,11 @@ inputs:
       default: us-east-1
       constraints:
         - valid_values:
-          - us-east-1
-          - us-west-1
-          - us-west-2
-          - eu-west-1
-          - ca-central-1
+          - us-east-1 #US East (N. Virginia)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-west-1 #Europe (Ireland)
 
   instance_type:
     description: Select instance size
