@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
 
 labels:
   csys-obj-type:
@@ -11,8 +11,8 @@ labels:
 inputs:
   aws_region_name_a:
     type: string
-    description: AWS Region Name
-    display_label: AWS Region Name
+    description: AWS Region Name for the first cluster
+    display_label: First AWS Region Name
     default: us-east-1
     constraints:
       - valid_values:
@@ -34,8 +34,8 @@ inputs:
         - ap-northeast-1  #Asia Pacific (Tokyo) 
   aws_region_name_b:
     type: string
-    description: AWS Region Name
-    display_label: AWS Region Name
+    description: AWS Region Name for the second cluster
+    display_label: Second AWS Region Name
     default: eu-west-1
     constraints:
       - valid_values:

@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin?version= >=0.15.0
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
 
@@ -20,6 +20,7 @@ inputs:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
   region_name:
     type: string
+    display_label: Region Name
     description: Azure location name
     default: 'westus'
 

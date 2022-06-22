@@ -1,0 +1,61 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-azure-plugin?version= >=3.0.10
+  - plugin:cloudify-terraform-plugin?version= >=0.18.8
+
+inputs:
+  aws_region_name_a:
+    type: string
+    display_label: AWS Region Name A
+
+  aws_region_name_b:
+    type: string
+    display_label: AWS Region Name B
+
+  resource_prefix:
+    type: string
+    display_label: Resource Prefix
+
+  aws_access_key_id:
+    type: string
+    display_label: AWS Access Key ID
+
+  aws_secret_access_key:
+    type: string
+    display_label: AWS Secret Access Key
+  
+node_templates:
+
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip
+
+  s3_tf:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        environment_variables:
+          AWS_ACCESS_KEY_ID: { get_input: [ aws_access_key_id ] }
+          AWS_SECRET_ACCESS_KEY: { get_input: [ aws_secret_access_key ] }
+        variables:
+          prefix: { get_input: resource_prefix }
+          region: { get_input: aws_region_name_a }
+          failover: { get_input: aws_region_name_b }
+        source:
+          location: templates/tf-s3-master.zip
+        source_path: tf-s3-master
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+
+capabilities:
+
+  s3_primary:
+    value: { get_attribute: [s3_tf, outputs, primary, value ] }
+  
+  s3_failover: 
+    value: { get_attribute: [s3_tf, outputs, failover, value ] }

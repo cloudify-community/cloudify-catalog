@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: >
   This blueprint creates an AWS infrastructure environment.
 imports:
-  - https://cloudify.co/spec/cloudify/6.4.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin?version= >=3.0.6
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
@@ -16,11 +16,22 @@ inputs:
     default: us-east-1
     constraints:
       - valid_values:
-        - us-east-1
-        - us-west-1
-        - us-west-2
-        - eu-west-1
-        - ca-central-1
+        - us-east-1 #US East (N. Virginia)
+        - us-east-2 #US East (Ohio)
+        - us-west-1 #US West (N. California)
+        - us-west-2 #US West (Oregon)
+        - ca-central-1  #Canada (Central)
+        - eu-central-1  #Europe (Frankfurt)
+        - eu-west-1 #Europe (Ireland)
+        - eu-west-2 #Europe (London)
+        - eu-south-1  #Europe (Milan)
+        - eu-west-3 #Europe (Paris)
+        - eu-north-1  #Europe (Stockholm)
+        - ap-northeast-3  #Asia Pacific (Osaka)
+        - ap-northeast-2  #Asia Pacific (Seoul)
+        - ap-southeast-1  #Asia Pacific (Singapore)
+        - ap-southeast-2  #Asia Pacific (Sydney)
+        - ap-northeast-1  #Asia Pacific (Tokyo)
 
   availability_zone_suffix:
     description: Availability Zone Suffix
@@ -36,19 +47,16 @@ inputs:
   availability_zone:
     description: Availability Zone, combination of region and availability zone suffix
     type: string
-    description: The availability zone in the AWS Region.
     default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }
     hidden: true
 
   ami_owner_filter:
-    description: AMI Owner Filter
     display_label: AMi Owner Filter
     type: string
     description: The AWS AMI owner number.
     default: '057448758665'
 
   ami_name_filter:
-    description: AMi Name Filter
     display_label: AMi Name Filter
     type: string
     description: The name of the AWS AMI in the AWS region.
@@ -59,12 +67,19 @@ inputs:
     display_label: Instane Type
     type: string
     default: t2.micro
+    constraints:
+      - valid_values:
+        - t2.micro
+        - t2.small
+        - t2.medium
+        - t2.large
 
   agent_user:
     description: >
       The username of the agent running on the instance created from the image.
     display_label: Agent User
     default: 'centos'
+    type: string
 
   agent_key_name:
     description: Agent Key Name

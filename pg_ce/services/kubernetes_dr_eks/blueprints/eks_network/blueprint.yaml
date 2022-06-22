@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin?version= >=2.9.0
   - plugin:cloudify-helm-plugin
   - plugin:cloudify-kubernetes-plugin?version= >=2.11.0
@@ -11,73 +11,91 @@ inputs:
 
   aws_access_key_id:
     type: string
+    display_label: AWS Access Key ID
     default: { get_secret: aws_access_key_id }
 
   aws_secret_access_key:
     type: string
+    display_label: AWS Secret Access Key
     default: { get_secret: aws_secret_access_key }
 
   aws_region_name:
     type: string
+    display_label: AWS Region Name
     default: 'us-west-1'
 
   availability_zone_1:
     type: string
+    display_label: Availability Zone 1
     default: { concat: [ { get_input: aws_region_name}, 'a' ] }
 
   availability_zone_2:
     type: string
+    display_label: Availability Zone 2
     default: { concat: [ { get_input: aws_region_name}, 'c' ] }
 
   eks_cluster_name:
     type: string
+    display_label: EKS Cluster Name
 
   eks_nodegroup_name:
     type: string
+    display_label: EKS Node Group Name
     default: { concat: [ 'eks_node_group', { get_input: eks_cluster_name } ] }
 
   kubernetes_version:
     type: string
+    display_label: Kubernetes Version
     default: ''
 
   service_account_name:
     type: string
+    display_label: Service Account Name
     default: examples-user
 
   service_account_namespace:
     type: string
+    display_label: Service Account Namespace
     default: default
 
   ssh_keypair:
     type: string
+    display_label: SSH Key Pair
     default: { concat: [ 'eks_key', { get_input: eks_cluster_name } ] }
 
   agent_key_name:
     type: string
+    display_lable: Agent Key Name
     default: agent_key
 
   chart_name:
+    display_label: Chart Name
     description: >
       Chart package name to deploy from repo.
     default: datadog
 
   repo_name:
+    display_label: Repo Name
     description: >
       Name of the repo to add.
     type: string
     default: datadog
 
   repo_url:
+    display_label: Repo URL
     description: >
       Name of the repo to add.
     type: string
     default: 'https://helm.datadoghq.com'
 
   helm_installation_source:
+    display_label: Helm Installation Source
     description: >
       Helm download link.
     type: string
     default: 'https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz'
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
 dsl_definitions:
 
@@ -602,7 +620,8 @@ node_templates:
     type: cloudify.kubernetes.resources.CustomBlueprintDefinedResource
     properties:
       client_config:
-        configuration: *kubernetes_master_configurationq
+        configuration: *kubernetes_master_configuration
+      use_external_resource: true
       definition:
         apiVersion: v1
         kind: Secret

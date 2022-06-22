@@ -1,0 +1,78 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-azure-plugin?version= >=3.0.10
+  - plugin:cloudify-terraform-plugin?version= >=0.18.8
+
+inputs:
+  aws_region_name_a:
+    type: string
+    display_label: AWS Region Name A
+    description: AWS Region Name A
+
+  aws_region_name_b:
+    type: string
+    display_label: AWS Region Name B
+    description: AWS Region Name B
+
+  resource_prefix:
+    type: string
+    display_label: Resource Prefix
+    description: Resource Prefix
+
+  aws_access_key_id:
+    type: string
+    display_label: AWS Access Key ID
+    description: AWS Access Key IF
+
+  aws_secret_access_key:
+    type: string
+    display_label: AWS Secret Access Key
+    description: AWS Secret Access Key
+
+node_templates:
+
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip
+
+  database_tf:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        environment_variables:
+          AWS_ACCESS_KEY_ID: { get_input: [ aws_access_key_id ] }
+          AWS_SECRET_ACCESS_KEY: { get_input: [ aws_secret_access_key ] }
+        variables:
+          prefix: { get_input: resource_prefix }
+          region: { get_input: aws_region_name_a }
+          failover: { get_input: aws_region_name_b }
+        source:
+          location: templates/tf-db-master.zip
+        source_path: tf-db-master
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+
+capabilities:
+
+  admin_login:
+    value: { get_attribute: [ database_tf, outputs, admin_login, value ] }
+
+  admin_password:
+    value: { get_attribute: [ database_tf, outputs, admin_password, value ] }
+
+  db_port:
+    value: { get_attribute: [ database_tf, outputs, db_port, value ] }
+
+  db_name:
+    value: { get_attribute: [ database_tf, outputs, db_name, value ] }
+
+  endpoint_failover:
+    value: { get_attribute: [ database_tf, outputs, endpoint_failover, value ] }
+    
+  endpoint_primary: 
+    value: { get_attribute: [ database_tf, outputs, endpoint_primary, value ] }

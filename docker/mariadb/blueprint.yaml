@@ -1,10 +1,10 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
-  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
 
@@ -14,6 +14,7 @@ inputs:
     description: >
       Name of infrastructure blueprint to deploy.
     type: string
+    display_label: Infrastructure Name
     constraints:
       - valid_values:
           - azure
@@ -23,14 +24,19 @@ inputs:
     description: >
       URL of infra zip file.
     type: string
+    display_label: Infrastructure Archive
     default: 'infra.zip'
 
   infra_exists:
+    type: boolean
+    display_label: Infrastructure Exists
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
 
   infra_deployment_id:
+    type: string
+    display_label: Infrastructure Deployment ID
     description: The blueprint name, the deployment name.
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
