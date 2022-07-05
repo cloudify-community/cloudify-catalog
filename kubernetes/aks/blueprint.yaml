@@ -103,8 +103,8 @@ dsl_definitions:
         managedOutboundIps:
           count: 2
     service_principal_profile:
-      clientId: { get_input: client_id }
-      secret: { get_input: client_secret }
+      clientId: { get_secret: client_id }
+      secret: { get_secret: client_secret }
     addon_profiles: {}
     enable_rbac: true
 
@@ -187,7 +187,6 @@ node_templates:
     properties:
       client_config:
         configuration: *kubernetes_master_configuration
-      use_external_resource: true
       definition:
         apiVersion: v1
         kind: Secret
@@ -225,7 +224,8 @@ node_templates:
           implementation: scripts/store_kube_token.py
           executor: central_deployment_agent
           inputs:
-            kube_token: {get_attribute: [secret, kubernetes, data, token ]}
+            kube_token: { get_attribute: [ secret, kubernetes, data, token ] }
+            kube_config: { get_attribute: [ managed_cluster, kubeconf ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: secret
@@ -281,8 +281,14 @@ labels:
 
 capabilities:
 
-  endpoint:
+  kubernetes_cluster_host:
     value: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }
+  
+  token:
+    value: { get_attribute: [ store_token, token ] }
+
+  ssl_ca_cert:
+    value: { get_attribute: [ store_token, ssl_ca_cert ] }
 
   connection_details:
     value: *kubernetes_master_configuration
