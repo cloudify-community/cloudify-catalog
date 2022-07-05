@@ -138,6 +138,11 @@ topics:
         path: certified_environments/services/azure/storage
         description: Creating Storage service
 
+      - id: EnvironmentAsAService
+        name: Environment-as-a-Service-CFY
+        path: certified_environments/eaas
+        description: Creating Environment as a Service (consists of networking, K8s, DB & Storage)
+
   - name: aws_services
     target_path: s3_json_file
     blueprints:
