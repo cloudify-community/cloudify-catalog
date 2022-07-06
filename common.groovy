@@ -38,6 +38,7 @@ def testBlueprints(){
     scp -i ~/.ssh/ec2_ssh_key parse_tests_yaml.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 sudo pip3 install -U parameterized
+sudo pip3 install -U pyyaml
 cd /home/centos
 python3 test_blueprints.py TestBlueprints.${env.TEST_CASE}
 EOT
