@@ -32,15 +32,14 @@ EOT
 
 def testBlueprints(){
     sh """#!/bin/bash
-    scp -i ~/.ssh/ec2_ssh_key -r docker centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
-    scp -i ~/.ssh/ec2_ssh_key test_blueprints.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
-    scp -i ~/.ssh/ec2_ssh_key catalog.yaml centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
-    scp -i ~/.ssh/ec2_ssh_key parse_tests_yaml.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
+    scp -i ~/.ssh/ec2_ssh_key -r * centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 sudo pip3 install -U parameterized
 sudo pip3 install -U pyyaml
+sudo pip3 install -U nose
+sudo pip3 install -U rednose
 cd /home/centos
-python3 test_blueprints.py TestBlueprints.${env.TEST_CASE}
+nosetests --verbosity=2 --rednose ./
 EOT
 """
 }

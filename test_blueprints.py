@@ -10,9 +10,8 @@ ids = test_data.get_blueprints_ids()
 args_upload = test_data.get_blueprints_args()
 
 class TestBlueprints(unittest.TestCase):
-
-    def upload(self):
-        for blueprint in ids: 
+    def upload(self, id):
+        for blueprint in ids[:5]: 
             with self.subTest(blueprint):
                 proc_upload = subprocess.run(args_upload.get(blueprint))
                 self.assertTrue(proc_upload.returncode == 0)
@@ -26,6 +25,11 @@ class TestBlueprints(unittest.TestCase):
     #             self.assertTrue(proc_install.returncode ==
     #                         0 and proc_uninstall.returncode == 0)
 
-                
-if __name__ == "__main__":
-    unittest.main()
+def upload_bps(arg):
+    proc_upload = subprocess.run(arg)
+    assert proc_upload.returncode == 0
+
+def test_generator():
+    for id in ids[:5]:
+        yield upload_bps, args_upload.get(id)
+
