@@ -1,4 +1,3 @@
-from xml.dom.xmlbuilder import _DOMInputSourceStringDataType
 import yaml
 
 class ParseTestData():
@@ -43,5 +42,5 @@ if __name__ =="__main__":
 
     tests = ParseTestData()
     print(tests.get_blueprints_ids())
-    print(tests.get_blueprints_args())
+    print(tests.get_upload_args())
 

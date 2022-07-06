@@ -8,24 +8,21 @@ ids = test_data.get_blueprints_ids()
 #args_uninstall = test_data.get_args_uninstall()
 args_upload = test_data.get_upload_args()
 
-@attr(type="upload")
-class UploadBlueprints:
-    def upload_bp(self, arg):
-        proc_upload = subprocess.run(arg)
-        assert proc_upload.returncode == 0
 
-    def test_uploads(self):
-        for id in ids[:5]:
-            yield self.upload_bp, args_upload.get(id)
+def upload_bp(arg):
+    proc_upload = subprocess.run(arg)
+    assert proc_upload.returncode == 0
+
+@attr(type="upload")
+def test_uploads():
+    print(ids)
+    for id in ids[:5]:
+        yield upload_bp, args_upload.get(id)
+
+
+def install_bp(arg):
+    pass
 
 @attr(type="install")
-class InstallBlueprints:
-
-    def install_bp(self, arg):
-        pass
-
-    def test_installs(self):
-        pass
-
-
-
+def test_installs():
+    pass
