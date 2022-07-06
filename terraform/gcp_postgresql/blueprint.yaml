@@ -18,11 +18,11 @@ inputs:
     type: string
     description: MariaDB database name 
     display_label: MariaDB database name
-    defualt: "cloudify"
+    default: "cloudify"
   
   user_name: 
     type: string
-    descritpion: MariaDB user name
+    description: MariaDB user name
     display_label: MariaDB user name
     default: "cloudify-user"
 

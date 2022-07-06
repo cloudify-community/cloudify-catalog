@@ -4,7 +4,7 @@ description: Cloudify Nginx blueprint. Deploys Nginx service with Ansible Clodui
 
 imports:
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
-  - http://cloudify.co/spec/cloudify/6.4.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-ansible-plugin
 
