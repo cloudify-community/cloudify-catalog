@@ -80,7 +80,7 @@ pipeline{
   }
 
   triggers {
-    cron(env.BRANCH_NAME == 'add_testing' ? '* 0/1 0 ? * * *' : '')
+    cron(env.BRANCH_NAME == 'add_testing' ? '0 */12 * * *' : '')
   }
   
   parameters {
