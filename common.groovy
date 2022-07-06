@@ -39,7 +39,7 @@ sudo pip3 install -U pyyaml
 sudo pip3 install -U nose
 sudo pip3 install -U rednose
 cd /home/centos
-nosetests --verbosity=2 --rednose ./
+nosetests --verbosity=2 --rednose ./ -a type=upload
 EOT
 """
 }

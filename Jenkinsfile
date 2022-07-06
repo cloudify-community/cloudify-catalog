@@ -78,6 +78,10 @@ pipeline{
     timeout(time: 60, unit: 'MINUTES')
     timestamps()
   }
+
+  triggers {
+    cron(env.BRANCH_NAME == 'development' ? '* 0/1 0 ? * * *' : '')
+  }
   
   parameters {
     booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: true, description: 'Test blueprints from marketplace.')
