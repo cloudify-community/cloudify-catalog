@@ -34,12 +34,9 @@ def testBlueprints(){
     sh """#!/bin/bash
     scp -i ~/.ssh/ec2_ssh_key -r * centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
-sudo pip3 install -U parameterized
-sudo pip3 install -U pyyaml
-sudo pip3 install -U nose
-sudo pip3 install -U rednose
+sudo pip3 install -U parameterized pyyaml nose rednose
 cd /home/centos
-nosetests --verbosity=2 --rednose ./ -a type=upload
+nosetests --verbosity=2 --rednose ./ -a type=${env.TEST_CASE}
 EOT
 """
 }

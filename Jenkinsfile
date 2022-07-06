@@ -85,7 +85,7 @@ pipeline{
   
   parameters {
     booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: true, description: 'Test blueprints from marketplace.')
-    //choice(name: 'TEST_CASE', choices: "install\nupload", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true.')
+    choice(name: 'TEST_CASE', choices: "install\nupload", defaultValue: "upload", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true.')
   }
 
   environment {
@@ -93,7 +93,7 @@ pipeline{
     WORKSPACE = "${env.WORKSPACE}"
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1" 
-    TEST_CASE = "upload" //"${params.TEST_CASE}"
+    TEST_CASE = "${params.TEST_CASE}"
   }
   stages{
     stage('prepare'){
