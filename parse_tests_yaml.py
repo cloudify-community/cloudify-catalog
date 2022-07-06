@@ -1,3 +1,4 @@
+from xml.dom.xmlbuilder import _DOMInputSourceStringDataType
 import yaml
 
 class ParseTestData():
@@ -17,8 +18,13 @@ class ParseTestData():
         bps = [ item for itemw in bps for item in itemw]  
         return bps  
     
-    
-    def get_blueprints_args(self):
+    def get_install_args(self):
+        pass
+
+    def get_uninstall_args(self):
+        pass
+
+    def get_upload_args(self):
         bps = self._get_bps()
         args = {}
         for blueprint in bps:

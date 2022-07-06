@@ -80,12 +80,12 @@ pipeline{
   }
 
   triggers {
-    cron(env.BRANCH_NAME == 'add_testing' ? '0 */12 * * *' : '')
+    cron(env.BRANCH_NAME == '6.4.0-build' ? '0 */12 * * *' : '')
   }
   
   parameters {
     booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: true, description: 'Test blueprints from marketplace.')
-    choice(name: 'TEST_CASE', choices: "install\nupload", defaultValue: "upload", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true.')
+    choice(name: 'TEST_CASE', choices: "upload\ninstall", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true.')
   }
 
   environment {
