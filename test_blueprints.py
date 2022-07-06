@@ -30,6 +30,6 @@ def upload_bps(arg):
     assert proc_upload.returncode == 0
 
 def test_generator():
-    for id in ids[:5]:
+    for id in ids:
         yield upload_bps, args_upload.get(id)
 
