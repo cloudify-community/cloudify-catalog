@@ -80,7 +80,7 @@ pipeline{
   }
   
   parameters {
-    booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: false, description: 'Test blueprints from marketplace.')
+    booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: true, description: 'Test blueprints from marketplace.')
     //choice(name: 'TEST_CASE', choices: "install\nupload", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true.')
   }
 

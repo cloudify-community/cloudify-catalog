@@ -34,8 +34,8 @@ def testBlueprints(){
     sh """#!/bin/bash
     scp -i ~/.ssh/ec2_ssh_key -r docker centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
     scp -i ~/.ssh/ec2_ssh_key test_blueprints.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
-    scp -i ~/.ssh/ec2_ssh_key test-blueprints.json centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
-    scp -i ~/.ssh/ec2_ssh_key parse_tests.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
+    scp -i ~/.ssh/ec2_ssh_key catalog.yaml centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
+    scp -i ~/.ssh/ec2_ssh_key parse_tests_yaml.py centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 sudo pip3 install -U parameterized
 cd /home/centos
