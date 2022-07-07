@@ -118,4 +118,4 @@ outputs:
 
   rabbitmq_endpoint:
     description: rabbitmq endpoint
-    value: { concat: [ { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':5672' ] }
+    value: { concat: [ { get_capability: [ { concat: [ { get_input: infra_deployment_id } ] }, endpoint] }, ':5672' ] }

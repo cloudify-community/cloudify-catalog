@@ -380,7 +380,7 @@ topics:
         path: terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
 
-      - id: terraform_gcp_vm
+      - id: tf_gcp_vm
         name: VM-Ubuntu-GCP-TFM
         path: terraform/gcp
         description: Create a GCP VM using Terraform automation

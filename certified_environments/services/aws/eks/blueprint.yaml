@@ -265,7 +265,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: new_service_account
 
-    secret:
+  secret:
     type: cloudify.kubernetes.resources.CustomBlueprintDefinedResource
     properties:
       client_config:
