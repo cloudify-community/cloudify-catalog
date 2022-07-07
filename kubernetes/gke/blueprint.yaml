@@ -67,7 +67,7 @@ node_templates:
     properties:
       client_config:
         authentication:
-          gcp_service_account: { get_input: gcp_credentials }
+          gcp_service_account: { get_secret: gcp_credentials }
         configuration:
           api_options:
             host: { concat: [ 'https://', { get_attribute: [kubernetes-cluster-attributes, endpoint] }]}

@@ -9,7 +9,7 @@ inputs:
 
   subscription-id-secret:
     type: string
-    display_name: Subscription ID Secret Name
+    display_label: Subscription ID Secret Name
     required: false
     default: azure_subscription_id
 

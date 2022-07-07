@@ -451,7 +451,7 @@ topics:
         path: terraform/azure_storage
         description: Create an Azure Blob Storage automation
 
-      - id: tf_gcp_storage
+      - id: terraform_gcp_storage
         name: Storage-GCP-TFM
         path: terraform/gcp_storage
         description: Create a Google Platform Storage using Terraform automation
@@ -466,7 +466,7 @@ topics:
         path: terraform/azure_vpc
         description: Create an Azure VPC using Terraform automation
 
-      - id: tf_gcp_network
+      - id: terraform_gcp_network
         name: Network-GCP-TFM
         path: terraform/gcp_network
         description: Create a Google Platform Network using Terraform automation
@@ -497,7 +497,7 @@ topics:
         path: terraform/azure_oracle
         description: Create an Azure Oracle database using Terraform automation
       
-      - id: tf_gcp_oracle
+      - id: terraform_gcp_oracle
         name: Oracle-GCP-TFM
         path: terraform/gcp_oracle
         description: Create a Google Platform Oracle Database the spot configuration using Terraform automation
@@ -512,7 +512,7 @@ topics:
         path: terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
       
-      - id: tf_gcp_mariadb
+      - id: terraform_gcp_mariadb
         name: MariaDB-GCP-TFM
         path: terraform/gcp_mariadb
         description: Create a Google Platform MariaDB Database the spot configuration using Terraform automation
@@ -527,7 +527,7 @@ topics:
         path: terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
       
-      - id: tf_gcp_mysql
+      - id: terraform_gcp_mysql
         name: MySQL-GCP-TFM
         path: terraform/gcp_mysql
         description: Create a Google Platform MySQL Database the spot configuration using Terraform automation
@@ -547,22 +547,22 @@ topics:
         path: terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
       
-      - id: tf_gcp_postgresql
+      - id: terraform_gcp_postgresql
         name: PostgreSQL-GCP-TFM
         path: terraform/gcp_postgresql
         description: Create a Google Platform PostgresSQL Database the spot configuration using Terraform automation
     #GCP others
-      - id: tf_gcp_queue
+      - id: terraform_gcp_queue
         name: Queue-GCP-TFM
         path: terraform/gcp_queue
         description: Create a Google Platform Queue service using Terraform automation
 
-      - id: tf_gcp_bigtable
+      - id: terraform_gcp_bigtable
         name: Bigtable-GCP-TFM
         path: terraform/gcp_bigtable
         description: Create a Google Platform Bigtable service using Terraform automation
 
-      - id: tf_gcp_disk
+      - id: terraform_gcp_disk
         name: Disk-GCP-TFM
         path: terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
