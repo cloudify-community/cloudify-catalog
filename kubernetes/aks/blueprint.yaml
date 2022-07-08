@@ -103,8 +103,8 @@ dsl_definitions:
         managedOutboundIps:
           count: 2
     service_principal_profile:
-      clientId: { get_input: client_id }
-      secret: { get_input: client_secret }
+      clientId: { get_secret: client_id }
+      secret: { get_secret: client_secret }
     addon_profiles: {}
     enable_rbac: true
 
@@ -216,7 +216,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: new_service_account
 
-  store_token_and_kubeconfig:
+  store_token:
     type: cloudify.nodes.Root
     interfaces:
       cloudify.interfaces.lifecycle:
@@ -285,10 +285,10 @@ capabilities:
     value: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }
   
   token:
-    value: { get_attribute: [ store_token_and_kubeconfig, token ] }
+    value: { get_attribute: [ store_token, token ] }
 
   ssl_ca_cert:
-    value: { get_attribute: [ store_token_and_kubeconfig, ssl_ca_cert ] }
+    value: { get_attribute: [ store_token, ssl_ca_cert ] }
 
   connection_details:
     value: *kubernetes_master_configuration
