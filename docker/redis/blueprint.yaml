@@ -39,36 +39,47 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: { concat: [ { get_input: infra_name }, ".zip" ] }
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment:
-          id: { get_input: infra_deployment_id }
-
-  docker:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
+  
+  secrurity_group_rules:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: "security_group.zip"
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: false
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
+          inputs:
+            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
+            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+  
+  image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
       cloudify.interfaces.lifecycle:
-        create:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs:
-            script_path: scripts/install_docker.sh
-            fabric_env: &fabric_env
-              host_string: { get_capability: [ { get_input: infra_deployment_id } , endpoint ] }
-              user: { get_capability: [ { get_input: infra_deployment_id }, user ] }
-              key: { get_capability: [ { get_input: infra_deployment_id }, key_content ] }
-            use_sudo: true
         configure:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs: 
-            script_path: scripts/install_container.sh
-            fabric_env: *fabric_env
-            use_sudo: true
-        delete:
-          implementation: fabric.fabric_plugin.tasks.run_script
+          implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
-            script_path: scripts/uninstall_docker.sh
-            fabric_env: *fabric_env
+            commands:
+            - docker pull redis:7
+            fabric_env: &fabric_env
+              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
+              user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
+              key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -92,7 +103,7 @@ node_templates:
           detach: True  
     relationships:
       - type: cloudify.relationships.depends_on
-        target: docker
+        target: image
 
 outputs:
   docker_api_url:

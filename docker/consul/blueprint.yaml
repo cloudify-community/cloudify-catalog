@@ -46,46 +46,33 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: { concat: [ { get_input: infra_name }, ".zip" ] }
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
-
-
-  docker:
+  
+  image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
       cloudify.interfaces.lifecycle:
-        create:
-          implementation: fabric.fabric_plugin.tasks.run_script
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
-            script_path: scripts/install_docker.sh
+            commands:
+            - docker pull consul:latest
             fabric_env: &fabric_env
               host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
               user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
               key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
             use_sudo: true
-        configure:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs: 
-            script_path: scripts/install_container.sh
-            fabric_env: *fabric_env
-            use_sudo: true
-        delete:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs:
-            script_path: scripts/uninstall_docker.sh
-            fabric_env: *fabric_env
-            use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
-    
   docker_consul_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -100,7 +87,7 @@ node_templates:
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on
-        target: docker
+        target: image
 
 outputs:
   docker_api_url:
