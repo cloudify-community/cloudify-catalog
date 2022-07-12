@@ -209,6 +209,7 @@ pipeline{
         }
       }
     }
+    }
     stage('copy_artifacts'){
       steps{
         script{
@@ -221,7 +222,6 @@ pipeline{
             }
           }
         }
-      }
     }
     stage('upload_artifacts'){
       steps{
