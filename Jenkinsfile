@@ -201,16 +201,24 @@ pipeline{
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
                   common.testBlueprints()
-                  sh """
-                  cat nosetests.xml
-                  cp nosetests.xml /tmp/data/nosetests.xml
-                  ls -la /tmp/data
-                  """
-                  }
                 }
             }
             // If we reach here that means all of the above passed
             buildState = 'SUCCESS'
+          }
+        }
+      }
+    }
+    stage('copy_artifacts'){
+      steps{
+        script{
+          container('cloudify'){
+            sh """
+                  cat nosetests.xml
+                  cp nosetests.xml /tmp/data/nosetests.xml
+                  ls -la /tmp/data
+                  """
+            }
           }
         }
       }
