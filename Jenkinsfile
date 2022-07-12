@@ -214,11 +214,13 @@ pipeline{
       steps{
         script{
           container('cloudify'){
+            echo 'Copy artifacts'
+            common.downloadTestReport("/home/centos/nosetests.xml", "/tmp/data/nosetests.xml")
             sh """
                   cat nosetests.xml
-                  cp nosetests.xml /tmp/data/nosetests.xml
+                  cat /tmp/data/nosetests.xml
                   ls -la /tmp/data
-                  """
+                """
             }
           }
         }

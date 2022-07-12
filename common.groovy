@@ -41,6 +41,12 @@ EOT
 """
 }
 
+def downloadTestReport(file_source, file_destination){
+  sh """#!/bin/bash 
+  scp -i ~/.ssh/ec2_ssh_key centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):${file_source} ${file_destination}
+  """
+}
+
 def terminateCloudifyManager(){
   sh """#!/bin/bash
     source .venv/bin/activate
