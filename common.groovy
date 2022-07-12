@@ -36,7 +36,7 @@ def testBlueprints(){
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 sudo pip3 install -U parameterized pyyaml nose rednose
 cd /home/centos
-nosetests --verbosity=2 --rednose ./ -a type=${env.TEST_CASE}
+nosetests --verbosity=2 --rednose ./ -a type=${env.TEST_CASE} --with-xunit --xunit-file=${env.TEST_RESTULT_PATH}
 EOT
 """
 }

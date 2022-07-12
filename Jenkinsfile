@@ -28,6 +28,9 @@ pipeline{
               - name: dshm
                 emptyDir:
                   medium: Memory
+              - name: shared-data-volume
+                peristentVolumeClaim:
+                  claimName: shared-data
             containers:
               - name: jnlp
                 image: jenkins/inbound-agent:4.3-4
@@ -44,6 +47,9 @@ pipeline{
                   limits:
                     cpu: 1
                     memory: 1Gi
+                volumeMounts:
+                  - mountPath: "/mnt/data"
+                    name: shared-data-volume
                 command:
                 - cat
                 tty: true
@@ -53,8 +59,10 @@ pipeline{
               - name: cloudify
                 image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
                 volumeMounts:
-                - mountPath: /dev/shm
-                  name: dshm
+                  - mountPath: /dev/shm
+                    name: dshm
+                  - mountPath: "/mnt/data"
+                    name: shared-data-volume
                 command:
                 - cat
                 tty: true
@@ -94,6 +102,7 @@ pipeline{
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1" 
     TEST_CASE = "${params.TEST_CASE}"
+    TEST_RESTULT_PATH = "/mnt/data"
   }
   stages{
     stage('prepare'){
@@ -157,28 +166,6 @@ pipeline{
         }
       }
     }
-    stage('upload_artifacts'){
-      steps{
-        withCredentials([
-              usernamePassword(
-                  credentialsId: 'aws-cli', 
-                  usernameVariable: 'ID', 
-                  passwordVariable: 'SECRET'
-                  )]) {
-              container('python'){
-                dir("${env.WORKSPACE}/${env.PROJECT}"){
-                  setupGithubSSHKey()
-                  sh '''
-                    export ID="$ID"
-                    export SECRET="$SECRET"
-                    python upload_artifacts.py 
-                  '''
-                }
-              }
-          }
-      }
-    }
-
     stage('deploy_cloudify_manager') {
       when { expression { params.TEST_BLUEPRINTS } }
       steps {
@@ -222,6 +209,27 @@ pipeline{
             buildState = 'SUCCESS'
           }
         }
+      }
+    }
+    stage('upload_artifacts'){
+      steps{
+        withCredentials([
+              usernamePassword(
+                  credentialsId: 'aws-cli', 
+                  usernameVariable: 'ID', 
+                  passwordVariable: 'SECRET'
+                  )]) {
+              container('python'){
+                dir("${env.WORKSPACE}/${env.PROJECT}"){
+                  setupGithubSSHKey()
+                  sh '''
+                    export ID="$ID"
+                    export SECRET="$SECRET"
+                    python upload_artifacts.py 
+                  '''
+                }
+              }
+          }
       }
     }
   }
