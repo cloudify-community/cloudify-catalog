@@ -218,7 +218,6 @@ pipeline{
               echo 'Copy artifacts'
               common.downloadTestReport("/home/centos/nosetests.xml", "/tmp/data/nosetests.xml")
               sh """
-                    cat nosetests.xml
                     cat /tmp/data/nosetests.xml
                     ls -la /tmp/data
                   """
