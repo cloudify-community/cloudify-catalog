@@ -112,7 +112,9 @@ pipeline{
           container('cloudify'){
             dir("${env.WORKSPACE}/${env.PROJECT}"){
               common = load "common.groovy"
-              
+              sh """
+                mkdir /tmp/data
+              """
             }
           }
         }
