@@ -123,7 +123,7 @@ def update_broken_bps(bucket_name, bucket_dir):
     source_file = "logos/logo.png"
     root = read_xml("/tmp/data/nosetests.xml")
     for failure in root:
-        bp_path = failure.attrib.get("name").split(' ')[5].replace("blueprint.yaml","logo.png")
+        bp_path = failure.attrib.get("name").split(' ')[5][1:-4].replace("blueprint.yaml","logo.png")
     target_file = "{}/{}".format(bucket_dir, bp_path)
     upload_file(source_file, bucket_name, target_file)
 
