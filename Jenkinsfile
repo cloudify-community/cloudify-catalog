@@ -48,7 +48,7 @@ pipeline{
                     cpu: 1
                     memory: 1Gi
                 volumeMounts:
-                  - mountPath: "/tmp/data"
+                  - mountPath: /tmp/data
                     name: shared-data-volume
                 command:
                 - cat
@@ -61,7 +61,7 @@ pipeline{
                 volumeMounts:
                   - mountPath: /dev/shm
                     name: dshm
-                  - mountPath: "/tmp/data"
+                  - mountPath: /tmp/data
                     name: shared-data-volume
                 command:
                 - cat
@@ -113,7 +113,7 @@ pipeline{
             dir("${env.WORKSPACE}/${env.PROJECT}"){
               common = load "common.groovy"
               sh """
-                mkdir /tmp/data
+                chmod 777 /tmp/data
               """
             }
           }
