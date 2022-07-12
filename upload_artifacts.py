@@ -2,6 +2,7 @@ import re
 import os
 import yaml
 import boto3
+import shutil
 import logging
 import xml.etree.ElementTree as ET
 
@@ -119,13 +120,14 @@ def read_xml(path):
     tree = ET.parse(path)
     return tree.getroot()
 
-def update_broken_bps(bucket_name, bucket_dir):
+def update_broken_bps_icon():
     source_file = "logos/logo.png"
     root = read_xml("/tmp/data/nosetests.xml")
     for failure in root:
-        bp_path = failure.attrib.get("name").split(' ')[5][1:-4].replace("blueprint.yaml","logo.png")
-    target_file = "{}/{}".format(bucket_dir, bp_path)
-    upload_file(source_file, bucket_name, target_file)
+        directory_file = failure.attrib.get("name").split(' ')[5][1:-4].replace("blueprint.yaml","logo.png")
+        shutil.copyfile(source_file, directory_file)  
+    # target_file = "{}/{}".format(bucket_dir, bp_path)
+    # upload_file(source_file, bucket_name, target_file)
 
 def main():
     with open(CATALOG_FILE_NAME, 'r') as stream:
@@ -142,8 +144,8 @@ def main():
     s3_bucket_directory = "{}/{}".format(
         catalog[S3_BUCKET_DIRECTORY], target_path_subfolder)
 
+    update_broken_bps_icon()
     upload_directory(BUILD_DIRECTORY, s3_bucket_name, s3_bucket_directory)
-    update_broken_bps(s3_bucket_name, s3_bucket_directory)
     print_catalogs_urls(BUILD_DIRECTORY, base_url, s3_bucket_directory)
 
 
