@@ -37,7 +37,6 @@ def testBlueprints(){
 sudo pip3 install -U parameterized pyyaml nose rednose
 cd /home/centos
 nosetests --verbosity=2 --rednose ./ -a type=${env.TEST_CASE} --with-xunit
-sudo cp nosetests.xml /tmp/data/nosetests.xml
 EOT
 """
 }

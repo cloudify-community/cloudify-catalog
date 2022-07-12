@@ -201,6 +201,11 @@ pipeline{
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
                   common.testBlueprints()
+                  sh """
+                  cat nosetests.xml
+                  cp nosetests.xml /tmp/data/nosetests.xml
+                  ls -la /tmp/data
+                  """
                   }
                 }
             }
