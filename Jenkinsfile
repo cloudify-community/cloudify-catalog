@@ -141,30 +141,6 @@ pipeline{
         }
       }
     }
-    stage('build'){
-      steps{
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-              python catalog.py
-            """
-          }
-        }
-      }
-    }
-    stage('validate_built_catalogs'){
-      steps{
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-              python catalog_linter.py
-            """
-          }
-        }
-      }
-    }
     stage('deploy_cloudify_manager') {
       when { expression { params.TEST_BLUEPRINTS } }
       steps {
@@ -225,6 +201,30 @@ pipeline{
             }
           }
         }
+    }
+    stage('build'){
+      steps{
+        container('python'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            setupGithubSSHKey()
+            sh """
+              python catalog.py
+            """
+          }
+        }
+      }
+    }
+    stage('validate_built_catalogs'){
+      steps{
+        container('python'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            setupGithubSSHKey()
+            sh """
+              python catalog_linter.py
+            """
+          }
+        }
+      }
     }
     stage('upload_artifacts'){
       steps{
