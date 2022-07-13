@@ -103,7 +103,7 @@ pipeline{
     SUFFIX = "6.4.0-.dev1" 
     TEST_CASE = "${params.TEST_CASE}"
     TEST_RESULT_DIR = "/tmp/data"
-    TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}+/nosetests.xml"
+    TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/nosetests.xml"
   }
   stages{
     stage('prepare'){
