@@ -102,7 +102,8 @@ pipeline{
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1" 
     TEST_CASE = "${params.TEST_CASE}"
-    TEST_RESULT_PATH = "/tmp/data/nosetests.xml"
+    TEST_RESULT_DIR = "/tmp/data"
+    TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}+/nosetests.xml"
   }
   stages{
     stage('prepare'){
@@ -192,6 +193,9 @@ pipeline{
           container('cloudify'){
              dir("${env.WORKSPACE}/${env.PROJECT}") {
               echo 'Copy artifacts'
+              sh """
+              rm ${TEST_RESULT_DIR}/*
+              """
               common.downloadTestReport("/home/centos/nosetests.xml", "${env.TEST_RESULT_PATH}")
             }
           }
