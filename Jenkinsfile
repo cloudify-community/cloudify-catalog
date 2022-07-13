@@ -193,10 +193,10 @@ pipeline{
           container('cloudify'){
              dir("${env.WORKSPACE}/${env.PROJECT}") {
               echo 'Copy artifacts'
-              sh """
-              rm ${TEST_RESULT_DIR}/*
-              """
               common.downloadTestReport("/home/centos/nosetests.xml", "${env.TEST_RESULT_PATH}")
+              sh """
+              cat ${env.TEST_RESULT_PATH}
+              """
             }
           }
         }
