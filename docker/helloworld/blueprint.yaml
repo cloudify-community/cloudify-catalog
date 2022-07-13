@@ -25,7 +25,7 @@ inputs:
       URL of infra zip file.
     type: string
     display_label: Infrastructure Archive
-    default: 'infra.zip'
+    default: 'https://github.com/cloudify-community/cloudify-catalog/blob/0d229089fa7137f9d2f2b6202af1af2b2b5c618e/docker/vm/vm.zip'
 
   infra_exists:
     type: boolean
@@ -52,8 +52,8 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { concat: [ { get_input: infra_name }, ".zip" ] }
-          main_file_name: blueprint.yaml
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat : [ {get_input: infra_name }, .yaml ] }
           external_resource: { get_input: infra_exists }
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
