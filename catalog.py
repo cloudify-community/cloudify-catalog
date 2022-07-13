@@ -11,7 +11,7 @@ from pygit2 import Repository
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
-TEST_RESULT_PATH = os.environ["TEST_DATA_PATH"]
+TEST_RESULT_PATH = os.environ["TEST_RESULT_PATH"]
 
 
 def read_xml(path):
