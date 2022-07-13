@@ -11,6 +11,7 @@ from pygit2 import Repository
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
+TEST_RESULT_PATH = os.environ["TEST_DATA_PATH"]
 
 def read_xml(path):
     tree = ET.parse(path)
@@ -18,7 +19,7 @@ def read_xml(path):
 
 
 def get_broken_bps_ids():
-    root = read_xml("/tmp/data/nosetests.xml")
+    root = read_xml(TEST_RESULT_PATH)
     broken_bps = []
     for failure in root:
         broken_bps.append(failure.attrib.get("name").split(' ')[4][1:-2])

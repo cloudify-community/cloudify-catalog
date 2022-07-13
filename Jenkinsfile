@@ -186,18 +186,13 @@ pipeline{
       }
     }
     }
-    stage('copy_artifacts'){
+    stage('download_test_artifacts'){
       steps{
         script{
           container('cloudify'){
              dir("${env.WORKSPACE}/${env.PROJECT}") {
               echo 'Copy artifacts'
-              common.downloadTestReport("/home/centos/nosetests.xml", "/tmp/data/nosetests.xml")
-              sh """
-                    cat /tmp/data/nosetests.xml
-                    ls -la /tmp/data
-                  """
-              }
+              common.downloadTestReport("/home/centos/nosetests.xml", "${env.TEST_RESULT_PATH}")
             }
           }
         }
@@ -208,7 +203,8 @@ pipeline{
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             setupGithubSSHKey()
             sh """
-              python catalog.py
+            export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+            python catalog.py
             """
           }
         }
