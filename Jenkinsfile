@@ -194,9 +194,6 @@ pipeline{
              dir("${env.WORKSPACE}/${env.PROJECT}") {
               echo 'Copy artifacts'
               common.downloadTestReport("/home/centos/nosetests.xml", "${env.TEST_RESULT_PATH}")
-              sh """
-              cat ${env.TEST_RESULT_PATH}
-              """
             }
           }
         }

@@ -25,13 +25,14 @@ def read_xml(path):
 
 
 def get_broken_bps_ids():
-    root = read_xml(TEST_RESULT_PATH)
+    test_data = read_xml(TEST_RESULT_PATH)
     broken_bps = []
-    if root:
-        for failure in root:
-            broken_bps.append(failure.attrib.get(
-                "name").split(' ')[4][1:-2])
-            return broken_bps
+    if test_data:
+        for test in test_data:
+            if test.getchildren():
+                broken_bps.append(test.attrib.get(
+                    "name").split(' ')[4][1:-2])
+        return broken_bps
     else:
         return broken_bps
 
