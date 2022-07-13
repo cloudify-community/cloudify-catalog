@@ -8,7 +8,7 @@ description: >
 
 imports:
   - cloudify/types/types.yaml
-s
+
 node_templates:
 
   # Running the same WebServer from ex3 as a ServiceComponent.
