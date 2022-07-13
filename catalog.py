@@ -13,16 +13,26 @@ logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 TEST_RESULT_PATH = os.environ["TEST_DATA_PATH"]
 
+
 def read_xml(path):
-    tree = ET.parse(path)
-    return tree.getroot()
+    try:
+        tree = ET.parse(path)
+        return tree.getroot()
+    except FileNotFoundError:
+        logging.info(
+            'The test result file was not found under: {} path'.format(path))
+        return None
 
 
 def get_broken_bps_ids():
     root = read_xml(TEST_RESULT_PATH)
     broken_bps = []
-    for failure in root:
-        broken_bps.append(failure.attrib.get("name").split(' ')[4][1:-2])
+    if root:
+        for failure in root:
+            broken_bps.append(failure.attrib.get(
+                "name").split(' ')[4][1:-2])
+            return broken_bps
+    else:
         return broken_bps
 
 

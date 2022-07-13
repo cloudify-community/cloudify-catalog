@@ -196,6 +196,7 @@ pipeline{
             }
           }
         }
+      }
     }
     stage('build'){
       steps{
@@ -238,9 +239,9 @@ pipeline{
                     export SECRET="$SECRET"
                     python upload_artifacts.py 
                   '''
-                }
-              }
+            }
           }
+        }
       }
     }
   }
