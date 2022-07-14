@@ -86,7 +86,7 @@ node_templates:
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on
-        target: docker
+        target: image
 
 outputs:
   docker_api_url:

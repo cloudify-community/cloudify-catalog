@@ -46,12 +46,11 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { concat: [ { get_input: infra_name }, ".zip" ] }
-          main_file_name: blueprint.yaml
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
-          inputs: 
             
     relationships:
       - type: cloudify.relationships.depends_on
@@ -62,17 +61,15 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { get_input: infra_archive }
+          blueprint_archive: "security_group.zip"
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
-          external_resource: { get_input: infra_exists }
+          external_resource: false
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
             vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
             security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
     relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
       - type: cloudify.relationships.depends_on
         target: infrastructure
   
@@ -94,6 +91,20 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
+  docker_container_files:
+    type: cloudify.nodes.docker.container_files
+    properties:
+      resource_config:
+        docker_machine:
+          docker_ip: { get_capability: [ { concat: [ { get_attribute: [ infra_prefix, value ] }, "-", { get_input: infra_deployment_id } ] }, endpoint] }
+          docker_user: { get_capability: [ { concat: [ { get_attribute: [ infra_prefix, value ] }, "-", { get_input: infra_deployment_id } ] }, user] }
+          docker_key: { get_capability: [ { concat: [ { get_attribute: [ infra_prefix, value ] }, "-", { get_input: infra_deployment_id } ] }, key_content ] }
+        source: "./templates.zip"
+        destination: ""
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+
   docker_nginx_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -106,6 +117,10 @@ node_templates:
           command: "/docker-entrypoint.sh nginx -g 'daemon off;'"
           name: nginx
           detach: True
+          volumes: 
+            - '/usr/share/nginx/html'
+          volumes_mapping: 
+            -  get_attribute: [ docker_container_files, destination ]
           ports: [ 80 ]
           host_config:
             port_bindings: { 80 : 80 }
@@ -113,6 +128,8 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
+      - type: cloudify.relationships.depends_on
+        target: docker_container_files
 
 outputs:
   docker_api_url:
