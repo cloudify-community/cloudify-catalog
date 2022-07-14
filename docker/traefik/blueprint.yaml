@@ -22,7 +22,7 @@ inputs:
     description: >
       URL of infra zip file.
     type: string
-    default: '../docker_vm/aws.zip'
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
     description: >
@@ -122,9 +122,11 @@ node_templates:
           ports: [8080, 80]
           working_dir: { get_attribute: [docker_container_files, storage_dir] }
           volumes: 
-          - '/etc/traefik/'
+            - '/etc/traefik/'
+            - '/var/run/docker.sock'
           volumes_mapping: 
             - { get_attribute: [ docker_container_files, destination ] }
+            - '/var/run/docker.sock'
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on

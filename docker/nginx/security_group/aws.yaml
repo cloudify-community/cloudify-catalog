@@ -9,10 +9,10 @@ imports:
 
 inputs:
 
-  aws_security_group_id:
+  security_group_id:
     type: string
 
-  aws_vpc_id:
+  vpc_id:
     type: string
     
   aws_region_name:
@@ -74,9 +74,9 @@ node_templates:
     properties:
       client_config: *client_config
       use_external_resource: true
-      resource_id: { get_input: aws_security_group_id }
+      resource_id: { get_input: security_group_id }
       resource_config:
         GroupName: CloudifyGettingStartedExample
         Description: Created by cloudify-getting-started-example.
-        VpcId: { get_input: aws_vpc_id }
+        VpcId: { get_input: vpc_id }
 

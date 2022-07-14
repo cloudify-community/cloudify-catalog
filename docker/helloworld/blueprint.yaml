@@ -25,7 +25,7 @@ inputs:
       URL of infra zip file.
     type: string
     display_label: Infrastructure Archive
-    default: 'https://github.com/cloudify-community/cloudify-catalog/blob/0d229089fa7137f9d2f2b6202af1af2b2b5c618e/docker/vm/vm.zip'
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
     type: boolean
@@ -69,7 +69,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull helloworld:latest
+              - docker pull hello-world:latest
             fabric_env: &fabric_env
               host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
               user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
@@ -88,6 +88,7 @@ node_templates:
       resource_config:
         image_tag: "helloworld:latest"
         container_args:
+          command: "hello"
           name: helloworld
           detach: True
     relationships:
@@ -97,7 +98,3 @@ outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
-
-  helloworld_endpoint:
-    description: Helloworld URL
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':80' ] }

@@ -25,7 +25,7 @@ inputs:
       URL of infra zip file.
     type: string
     display_label: Infrastructure Archive
-    default: 'infra.zip'
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
     type: boolean

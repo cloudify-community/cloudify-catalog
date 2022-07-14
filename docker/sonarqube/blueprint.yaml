@@ -23,8 +23,8 @@ inputs:
     description: >
       URL of infra zip file.
     type: string
-    default: 'infra.zip'
-
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
+    
   infra_exists:
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
