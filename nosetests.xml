@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="2" errors="0" failures="2" skip="0"><testcase classname="test_blueprints" name="test_uploads(['cfy', 'blueprints', 'upload', '-b', 'gen-ssh-cert-service-component', 'getting_started/ssh_cert/blueprint.yaml'],)" time="1.696"><failure type="builtins.AssertionError" message=""><![CDATA[Traceback (most recent call last):
+  File "/usr/lib/python3.8/unittest/case.py", line 60, in testPartExecutor
+    yield
+  File "/usr/lib/python3.8/unittest/case.py", line 676, in run
+    self._callTestMethod(testMethod)
+  File "/usr/lib/python3.8/unittest/case.py", line 633, in _callTestMethod
+    method()
+  File "/home/bartosz/cloudify-catalog/env/lib/python3.8/site-packages/nose/case.py", line 198, in runTest
+    self.test(*self.arg)
+  File "/home/bartosz/cloudify-catalog/test_blueprints.py", line 14, in upload_bp
+    assert proc_upload.returncode == 0
+AssertionError
+]]></failure></testcase><testcase classname="test_blueprints" name="test_uploads(['cfy', 'blueprints', 'upload', '-b', 'ex4-nested-blueprint', 'getting_started/service_composition/blueprint.yaml'],)" time="1.574"><failure type="builtins.AssertionError" message=""><![CDATA[Traceback (most recent call last):
+  File "/usr/lib/python3.8/unittest/case.py", line 60, in testPartExecutor
+    yield
+  File "/usr/lib/python3.8/unittest/case.py", line 676, in run
+    self._callTestMethod(testMethod)
+  File "/usr/lib/python3.8/unittest/case.py", line 633, in _callTestMethod
+    method()
+  File "/home/bartosz/cloudify-catalog/env/lib/python3.8/site-packages/nose/case.py", line 198, in runTest
+    self.test(*self.arg)
+  File "/home/bartosz/cloudify-catalog/test_blueprints.py", line 14, in upload_bp
+    assert proc_upload.returncode == 0
+AssertionError
+]]></failure></testcase></testsuite>

@@ -112,7 +112,7 @@ node_templates:
             restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
     relationships:
       - type: cloudify.relationships.depends_on
-        target: docker
+        target: image
 
 outputs:
   docker_api_url:

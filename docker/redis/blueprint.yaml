@@ -34,6 +34,11 @@ inputs:
 
 node_templates:
 
+  infra_prefix:
+    type: eaas.nodes.UniquePrefixGenerator
+    properties:
+      predefined_value: ""
+
   infrastructure:
     type: cloudify.nodes.Component
     properties:
