@@ -316,4 +316,3 @@ policies:
     properties:
       default_instances: 1
     targets: [scalable_compute]
-
