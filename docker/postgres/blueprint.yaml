@@ -3,6 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
@@ -39,13 +40,13 @@ node_templates:
     properties:
       predefined_value: ""
 
-    infrastructure:
+  infrastructure:
     type: cloudify.nodes.Component
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { concat: [ { get_input: infra_name }, ".zip" ] }
-          main_file_name: blueprint.yaml
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }

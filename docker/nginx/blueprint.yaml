@@ -41,7 +41,7 @@ node_templates:
     properties:
       predefined_value: ""
 
-    infrastructure:
+  infrastructure:
     type: cloudify.nodes.Component
     properties:
       resource_config:
@@ -62,9 +62,9 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "security_group.zip"
+          blueprint_archive: { get_input: infra_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
-          external_resource: false
+          external_resource: { get_input: infra_exists }
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:

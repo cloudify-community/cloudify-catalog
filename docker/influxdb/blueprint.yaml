@@ -58,7 +58,7 @@ node_templates:
     properties:
       predefined_value: ""
 
-      infrastructure:
+  infrastructure:
     type: cloudify.nodes.Component
     properties:
       resource_config:
