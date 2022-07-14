@@ -56,6 +56,7 @@ node_templates:
           prefix: { get_attribute : [prefix, value] }
         source:
           location: templates/tf-aks-master.zip
+        source_path: tf-aks-master
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
