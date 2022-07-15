@@ -53,11 +53,13 @@ inputs:
 
 node_templates:
 
+  # unique prefix for our deployments
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: ""
 
+  # we creating the insfrastructure that is needed for the app service
   infrastructure:
     type: cloudify.nodes.Component
     properties:
@@ -72,6 +74,8 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
 
+  # the infrastructure node security group open only the port responsible for communication such: 22 and 2375, so we need to
+  # add the rules for our application, in this case we open port 8086
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -89,6 +93,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
+  # we connect to the docker instance and pull the required images, moreover we set the selinux to be permissive
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -109,6 +114,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
+  # we generate the password for out influxdb instance
   password_generator:
     type: cloudify.nodes.Root
     interfaces:
@@ -117,6 +123,8 @@ node_templates:
           executor: central_deployment_agent
           implementation: scripts/generate-password.sh
   
+  # we create the folder on the docker host that will be holding our configuration files, 
+  # then we will attch the folder to the telegraf container
   docker_container_files:
     type: cloudify.nodes.docker.container_files
     properties:
@@ -131,6 +139,9 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
+  # we creating the influxdb container, 
+  # !!! the ports (commonly in docker run used with -p 80:80) need to be 
+  # added in two config params: host_config and ports. 
   docker_influxdb_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -160,6 +171,9 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: password_generator
   
+  # we create the telegraf container and connect the volume with configuration file, 
+  # please remember that you can always point the volume to the direct destination in the
+  # container. You need to just change the volumes parameter
   docker_telegraf_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -192,10 +206,15 @@ node_templates:
         target: docker_influxdb_container
 
 outputs:
+
   docker_endpoint:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ { get_attribute: [ infra_prefix, value ] }, "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
   
+  endpoint:
+    description: Influxdb endpoint
+    value: { concat: [ "http://", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8086' ] }
+
   influxdb_password:
     description: Influxdb password
     value: { get_attribute: [ password_generator, master_password ] }
@@ -211,7 +230,3 @@ outputs:
   influxdb_org:
     description: Influxdb org
     value: { get_input: org }
-
-  endpoint:
-    description: Influxdb endpoint
-    value: { concat: [ "http://", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8086' ] }
