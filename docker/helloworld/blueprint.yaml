@@ -25,7 +25,7 @@ inputs:
       URL of infra zip file.
     type: string
     display_label: Infrastructure Archive
-    default: 'infra.zip'
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
     type: boolean
@@ -52,7 +52,6 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          id: { get_input: infra_deployment_id }
           blueprint_archive: { get_input: infra_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }
@@ -61,32 +60,20 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
-
-
-  docker:
+    
+  image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
       cloudify.interfaces.lifecycle:
-        create:
-          implementation: fabric.fabric_plugin.tasks.run_script
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
-            script_path: scripts/install_docker.sh
+            commands:
+              - docker pull hello-world:latest
             fabric_env: &fabric_env
               host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
               user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
               key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
-            use_sudo: true
-        configure:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs: 
-            script_path: scripts/install_container.sh
-            fabric_env: *fabric_env
-            use_sudo: true
-        delete:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs:
-            script_path: scripts/uninstall_docker.sh
-            fabric_env: *fabric_env
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -101,17 +88,13 @@ node_templates:
       resource_config:
         image_tag: "helloworld:latest"
         container_args:
+          command: "hello"
           name: helloworld
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on
-        target: docker
-
+        target: image
 outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
-
-  helloworld_endpoint:
-    description: Helloworld URL
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':80' ] }

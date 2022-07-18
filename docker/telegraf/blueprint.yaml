@@ -23,7 +23,7 @@ inputs:
     description: >
       URL of infra zip file.
     type: string
-    default: 'infra.zip'
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
     description: >
@@ -40,7 +40,7 @@ inputs:
   
   bucket: 
     description: The name to set for the system's initial bucket 
-    default: bucket
+    default: cloudify
   
   org: 
     description: The name to set for the system's initial organization
@@ -53,17 +53,18 @@ inputs:
 
 node_templates:
 
+  # unique prefix for our deployments
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: ""
 
+  # we creating the insfrastructure that is needed for the app service
   infrastructure:
     type: cloudify.nodes.Component
     properties:
       resource_config:
         blueprint:
-          id: { get_input: infra_deployment_id }
           blueprint_archive: { get_input: infra_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: { get_input: infra_exists }
@@ -73,35 +74,47 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
 
-  docker:
+  # the infrastructure node security group open only the port responsible for communication such: 22 and 2375, so we need to
+  # add the rules for our application, in this case we open port 8086
+  secrurity_group_rules:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: "security_group.zip"
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: false
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
+          inputs:
+            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
+            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+
+  # we connect to the docker instance and pull the required images, moreover we set the selinux to be permissive
+  image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
       cloudify.interfaces.lifecycle:
-        create:
-          implementation: fabric.fabric_plugin.tasks.run_script
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
-            script_path: scripts/install_docker.sh
+            commands:
+              - docker pull influxdb:2.0
+              - docker pull telegraf:latest
+              - setenforce 0
             fabric_env: &fabric_env
               host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
               user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
               key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
             use_sudo: true
-        configure:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs: 
-            script_path: scripts/install_container.sh
-            fabric_env: *fabric_env
-            use_sudo: true
-        delete:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs:
-            script_path: scripts/uninstall_docker.sh
-            fabric_env: *fabric_env
-            use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
+  # we generate the password for out influxdb instance
   password_generator:
     type: cloudify.nodes.Root
     interfaces:
@@ -110,6 +123,8 @@ node_templates:
           executor: central_deployment_agent
           implementation: scripts/generate-password.sh
   
+  # we create the folder on the docker host that will be holding our configuration files, 
+  # then we will attch the folder to the telegraf container
   docker_container_files:
     type: cloudify.nodes.docker.container_files
     properties:
@@ -118,12 +133,15 @@ node_templates:
           docker_ip: { get_capability: [ { concat: [ { get_attribute: [ infra_prefix, value ] }, "-", { get_input: infra_deployment_id } ] }, endpoint] }
           docker_user: { get_capability: [ { concat: [ { get_attribute: [ infra_prefix, value ] }, "-", { get_input: infra_deployment_id } ] }, user] }
           docker_key: { get_capability: [ { concat: [ { get_attribute: [ infra_prefix, value ] }, "-", { get_input: infra_deployment_id } ] }, key_content ] }
-        source: "./config.zip"
+        source: "./telegraf.zip"
         destination: ""
     relationships:
       - type: cloudify.relationships.depends_on
-        target: docker
-    
+        target: infrastructure
+
+  # we creating the influxdb container, 
+  # !!! the ports (commonly in docker run used with -p 80:80) need to be 
+  # added in two config params: host_config and ports. 
   docker_influxdb_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -149,10 +167,13 @@ node_templates:
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on
-        target: docker
+        target: image
       - type: cloudify.relationships.depends_on
         target: password_generator
   
+  # we create the telegraf container and connect the volume with configuration file, 
+  # please remember that you can always point the volume to the direct destination in the
+  # container. You need to just change the volumes parameter
   docker_telegraf_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -162,20 +183,21 @@ node_templates:
       resource_config:
         image_tag: "telegraf:latest"
         container_args:
-          command: "/entrypoint.sh telegraf"
+          command: "telegraf"
           environment: [
-            { concat: [ "INFLUXDB_TOKEN=", { get_input: token }] }, 
-            { concat: [ "INFLUXDB_BUCKET=",{ get_input: bucket }  ] },
-            { concat: [ "INFLUXDB_ORG=",  { get_input: org } ] },
-            { concat: [ "TELEGRAF_CONFIG_PATH=", "/config/telegraf.conf" ] }
+            { concat: [ "TELEGRAF_CONFIG_PATH=", "/config/telegraf.conf" ] },
+            { concat: [ "INFLUX_TOKEN=", { get_input: token }] }, 
+            { concat: [ "INFLUX_BUCKET=",{ get_input: bucket }  ] },
+            { concat: [ "INFLUX_ORG=",  { get_input: org } ] },
           ]
           working_dir: { get_attribute: [docker_container_files, storage_dir] }
           volumes: 
           - '/config'
           volumes_mapping: 
-            - { get_attribute: [ docker_container_files, destination ] }
+            -  get_attribute: [ docker_container_files, destination ]
           host_config:
             network_mode: "container:influxdb"
+            privileged: True
           detach: True
     relationships:
       - type: cloudify.relationships.depends_on
@@ -184,10 +206,15 @@ node_templates:
         target: docker_influxdb_container
 
 outputs:
+
   docker_endpoint:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ { get_attribute: [ infra_prefix, value ] }, "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
   
+  endpoint:
+    description: Influxdb endpoint
+    value: { concat: [ "http://", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8086' ] }
+
   influxdb_password:
     description: Influxdb password
     value: { get_attribute: [ password_generator, master_password ] }
@@ -203,7 +230,3 @@ outputs:
   influxdb_org:
     description: Influxdb org
     value: { get_input: org }
-
-  endpoint:
-    description: Influxdb endpoint
-    value: { concat: [ "http://", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8086' ] }

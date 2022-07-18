@@ -1,0 +1,82 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: >
+  This blueprint creates an AWS infrastructure environment.
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-aws-plugin
+
+inputs:
+
+  security_group_id:
+    type: string
+
+  vpc_id:
+    type: string
+    
+  aws_region_name:
+      type: string
+      default: 'us-east-1'
+      constraints:
+        - valid_values:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+            - us-west-2
+            - eu-central-1
+            - eu-west-1
+            - eu-west-2
+            - eu-south-1
+            - eu-west-3
+            - eu-north-1
+            - af-south-1
+            - ap-east-1
+            - ap-south-1
+            - ap-northeast-3
+            - ap-northeast-2
+            - ap-southeast-1
+            - ap-southeast-2
+            - ap-northeast-1
+            - ca-central-1
+            - cn-north-1
+            - cn-northwest-1
+            - me-south-1
+            - sa-east-1
+    
+
+dsl_definitions:
+
+  client_config: &client_config
+    aws_access_key_id: { get_secret: aws_access_key_id }
+    aws_secret_access_key: { get_secret: aws_secret_access_key }
+    region_name: { get_input: aws_region_name }
+
+node_templates:
+
+  security_group_rules:
+    type: cloudify.nodes.aws.ec2.SecurityGroupRuleIngress
+    properties:
+      client_config: *client_config
+      resource_config:
+        IpPermissions:
+        - IpProtocol: tcp
+          FromPort: 6379
+          ToPort: 6379
+          IpRanges:
+          - CidrIp: 0.0.0.0/0
+    relationships:
+    - type: cloudify.relationships.contained_in
+      target: security_group
+
+  security_group:
+    type: cloudify.nodes.aws.ec2.SecurityGroup
+    properties:
+      client_config: *client_config
+      use_external_resource: true
+      resource_id: { get_input: security_group_id }
+      resource_config:
+        GroupName: CloudifyGettingStartedExample
+        Description: Created by cloudify-getting-started-example.
+        VpcId: { get_input: vpc_id }
+
