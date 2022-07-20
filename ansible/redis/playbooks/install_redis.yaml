@@ -1,0 +1,24 @@
+- hosts: all
+  become: true
+  tasks:
+  
+    - name: Activate the epel-release repository
+      ansible.builtin.yum:
+        name: epel-release
+        state: present
+
+    - name: Install Redis
+      ansible.builtin.yum:
+        name: redis
+        state: present
+    
+    - name: Add home page with message
+      ansible.builtin.template:
+        src: templates/redis.conf.j2
+        dest: /etc/redis.conf
+
+    - name: Ensure Redis is started
+      ansible.builtin.service:
+        name: redis
+        state: started
+        enabled: true
