@@ -35,6 +35,11 @@ inputs:
     description: The blueprint name, the deployment name.
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
+  website_message:
+    type: string
+    description: A message to display on the home page of the deployed web server
+    default: Welcome to Redis, deployed by Cloudify
+
 node_templates:
 
   # we creating the password for RabbitMQ admin/master user
@@ -70,7 +75,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
   
-  # we setting the mariadb port to be open
+  # we setting the grafana port to be open
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -89,9 +94,9 @@ node_templates:
         target: infrastructure
 
   # deployment of the service is made by ansible plugin which run the code 
-  # inside the 'install_mariadb.yaml' playbook
+  # inside the 'install_grafana.yaml' playbook
   # we enter the master_password value as playbook variable
-  mariadb:
+  grafana:
     type: cloudify.nodes.ansible.Playbook
     interfaces:
       cloudify.interfaces.lifecycle:
@@ -103,7 +108,7 @@ node_templates:
           cloudify.interfaces.relationship_lifecycle:
             establish:
               inputs:
-                playbook_path: playbooks/install_mariadb.yaml
+                playbook_path: playbooks/install_grafana.yaml
                 sources:
                   instances:
                     hosts:
@@ -119,18 +124,18 @@ node_templates:
 
 outputs:
 
-  mariadb_endpoint:
-    description: MariaDB Host IP
+  grafana_endpoint:
+    description: Grafana Host IP
     value: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
   
-  mariadb_port:
-    description: MariaDB Port
-    value: "3306"
+  grafana_port:
+    description: Grafana Port
+    value: "3000"
 
   master_password:
-    description: Mariadb Master password
+    description: Grafana Master password
     value: { get_attribute: [ master_password, master_password ] }
   
-  master_login_command:
+  master_login:
     description: Connection to mongo server by mysql client
-    value: { concat : [ "mysql -h ", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, " -u root -p ", { get_attribute: [ master_password, master_password ] } ] }
+    value: admin
