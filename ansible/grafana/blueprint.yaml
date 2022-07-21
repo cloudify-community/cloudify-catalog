@@ -126,11 +126,7 @@ outputs:
 
   grafana_endpoint:
     description: Grafana Host IP
-    value: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
-  
-  grafana_port:
-    description: Grafana Port
-    value: "3000"
+    value: { concat: [ "http://", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ":3000" ] }
 
   master_password:
     description: Grafana Master password
