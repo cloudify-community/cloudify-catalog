@@ -14,10 +14,6 @@ inputs:
     description: The user name to create database for
     default: cloudify
 
-  db_name: 
-    description: The database name to create
-    default: cloudify
-
   infra_name:
     description: >
       Name of infrastructure blueprint to deploy.
@@ -50,7 +46,7 @@ inputs:
 
 node_templates:
 
-  # we creating the password for postgres admin/master user
+  # we creating the password for RabbitMQ admin/master user
   master_password:
     type: cloudify.nodes.Root
     interfaces:
@@ -59,15 +55,6 @@ node_templates:
           executor: central_deployment_agent
           implementation: scripts/generate-password.sh
 
-  #set the password for the user of the cloudify database
-  user_password:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
-  
   #we creating the prefix for the deployment resources i.e. infrastructure
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
@@ -92,7 +79,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
   
-  # we setting the postgres port to be open
+  # we setting the mariadb port to be open
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -111,10 +98,9 @@ node_templates:
         target: infrastructure
 
   # deployment of the service is made by ansible plugin which run the code 
-  # inside the 'install_postgres.yaml' playbook
-  # we enter few variables to the run_data dict in order to use them
-  # as the playbook variables
-  mongodb:
+  # inside the 'install_mariadb.yaml' playbook
+  # we enter the master_password value as playbook variable
+  mariadb:
     type: cloudify.nodes.ansible.Playbook
     interfaces:
       cloudify.interfaces.lifecycle:
@@ -126,7 +112,7 @@ node_templates:
           cloudify.interfaces.relationship_lifecycle:
             establish:
               inputs:
-                playbook_path: playbooks/install_mongodb.yaml
+                playbook_path: playbooks/install_mariadb.yaml
                 sources:
                   instances:
                     hosts:
@@ -138,34 +124,22 @@ node_templates:
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
                 run_data:
                   master_password: { get_attribute: [ master_password, master_password ] }
-                  user_password: { get_attribute: [ user_password, master_password ] }
-                  user_name: { get_input: user_name }
-                  db_name: { get_input: db_name }
-                  
+
 
 outputs:
 
-  mongodb_endpoint:
-    description: MongoDB Host IP
+  mariadb_endpoint:
+    description: MariaDB Host IP
     value: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
   
-  mongodb_port:
-    description: MongoDB Port
-    value: "27017"
+  mariadb_port:
+    description: MariaDB Port
+    value: "3306"
 
   master_password:
-    description: MongoDB Master password
+    description: Mariadb Master password
     value: { get_attribute: [ master_password, master_password ] }
   
-  user_password:
-    description: MongoDB Master password
-    value: { get_attribute: [ user_password, master_password ] }
-  
   master_login_command:
-    description: Connection to mongo server by mongo client
-    value: { concat : [ "mongo -h ", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] },"/admin", "-u admin -p", { get_attribute: [ master_password, master_password ] } ] }
-
-  user_login_command:
-    description: Connection to mongo server by mongo client
-    value: { concat : [ "mongo -h ", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] },"/", { get_input: db_name }, "-u", { get_input: user_name }, "-p", { get_attribute: [ user_password, master_password ] } ] }
-  
+    description: Connection to mongo server by mysql client
+    value: { concat : [ "mysql -h ", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, " -u root -p ", { get_attribute: [ master_password, master_password ] } ] }
