@@ -7,7 +7,6 @@
     - mysql_app_user: "{{ pb_appuser }}"
     - mysql_app_user_password: "{{ pb_appuser_password }}" 
     - mysql_repo_url: http://repo.mysql.com/mysql80-community-release-el7.rpm
- 
 
   tasks:
     - name: Enable MySQL Community Repository - CentOS
