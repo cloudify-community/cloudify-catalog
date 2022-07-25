@@ -1,5 +1,5 @@
 
-- hosts: localhost
+- hosts: all
   become: true
   tasks:
 
@@ -23,7 +23,7 @@
       become_user: kafka
 
     - name: Copy server properties
-      ansible.bultin.copy:
+      ansible.builtin.copy:
         src: config/server.properties
         dest: ~/kafka/config/server.properties
       become_user: kafka
@@ -36,14 +36,8 @@
     - name: Copy zookeeper service
       ansible.builtin.copy:
         src: services/kafka.service
-        dest: /etc/systemd/system/kafka.services
-    
-    - name: Ensure Zookeper started
-      ansible.builtin.service:
-        name: zookeeper
-        state: started
-        enabled: true
-    
+        dest: /etc/systemd/system/kafka.service
+        
     - name: Ensure Kafka started
       ansible.builtin.service:
         name: kafka

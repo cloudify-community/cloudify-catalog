@@ -49,13 +49,13 @@ node_templates:
       predefined_value: ""
 
   #generating the password for the wordpress sql client
-  master_password:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+  # master_password:
+  #   type: cloudify.nodes.Root
+  #   interfaces:
+  #     cloudify.interfaces.lifecycle:
+  #       create:
+  #         executor: central_deployment_agent
+  #         implementation: scripts/generate-password.sh
 
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
@@ -95,7 +95,7 @@ node_templates:
 
   # deployment of the service is made by ansible plugin which run the code 
   # inside the 'install_wordpress.yaml' playbook
-  wordpress:
+  kafka:
     type: cloudify.nodes.ansible.Playbook
     interfaces:
       cloudify.interfaces.lifecycle:
@@ -117,8 +117,8 @@ node_templates:
                         ansible_ssh_private_key_file:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
                         ansible_become: true
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
-                run_data:
-                  master_password: { get_attribute: [ master_password, master_password ] }
+                # run_data:
+                #   master_password: { get_attribute: [ master_password, master_password ] }
 
 outputs:
 
