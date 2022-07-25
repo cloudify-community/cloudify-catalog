@@ -78,7 +78,7 @@ inputs:
     description: >
        Name of Virtual Machine Size in Azure.
     type: string
-    default: Standard_B1s
+    default: Standard_B4ms
     constraints:
       - valid_values:
           - Standard_B1s
