@@ -28,6 +28,9 @@ pipeline{
               - name: dshm
                 emptyDir:
                   medium: Memory
+              - name: shared-data-volume
+                peristentVolumeClaim:
+                  claimName: shared-data
             containers:
               - name: jnlp
                 image: jenkins/inbound-agent:4.3-4
@@ -44,6 +47,9 @@ pipeline{
                   limits:
                     cpu: 1
                     memory: 1Gi
+                volumeMounts:
+                  - mountPath: /tmp/data
+                    name: shared-data-volume
                 command:
                 - cat
                 tty: true
@@ -53,8 +59,10 @@ pipeline{
               - name: cloudify
                 image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
                 volumeMounts:
-                - mountPath: /dev/shm
-                  name: dshm
+                  - mountPath: /dev/shm
+                    name: dshm
+                  - mountPath: /tmp/data
+                    name: shared-data-volume
                 command:
                 - cat
                 tty: true
@@ -94,6 +102,8 @@ pipeline{
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1" 
     TEST_CASE = "${params.TEST_CASE}"
+    TEST_RESULT_DIR = "/tmp/data"
+    TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/nosetests.xml"
   }
   stages{
     stage('prepare'){
@@ -103,7 +113,6 @@ pipeline{
           container('cloudify'){
             dir("${env.WORKSPACE}/${env.PROJECT}"){
               common = load "common.groovy"
-              
             }
           }
         }
@@ -133,52 +142,6 @@ pipeline{
         }
       }
     }
-    stage('build'){
-      steps{
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-              python catalog.py
-            """
-          }
-        }
-      }
-    }
-    stage('validate_built_catalogs'){
-      steps{
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-              python catalog_linter.py
-            """
-          }
-        }
-      }
-    }
-    stage('upload_artifacts'){
-      steps{
-        withCredentials([
-              usernamePassword(
-                  credentialsId: 'aws-cli', 
-                  usernameVariable: 'ID', 
-                  passwordVariable: 'SECRET'
-                  )]) {
-              container('python'){
-                dir("${env.WORKSPACE}/${env.PROJECT}"){
-                  setupGithubSSHKey()
-                  sh '''
-                    export ID="$ID"
-                    export SECRET="$SECRET"
-                    python upload_artifacts.py 
-                  '''
-                }
-              }
-          }
-      }
-    }
-
     stage('deploy_cloudify_manager') {
       when { expression { params.TEST_BLUEPRINTS } }
       steps {
@@ -215,11 +178,69 @@ pipeline{
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
                   common.testBlueprints()
-                  }
                 }
             }
             // If we reach here that means all of the above passed
             buildState = 'SUCCESS'
+          }
+        }
+      }
+    }
+    }
+    stage('download_test_artifacts'){
+      steps{
+        script{
+          container('cloudify'){
+             dir("${env.WORKSPACE}/${env.PROJECT}") {
+              echo 'Copy artifacts'
+              common.downloadTestReport("/home/centos/nosetests.xml", "${env.TEST_RESULT_PATH}")
+            }
+          }
+        }
+      }
+    }
+    stage('build'){
+      steps{
+        container('python'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            setupGithubSSHKey()
+            sh """
+            export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+            python catalog.py
+            """
+          }
+        }
+      }
+    }
+    stage('validate_built_catalogs'){
+      steps{
+        container('python'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            setupGithubSSHKey()
+            sh """
+              python catalog_linter.py
+            """
+          }
+        }
+      }
+    }
+    stage('upload_artifacts'){
+      steps{
+        withCredentials([
+              usernamePassword(
+                  credentialsId: 'aws-cli', 
+                  usernameVariable: 'ID', 
+                  passwordVariable: 'SECRET'
+                  )]) {
+              container('python'){
+                dir("${env.WORKSPACE}/${env.PROJECT}"){
+                  setupGithubSSHKey()
+                  sh '''
+                    export ID="$ID"
+                    export SECRET="$SECRET"
+                    python upload_artifacts.py 
+                  '''
+            }
           }
         }
       }
