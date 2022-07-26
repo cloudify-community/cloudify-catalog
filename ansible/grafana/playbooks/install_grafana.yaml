@@ -1,0 +1,25 @@
+- hosts: all
+  become: true
+  tasks:
+
+    - name: Download grafana RPM
+      ansible.builtin.yum:
+        name: https://dl.grafana.com/enterprise/release/grafana-enterprise-9.0.4-1.x86_64.rpm
+        state: present
+        validate_certs: no
+
+    - name: Daemon reload
+      shell: |
+        systemctl daemon-reload
+    
+    - name: Start Grafana server
+      ansible.builtin.service:
+        name: grafana-server
+        state: started
+        enabled: true
+
+    - name: Set admin pwd
+      shell: |
+        grafana-cli admin reset-admin-password "{{ master_password }}"
+
+

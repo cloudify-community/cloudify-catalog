@@ -1,0 +1,10 @@
+use {{ db_name }};
+db.createUser({
+      user: "{{ user_name }}",
+      pwd: "{{ user_password }}",
+      roles: [
+                { role: "userAdmin", db: "{{ db_name }}" },
+                { role: "dbAdmin",   db: "{{ db_name }}" },
+                { role: "readWrite", db: "{{ db_name }}" }
+             ]
+  });

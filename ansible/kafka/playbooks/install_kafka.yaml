@@ -1,0 +1,55 @@
+
+- hosts: all
+  become: true
+  tasks:
+
+    - name: Installing java
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+        - epel-release
+        - java-devel
+
+    - name: Add kafka user
+      ansible.builtin.user:
+        name: kafka
+        group: wheel
+        state: present
+        password: {{ master_password }}
+        
+    - name: Download kafka tar
+      ansible.builtin.get_url:
+        url: https://downloads.apache.org/kafka/3.2.0/kafka_2.12-3.2.0.tgz
+        dest: ~/kafka.tgz
+      become_user: kafka
+
+    - name: Create kafka dir
+      shell: |
+        mkdir ~/kafka && cd ~/kafka
+        cd ~/kafka && tar -xvzf ~/kafka.tgz --strip 1
+      become_user: kafka
+
+    - name: Copy server properties
+      ansible.builtin.copy:
+        src: config/server.properties
+        dest: ~/kafka/config/server.properties
+      become_user: kafka
+
+    - name: Copy zookeeper service
+      ansible.builtin.copy:
+        src: services/zookeeper.service
+        dest: /etc/systemd/system/zookeeper.service
+    
+    - name: Copy zookeeper service
+      ansible.builtin.copy:
+        src: services/kafka.service
+        dest: /etc/systemd/system/kafka.service
+        
+    - name: Ensure Kafka started
+      ansible.builtin.service:
+        name: kafka
+        state: started
+        enabled: true
+    

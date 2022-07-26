@@ -1,0 +1,73 @@
+- hosts: all
+  become: true
+  tasks:
+  
+    - name: Installing httpd & mariadb
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+        - https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        - http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+        - yum-utils
+        - httpd
+        - mariadb-server
+
+    - name: Enable php 5.6.*
+      shell: |
+        yum-config-manager --enable remi-php56
+
+    - name: Installing php 5.6.*
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+        - php
+        - php-mysql
+        - php-gd
+
+    - name: Ensure httpd started
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Ensure mariadb started
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: true
+
+    - name: Download & extract wordpress
+      ansible.builtin.unarchive:
+        src: https://wordpress.org/latest.tar.gz
+        dest: /tmp
+        remote_src: yes
+
+    - name: Transfer wordpress to apache
+      shell: |
+        rsync -avP /tmp/wordpress/ /var/www/html/
+        mdkir /var/www/html/wp-content/uploads
+        chown -R apache:apache /var/www/html/*
+    
+    - name: Copy wordpress user creation SQL script
+      ansible.builtin.template:
+        src: templates/create-wordpress-user.sql.j2
+        dest: /tmp/create-wordpress-user.sql
+
+    - name: Configure mariadb
+      shell: |
+        mysql < /tmp/create-wordpress-user.sql
+
+    - name: Copy wp-config PHP file
+      ansible.builtin.template:
+        src: templates/wp-config.php.j2
+        dest: /var/www/html/wp-config.php
+
+    - name: Restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+        enabled: true
