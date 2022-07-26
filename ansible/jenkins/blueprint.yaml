@@ -91,7 +91,6 @@ node_templates:
                         ansible_become: True
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
 
-
 capabilities:
 
   application_endpoint:

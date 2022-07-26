@@ -48,14 +48,14 @@ node_templates:
     properties:
       predefined_value: ""
 
-  #generating the password for the wordpress sql client
-  # master_password:
-  #   type: cloudify.nodes.Root
-  #   interfaces:
-  #     cloudify.interfaces.lifecycle:
-  #       create:
-  #         executor: central_deployment_agent
-  #         implementation: scripts/generate-password.sh
+  #generating the password for the kakfa user
+  master_password:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          executor: central_deployment_agent
+          implementation: scripts/generate-password.sh
 
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
@@ -75,7 +75,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
   
-  # # we setting the wordpress port to be open
+  # # we setting the kafka port to be open
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -94,7 +94,7 @@ node_templates:
         target: infrastructure
 
   # deployment of the service is made by ansible plugin which run the code 
-  # inside the 'install_wordpress.yaml' playbook
+  # inside the 'install_kafka.yaml' playbook
   kafka:
     type: cloudify.nodes.ansible.Playbook
     interfaces:
@@ -117,11 +117,20 @@ node_templates:
                         ansible_ssh_private_key_file:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
                         ansible_become: true
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
-                # run_data:
-                #   master_password: { get_attribute: [ master_password, master_password ] }
+                run_data:
+                   master_password: { get_attribute: [ master_password, master_password ] }
 
 outputs:
 
-  kafka_endpoint:
+  kafka_ip:
     description: Kafka Endpoint
-    value: { concat : [ "http://", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] } ] }
+    value: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+
+  kafka_port: 
+    description: Kafka port
+    value: 9092
+  
+  kafka_user_pwd:
+    description: Kafka user pwd
+    value: { get_attribute: [ master_password, master_password ] }
+  

@@ -3,13 +3,22 @@
   become: true
   tasks:
 
+    - name: Installing java
+      ansible.builtin.yum:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+        - epel-release
+        - java-devel
+
     - name: Add kafka user
       ansible.builtin.user:
         name: kafka
         group: wheel
         state: present
-        password: "P@ssw0rd"
-
+        password: {{ master_password }}
+        
     - name: Download kafka tar
       ansible.builtin.get_url:
         url: https://downloads.apache.org/kafka/3.2.0/kafka_2.12-3.2.0.tgz
