@@ -3,6 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin
+  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
