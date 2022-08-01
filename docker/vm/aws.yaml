@@ -61,7 +61,7 @@ inputs:
     type: string
     default: agent_key
 
-  env_name:
+  resource_prefix:
     type: string
     description: Control parameters for names in resources.
     default: 'example'
@@ -115,7 +115,7 @@ node_templates:
             - ResourceType: instance
               Tags:
                 - Key: Name
-                  Value: { get_input: env_name }
+                  Value: { get_input: resource_prefix }
       use_public_ip: true
       cloudify_tagging: true
     relationships:
