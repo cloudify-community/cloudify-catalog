@@ -7,4 +7,3 @@ fi
 if [ -f /etc/lsb-release ]; then
   apt-get remove -y docker
 fi
-© 2022 GitHub, Inc.

@@ -1,0 +1,108 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: Installs Jenkins with Ansible on AWS/Azure environments.
+
+imports:
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-ansible-plugin
+
+inputs:
+
+  infra_name:
+    description: >
+      Name of infrastructure blueprint to deploy.
+    type: string
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+
+  infra_archive:
+    description: >
+      URL of infra zip file.
+    type: string
+    default: 'infra.zip'
+
+  infra_exists:
+    description: >
+      Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
+    default: false
+
+  infra_deployment_id:
+    description: The blueprint name, the deployment name.
+    default: { concat: [ 'infra-', { get_input: infra_name } ] }
+
+node_templates:
+
+# Generate a unique prefix to append to the infrastructure VM deployment
+  infra_prefix:
+    type: eaas.nodes.UniquePrefixGenerator
+    properties:
+      predefined_value: ""
+
+# Deploy the chosen infrastructure VM
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: { get_input: infra_exists }
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
+
+# Install Jenkins using Ansible playbook, on the newly created VM.
+  jenkins_app:
+    type: cloudify.nodes.ansible.Playbook
+    properties:
+      playbook_path: playbooks/install_jenkins.yaml
+      ansible_env_vars:
+        ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED: "False"
+        ANSIBLE_HOST_KEY_CHECKING: "False"
+        ANSIBLE_STDOUT_CALLBACK: dense
+      store_facts: false
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create: {}
+        configure: {}
+        poststart: {}
+    relationships:
+      - type: cloudify.ansible.relationships.run_on_host
+        target: infrastructure
+        source_interfaces:
+          cloudify.interfaces.relationship_lifecycle:
+            establish:
+              inputs:
+                log_stdout: false
+                store_facts: false
+                sources:
+                  instances:
+                    hosts:
+                      instance:
+                        ansible_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+                        ansible_user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user] }
+                        ansible_ssh_private_key_file: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content] }
+                        ansible_become: True
+                        ansible_ssh_common_args: -o StrictHostKeyChecking=no
+
+capabilities:
+
+  application_endpoint:
+    description: The external endpoint of the application.
+    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8080' ] }
+
+  jenkins_endpoint:
+    description: application endpoint
+    value: { concat: [ { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8080' ] }
+
+
+  
+
+
+

@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  cassandra:
+    image: docker.io/bitnami/cassandra:latest
+    ports:
+      - '7000:7000'
+      - '9042:9042'
+    healthcheck:
+      test: [ "CMD", "/opt/bitnami/cassandra/bin/cqlsh", "-u cassandra", "-p {{ master_password }}" ,"-e \"describe keyspaces\"" ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+    environment:
+      - CASSANDRA_SEEDS=cassandra
+      - CASSANDRA_PASSWORD_SEEDER=yes
+      - CASSANDRA_PASSWORD={{ master_password }}
+volumes:
+  cassandra_data:
+    driver: local

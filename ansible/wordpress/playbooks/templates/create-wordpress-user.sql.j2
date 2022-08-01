@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS wordpress;
+CREATE USER wordpress@localhost IDENTIFIED BY '{{ master_password }}';
+GRANT ALL PRIVILEGES ON wordpress.* TO wordpress@localhost IDENTIFIED BY '{{ master_password }}';
+FLUSH PRIVILEGES;
