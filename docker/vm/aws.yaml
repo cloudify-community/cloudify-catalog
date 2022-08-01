@@ -301,6 +301,10 @@ capabilities:
     description: VPC resource ID.
     value: { get_attribute: [ vpc, aws_resource_id ] }
 
+  vm_id: 
+    description: VM resource ID.
+    value: { get_attribute: [ vm, aws_resource_id ] }
+
 groups:
 
   scalable_compute:
