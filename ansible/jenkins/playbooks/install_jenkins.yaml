@@ -1,0 +1,38 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Ensure Jenkins repository is added 
+      yum_repository:
+        name: jenkins
+        description: Jenkins-stable
+        baseurl: https://pkg.jenkins.io/redhat-stable
+        gpgkey: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+        gpgcheck: yes
+
+    - name: downloading jenkins key. Skip validating certs so that install doesnt fail due to certs.
+      rpm_key:
+        key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+        validate_certs: no 
+        state: present
+
+    - name: updating yum
+      yum:
+        name: yum
+        state: latest
+ 
+    - name: installing openjdk software
+      yum:
+        name: "java-1.8.0-openjdk-devel"
+        state: present
+
+    - name: Install jenkins
+      yum:
+        name: jenkins
+        state: present
+
+    - name: start the service 
+      service:
+        name: jenkins
+        state: started
