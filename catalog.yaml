@@ -171,6 +171,11 @@ topics:
         path: aws/ec2_spot_instances
         description: Creating EC2 Spot instance
 
+      - id: EC2_CloudFormation
+        name: EC2_CloudFormation
+        path: aws/aws/cloudformation
+        description: Creating EC2 and netowrking (VPC, Subnet, SecurityGroup, InternetGroup etc.)
+
       - id: ECS
         name: ECS-AWS-CFY
         path: aws/ecs
