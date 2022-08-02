@@ -171,6 +171,11 @@ topics:
         path: aws/ec2_spot_instances
         description: Creating EC2 Spot instance
 
+      - id: EC2_CloudFormation
+        name: EC2_CloudFormation
+        path: aws/cloudformation
+        description: Creating EC2 and netowrking (VPC, Subnet, SecurityGroup, InternetGroup etc.)
+
       - id: ECS
         name: ECS-AWS-CFY
         path: aws/ecs
@@ -770,6 +775,11 @@ topics:
         name: VM-Centos-vSphere-CFY
         path: vsphere/vm
         description: Create vSphere VM
+
+      - id: vcloud_vm
+        name: VM-vCloud-CFY
+        path: vcloud/vm
+        description: Create vCloud VM
 
   - name: ansible_services
     target_path: s3_json_file
