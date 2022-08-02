@@ -173,7 +173,7 @@ topics:
 
       - id: EC2_CloudFormation
         name: EC2_CloudFormation
-        path: aws/aws/cloudformation
+        path: aws/cloudformation
         description: Creating EC2 and netowrking (VPC, Subnet, SecurityGroup, InternetGroup etc.)
 
       - id: ECS
