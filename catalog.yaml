@@ -776,6 +776,11 @@ topics:
         path: vsphere/vm
         description: Create vSphere VM
 
+      - id: vcloud_vm
+        name: VM-vCloud-CFY
+        path: vcloud/vm
+        description: Create vCloud VM
+
   - name: ansible_services
     target_path: s3_json_file
     blueprints:
