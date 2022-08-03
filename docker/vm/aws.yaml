@@ -304,6 +304,10 @@ capabilities:
   vm_id: 
     description: VM resource ID.
     value: { get_attribute: [ vm, aws_resource_id ] }
+  
+  rg_id: 
+    description: Mock resource group id - to be compatible with Azure VM template
+    value: 'mocked_resource_group_id'
 
 groups:
 

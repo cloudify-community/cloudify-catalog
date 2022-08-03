@@ -340,3 +340,6 @@ capabilities:
   vm_id:
     description: Name of the VM
     value: { concat: [ { get_input: resource_prefix }, vm, { get_input: resource_suffix } ] }
+  rg_id:
+    description: Name of the resource group
+    value: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
