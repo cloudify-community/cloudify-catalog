@@ -123,7 +123,7 @@ node_templates:
           inputs:
             script_path: scripts/install_docker.sh
             fabric_env: &fabric_env
-              host_string: { get_attribute: [ ip, aws_resource_id ] }
+              host_string: { get_attribute: [ vm, public_ip ] }
               user: { get_input: agent_user }
               key: { get_attribute: [agent_key, private_key_export] }
             use_sudo: true
