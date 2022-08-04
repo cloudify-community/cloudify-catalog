@@ -34,48 +34,43 @@ inputs:
     description: The blueprint name, the deployment name.
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
-  website_message:
-    type: string
-    description: A message to display on the home page of the deployed web server
-    default: Welcome to Redis, deployed by Cloudify
-
 node_templates:
      
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
-      predefined_value: "lhidvo"
+      predefined_value: ""
 
-  # infrastructure:
-  #   type: cloudify.nodes.Component
-  #   properties:
-  #     resource_config:
-  #       blueprint:
-  #         blueprint_archive: { get_input: infra_archive }
-  #         main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
-  #         external_resource: { get_input: infra_exists }
-  #       deployment:
-  #         id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
-  #   relationships:
-  #     - type: cloudify.relationships.depends_on
-  #       target: infra_prefix
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: { get_input: infra_exists }
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
   
-  # secrurity_group_rules:
-  #   type: cloudify.nodes.Component
-  #   properties:
-  #     resource_config:
-  #       blueprint:
-  #         blueprint_archive: "security_group.zip"
-  #         main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
-  #         external_resource: false
-  #       deployment:
-  #         id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
-  #         inputs:
-  #           vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-  #           security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
-  #   relationships:
-  #     - type: cloudify.relationships.depends_on
-  #       target: infrastructure
+  secrurity_group_rules:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: "security_group.zip"
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: false
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
+          inputs:
+            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
+            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
 
   prometheus:
     type: cloudify.nodes.Root
@@ -94,9 +89,9 @@ node_templates:
                     ansible_ssh_private_key_file:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
                     ansible_become: true
                     ansible_ssh_common_args: -o StrictHostKeyChecking=no
-    # relationships:
-    #   - type: cloudify.relationships.depends_on
-    #     target: infrastructure
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
 
 outputs:
 

@@ -35,11 +35,6 @@ inputs:
     description: The blueprint name, the deployment name.
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
-  website_message:
-    type: string
-    description: A message to display on the home page of the deployed web server
-    default: Welcome to Redis, deployed by Cloudify
-
 node_templates:
 
   # we creating the password for postgres admin/master user
