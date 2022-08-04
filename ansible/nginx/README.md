@@ -4,7 +4,7 @@
 
 The blueprint creates Nginx service with the Ansible plugin in the AWS/Azure cloud provider environment.
 
-## Requirmennts
+## Requirements
 
 In order to run successfully the blueprint you'll need AWS access key id and aceess secret key. The credentials to the AWS/Azure should have permission to describe, update, delete and created Virtual Machine.
 
@@ -35,10 +35,10 @@ The blueprint uses secrets to connect to Azure, you need to connfigure them prio
 
 ## Inputs
 
-| Display Laebel                                                                                      | Name                | Type   | Default Value       |
+| Display Label                                                                                      | Name                | Type   | Default Value       |
 | --------------------------------------------------------------------------------------------------- | ------------------- | ------ | ------------------- |
 | Name of infrastructure blueprint to deploy.                                                         | infra_name          | string | aws                 |
-| URL of infra zip file.                                                                              | infra_archive       | string | 'infra.zip'         |
+| URL of infra zip file.                                                                              | infra_archive       | string | https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip         |
 | Whether a getting started infrastructure blueprint has already been uploaded to the manager or not. | infra_exists        | string | false               |
 | The blueprint name, the deployment name.                                                            | infra_deployment_id | string | 'infra-{infra_name} |
 
@@ -49,9 +49,14 @@ The blueprint uses secrets to connect to Azure, you need to connfigure them prio
 The node type is responisble to create a Virtual Machine.
 The type is `cloudify.nodes.Component`. 
 
-## App
-The node type is responsible to create an applicaiton on the Virtual Machine.
-The type us `cloudify.nodes.ansible.Playbook`
+### Security Group Rules
+The node type is responisble to setup security group rules for infrastructure.
+The type is `cloudify.nodes.Component`. 
+
+### Nginx
+The node types is responsible to run the playbook on the Virtual Machine.
+The type is `cloudify.nodes.ansible.Playbook`. 
+
 
 ## Labels
 

@@ -1,10 +1,10 @@
-# Consul Provisioning
+# Cassandra Provisioning
 
 ## General
 
-The blueprint creates Consul service with the Docker plugin in the AWS/Azure cloud provider environment.
+The blueprint creates Cassandra service with the Ansible plugin in the AWS/Azure cloud provider environment.
 
-## Requirmennts
+## Requirements
 
 In order to run successfully the blueprint you'll need AWS access key id and aceess secret key. The credentials to the AWS/Azure should have permission to describe, update, delete and created Virtual Machine.
 
@@ -31,14 +31,14 @@ The blueprint uses secrets to connect to Azure, you need to connfigure them prio
 ## Plugins
 
   - plugin:cloudify-fabric-plugin
-  - plugin:cloudify-docker-plugin
+  - plugin:cloudify-ansible-plugin
 
 ## Inputs
 
-| Display Laebel                                                                                      | Name                | Type   | Default Value       |
+| Display Label                                                                                      | Name                | Type   | Default Value       |
 | --------------------------------------------------------------------------------------------------- | ------------------- | ------ | ------------------- |
 | Name of infrastructure blueprint to deploy.                                                         | infra_name          | string | aws                 |
-| URL of infra zip file.                                                                              | infra_archive       | string | 'infra.zip'         |
+| URL of infra zip file.                                                                              | infra_archive       | string | https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip         |
 | Whether a getting started infrastructure blueprint has already been uploaded to the manager or not. | infra_exists        | string | false               |
 | The blueprint name, the deployment name.                                                            | infra_deployment_id | string | 'infra-{infra_name} |
 
@@ -49,13 +49,13 @@ The blueprint uses secrets to connect to Azure, you need to connfigure them prio
 The node type is responisble to create a Virtual Machine.
 The type is `cloudify.nodes.Component`. 
 
-### Docker
-The node type is responisble to install Docker on the VM.
-The type is `cloudify.nodes.ApplicationServer`. 
+### Security Group Rules
+The node type is responisble to setup security group rules for infrastructure.
+The type is `cloudify.nodes.Component`. 
 
-### Docker Container
-the node type is responisble to deploy container on the VM.
-The type is `cloudify.nodes.docker.container`. 
+### Cassandra
+The node types is responsible to run the playbook on the Virtual Machine.
+The type is `cloudify.nodes.ansible.Playbook`. 
 
 ## Labels
 
