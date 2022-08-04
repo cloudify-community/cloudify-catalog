@@ -6,16 +6,8 @@ description: >
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
-  - plugin:cloudify-terraform-plugin?version= >=0.15.0
 
 inputs:
-
-  vm_id:
-    type: string
-  
-  disk_size:
-    default: "30"
-    type: string
 
   security_group_id:
     type: string
@@ -69,8 +61,8 @@ node_templates:
       resource_config:
         IpPermissions:
         - IpProtocol: tcp
-          FromPort: 3306
-          ToPort: 3306
+          FromPort: 8200
+          ToPort: 8200
           IpRanges:
           - CidrIp: 0.0.0.0/0
     relationships:
@@ -87,27 +79,3 @@ node_templates:
         GroupName: CloudifyGettingStartedExample
         Description: Created by cloudify-getting-started-example.
         VpcId: { get_input: vpc_id }
-  
-  terraform:
-    type: cloudify.nodes.terraform
-    properties:
-      resource_config:
-        installation_source: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip
-
-  terraform_module:
-    type: cloudify.nodes.terraform.Module
-    properties:
-      resource_config:
-        environment_variables:
-          AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
-          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
-        variables:
-          vm_id: { get_input: vm_id }
-          disk_size: { get_input: disk_size }
-          region: { get_input: aws_region_name }
-        source:
-          location: templates/tf-disk-master.zip
-        source_path: tf-disk-master
-    relationships:
-      - target: terraform
-        type: cloudify.terraform.relationships.run_on_host

@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 description: Installs MySQL with Ansible on AWS/Azure environments.
 
@@ -64,12 +64,14 @@ node_templates:
           external_resource: { get_input: infra_exists }
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+          inputs: 
+            resource_prefix: { get_attribute: [ infra_prefix, value ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
   
-  # we setting the mariadb port to be open
-  secrurity_group_rules:
+  # we setting the mysql port to be open
+  security_group_rules:
     type: cloudify.nodes.Component
     properties:
       resource_config:
@@ -80,6 +82,7 @@ node_templates:
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
+            vm_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vm_id ] }
             vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
             security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
     relationships:
@@ -101,6 +104,8 @@ node_templates:
         configure: {}
         poststart: {}
     relationships:
+      - type: cloudify.relationships.depends_on
+        target: security_group_rules
       - type: cloudify.ansible.relationships.run_on_host
         target: infrastructure
         source_interfaces:
