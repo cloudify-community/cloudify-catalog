@@ -3,6 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin
+  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
@@ -78,7 +79,7 @@ inputs:
     description: >
        Name of Virtual Machine Size in Azure.
     type: string
-    default: Standard_B1s
+    default: Standard_B4ms
     constraints:
       - valid_values:
           - Standard_B1s
@@ -122,7 +123,7 @@ node_templates:
           inputs:
             script_path: scripts/install_docker.sh
             fabric_env: &fabric_env
-              host_string: { get_attribute: [ ip, aws_resource_id ] }
+              host_string: { get_attribute: [ vm, public_ip ] }
               user: { get_input: agent_user }
               key: { get_attribute: [agent_key, private_key_export] }
             use_sudo: true
@@ -139,6 +140,7 @@ node_templates:
   vm:
     type: cloudify.azure.nodes.compute.VirtualMachine
     properties:
+      name: { concat: [ { get_input: resource_prefix }, vm, { get_input: resource_suffix } ] }
       location: { get_input: location }
       retry_after: { get_input: retry_after }
       os_family: linux
@@ -330,8 +332,14 @@ capabilities:
     description: Private agent key
     value: { get_attribute: [agent_key, private_key_export] }
   security_group_id:
-    Description: Name of the security group 
-    value: {concat : [{get_input: resource_prefix},nsg,{get_input: resource_suffix}]}
+    description: Name of the security group 
+    value: {concat : [ { get_input: resource_prefix},nsg, { get_input: resource_suffix } ] }
   vpc_id:
-    Description: Name of the network
+    description: Name of the network
     value: { concat: [ { get_input: resource_prefix }, vn, { get_input: resource_suffix } ] }
+  vm_id:
+    description: Name of the VM
+    value: { concat: [ { get_input: resource_prefix }, vm, { get_input: resource_suffix } ] }
+  rg_id:
+    description: Name of the resource group
+    value: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }

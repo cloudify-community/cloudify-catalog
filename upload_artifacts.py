@@ -4,6 +4,7 @@ import yaml
 import boto3
 import logging
 
+
 from pygit2 import Repository
 from botocore.exceptions import ClientError
 
@@ -57,18 +58,22 @@ def upload_file(file_name: str, bucket: str, object_name: str = None) -> bool:
         return False
     return True
 
+
 def check_branch(directory: str):
-    for version in ['6.4','6.3','6.2']:
+    for version in ['6.4', '6.3', '6.2']:
         if version in directory:
             return True
     return False
+
 
 def set_target_path(directory: str, root: str, file: str):
     if "catalogs" in root and check_branch(directory):
         target_file = "{}/{}".format(directory, file)
     else:
-        target_file = "{}/{}/{}".format(directory, root[root.find("/")+1:], file)
+        target_file = "{}/{}/{}".format(directory,
+                                        root[root.find("/")+1:], file)
     return target_file
+
 
 def upload_directory(source_directory: str, bucket: str, directory: str):
     """Uploads directories and files in the build to S3
@@ -82,7 +87,7 @@ def upload_directory(source_directory: str, bucket: str, directory: str):
     for root, dirs, files in os.walk(source_directory):
         for file in files:
             target_file = set_target_path(directory, root, file)
-            source_file = "{}/{}".format(root,file)
+            source_file = "{}/{}".format(root, file)
             upload_file(source_file, bucket, target_file)
 
 
@@ -101,8 +106,9 @@ def print_catalogs_urls(build_directory: str, base_url: str, directory: str):
                 target_file = set_target_path(directory, root, file)
                 print("{}/{}".format(base_url, target_file))
 
+
 def set_head():
-    try: 
+    try:
         head = os.environ["GIT_BRANCH"]
         if re.match("^PR-[\\d]{1,4}-(merge|head)$", head):
             # it means that we are on the prs branches
@@ -113,6 +119,7 @@ def set_head():
         print(
             "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
     return head
+
 
 def main():
     with open(CATALOG_FILE_NAME, 'r') as stream:

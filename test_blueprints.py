@@ -15,7 +15,6 @@ def upload_bp(arg):
 
 @attr(type="upload")
 def test_uploads():
-    print(ids)
     for id in ids:
         yield upload_bp, args_upload.get(id)
 

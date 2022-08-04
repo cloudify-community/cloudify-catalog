@@ -42,7 +42,7 @@ inputs:
 
   instance_type:
     type: string
-    default: t2.micro
+    default: t2.medium
     constraints:
       - valid_values:
           - t2.micro
@@ -61,7 +61,7 @@ inputs:
     type: string
     default: agent_key
 
-  env_name:
+  resource_prefix:
     type: string
     description: Control parameters for names in resources.
     default: 'example'
@@ -115,7 +115,7 @@ node_templates:
             - ResourceType: instance
               Tags:
                 - Key: Name
-                  Value: { get_input: env_name }
+                  Value: { get_input: resource_prefix }
       use_public_ip: true
       cloudify_tagging: true
     relationships:
@@ -300,6 +300,14 @@ capabilities:
   vpc_id:
     description: VPC resource ID.
     value: { get_attribute: [ vpc, aws_resource_id ] }
+
+  vm_id: 
+    description: VM resource ID.
+    value: { get_attribute: [ vm, aws_resource_id ] }
+  
+  rg_id: 
+    description: Mock resource group id - to be compatible with Azure VM template
+    value: 'mocked_resource_group_id'
 
 groups:
 
