@@ -806,7 +806,7 @@ topics:
         description: Create Jenkins service using Ansible plugin
 
       - id: kafka_ansible
-        name: Ansible-Kakfa-CFY
+        name: Ansible-Kafka-CFY
         path: ansible/kafka
         description: Create Kafka service using Ansible plugin
 
