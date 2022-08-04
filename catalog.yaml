@@ -789,6 +789,71 @@ topics:
         name: Ansible-Nginx-CFY
         path: ansible/nginx
         description: Create Nginx service using Ansible plugin
+      
+      - id: cassandra_ansible
+        name: Ansible-Cassandra-CFY
+        path: ansible/cassandra
+        description: Create Cassandra service using Ansible plugin
+
+      - id: grafana_ansible
+        name: Ansible-Grafana-CFY
+        path: ansible/grafana
+        description: Create Grafana service using Ansible plugin
+
+      - id: jenkins_ansible
+        name: Ansible-Jenkins-CFY
+        path: ansible/jenkins
+        description: Create Jenkins service using Ansible plugin
+
+      - id: kafka_ansible
+        name: Ansible-Kakfa-CFY
+        path: ansible/kafka
+        description: Create Kafka service using Ansible plugin
+
+      - id: mariadb_ansible
+        name: Ansible-Mariadb-CFY
+        path: ansible/mariadb
+        description: Create MariaDB service using Ansible plugin
+
+      - id: mongodb_ansible
+        name: Ansible-MongoDB-CFY
+        path: ansible/mongodb
+        description: Create MongoDB service using Ansible plugin
+
+      - id: mysql_ansible
+        name: Ansible-MySQL-CFY
+        path: ansible/mysql
+        description: Create MySQL service using Ansible plugin
+      
+      - id: postgresql_ansible
+        name: Ansible-Postgres-CFY
+        path: ansible/postgresql
+        description: Create Postgres service using Ansible plugin
+      
+      - id: prometheus_ansible
+        name: Ansible-Prometheus-CFY
+        path: ansible/prometheus
+        description: Create Prometheus service using Ansible plugin
+      
+      - id: rabbitmq_ansible
+        name: Ansible-Rabbitmq-CFY
+        path: ansible/rabbitmq
+        description: Create RabbitMQ service using Ansible plugin
+
+      - id: redis_ansible
+        name: Ansible-Redis-CFY
+        path: ansible/redis
+        description: Create Redis service using Ansible plugin
+
+      - id: traefik_ansible
+        name: Ansible-Traefik-CFY
+        path: ansible/traefik
+        description: Create Traefik service using Ansible plugin
+
+      - id: wordpress_ansible
+        name: Ansible-Wordpress-CFY
+        path: ansible/wordpress
+        description: Create Wordpress service using Ansible plugin
 
   - name: other_services
     target_path: s3_json_file
