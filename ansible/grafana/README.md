@@ -1,3 +1,4 @@
+
 # Grafana Provisioning
 
 ## General
@@ -56,7 +57,6 @@ The type is `cloudify.nodes.Component`.
 ### Grafana
 The node types is responsible to run the playbook on the Virtual Machine.
 The type is `cloudify.nodes.ansible.Playbook`. 
-
 
 ## Labels
 

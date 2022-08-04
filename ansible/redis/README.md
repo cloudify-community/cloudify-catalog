@@ -39,6 +39,15 @@ The blueprint uses secrets to connect to Azure, you need to connfigure them prio
 | --------------------------------------------------------------------------------------------------- | ------------------- | ------ | ------------------- |
 | Name of infrastructure blueprint to deploy.                                                         | infra_name          | string | aws                 |
 | URL of infra zip file.                                                                              | infra_archive       | string | https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip         |
+=======
+  - plugin:cloudify-docker-plugin
+
+## Inputs
+
+| Display Laebel                                                                                      | Name                | Type   | Default Value       |
+| --------------------------------------------------------------------------------------------------- | ------------------- | ------ | ------------------- |
+| Name of infrastructure blueprint to deploy.                                                         | infra_name          | string | aws                 |
+| URL of infra zip file.                                                                              | infra_archive       | string | 'infra.zip'         |
 | Whether a getting started infrastructure blueprint has already been uploaded to the manager or not. | infra_exists        | string | false               |
 | The blueprint name, the deployment name.                                                            | infra_deployment_id | string | 'infra-{infra_name} |
 

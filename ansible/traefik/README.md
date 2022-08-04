@@ -57,7 +57,6 @@ The type is `cloudify.nodes.Component`.
 The node types is responsible to run the playbook on the Virtual Machine.
 The type is `cloudify.nodes.ansible.Playbook`. 
 
-
 ## Labels
 
 The created deployment will have label `obj-type` equal to `service`
