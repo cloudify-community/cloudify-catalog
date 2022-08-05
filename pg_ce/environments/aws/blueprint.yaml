@@ -2,6 +2,8 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
+  - plugin:cloudify-aws-plugin
+  - plugin:cloudify-utilities-plugin
 
 labels:
   csys-obj-type:
@@ -54,7 +56,46 @@ inputs:
         - ap-northeast-2  #Asia Pacific (Seoul) 
         - ap-southeast-1  #Asia Pacific (Singapore) 
         - ap-southeast-2  #Asia Pacific (Sydney)  
-        - ap-northeast-1  #Asia Pacific (Tokyo) 
+        - ap-northeast-1  #Asia Pacific (Tokyo)
+
+node_templates:
+  key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { concat: ["RSA-", { get_sys: [deployment, id] }] }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          inputs:
+            store_public_key_material: true
+            store_private_key_material: true
+
+  keypair_a:
+    type: cloudify.nodes.aws.ec2.Keypair
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: aws_region_name_a }
+      resource_config:
+        PublicKeyMaterial: { get_attribute: [key, public_key_export] }
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: key 
+  
+  keypair_b:
+    type: cloudify.nodes.aws.ec2.Keypair
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: aws_region_name_b }
+      resource_config:
+        PublicKeyMaterial: { get_attribute: [key, public_key_export] }
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: key 
 
 capabilities:
   cloud_type:
@@ -62,9 +103,10 @@ capabilities:
   cloud_credentials:
     value:
       aws_access_key_id: { get_secret: aws_access_key_id }
-      aws_keypair: { get_secret: aws_keypair }
+      aws_keypair_a: { get_attribute: [keypair_a, aws_resource_id] }
+      aws_keypair_b: { get_attribute: [keypair_b, aws_resource_id] }
       aws_secret_access_key: { get_secret: aws_secret_access_key }
-      public_key_content: { get_secret: public_key_content }
-      private_key_content: { get_secret: private_key_content }
+      public_key_content: { get_attribute: [key, public_key_export] }
+      private_key_content: { get_attribute: [key, private_key_export] }
       region_name_a: { get_input: aws_region_name_a }
       region_name_b: { get_input: aws_region_name_b }
