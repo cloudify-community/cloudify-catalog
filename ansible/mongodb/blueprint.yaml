@@ -1,6 +1,6 @@
 tosca_definitions_version: cloudify_dsl_1_4
 
-description: Cloudify Nginx blueprint. Deploys Nginx service with Ansible Cloduify plugin.
+description: Cloudify MongoDB blueprint. Deploys MongoDB service with Ansible Cloduify plugin.
 
 imports:
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
