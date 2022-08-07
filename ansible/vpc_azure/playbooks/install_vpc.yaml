@@ -1,0 +1,37 @@
+- hosts: all
+  become: true
+  
+  vars:
+    resource_group: "{{ resource_group_name }}"
+    vpc_name: "{{ vpc_name }}"
+    igw_name: "{{ igw_name }}"
+    subnet_name: "{{ subnet_name }}"
+    
+    vpcCidrBlock: '10.0.0.0/16'
+    subNetCidrBlock: '10.0.1.0/24'
+
+    state: 'present'
+    location: "{{ azure_region }}" 
+
+  tasks:
+    - name: Create a resource group
+      azure_rm_resourcegroup:
+        name: "{{ resource_group }}"
+        location: "{{ location }}"
+        state: "{{ state }}"
+
+   - name: Create first virtual network
+    azure_rm_virtualnetwork:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vpc_name }}"
+      address_prefixes: "{{ vpcCidrBlock }}"
+      state: "{{ state }}"
+
+  - name: Add subnet
+    azure_rm_subnet:
+      resource_group: "{{ resource_group }}"
+      name: "{{ subnet_name }}"
+      address_prefix: "{{ subNetCidrBlock }}"
+      virtual_network: name: "{{ vpc_name }}"
+      state: "{{ state }}"
+  
