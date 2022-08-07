@@ -1,0 +1,49 @@
+- hosts: all
+  become: true
+  tasks:
+  
+  - name: Download influxdb, telegraf, grafana
+    ansible.builtin.yum:
+      name: "{{ packages }}" 
+      state: present
+    vars:
+      packages:
+        - https://dl.influxdata.com/influxdb/releases/influxdb-1.7.1.x86_64.rpm
+        - https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-5.3.4-1.x86_64.rpm
+        - https://dl.influxdata.com/telegraf/releases/telegraf-1.8.3-1.x86_64.rpm
+  
+  - name: Ensure Influxdb is started
+    ansible.builtin.service:
+      name: influxdb
+      state: started
+      enabled: true
+
+  - name: Configure influxdb
+    shell: |
+      influx -execute "CREATE DATABASE MONITORDB"
+      influx -execute "CREATE USER "admin" WITH PASSWORD 'secret' WITH ALL PRIVILEGES"
+      influx -execute "CREATE USER "monitor" WITH PASSWORD 'secret'"
+      influx -execute "GRANT ALL ON "MONITORDB" to "monitor""
+  
+  - name: Ensure Grafana is started
+    ansible.builtin.service:
+      name: grafana-server
+      state: started
+      enabled: true
+
+  - name: Setup grafana datasource
+    shell: | 
+      curl 'http://admin:admin@127.0.0.1:3000/api/datasources' -X POST -H 'Content-Type: application/json;charset=UTF-8' --data-binary '{"name":"influx","type":"influxdb","url":"http://localhost:8086","access":"proxy","isDefault":true,"database":"MONITORDB","user":"monitor","password":"secret"}'
+
+  - name: Copy telegraf conf file
+    ansible.builtin.copy:
+      src: config/telegraf.conf
+      dest: /etc/telegraf/telegraf.conf
+
+  - name: Ensure Telegraf is started
+    ansible.builtin.service:
+      name: telegraf
+      state: started
+      enabled: true
+
+  
