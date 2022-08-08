@@ -855,6 +855,26 @@ topics:
         path: ansible/wordpress
         description: Create Wordpress service using Ansible plugin
 
+      - id: influxdb_ansible
+        name: Ansible-InfluxDB-CFY
+        path: ansible/influxdb
+        description: Create InfluxDB+Telegraf+Grafana service using Ansible plugin
+
+      - id: bigip_ansible
+        name: Ansible-BigIP-CFY
+        path: ansible/bigip
+        description: Create BigIP Http service using Ansible plugin
+
+      - id: vpc_aws_ansible
+        name: Ansible-AWS-VPC-CFY
+        path: ansible/vpc_aws
+        description: Create AWS VPC service using Ansible plugin
+
+      - id: vpc_azure_ansible
+        name: Ansible-Azure-VPC-CFY
+        path: ansible/vpc_azure
+        description: Create Azure VPC service using Ansible plugin
+
   - name: other_services
     target_path: s3_json_file
     blueprints:

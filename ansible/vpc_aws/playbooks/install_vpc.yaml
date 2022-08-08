@@ -1,0 +1,61 @@
+- hosts: all
+  become: true
+  
+  vars:
+    aws_access_key: "{{ aws_access_key }}" #put your aws access key here'
+    aws_secret_key: "{{ aws_secret_key }}" #'put your aws secret key here'
+    vpc_name: "{{ vpc_name }}"
+    igw_name: "{{ igw_name }}"
+    subnet_name: "{{ subnet_name }}"
+    
+    vpcCidrBlock: '10.0.0.0/16'
+    subNetCidrBlock: '10.0.1.0/24'
+
+    state: 'present'
+    zone: "{{ aws_zone }}" #us-east-1a'
+    region: "{{ aws_region }}" #us-east-1'
+  
+  tasks:
+  - name: create a new ec2 VPC
+    # create a vpc with name, cidr block,dns support, and tenancy
+    ec2_vpc_net:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      name: "{{ vpc_name }}" 
+      cidr_block: "{{ vpcCidrBlock }}"
+      region: "{{ region }}"
+      # enable dns support 
+      dns_support: yes
+      # enable dns hostnames
+      dns_hostnames: yes
+      tenancy: default
+      state: "{{ state }}"
+    register: ec2_vpc_net_result
+
+  - name: create ec2 vpc internet gateway       
+    # create an internet gateway for the vpc
+    ec2_vpc_igw:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      vpc_id: "{{ ec2_vpc_net_result.vpc.id }}"
+      region: "{{ region }}"
+      state: "{{ state }}" 
+      tags:
+        Name: "{{ igw_name }}"
+    register: igw_result
+
+  - name: create ec2 vpc subnet
+    # create the subnet for the vpc with a cidr block
+    ec2_vpc_subnet:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      vpc_id: "{{ ec2_vpc_net_result.vpc.id }}"
+      region: "{{ region }}"
+      az: "{{ zone }}"  
+      state: "{{ state }}"
+      cidr: "{{ subNetCidrBlock }}"
+      # enable public ip
+      map_public: yes
+      resource_tags:
+        Name: "{{ subnet_name }}"
+    register: subnet_result

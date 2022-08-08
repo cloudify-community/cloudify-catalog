@@ -1,0 +1,106 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: Cloudify InfluxDB blueprint. Deploys InfluxDB service with Ansible Cloudify plugin.
+
+imports:
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - cloudify/types/types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-ansible-plugin
+
+inputs:
+
+  infra_name:
+    description: >
+      Name of infrastructure blueprint to deploy.
+    type: string
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+
+  infra_archive:
+    description: >
+      URL of infra zip file.
+    type: string
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
+
+  infra_exists:
+    description: >
+      Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
+    default: false
+
+  infra_deployment_id:
+    description: The blueprint name, the deployment name.
+    default: { concat: [ 'infra-', { get_input: infra_name } ] }
+
+node_templates:
+      
+  infra_prefix:
+    type: eaas.nodes.UniquePrefixGenerator
+    properties:
+      predefined_value: ""
+
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: { get_input: infra_exists }
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
+  
+  secrurity_group_rules:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: "security_group.zip"
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: false
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
+          inputs:
+            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
+            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+
+  influxdb:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: ansible.cloudify_ansible.tasks.run
+          inputs:
+            site_yaml_path: playbooks/install_influxdb.yaml
+            sources:
+              foo_group:
+                hosts:
+                  foo_host:
+                    ansible_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
+                    ansible_user:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
+                    ansible_ssh_private_key_file:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+                    ansible_become: true
+                    ansible_ssh_common_args: -o StrictHostKeyChecking=no
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+
+outputs:
+
+  grafana_endpoint:
+    description: Grafana Host IP
+    value: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+  
+  grafana_port:
+    description: InfluxDB Port
+    value: "3000"
+
+  

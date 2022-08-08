@@ -1,0 +1,98 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: Cloudify Redis blueprint. Deploys Redis service with Ansible Cloudify plugin.
+
+imports:
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - cloudify/types/types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-ansible-plugin
+
+inputs:
+
+  region_name:
+      type: string
+      display_label: AWS Region Name
+      description: Select AWS region name
+      default: us-east-1
+      constraints:
+        - valid_values:
+          - us-east-1 #US East (N. Virginia)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-west-1 #Europe (Ireland)
+
+  infra_name:
+    description: >
+      Name of infrastructure blueprint to deploy.
+    type: string
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+
+  infra_archive:
+    description: >
+      URL of infra zip file.
+    type: string
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
+
+  infra_exists:
+    description: >
+      Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
+    default: false
+
+  infra_deployment_id:
+    description: The blueprint name, the deployment name.
+    default: { concat: [ 'infra-', { get_input: infra_name } ] }
+
+node_templates:
+          
+  infra_prefix:
+    type: eaas.nodes.UniquePrefixGenerator
+    properties:
+      predefined_value: ""
+
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: { get_input: infra_exists }
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
+  
+  vpc:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: ansible.cloudify_ansible.tasks.run
+          inputs:
+            site_yaml_path: playbooks/install_vpc.yaml
+            sources:
+              foo_group:
+                hosts:
+                  foo_host:
+                    ansible_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
+                    ansible_user:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
+                    ansible_ssh_private_key_file:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+                    ansible_become: true
+                    ansible_ssh_common_args: -o StrictHostKeyChecking=no
+            run_data:
+              aws_access_key: { get_secret: aws_access_key_id }
+              aws_secret_key:  { get_secret: aws_secret_access_key }
+              vpc_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_vpc" ]}
+              subnet_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_subnet" ]}
+              igw_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_igw" ]}
+              region: { get_input: region_name }
+              zone: { concat: [ { get_input: region_name }, 'a' ] }  
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
