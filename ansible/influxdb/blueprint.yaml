@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_4
+dtosca_definitions_version: cloudify_dsl_1_4
 
 description: Cloudify InfluxDB blueprint. Deploys InfluxDB service with Ansible Cloudify plugin.
 
@@ -39,9 +39,9 @@ node_templates:
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
-      predefined_value: "tuqltn"
+      predefined_value: ""
 
-  # infrastructure:
+  infrastructure:
     type: cloudify.nodes.Component
     properties:
       resource_config:
@@ -55,7 +55,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
   
-  # secrurity_group_rules:
+  secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
       resource_config:
