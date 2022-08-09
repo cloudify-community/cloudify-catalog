@@ -59,7 +59,7 @@ node_templates:
       ansible_become: true
       run_data:
         availability_zone: { get_input: availability_zone }
-        resource_suffix: { get_attribute: [ infra_prefix, value ] }
+        resource_suffix: { get_attribute: [ infra_suffix, value ] }
       ansible_env_vars: &env_vars
         AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
         AWS_SECRET_ACCESS_KEY: {get_secret: aws_secret_access_key }
