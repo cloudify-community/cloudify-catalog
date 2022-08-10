@@ -1,98 +1,120 @@
 tosca_definitions_version: cloudify_dsl_1_4
 
-description: Cloudify Redis blueprint. Deploys Redis service with Ansible Cloudify plugin.
+description: >
+  This blueprint creates an AWS infrastructure environment using Ansible.
+  libselinux-python/libselinux-python3 on the manager VM is prerequisite.
 
 imports:
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
-  - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
+  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
   - plugin:cloudify-ansible-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
 
-  region_name:
-      type: string
-      display_label: AWS Region Name
-      description: Select AWS region name
-      default: us-east-1
-      constraints:
-        - valid_values:
-          - us-east-1 #US East (N. Virginia)
-          - us-west-1 #US West (N. California)
-          - us-west-2 #US West (Oregon)
-          - ca-central-1  #Canada (Central)
-          - eu-west-1 #Europe (Ireland)
-
-  infra_name:
-    description: >
-      Name of infrastructure blueprint to deploy.
+  aws_region_name:
+    description: AWS region name
+    display_label: AWS Regionn Name
     type: string
+    default: us-east-1
     constraints:
       - valid_values:
-          - azure
-          - aws
+        - us-east-1 #US East (N. Virginia)
+        - us-east-2 #US East (Ohio)
+        - us-west-1 #US West (N. California)
+        - us-west-2 #US West (Oregon)
+        - ca-central-1  #Canada (Central)
+        - eu-central-1  #Europe (Frankfurt)
+        - eu-west-1 #Europe (Ireland)
+        - eu-west-2 #Europe (London)
+        - eu-south-1  #Europe (Milan)
+        - eu-west-3 #Europe (Paris)
+        - eu-north-1  #Europe (Stockholm)
+        - ap-northeast-3  #Asia Pacific (Osaka)
+        - ap-northeast-2  #Asia Pacific (Seoul)
+        - ap-southeast-1  #Asia Pacific (Singapore)
+        - ap-southeast-2  #Asia Pacific (Sydney)
+        - ap-northeast-1  #Asia Pacific (Tokyo)
 
-  infra_archive:
-    description: >
-      URL of infra zip file.
+  availability_zone:
     type: string
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
+    description: The availability zone in the AWS Region.
+    default: { concat: [ { get_input: aws_region_name }, 'b' ] }
 
-  infra_exists:
-    description: >
-      Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
-    default: false
-
-  infra_deployment_id:
-    description: The blueprint name, the deployment name.
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
 node_templates:
-          
-  infra_prefix:
+
+  infra_suffix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: ""
 
-  infrastructure:
-    type: cloudify.nodes.Component
+  # Use ansible Executor node type in order to execute resources/ansible/playbook.yaml during install workflow.
+  # See https://github.com/cloudify-cosmo/cloudify-ansible-plugin/blob/master/plugin.yaml for more information about the properties provided.
+  install-infra-playbook:
+    type: cloudify.nodes.ansible.Executor
     properties:
-      resource_config:
-        blueprint:
-          blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
-          external_resource: { get_input: infra_exists }
-        deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+      playbook_path: playbooks/install_vpc.yaml
+      sources: playbooks/inventory.yaml
+      ansible_become: true
+      run_data:
+        availability_zone: { get_input: availability_zone }
+        resource_suffix: { get_attribute: [ infra_suffix, value ] }
+      ansible_env_vars: &env_vars
+        AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
+        AWS_SECRET_ACCESS_KEY: {get_secret: aws_secret_access_key }
+        AWS_REGION: { get_input: aws_region_name}
+      extra_packages: &extra_packages
+        - boto3==1.16.26
+        - boto==2.49.0
+        - selinux
+        - ndg-httpsclient
+        - pyopenssl
+        - pyasn1
+        - urllib3
+
+  # Override stop lifecycle interface for executing resources/ansible/uninstall-playbook.yaml playbook during uninstall workflow.
+  # Execute ansible.cloudify_ansible.tasks.run task in order to do so.
+  uninstall-infra-playbook:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        stop:
+          implementation: ansible.cloudify_ansible.tasks.run
+          inputs:
+            playbook_path: playbooks/uninstall_vpc.yaml
+            start_at_task: "Delete route table"
+            sources: playbooks/inventory.yaml
+            run_data:
+              internet_gateway_id: { get_attribute: [aws_infra_info, internet_gateway_id] }
+              route_table_id: { get_attribute: [aws_infra_info, route_table_id] }
+              subnet_id: { get_attribute: [aws_infra_info, subnet_id] }
+              vpc_id: { get_attribute: [aws_infra_info, vpc_id] }
+              vpc_name:  { get_attribute: [aws_infra_info, vpc_name] }
+            ansible_env_vars: *env_vars
+            extra_packages: *extra_packages
     relationships:
       - type: cloudify.relationships.depends_on
-        target: infra_prefix
+        target: aws_infra_info
   
-  vpc:
+  aws_infra_info:
     type: cloudify.nodes.Root
     interfaces:
       cloudify.interfaces.lifecycle:
         create:
-          implementation: ansible.cloudify_ansible.tasks.run
-          inputs:
-            site_yaml_path: playbooks/install_vpc.yaml
-            sources:
-              foo_group:
-                hosts:
-                  foo_host:
-                    ansible_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
-                    ansible_user:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
-                    ansible_ssh_private_key_file:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
-                    ansible_become: true
-                    ansible_ssh_common_args: -o StrictHostKeyChecking=no
-            run_data:
-              aws_access_key: { get_secret: aws_access_key_id }
-              aws_secret_key:  { get_secret: aws_secret_access_key }
-              vpc_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_vpc" ]}
-              subnet_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_subnet" ]}
-              igw_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_igw" ]}
-              region: { get_input: region_name }
-              zone: { concat: [ { get_input: region_name }, 'a' ] }  
+          implementation: scripts/store_deployment_info.py
+          executor: central_deployment_agent
     relationships:
       - type: cloudify.relationships.depends_on
-        target: infrastructure
+        target: install-infra-playbook
+
+capabilities:
+
+  vpc_id:
+    description: Created VPC id.
+    value:  { get_attribute: [aws_infra_info, vpc_id] }
+
+  subnet_id:
+    description: Created subnet id.
+    value:  { get_attribute: [aws_infra_info, subnet_id] }
+
