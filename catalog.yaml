@@ -830,6 +830,11 @@ topics:
         path: ansible/postgresql
         description: Create Postgres service using Ansible plugin
       
+      - id: oracle_ansible
+        name: Ansible-Oracle-CFY
+        path: ansible/Oracle
+        description: Create Oracle service using Ansible plugin
+      
       - id: prometheus_ansible
         name: Ansible-Prometheus-CFY
         path: ansible/prometheus

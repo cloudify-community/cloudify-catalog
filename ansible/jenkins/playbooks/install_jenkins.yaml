@@ -1,9 +1,12 @@
 ---
 
 - hosts: all
-  become: true
+  become: yes
+  vars:
+    - jenkins_password: "{{ pb_jadmin_password }}"
+
   tasks:
-    - name: Ensure Jenkins repository is added 
+    - name: Ensure Jenkins repository is added
       yum_repository:
         name: jenkins
         description: Jenkins-stable
@@ -14,17 +17,22 @@
     - name: downloading jenkins key. Skip validating certs so that install doesnt fail due to certs.
       rpm_key:
         key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-        validate_certs: no 
+        validate_certs: no
         state: present
 
     - name: updating yum
       yum:
         name: yum
         state: latest
- 
-    - name: installing openjdk software
+
+    - name: installing openjdk and python packages for py-bcrypt
       yum:
-        name: "java-1.8.0-openjdk-devel"
+        name:
+          - "java-11-openjdk-11.0.8.10-1.el7"
+          - python-pip
+          - python-devel
+          - gcc 
+          - libffi-devel
         state: present
 
     - name: Install jenkins
@@ -32,7 +40,44 @@
         name: jenkins
         state: present
 
-    - name: start the service 
+    - name: updating yum again
+      yum:
+        name: yum
+        state: latest
+
+    - name: start the service
       service:
         name: jenkins
         state: started
+
+    - name: Install py-bcrypt to generate the hashed password.
+      shell: |
+        pip install py-bcrypt
+        pip uninstall unknown
+        yum install py-bcrypt -y
+    
+      
+    - name: create the new bcrypt hashed Admin password
+      shell: echo 'import bcrypt;print(bcrypt.hashpw("{{ jenkins_password }}", bcrypt.gensalt(rounds=10, prefix=b"2a")))'| python -
+      register: custom_admin_password
+
+    - name: change to the admin directory.
+      shell: "ls /var/lib/jenkins/users/admin_*/config.xml"
+      register: file_location
+
+    - name: remove existing password line
+      lineinfile:
+        path: "{{file_location.stdout}}"
+        regexp: '^      <password'
+        state: absent
+
+    - name: add new password line
+      lineinfile:
+        path: "{{file_location.stdout}}"
+        line: '      <passwordHash>#jbcrypt:{{custom_admin_password.stdout}}</passwordHash>'
+        insertafter: '^    <hudson.security.HudsonPrivateSecurityRealm'
+
+    - name: restart the service for new password to effect
+      service:
+        name: jenkins
+        state: restarted
