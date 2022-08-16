@@ -87,8 +87,10 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: aks_cluster_a
           blueprint_archive: blueprints/aks.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
           id: aks_cluster_a
           inputs: 
@@ -105,15 +107,17 @@ node_templates:
    properties:
      resource_config:
        blueprint:
-         blueprint_archive: blueprints/aks.zip
-         external_resource: false
+        id: aks_cluster_a
+        blueprint_archive: blueprints/aks.zip
+        external_resource: false
+        main_file_name: blueprint.yaml
        deployment:
-         id: aks_cluster_b
-         inputs: 
-           resource_config: {}
-           resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'bdr' ] }
-           cloud_credentials: { get_input: cloud_credentials_b }
-         auto_inc_suffix: true
+        id: aks_cluster_b
+        inputs: 
+          resource_config: {}
+          resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'bdr' ] }
+          cloud_credentials: { get_input: cloud_credentials_b }
+        auto_inc_suffix: true
    relationships:
      - type: cloudify.relationships.depends_on
        target: prefix
@@ -123,10 +127,12 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: load_balancer_azure
           blueprint_archive: blueprints/lb.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
-          id: load_balancer
+          id: load_balancer_azure
           inputs: 
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
             cloud_credentials: { get_input: cloud_credentials_b }
@@ -147,10 +153,12 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: database_dr_azure
           blueprint_archive: blueprints/database.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
-          id: database_dr
+          id: database_dr_azure
           inputs: 
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
             cloud_credentials: { get_input: cloud_credentials_a }
@@ -172,10 +180,12 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: storage_dr_azure
           blueprint_archive: blueprints/storage.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
-          id: storage_dr
+          id: storage_dr_azure
           inputs: 
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
             cloud_credentials: { get_input: cloud_credentials_a }

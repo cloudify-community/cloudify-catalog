@@ -39,8 +39,10 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: eks_cluster_a
           blueprint_archive: blueprints/eks_network.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
           inputs: 
             aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
@@ -61,8 +63,10 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: eks_cluster_b
           blueprint_archive: blueprints/eks_network.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
           inputs: 
             aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
@@ -83,9 +87,12 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: database_dr_azure
           blueprint_archive: blueprints/database.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
+          id: database_dr_azure
           inputs: 
             aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
             aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
@@ -103,9 +110,12 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: s3_dr
           blueprint_archive: blueprints/s3.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
+          id: s3_dr
           inputs: 
             aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
             aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
@@ -123,9 +133,12 @@ node_templates:
     properties:
       resource_config:
         blueprint:
+          id: load_balancer_azure
           blueprint_archive: blueprints/lb.zip
           external_resource: false
+          main_file_name: blueprint.yaml
         deployment:
+          id: load_balancer_azure
           inputs: 
             aws_access_key_id: { get_environment_capability: [ cloud_credentials, aws_access_key_id ] }
             aws_secret_access_key: { get_environment_capability: [ cloud_credentials, aws_secret_access_key ] }
