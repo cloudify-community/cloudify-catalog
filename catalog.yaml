@@ -832,7 +832,7 @@ topics:
       
       - id: oracle_ansible
         name: Ansible-Oracle-CFY
-        path: ansible/Oracle
+        path: ansible/oracle
         description: Create Oracle service using Ansible plugin
       
       - id: prometheus_ansible
