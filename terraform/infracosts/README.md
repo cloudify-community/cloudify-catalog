@@ -2,7 +2,8 @@
 
 ## General
 
-The blueprint creates EKS, S3, RDS deployment and estimates the costs of the deployment maintenance.
+The blueprint won't provision the services [EKS,RDS,S3] unless you run terraform `reload workflow` command.
+but it gives you the terraform plan and cost of the modules 
 
 ## Requirements
 
