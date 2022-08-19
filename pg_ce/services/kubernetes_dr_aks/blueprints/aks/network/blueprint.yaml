@@ -12,40 +12,23 @@ dsl_definitions:
     client_id: { get_input: [ cloud_credentials, azure_client_id ] }
     client_secret: { get_input: [ cloud_credentials, azure_client_secret ] }
 
-data_types:
-  cloud_credentials:
-    properties:
-      azure_tenant_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_tenant_id] }
-      azure_subscription_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_subscription_id] }
-      azure_client_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_client_id] }
-      azure_client_secret:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_client_secret] }
-      public_key_content:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, public_key_content] }
-      private_key_content:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, private_key_content] }
-      region_name:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, region_name] }
 inputs:
+
   cloud_credentials:
-    type: cloud_credentials
-    display_label: Cloud Credentials
-    description: Cloud Credentials
+    default:
+      azure_tenant_id: { get_secret: azure_tenant_id }
+      azure_subscription_id: { get_secret: azure_subscription_id }
+      azure_client_id: { get_secret: azure_client_id }
+      azure_client_secret: { get_secret: azure_client_secret }
+      public_key_content: { get_secret: public_key_content }
+      private_key_content: { get_secret: private_key_content }
+      region_name: WestUS2 #{ get_environment_capability: [cloud_credentials, region_name_a] }
 
   resource_prefix:
     type: string
     display_label: Resource Prefix
     description: Resource Prefix
+    default: "xyz123"
 
 node_templates:
 
@@ -166,122 +149,6 @@ node_templates:
       target: network
     - type: cloudify.relationships.depends_on
       target: public_subnet_01
-
-  # public_ip_01:
-  #   type: cloudify.azure.nodes.network.PublicIPAddress
-  #   properties:
-  #     client_config: *azure_config
-  #     name: { concat: [ { get_input: resource_prefix }, '-public-ip-1' ] }
-  #     location: { get_input: [ cloud_credentials, region_name ] }
-  #     resource_group_name: { get_attribute: [ terraform_vnet, outputs, rg_id, value ] }
-  #     tags:
-  #       Name: { concat: [ { get_input: resource_prefix }, '-public-ip-1' ] }
-  #     retry_after: 5
-  #     resource_config:
-  #       publicIPAllocationMethod: Static
-  #   relationships:
-  #     - type: cloudify.azure.relationships.contained_in_resource_group
-  #       target: resource_group
-  #     - type: cloudify.relationships.depends_on
-  #       target: public_subnet_01
-
-  # public_ip_cfg_01:
-  #   type: cloudify.azure.nodes.network.IPConfiguration
-  #   properties:
-  #     location: { get_input: [ cloud_credentials, region_name ] }
-  #     name: { concat: [ { get_input: resource_prefix }, '-public-ip-cfg-1' ] }
-  #     resource_group_name: { get_attribute: [ terraform_vnet, outputs, rg_id, value ] }
-  #     azure_config: *azure_config
-  #     retry_after: 5
-  #     resource_config:
-  #       privateIPAllocationMethod: Dynamic
-  #   relationships:
-  #     - type: cloudify.azure.relationships.contained_in_resource_group
-  #       target: resource_group
-  #     - type: cloudify.azure.relationships.ip_configuration_connected_to_subnet
-  #       target: public_subnet_01
-  #     - type: cloudify.azure.relationships.ip_configuration_connected_to_subnet
-  #       target: private_subnet_1
-  #     - type: cloudify.azure.relationships.ip_configuration_connected_to_public_ip
-  #       target: public_ip_01
-
-  # private_nat_gateway_01:
-  #   type: cloudify.azure.nodes.network.LoadBalancer
-  #   properties:
-  #     client_config: *azure_config
-  #     name: { concat: [ { get_input: resource_prefix }, '-lb-1' ] }
-  #     location: { get_input: [ cloud_credentials, region_name ] }
-  #     resource_group_name: { get_attribute: [ terraform_vnet, outputs, rg_id, value ] }
-  #     tags:
-  #       Name: { concat: [ { get_input: resource_prefix }, '-lb-1' ] }
-  #     retry_after: 5
-  #   relationships:
-  #     - type: cloudify.azure.relationships.contained_in_resource_group
-  #       target: resource_group
-  #     - type: cloudify.relationships.depends_on
-  #       target: public_subnet_01
-  #     - type: cloudify.relationships.depends_on
-  #       target: private_subnet_1
-  #     - type: cloudify.azure.relationships.lb_connected_to_ip_configuration
-  #       target: public_ip_cfg_01
-
-  # public_ip_02:
-  #   type: cloudify.azure.nodes.network.PublicIPAddress
-  #   properties:
-  #     client_config: *azure_config
-  #     name: { concat: [ { get_input: resource_prefix }, '-public-ip-2' ] }
-  #     location: { get_input: [ cloud_credentials, region_name ] }
-  #     resource_group_name: { get_attribute: [ terraform_vnet, outputs, rg_id, value ] }
-  #     tags:
-  #       Name: { concat: [ { get_input: resource_prefix }, '-public-ip-2' ] }
-  #     retry_after: 5
-  #     resource_config:
-  #       publicIPAllocationMethod: Static
-  #   relationships:
-  #     - type: cloudify.azure.relationships.contained_in_resource_group
-  #       target: resource_group
-  #     - type: cloudify.relationships.depends_on
-  #       target: private_nat_gateway_01
-
-  # public_ip_cfg_02:
-  #   type: cloudify.azure.nodes.network.IPConfiguration
-  #   properties:
-  #     location: { get_input: [ cloud_credentials, region_name ] }
-  #     name: { concat: [ { get_input: resource_prefix }, '-public-ip-cfg-2' ] }
-  #     resource_group_name: { get_attribute: [ terraform_vnet, outputs, rg_id, value ] }
-  #     azure_config: *azure_config
-  #     retry_after: 5
-  #     resource_config:
-  #       privateIPAllocationMethod: Dynamic
-  #   relationships:
-  #     - type: cloudify.azure.relationships.contained_in_resource_group
-  #       target: resource_group
-  #     - type: cloudify.azure.relationships.ip_configuration_connected_to_subnet
-  #       target: public_subnet_02
-  #     - type: cloudify.azure.relationships.ip_configuration_connected_to_subnet
-  #       target: private_subnet_2
-  #     - type: cloudify.azure.relationships.ip_configuration_connected_to_public_ip
-  #       target: public_ip_02
-
-  # private_nat_gateway_02:
-  #   type: cloudify.azure.nodes.network.LoadBalancer
-  #   properties:
-  #     client_config: *azure_config
-  #     name: { concat: [ { get_input: resource_prefix }, '-lb-2' ] }
-  #     location: { get_input: [ cloud_credentials, region_name ] }
-  #     resource_group_name: { get_attribute: [ terraform_vnet, outputs, rg_id, value ] }
-  #     tags:
-  #       Name: { concat: [ { get_input: resource_prefix }, '-lb-2' ] }
-  #     retry_after: 5
-  #   relationships:
-  #     - type: cloudify.azure.relationships.contained_in_resource_group
-  #       target: resource_group
-  #     - type: cloudify.relationships.depends_on
-  #       target: private_subnet_2
-  #     - type: cloudify.relationships.depends_on
-  #       target: public_subnet_02
-  #     - type: cloudify.azure.relationships.lb_connected_to_ip_configuration
-  #       target: public_ip_cfg_02
 
   security_group:
     type: cloudify.azure.nodes.network.NetworkSecurityGroup
