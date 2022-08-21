@@ -3,6 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin
+  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
@@ -18,7 +19,7 @@ inputs:
   resource_suffix:
     default: '0'
 
-  region_name:
+  location:
     type: string
     description: Your Azure Region.
     default: eastus2
@@ -78,7 +79,7 @@ inputs:
     description: >
        Name of Virtual Machine Size in Azure.
     type: string
-    default: Standard_B1s
+    default: Standard_B4ms
     constraints:
       - valid_values:
           - Standard_B1s
@@ -122,7 +123,7 @@ node_templates:
           inputs:
             script_path: scripts/install_docker.sh
             fabric_env: &fabric_env
-              host_string: { get_attribute: [ ip, aws_resource_id ] }
+              host_string: { get_attribute: [ vm, public_ip ] }
               user: { get_input: agent_user }
               key: { get_attribute: [agent_key, private_key_export] }
             use_sudo: true
@@ -139,7 +140,8 @@ node_templates:
   vm:
     type: cloudify.azure.nodes.compute.VirtualMachine
     properties:
-      location: { get_input: region_name }
+      name: { concat: [ { get_input: resource_prefix }, vm, { get_input: resource_suffix } ] }
+      location: { get_input: location }
       retry_after: { get_input: retry_after }
       os_family: linux
       azure_config: *azure_config
@@ -177,7 +179,7 @@ node_templates:
   nic:
     type: cloudify.azure.nodes.network.NetworkInterfaceCard
     properties:
-      location: { get_input: region_name }
+      location: { get_input: location }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
     relationships:
@@ -191,7 +193,7 @@ node_templates:
   ip_config:
     type: cloudify.azure.nodes.network.IPConfiguration
     properties:
-      location: { get_input: region_name }
+      location: { get_input: location }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
       resource_config:
@@ -206,7 +208,7 @@ node_templates:
     type: cloudify.azure.nodes.network.NetworkSecurityGroup
     properties:
       name: {concat : [{get_input: resource_prefix},nsg,{get_input: resource_suffix}]}
-      location: { get_input: region_name }
+      location: { get_input: location }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
       resource_config:
@@ -240,7 +242,7 @@ node_templates:
   ip:
     type: cloudify.azure.nodes.network.PublicIPAddress
     properties:
-      location: { get_input: region_name }
+      location: { get_input: location }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
       resource_config:
@@ -253,7 +255,7 @@ node_templates:
     type: cloudify.azure.nodes.compute.AvailabilitySet
     properties:
       name: { concat : [{get_input: resource_prefix},availset,{get_input: resource_suffix}]}
-      location: { get_input: region_name }
+      location: { get_input: location }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
     relationships:
@@ -263,7 +265,7 @@ node_templates:
   storage_account:
     type: cloudify.azure.nodes.storage.StorageAccount
     properties:
-      location: { get_input: region_name }
+      location: { get_input: location }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
       resource_config:
@@ -278,7 +280,8 @@ node_templates:
       resource_group_name: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
       name: { concat: [ { get_input: resource_prefix }, sub, { get_input: resource_suffix } ] }
       azure_config: *azure_config
-      location: { get_input: region_name }
+      location: { get_input: location }
+      resource_config:
         addressPrefix: 10.10.0.0/24
     relationships:
     - type: cloudify.azure.relationships.contained_in_virtual_network
@@ -290,7 +293,7 @@ node_templates:
       resource_group_name: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
       name: { concat: [ { get_input: resource_prefix }, vn, { get_input: resource_suffix } ] }
       azure_config: *azure_config
-      location: { get_input: region_name }
+      location: { get_input: location }
     relationships:
     - type: cloudify.azure.relationships.contained_in_resource_group
       target: resource_group
@@ -299,7 +302,7 @@ node_templates:
     type: cloudify.azure.nodes.ResourceGroup
     properties:
       name: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
-      location: { get_input: region_name }
+      location: { get_input: location }
       azure_config: *azure_config
 
   agent_key:
@@ -329,8 +332,14 @@ capabilities:
     description: Private agent key
     value: { get_attribute: [agent_key, private_key_export] }
   security_group_id:
-    Description: Name of the security group 
-    value: {concat : [{get_input: resource_prefix},nsg,{get_input: resource_suffix}]}
+    description: Name of the security group 
+    value: {concat : [ { get_input: resource_prefix},nsg, { get_input: resource_suffix } ] }
   vpc_id:
-    Description: Name of the network
+    description: Name of the network
     value: { concat: [ { get_input: resource_prefix }, vn, { get_input: resource_suffix } ] }
+  vm_id:
+    description: Name of the VM
+    value: { concat: [ { get_input: resource_prefix }, vm, { get_input: resource_suffix } ] }
+  rg_id:
+    description: Name of the resource group
+    value: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
