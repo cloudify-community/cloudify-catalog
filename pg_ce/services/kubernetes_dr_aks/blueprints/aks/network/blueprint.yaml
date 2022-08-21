@@ -2,8 +2,8 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-azure-plugin?version= >=3.0.10
-  - plugin:cloudify-terraform-plugin?version= >=0.18.8
+  - plugin:cloudify-azure-plugin?version= >=3.7.8
+  - plugin:cloudify-terraform-plugin?version= >=0.19.3
 
 dsl_definitions:
   client_config: &azure_config
@@ -15,6 +15,7 @@ dsl_definitions:
 inputs:
 
   cloud_credentials:
+    type: dict
     default:
       azure_tenant_id: { get_secret: azure_tenant_id }
       azure_subscription_id: { get_secret: azure_subscription_id }
@@ -22,13 +23,13 @@ inputs:
       azure_client_secret: { get_secret: azure_client_secret }
       public_key_content: { get_secret: public_key_content }
       private_key_content: { get_secret: private_key_content }
-      region_name: WestUS2 #{ get_environment_capability: [cloud_credentials, region_name_a] }
+      region_name: { get_secret: region_name }
 
   resource_prefix:
     type: string
     display_label: Resource Prefix
     description: Resource Prefix
-    default: "xyz123"
+    default: "rgxyz123"
 
 node_templates:
 

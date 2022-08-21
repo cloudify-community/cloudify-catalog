@@ -238,6 +238,11 @@ topics:
         path: terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
 
+      - id: tf_infracosts
+        name: InfraCosts-AWS-TFM
+        path: terraform/infracosts
+        description: Create an AWS InfraCosts using Terraform automation
+
   - name: azure_services
     target_path: s3_json_file
     blueprints:
@@ -571,6 +576,12 @@ topics:
         name: Disk-GCP-TFM
         path: terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
+      
+      #AWS others
+      - id: terraform_infracosts
+        name: InfraCosts-AWS-TFM
+        path: terraform/infracosts
+        description: Create an AWS InfraCosts using Terraform automation
 
   - name: helm_services
     target_path: s3_json_file
@@ -737,16 +748,6 @@ topics:
         name: EKS-DR-AWS-TFM
         path: pg_ce/services/kubernetes_dr_eks
         description: Creating Disaster Recovery EKS service
-
-      - id: Environment_AWS_DR
-        name: Production-Env-DR-AWS-CFY
-        path: pg_ce/environments/aws
-        description: Creating Disaster Recovery AWS environment
-
-      - id: Environment_Azure_DR
-        name:  Production-Env-DR-Azure-CFY
-        path: pg_ce/environments/azure
-        description: Creating Disaster Recovery Azure environment
 
   - name: K8S_Discovery
     target_path: s3_json_file

@@ -2,8 +2,8 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-azure-plugin?version= >=3.0.10
-  - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
+  - plugin:cloudify-azure-plugin?version= >=3.7.8
+  - plugin:cloudify-kubernetes-plugin?version= >=2.13.14 
   - plugin:cloudify-helm-plugin
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
 
@@ -17,30 +17,15 @@ dsl_definitions:
 inputs:
 
   resource_config:
-    type: dict
     default:
-      kubernetes_version:
-        type: string
-        default: ""
-      service_account_namespace:
-        type: string
-        default: default
-      service_cidr:
-        type: string
-        default: 10.0.8.0/23
-      docker_bridge_cidr:
-        type: string
-        default: 10.0.10.1/23
-      dns_service_ip:
-        type: string
-        default: "10.0.8.2"
-      node_pool_size:
-        type: string
-        default: 1
+      service_account_namespace: default
+      service_cidr: 10.0.8.0/23
+      docker_bridge_cidr: 10.0.10.1/23
+      dns_service_ip: "10.0.8.2"
+      node_pool_size: 1
     display_label: Resource Config
 
   cloud_credentials:
-    type: dict
     default:
       azure_tenant_id: { get_secret: azure_tenant_id }
       azure_subscription_id: { get_secret: azure_subscription_id }
@@ -49,6 +34,8 @@ inputs:
       public_key_content: { get_secret: public_key_content }
       private_key_content: { get_secret: private_key_content }
       region_name: { get_secret: region_name }
+    display_label: Cloud Credentials
+    description: Cloud Credentials
 
   resource_prefix:
     type: string
@@ -87,7 +74,7 @@ inputs:
     description: >
       Helm download link.
     type: string
-    default: 'https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz'
+    default: 'https://get.helm.sh/helm-v3.9.3-linux-amd64.tar.gz'
     constraints:
       - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 
@@ -102,14 +89,11 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          id: { get_secret: [ eaas_params, azure, production, network, blueprint ] }
           blueprint_archive: network.zip
           external_resource: false
           main_file_name: blueprint.yaml
         deployment:
-          id: { get_secret: [ eaas_params, azure, production, network, deployment ] }
           inputs: 
-            #resource_config: { get_secret: [ eaas_params, azure, production, network, inputs ] }
             resource_prefix: { get_attribute: [ prefix, value ] }
             cloud_credentials: { get_input: cloud_credentials }
           auto_inc_suffix: true
@@ -127,7 +111,7 @@ node_templates:
         tags:
           Name: { concat: [ { get_attribute: [ network, capabilities, resource_prefix ] }, '-aks-cluster' ] }
           tier: "Free"
-        kubernetes_version: { get_input: [ resource_config, kubernetes_version ] }
+        kubernetes_version: ""
         dns_prefix: { concat: [ { get_attribute: [ network, capabilities, resource_prefix ] }, 'aks' ] }
         agent_pool_profiles:
           - name: 'ap1'
@@ -147,9 +131,8 @@ node_templates:
           loadBalancerSku: "Standard"
           outboundType: "loadBalancer"
           loadBalancerProfile:
-            outboundIps:
-              publicIps:
-                - id: { get_attribute: [ network, capabilities, public_ips_ids, 0] }
+            managedOutboundIPs:
+              count: 2
           serviceCidr: { get_input: [ resource_config, service_cidr ] }
           dockerBridgeCidr: { get_input: [ resource_config, docker_bridge_cidr ] }
           dnsServiceIp: { get_input: [ resource_config, dns_service_ip ] }
