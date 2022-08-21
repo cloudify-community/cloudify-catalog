@@ -238,11 +238,6 @@ topics:
         path: terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
 
-      - id: tf_infracosts
-        name: InfraCosts-AWS-TFM
-        path: terraform/infracosts
-        description: Create an AWS InfraCosts using Terraform automation
-
   - name: azure_services
     target_path: s3_json_file
     blueprints:
@@ -576,12 +571,6 @@ topics:
         name: Disk-GCP-TFM
         path: terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
-      
-      #AWS others
-      - id: terraform_infracosts
-        name: InfraCosts-AWS-TFM
-        path: terraform/infracosts
-        description: Create an AWS InfraCosts using Terraform automation
 
   - name: helm_services
     target_path: s3_json_file
