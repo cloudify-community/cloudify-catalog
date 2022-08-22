@@ -1,6 +1,6 @@
 tosca_definitions_version: cloudify_dsl_1_3
 
-description: Installs Jenkins with Ansible on AWS/Azure environments.
+description: Installs Oracle with Ansible on AWS/Azure environments.
 
 imports:
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
@@ -19,7 +19,6 @@ inputs:
           - azure
           - aws
 
- # we using the virtual machine image that is under maintenance
   infra_archive:
     description: >
       URL of infra zip file.
@@ -35,29 +34,21 @@ inputs:
     description: The blueprint name, the deployment name.
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
-  admin_password:
-    type: string
-    description: A message to display on the home page of the deployed web server
-    default: { get_secret: jenkins_admin_password }
+  oracle_password:
+    description: login password for oracle db server
+    default: { get_secret: oracle_password }
 
-  website_message:
-    type: string
-    description: A message to display on the home page of the deployed web server
-    default: Welcome to Jenkins, deployed by Cloudify
-    
 node_templates:
 
-  # Generate a unique prefix to append to the infrastructure VM deployment
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: ""
 
-
-  # Deployment of the infrastructure, we pass the URL as a blueprint archive.
-  # The node will automatically fetch the file from the URL host and unzip it.
-  # We point the node to use particular infrastructure cloud provider within 
-  # main_file_name param by setting infra_name input as the file name value.
+  # deployment of the infrastructure, we pass the URL as a blueprint archive
+  # the node will automatically fetch the file from the URL host and unzip it
+  # we point the node to use particular infrastructure cloud provider within 
+  # main_file_name param by setting infra_name input as the file name value
   infrastructure:
     type: cloudify.nodes.Component
     properties:
@@ -68,13 +59,14 @@ node_templates:
           external_resource: { get_input: infra_exists }
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+          inputs: 
+            resource_prefix: { get_attribute: [ infra_prefix, value ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
-
-  # we setting the Jenkins port to be open using the security_group blueprint
-  # add the necessary ports in the infra files inside it.
-  secrurity_group_rules:
+  
+  # we setting the mysql port to be open
+  security_group_rules:
     type: cloudify.nodes.Component
     properties:
       resource_config:
@@ -85,18 +77,17 @@ node_templates:
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
+            vm_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vm_id ] }
             vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
             security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
-  # Install Jenkins using Ansible plugin, on the newly created VM.
-  # The install_jenkins.yaml playbook runs for this.
-  jenkins_app:
+  oracle_db:
     type: cloudify.nodes.ansible.Playbook
     properties:
-      playbook_path: playbooks/install_jenkins.yaml
+      playbook_path: playbooks/install_oracle.yaml
       ansible_env_vars:
         ANSIBLE_INVALID_TASK_ATTRIBUTE_FAILED: "False"
         ANSIBLE_HOST_KEY_CHECKING: "False"
@@ -108,6 +99,8 @@ node_templates:
         configure: {}
         poststart: {}
     relationships:
+      - type: cloudify.relationships.depends_on
+        target: security_group_rules
       - type: cloudify.ansible.relationships.run_on_host
         target: infrastructure
         source_interfaces:
@@ -117,7 +110,6 @@ node_templates:
                 log_stdout: false
                 store_facts: false
                 secret_keys:
-                  - pb_admin_password
                 sources:
                   instances:
                     hosts:
@@ -128,29 +120,14 @@ node_templates:
                         ansible_become: True
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
                 run_data:
-                  pb_jadmin_password: { get_input: admin_password }
-
+                  ora_password: { get_input: oracle_password }
 
 capabilities:
 
   application_endpoint:
-    description: The external endpoint of the application.
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8080' ] }
+    description: The external endpoint of the DB application.
+    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }] }
 
-  jenkins_endpoint:
-    description: application endpoint
-    value: { concat: [ { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8080' ] }
-
-# The initial admin password that is auto-generated by Jenkins install. 
-# Need to change at first login.
-#  temp_password:
-#    description: initial admin password. Please change at first login.
-#    value: { get_attribute: [jenkins_app, facts, ansible_local, customfacts, localfacts, initial_admin_password] }
-
-  jenkins_admin_password:
-    description: Admin password to login to the Jenkins portal
-    value: { get_input: admin_password }
-  
-
-
-
+  oracle_password:
+    description: Oracle password
+    value: { get_input: oracle_password }
