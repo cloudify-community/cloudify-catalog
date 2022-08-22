@@ -16,22 +16,22 @@ inputs:
     default: us-east-1
     constraints:
       - valid_values:
-        - us-east-1 #US East (N. Virginia)
-        - us-east-2 #US East (Ohio)
-        - us-west-1 #US West (N. California)
-        - us-west-2 #US West (Oregon)
-        - ca-central-1  #Canada (Central)
-        - eu-central-1  #Europe (Frankfurt)
-        - eu-west-1 #Europe (Ireland)
-        - eu-west-2 #Europe (London)
-        - eu-south-1  #Europe (Milan)
-        - eu-west-3 #Europe (Paris)
-        - eu-north-1  #Europe (Stockholm)
-        - ap-northeast-3  #Asia Pacific (Osaka)
-        - ap-northeast-2  #Asia Pacific (Seoul)
-        - ap-southeast-1  #Asia Pacific (Singapore)
-        - ap-southeast-2  #Asia Pacific (Sydney)
-        - ap-northeast-1  #Asia Pacific (Tokyo)
+          - us-east-1 #US East (N. Virginia)
+          - us-east-2 #US East (Ohio)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-central-1  #Europe (Frankfurt)
+          - eu-west-1 #Europe (Ireland)
+          - eu-west-2 #Europe (London)
+          - eu-south-1  #Europe (Milan)
+          - eu-west-3 #Europe (Paris)
+          - eu-north-1  #Europe (Stockholm)
+          - ap-northeast-3  #Asia Pacific (Osaka)
+          - ap-northeast-2  #Asia Pacific (Seoul)
+          - ap-southeast-1  #Asia Pacific (Singapore)
+          - ap-southeast-2  #Asia Pacific (Sydney)
+          - ap-northeast-1  #Asia Pacific (Tokyo)
 
   availability_zone_suffix:
     description: Availability Zone Suffix
@@ -40,9 +40,9 @@ inputs:
     default: a
     constraints:
       - valid_values:
-        - a
-        - b
-        - c
+          - a
+          - b
+          - c
 
   availability_zone:
     description: Availability Zone, combination of region and availability zone suffix
@@ -69,10 +69,10 @@ inputs:
     default: t2.micro
     constraints:
       - valid_values:
-        - t2.micro
-        - t2.small
-        - t2.medium
-        - t2.large
+          - t2.micro
+          - t2.small
+          - t2.medium
+          - t2.large
 
   agent_user:
     description: >
@@ -111,14 +111,14 @@ node_templates:
             InstanceType: { get_input: instance_type }
             UserData: { get_attribute: [ cloud_init, cloud_config ] }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: ami
-    - type: cloudify.relationships.depends_on
-      target: nic
-    - type: cloudify.relationships.depends_on
-      target: ip
-    - type: cloudify.relationships.depends_on
-      target: cloud_init
+      - type: cloudify.relationships.depends_on
+        target: ami
+      - type: cloudify.relationships.depends_on
+        target: nic
+      - type: cloudify.relationships.depends_on
+        target: ip
+      - type: cloudify.relationships.depends_on
+        target: cloud_init
 
   ami:
     type: cloudify.nodes.aws.ec2.Image
@@ -126,12 +126,12 @@ node_templates:
       resource_config:
         kwargs:
           Filters:
-          - Name: name
-            Values:
-            - { get_input: ami_name_filter }
-          - Name: owner-id
-            Values:
-            - { get_input: ami_owner_filter }
+            - Name: name
+              Values:
+                - { get_input: ami_name_filter }
+            - Name: owner-id
+              Values:
+                - { get_input: ami_owner_filter }
       client_config: *client_config
 
   ip:
@@ -139,8 +139,8 @@ node_templates:
     properties:
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: nic
+      - type: cloudify.relationships.depends_on
+        target: nic
 
   nic:
     type: cloudify.nodes.aws.ec2.Interface
@@ -151,12 +151,12 @@ node_templates:
           Description: Created by cloudify-getting-started-example.
           SubnetId: { get_attribute: [ subnet, aws_resource_id ] }
           Groups:
-          - { get_attribute: [ security_group, aws_resource_id ] }
+            - { get_attribute: [ security_group, aws_resource_id ] }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: security_group
-    - type: cloudify.relationships.depends_on
-      target: subnet
+      - type: cloudify.relationships.depends_on
+        target: security_group
+      - type: cloudify.relationships.depends_on
+        target: subnet
 
   security_group_rules:
     type: cloudify.nodes.aws.ec2.SecurityGroupRuleIngress
@@ -164,34 +164,34 @@ node_templates:
       client_config: *client_config
       resource_config:
         IpPermissions:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 9990
-          ToPort: 9990
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 2375
-          ToPort: 2375
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 22
+            ToPort: 22
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 8080
+            ToPort: 8080
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 9990
+            ToPort: 9990
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 2375
+            ToPort: 2375
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
     relationships:
-    - type: cloudify.relationships.contained_in
-      target: security_group
+      - type: cloudify.relationships.contained_in
+        target: security_group
 
   security_group:
     type: cloudify.nodes.aws.ec2.SecurityGroup
@@ -202,8 +202,8 @@ node_templates:
         Description: Created by cloudify-getting-started-example.
         VpcId: { get_attribute: [ vpc, aws_resource_id ] }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: vpc
+      - type: cloudify.relationships.depends_on
+        target: vpc
 
   route_public_subnet_internet_gateway:
     type: cloudify.nodes.aws.ec2.Route
@@ -213,10 +213,10 @@ node_templates:
           DestinationCidrBlock: '0.0.0.0/0'
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.contained_in
-      target: routetable
-    - type: cloudify.relationships.connected_to
-      target: internet_gateway
+      - type: cloudify.relationships.contained_in
+        target: routetable
+      - type: cloudify.relationships.connected_to
+        target: internet_gateway
     interfaces:
       cloudify.interfaces.lifecycle:
         stop: {}
@@ -226,10 +226,10 @@ node_templates:
     properties:
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.contained_in
-      target: vpc
-    - type: cloudify.relationships.connected_to
-      target: subnet
+      - type: cloudify.relationships.contained_in
+        target: vpc
+      - type: cloudify.relationships.connected_to
+        target: subnet
 
   subnet:
     type: cloudify.nodes.aws.ec2.Subnet
@@ -239,16 +239,16 @@ node_templates:
         CidrBlock: 10.10.4.0/24
         AvailabilityZone: { get_input: availability_zone }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: vpc
+      - type: cloudify.relationships.depends_on
+        target: vpc
 
   internet_gateway:
     type: cloudify.nodes.aws.ec2.InternetGateway
     properties:
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.connected_to
-      target: vpc
+      - type: cloudify.relationships.depends_on
+        target: vpc
 
   vpc:
     type: cloudify.nodes.aws.ec2.Vpc
@@ -262,11 +262,11 @@ node_templates:
     properties:
       resource_config:
         users:
-        - name: { get_input: agent_user }
-          shell: /bin/bash
-          sudo: ['ALL=(ALL) NOPASSWD:ALL']
-          ssh-authorized-keys:
-          - { get_attribute: [agent_key, public_key_export] }
+          - name: { get_input: agent_user }
+            shell: /bin/bash
+            sudo: ['ALL=(ALL) NOPASSWD:ALL']
+            ssh-authorized-keys:
+              - { get_attribute: [agent_key, public_key_export] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: agent_key
@@ -287,6 +287,6 @@ node_templates:
             store_private_key_material: true
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - aws

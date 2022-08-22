@@ -189,25 +189,29 @@ labels:
 
 capabilities:
   kafka_access_points:
+    description: Access point to Kafka
     value:
       [
         { concat: [ { get_attribute: [ kafka-first, kubernetes, status, load_balancer, ingress, 0, ip ] }, ":", { get_input: access_port } ] },
-         concat: [ { get_attribute: [ kafka-second, kubernetes, status, load_balancer, ingress, 0, ip ] }, ":", { get_input: access_port } ],
+        concat: [ { get_attribute: [ kafka-second, kubernetes, status, load_balancer, ingress, 0, ip ] }, ":", { get_input: access_port } ],
       ]
 
-  zookepeer_password:
+  zookeeper_password:
+    description: Zookeeper password
     value: { get_attribute: [ password_zookeeper, master_password ] }
-  
+
   zookeeper_user:
+    description: Zookeeper user
     value: { get_input: zookeeper_user }
 
   kafka_password:
+    description: Kafka password
     value: { get_attribute: [ password_kafka, master_password ] }
 
   kafka_user:
+    description: Kafka user
     value: { get_input: kafka_user }
 
   jks_password:
+    description: JSK passowrd
     value: { get_attribute: [ password_jks, master_password ] }
-
- 

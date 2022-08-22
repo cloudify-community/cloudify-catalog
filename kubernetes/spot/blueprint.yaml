@@ -36,7 +36,6 @@ inputs:
     description: AWS Region
     default: "us-east-1"
 
-
 node_templates:
   terraform:
     type: cloudify.nodes.terraform
@@ -61,4 +60,3 @@ node_templates:
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
-

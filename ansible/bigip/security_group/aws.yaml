@@ -14,36 +14,35 @@ inputs:
 
   vpc_id:
     type: string
-    
+
   aws_region_name:
-      type: string
-      default: 'us-east-1'
-      constraints:
-        - valid_values:
-            - us-east-1
-            - us-east-2
-            - us-west-1
-            - us-west-2
-            - eu-central-1
-            - eu-west-1
-            - eu-west-2
-            - eu-south-1
-            - eu-west-3
-            - eu-north-1
-            - af-south-1
-            - ap-east-1
-            - ap-south-1
-            - ap-northeast-3
-            - ap-northeast-2
-            - ap-southeast-1
-            - ap-southeast-2
-            - ap-northeast-1
-            - ca-central-1
-            - cn-north-1
-            - cn-northwest-1
-            - me-south-1
-            - sa-east-1
-    
+    type: string
+    default: 'us-east-1'
+    constraints:
+      - valid_values:
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - eu-central-1
+          - eu-west-1
+          - eu-west-2
+          - eu-south-1
+          - eu-west-3
+          - eu-north-1
+          - af-south-1
+          - ap-east-1
+          - ap-south-1
+          - ap-northeast-3
+          - ap-northeast-2
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-northeast-1
+          - ca-central-1
+          - cn-north-1
+          - cn-northwest-1
+          - me-south-1
+          - sa-east-1
 
 dsl_definitions:
 
@@ -60,14 +59,14 @@ node_templates:
       client_config: *client_config
       resource_config:
         IpPermissions:
-        - IpProtocol: tcp
-          FromPort: 8080
-          ToPort: 8080
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 8080
+            ToPort: 8080
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
     relationships:
-    - type: cloudify.relationships.contained_in
-      target: security_group
+      - type: cloudify.relationships.contained_in
+        target: security_group
 
   security_group:
     type: cloudify.nodes.aws.ec2.SecurityGroup

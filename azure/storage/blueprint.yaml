@@ -13,7 +13,7 @@ inputs:
     display_label: Enter prefix to be applied to resource names
     description: >
       Resource names created in Azure by the blueprint can be
-      customized by supplying a prefix string (e.g. 'test_') 
+      customized by supplying a prefix string (e.g. 'test_')
     default: ''
   subscription_id:
     type: string
@@ -53,11 +53,11 @@ inputs:
     default: Standard_LRS
     constraints:
       - valid_values:
-        - Standard_LRS
-        - Standard_ZRS
-        - Standard_GRS
-        - Standard_RAGRS
-        - Premium_LRS
+          - Standard_LRS
+          - Standard_ZRS
+          - Standard_GRS
+          - Standard_RAGRS
+          - Premium_LRS
   location:
     type: string
     display_label: Azure location
@@ -65,11 +65,11 @@ inputs:
     default: EastUS
     constraints:
       - valid_values:
-        - EastUS
-        - CentralUS
-        - WestUS
-        - WestEurope
-        - CanadaCentral
+          - EastUS
+          - CentralUS
+          - WestUS
+          - WestEurope
+          - CanadaCentral
 
 dsl_definitions:
   azure_credentials: &azure_credentials
@@ -79,7 +79,7 @@ dsl_definitions:
     client_secret: {get_input: client_secret}
 
 node_templates:
-  
+
   resource_group:
     type: cloudify.nodes.azure.ResourceGroup
     properties:
@@ -88,22 +88,22 @@ node_templates:
       location: {get_input: location}
 
   storage_account:
-    type: cloudify.azure.nodes.storage.StorageAccount
+    type: cloudify.nodes.azure.storage.StorageAccount
     properties:
       client_config: *azure_credentials
       location: { get_input: location }
       resource_config:
         accountType: { get_input: account_type }
     relationships:
-    - type: cloudify.azure.relationships.contained_in_resource_group
-      target: resource_group
+      - type: cloudify.relationships.azure.contained_in_resource_group
+        target: resource_group
 
 labels:
   csys-obj-type:
     values:
       - service
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - azure
       - storage
 

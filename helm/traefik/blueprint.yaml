@@ -71,10 +71,11 @@ node_templates:
         target: release
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - helm
 
 capabilities:
   traefik_endpoint:
-    value: { concat: ["https://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip ] } ] } 
+    description: Traefik endpoint
+    value: { concat: ["https://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip ] } ] }

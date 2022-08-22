@@ -105,6 +105,7 @@ labels:
 
 capabilities:
   rabbitmq_ip:
+    description: RabbitMQ IP address
     value:
       {
         concat:
@@ -117,6 +118,8 @@ capabilities:
           ],
       }
   admin_password:
+    description: Admin password
     value: { get_attribute: [password_generator, master_password] }
   port:
+    description: Port
     value: { get_attribute: [svc, kubernetes, spec, ports, 0, port] }

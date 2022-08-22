@@ -2,7 +2,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
   This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair
-  which it stores in the secret store.  It associates a public ip with 
+  which it stores in the secret store.  It associates a public ip with
   the instance
 
 imports:
@@ -16,7 +16,7 @@ inputs:
     display_label: Enter prefix to be applied to resource names
     description: >
       Resource names created in Azure by the blueprint can be
-      customized by supplying a prefix string (e.g. 'test_') 
+      customized by supplying a prefix string (e.g. 'test_')
     default: ''
   subscription_id:
     type: string
@@ -61,11 +61,11 @@ inputs:
     default: EastUS
     constraints:
       - valid_values:
-        - EastUS
-        - CentralUS
-        - WestUS
-        - WestEurope
-        - CanadaCentral
+          - EastUS
+          - CentralUS
+          - WestUS
+          - WestEurope
+          - CanadaCentral
   image_publisher:
     type: string
     display_label: Enter image publisher
@@ -91,7 +91,7 @@ inputs:
     display_label: Enter desired admin username
     description: Enter desired admin username
     default: {get_secret: azure_admin_username}
-  admin_password: 
+  admin_password:
     type: string
     display_label: Enter admin password
     description: Enter the desired admin password
@@ -137,15 +137,15 @@ node_templates:
         image_sku: {get_input: image_sku}
         image_version: {get_input: image_version}
         admin_username: {get_input: admin_username}
-        admin_password: {get_input: admin_password} 
+        admin_password: {get_input: admin_password}
         ssh_keydata: {get_attribute: [vm_ssh_key, public_key_export]}
     relationships:
       - type: cloudify.relationships.depends_on
         target: vm_ssh_key
-    
+
 labels:
-  csys-obj-type: 
-    values: 
+  csys-obj-type:
+    values:
       - environment
 
 capabilities:
@@ -154,6 +154,6 @@ capabilities:
     description: The public ip of the instance
     value: { get_attribute: [ deployment, public_ip] }
 
-  private_key: 
+  private_key:
     description: The private key for the instance
     value: { get_attribute: [vm_ssh_key, private_key_export] }

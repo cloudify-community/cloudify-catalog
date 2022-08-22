@@ -109,7 +109,7 @@ inputs:
     default: default
 
   ssh_keypair:
-    display_label: SSH key name 
+    display_label: SSH key name
     type: string
     default: { concat: ["eks_key", { get_input: eks_cluster_name }] }
 
@@ -216,7 +216,7 @@ node_templates:
           inputs:
             modify_vpc_attribute_args:
               EnableDnsHostnames:
-                Value: True
+                Value: true
 
   internet_gateway:
     type: cloudify.nodes.aws.ec2.InternetGateway
@@ -532,10 +532,10 @@ node_templates:
               - { get_attribute: [public_subnet_02, aws_resource_id] }
             securityGroupIds:
               - { get_attribute: [security_group, aws_resource_id] }
-            endpointPublicAccess: True
-            endpointPrivateAccess: False
+            endpointPublicAccess: true
+            endpointPrivateAccess: false
       client_config: *client_config
-      store_kube_config_in_runtime: True
+      store_kube_config_in_runtime: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: eks_service_iam_role
@@ -757,19 +757,24 @@ node_templates:
 
 capabilities:
   kubernetes_cluster_host:
+    description: Kubernetes cluster host
     value:
       { get_attribute: [eks_cluster, kubeconf, clusters, 0, cluster, server] }
 
   token:
+    description: Token
     value: { get_attribute: [store_token_and_kubeconfig, token] }
 
   ssl_ca_cert:
+    description: SSL CA certificate
     value: { get_attribute: [store_token_and_kubeconfig, ssl_ca_cert] }
 
   connection_details:
+    description: Connection details
     value: *kubernetes_master_configuration
 
 outputs:
   endpoint:
+    description: Kubernetes endpoint
     value:
       { get_attribute: [eks_cluster, kubeconf, clusters, 0, cluster, server] }

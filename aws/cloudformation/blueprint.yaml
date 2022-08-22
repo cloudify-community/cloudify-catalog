@@ -102,14 +102,14 @@ node_templates:
         kwargs:
           StackName: { concat: [ 'Two-Tier-Sample-Stack', { get_input: env_name } ] }
           Parameters:
-          - ParameterKey: InstanceType
-            ParameterValue: t2.small
-          - ParameterKey: KeyName
-            ParameterValue: { concat: [ 'two_tier_key', { get_input: env_name } ] }
-          - ParameterKey: VpcCIDR
-            ParameterValue: { get_input: vpc_cidr }
-          - ParameterKey: SubnetCIDR
-            ParameterValue: { get_input: subnet_cidr }
+            - ParameterKey: InstanceType
+              ParameterValue: t2.small
+            - ParameterKey: KeyName
+              ParameterValue: { concat: [ 'two_tier_key', { get_input: env_name } ] }
+            - ParameterKey: VpcCIDR
+              ParameterValue: { get_input: vpc_cidr }
+            - ParameterKey: SubnetCIDR
+              ParameterValue: { get_input: subnet_cidr }
           TemplateURL: { get_input: template_url }
     relationships:
       - type: cloudify.relationships.depends_on

@@ -76,12 +76,14 @@ node_templates:
         target: release
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - helm
 
 capabilities:
   url:
-    value: { concat: ["https://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip] }] } 
+    description: URL
+    value: { concat: [ "https://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip] } ] }
   token:
+    description: Token
     value: { get_environment_capability: token }

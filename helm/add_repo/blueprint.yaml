@@ -29,7 +29,6 @@ inputs:
       https://kubernetes-charts.storage.googleapis.com/
     type: string
 
-
 node_templates:
 
   helm_install:

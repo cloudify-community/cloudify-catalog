@@ -53,8 +53,8 @@ node_templates:
         apiVersion: v1
         kind: Namespace
         metadata:
-          name: { get_input: namespace } 
-          
+          name: { get_input: namespace }
+
   release:
     type: cloudify.nodes.helm.Release
     properties:
@@ -80,14 +80,16 @@ node_templates:
         type: cloudify.relationships.depends_on
       - target: namespace
         type: cloudify.relationships.depends_on
-  
+
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - helm
 
 capabilities:
   namespace:
+    description: Namespace
     value: { get_input: namespace }
   service_name:
-    value: { concat : [ { get_input: release_name }, "-cert-manager" ] }
+    description: Created service name
+    value: { concat: [ { get_input: release_name }, "-cert-manager" ] }

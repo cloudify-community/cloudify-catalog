@@ -5,29 +5,29 @@ imports:
   - plugin:cloudify-aws-plugin
 
 inputs:
-
   aws_region_name:
     description: AWS Region Name
     display_label: AWS Region Name
+    type: string
     default: us-east-1
     constraints:
       - valid_values:
-        - us-east-1 #US East (N. Virginia)
-        - us-east-2 #US East (Ohio)
-        - us-west-1 #US West (N. California)
-        - us-west-2 #US West (Oregon)
-        - ca-central-1  #Canada (Central)
-        - eu-central-1  #Europe (Frankfurt)
-        - eu-west-1 #Europe (Ireland)
-        - eu-west-2 #Europe (London)
-        - eu-south-1  #Europe (Milan)
-        - eu-west-3 #Europe (Paris)
-        - eu-north-1  #Europe (Stockholm)
-        - ap-northeast-3  #Asia Pacific (Osaka)
-        - ap-northeast-2  #Asia Pacific (Seoul)
-        - ap-southeast-1  #Asia Pacific (Singapore)
-        - ap-southeast-2  #Asia Pacific (Sydney)
-        - ap-northeast-1  #Asia Pacific (Tokyo)
+          - us-east-1 #US East (N. Virginia)
+          - us-east-2 #US East (Ohio)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-central-1  #Europe (Frankfurt)
+          - eu-west-1 #Europe (Ireland)
+          - eu-west-2 #Europe (London)
+          - eu-south-1  #Europe (Milan)
+          - eu-west-3 #Europe (Paris)
+          - eu-north-1  #Europe (Stockholm)
+          - ap-northeast-3  #Asia Pacific (Osaka)
+          - ap-northeast-2  #Asia Pacific (Seoul)
+          - ap-southeast-1  #Asia Pacific (Singapore)
+          - ap-southeast-2  #Asia Pacific (Sydney)
+          - ap-northeast-1  #Asia Pacific (Tokyo)
 
   availability_zone_suffix:
     description: Availability Zone Suffix
@@ -35,9 +35,9 @@ inputs:
     default: a
     constraints:
       - valid_values:
-        - a
-        - b
-        - c
+          - a
+          - b
+          - c
 
   availability_zone:
     description: The availability zone in the AWS Region.
@@ -77,10 +77,10 @@ node_templates:
       resource_config:
         kwargs: {}
     relationships:
-    - type: cloudify.relationships.aws.route53.record_set.connected_to
-      target: dns_hosted_zone
-    - type: cloudify.relationships.depends_on
-      target: instance
+      - type: cloudify.relationships.aws.route53.record_set.connected_to
+        target: dns_hosted_zone
+      - type: cloudify.relationships.depends_on
+        target: instance
     interfaces:
       cloudify.interfaces.lifecycle:
         precreate:
@@ -93,7 +93,7 @@ node_templates:
                 Type: !!str TXT
                 TTL: !!int 60
                 ResourceRecords:
-                - Value: { concat: [ '"', { get_attribute: [ instance, ip ] } , '"' ] }
+                  - Value: { concat: [ '"', { get_attribute: [ instance, ip ] }, '"' ] }
 
   dns_record_set_1:
     type: cloudify.nodes.aws.route53.RecordSet
@@ -107,10 +107,10 @@ node_templates:
             Type: !!str TXT
             TTL: !!int 60
             ResourceRecords:
-            - Value: '"Created using Cloudify"'
+              - Value: '"Created using Cloudify"'
     relationships:
-    - type: cloudify.relationships.aws.route53.record_set.connected_to
-      target: dns_hosted_zone
+      - type: cloudify.relationships.aws.route53.record_set.connected_to
+        target: dns_hosted_zone
 
   dns_hosted_zone:
     type: cloudify.nodes.aws.route53.HostedZone
@@ -126,8 +126,8 @@ node_templates:
             VPCRegion: { get_input: aws_region_name }
             VPCId: { get_attribute: [ dns_vpc, aws_resource_id ] }
     relationships:
-    - type: cloudify.relationships.aws.route53.hosted_zone.connected_to
-      target: dns_vpc
+      - type: cloudify.relationships.aws.route53.hosted_zone.connected_to
+        target: dns_vpc
 
   instance:
     type: cloudify.nodes.aws.ec2.Instances
@@ -141,10 +141,10 @@ node_templates:
         InstanceType: m3.large
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: dns_subnet
-    - type: cloudify.relationships.depends_on
-      target: ubuntu_trusty_ami
+      - type: cloudify.relationships.depends_on
+        target: dns_subnet
+      - type: cloudify.relationships.depends_on
+        target: ubuntu_trusty_ami
 
   ubuntu_trusty_ami:
     type: cloudify.nodes.aws.ec2.Image
@@ -152,12 +152,12 @@ node_templates:
       resource_config:
         kwargs:
           Filters:
-          - Name: name
-            Values:
-            - 'ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20170727'
-          - Name: owner-id
-            Values:
-            - '099720109477'
+            - Name: name
+              Values:
+                - 'ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20170727'
+            - Name: owner-id
+              Values:
+                - '099720109477'
       client_config: *client_config
 
   dns_subnet:
@@ -168,8 +168,8 @@ node_templates:
         AvailabilityZone: { get_input: availability_zone }
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: dns_vpc
+      - type: cloudify.relationships.depends_on
+        target: dns_vpc
 
   dns_vpc:
     type: cloudify.nodes.aws.ec2.Vpc

@@ -83,12 +83,14 @@ node_templates:
         target: release
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - helm
 
 capabilities:
   postgres_server_ip:
-    value: { concat: ["http://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip ] }] } 
+    description: PostgreSQL server ip address
+    value: { concat: [ "http://", { get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, ip ] } ] }
   postgres_admin_pwd:
+    description: PostgreSQL admin password
     value: { get_attribute: [ password_generator, master_password ] }

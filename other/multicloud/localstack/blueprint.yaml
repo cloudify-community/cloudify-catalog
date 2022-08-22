@@ -1,7 +1,8 @@
 tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
-  Cloudify Getting Started blueprint for localstack deployment. Localstack is a cloud service emulator that runs in a single container on your local environment
+  Cloudify Getting Started blueprint for localstack deployment. Localstack is a cloud
+  service emulator that runs in a single container on your local environment
 
 imports:
   - cloudify/types/types.yaml
@@ -23,8 +24,9 @@ inputs:
           - gcp
 
   infra_archive:
-     # Don't update this line - it is being updated automatically during merging. The getting-started.zip will have the updated URL.
-     default: 'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
+     # Don't update this line - it is being updated automatically during merging. The getting-started.zip will have
+     # the updated URL.
+    default: 'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
   infra_exists:
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
@@ -38,7 +40,7 @@ inputs:
     type: string
     description: Control parameters for names in resources.
     default: mc-localstack
-  
+
 node_templates:
 
   infrastructure:
@@ -54,7 +56,6 @@ node_templates:
           id: { get_input: infra_deployment_id }
           inputs:
             env_name: { get_input: env_name }
-      
 
   localstack:
     type: cloudify.nodes.ApplicationServer
@@ -65,7 +66,7 @@ node_templates:
           inputs:
             script_path: scripts/localstack/create_localstack.sh
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { get_input: infra_deployment_id } , endpoint ] }
+              host_string: { get_capability: [ { get_input: infra_deployment_id }, endpoint ] }
               user: { get_capability: [ { get_input: infra_deployment_id }, user ] }
               key: { get_capability: [ { get_input: infra_deployment_id }, key_content ] }
         start:
@@ -82,9 +83,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
-       
 outputs:
   localstack_endpoint:
     description: endpoint of the localstack application
     value: { concat: [ 'http://', { get_capability: [ { get_attribute: [ infrastructure, deployment, id ] }, endpoint ] }, ':4566' ] }
-

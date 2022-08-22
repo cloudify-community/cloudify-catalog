@@ -44,7 +44,7 @@ inputs:
   managed_cluster_name:
     description: Managed Cluster Name, combination of prefix and suffix
     type: string
-    default: { concat: [ { get_input: managed_cluster_name_preffix } , { get_input: resource_suffix } ] }
+    default: { concat: [ { get_input: managed_cluster_name_preffix }, { get_input: resource_suffix } ] }
     hidden: true
 
   service_account_name:
@@ -95,7 +95,7 @@ dsl_definitions:
       adminUsername: "azureuser"
       ssh:
         publicKeys:
-          - keyData : { get_attribute: [agent_key, public_key_export] }
+          - keyData: { get_attribute: [agent_key, public_key_export] }
     network_profile:
       loadBalancerSku: "standard"
       outboundType: "loadBalancer"
@@ -108,29 +108,28 @@ dsl_definitions:
     addon_profiles: {}
     enable_rbac: true
 
-
 node_templates:
 
   resource_group:
-    type: cloudify.azure.nodes.ResourceGroup
+    type: cloudify.nodes.azure.ResourceGroup
     properties:
       name: { get_input: resource_group_name }
       location: { get_input: location }
-      azure_config: *azure_config
+      client_config: *azure_config
 
   managed_cluster:
-    type: cloudify.azure.nodes.compute.ManagedCluster
+    type: cloudify.nodes.azure.compute.ManagedCluster
     properties:
       resource_group: { get_input: resource_group_name }
       name: { get_input: managed_cluster_name }
       resource_config: *resource_config
-      azure_config: *azure_config
+      client_config: *azure_config
       store_kube_config_in_runtime: true
     relationships:
-    - type: cloudify.azure.relationships.contained_in_resource_group
-      target: resource_group
-    - type: cloudify.relationships.depends_on
-      target: agent_key
+      - type: cloudify.relationships.azure.contained_in_resource_group
+        target: resource_group
+      - type: cloudify.relationships.depends_on
+        target: agent_key
 
   kubernetes_master:
     type: cloudify.kubernetes.nodes.Master
@@ -173,9 +172,9 @@ node_templates:
           kind: ClusterRole
           name: cluster-admin
         subjects:
-        - kind: ServiceAccount
-          name: { get_input: service_account_name }
-          namespace: { get_input: service_account_namespace }
+          - kind: ServiceAccount
+            name: { get_input: service_account_name }
+            namespace: { get_input: service_account_namespace }
       options:
         namespace: { get_input: service_account_namespace }
     relationships:
@@ -236,7 +235,7 @@ node_templates:
       client_config:
         configuration:
           api_options:
-            host:  { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }
+            host: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }
             api_key: { get_attribute: [ store_token, token ] }
             debug: false
             verify_ssl: false
@@ -261,39 +260,44 @@ node_templates:
         postdelete: {}
 
   agent_key:
-      type: cloudify.keys.nodes.RSAKey
-      properties:
-        resource_config:
-          key_name: { get_input: agent_key_name }
-          openssh_format: true
-        use_secret_store: true
-        use_secrets_if_exist: true
-      interfaces:
-        cloudify.interfaces.lifecycle:
-          create:
-            implementation: keys.cloudify_ssh_key.operations.create
-            inputs:
-              store_private_key_material: true
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { get_input: agent_key_name }
+        openssh_format: true
+      use_secret_store: true
+      use_secrets_if_exist: true
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: keys.cloudify_ssh_key.operations.create
+          inputs:
+            store_private_key_material: true
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - k8s
 
 capabilities:
 
   kubernetes_cluster_host:
+    description: Kubernetes cluster host
     value: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }
-  
+
   token:
+    description: Token
     value: { get_attribute: [ store_token, token ] }
 
   ssl_ca_cert:
+    description: SSL CA certificate
     value: { get_attribute: [ store_token, ssl_ca_cert ] }
 
   connection_details:
+    description: Connection details
     value: *kubernetes_master_configuration
 
 outputs:
 
   endpoint:
+    description: Kubernetes endpoint
     value: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }
