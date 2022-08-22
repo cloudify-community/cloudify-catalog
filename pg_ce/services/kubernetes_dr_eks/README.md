@@ -6,17 +6,17 @@ The blueprint creates EKS service across region configuration. The blueprint dep
 
 ## Requirmennts
 
-1. In order to run successfully this blueprint you'll need to deploy the Azure DR production environment (Production-Env-DR-AWS-CFY) from Kubernetes tab.
-2. Then you need to upload this blueprint and create the deployment. During the deployment the environment will be assumed as 'aws_dr' and the process will proceed.
+In order to run successfully the blueprint you'll need AWS access key id and aceess secret key. The credentials to the AWS should have permission to describe, update, delete and create resources in the cloud provider environment. 
 
 ## Secrets
 
-The blueprint uses below secret in json format in order to set up service in AWS cloud - the example of the secret format could be found [here](https://github.com/cloudify-community/eaas-example/blob/master/secret.json).
+The blueprint uses below secret in json format in order to set up service in AWS cloud.
 
 | Name                  | Description                        |
 | --------------------- | ---------------------------------- |
 | datadog_api_key       | API key for the Datadog monitoring |
-
+| aws_access_key_id     | AWS Access Key ID                  |
+| aws_access_secret_key | AWS Access Secret Key              |
 
 ## Plugins
 
@@ -30,7 +30,9 @@ The blueprint uses below secret in json format in order to set up service in AWS
 | Display Label                            | Name                | Type              | Default Value                                    |
 | ---------------------------------------- | ------------------- | ----------------- | ------------------------------------------------ |
 | The resource prefix for resources naming | resource_prefix     | string            | ''                                               |
-| The domain for load balancer creation    | domain_owned        | string            | 'aws.com                                         |
+| The domain for load balancer creation    | domain_owned        | string            | aws.com                                          |
+| AWS Region Name A                        | aws_region_name_a   | string            | us-east-1                                        |
+| AWS Region Name B                        | aws_region_name_b   | string            | eu-west-1                                        |
 
 ## Node Types
 

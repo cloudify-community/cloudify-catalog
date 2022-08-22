@@ -8,7 +8,7 @@ imports:
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
-
+  
   aws_access_key_id:
     type: string
     display_label: AWS Access Key ID

@@ -12,34 +12,16 @@ dsl_definitions:
     client_id: { get_input: [ cloud_credentials, azure_client_id ] }
     client_secret: { get_input: [ cloud_credentials, azure_client_secret ] }
 
-data_types:
-  cloud_credentials:
-    properties:
-      azure_tenant_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_tenant_id] }
-      azure_subscription_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_subscription_id] }
-      azure_client_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_client_id] }
-      azure_client_secret:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_client_secret] }
-      public_key_content:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, public_key_content] }
-      private_key_content:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, private_key_content] }
-      region_name:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, region_name] }
-
 inputs:
   cloud_credentials:
-    type: cloud_credentials
+    default:
+      azure_tenant_id: { get_secret: azure_tenant_id }
+      azure_subscription_id: { get_secret: azure_subscription_id }
+      azure_client_id: { get_secret: azure_client_id }
+      azure_client_secret: { get_secret: azure_client_secret }
+      public_key_content: { get_secret: public_key_content }
+      private_key_content: { get_secret: private_key_content }
+      region_name: { get_secret: region_name }
     display_label: Cloud Credentials
     description: Cloud Credentials
 

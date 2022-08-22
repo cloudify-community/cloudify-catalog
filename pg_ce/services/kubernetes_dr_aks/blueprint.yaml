@@ -2,33 +2,81 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
+  - plugin:cloudify-utilities-plugin
   - plugin:cloudify-azure-plugin?version= >=3.0.10
   - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
 
-dsl_definitions:
-  client_config: &azure_config
-    subscription_id: { get_input: [ cloud_credentials, azure_subscription_id ] }
-    tenant_id: { get_input: [ cloud_credentials, azure_tenant_id ] }
-    client_id: { get_input: [ cloud_credentials, azure_client_id ] }
-    client_secret: { get_input: [ cloud_credentials, azure_client_secret ] }
-
 labels:
-  csys-obj-parent:
+  csys-obj-type:
     values:
-      - azure_dr
-
+      - service
+      
 inputs:
 
-  cloud_credentials_a:
-    type: cloud_credentials_a
-    display_label: Cloud Credentials A
-    description: Credentials to the cloud A
-
-  cloud_credentials_b:
-    type: cloud_credentials_b
-    display_label: Cloud Credentials B
-    description: Credentials to the cloud B
+  region_name_a:
+    type: string
+    display_label: Azure location for region A
+    description: Select Azure location name for region A
+    default: EastUS
+    constraints:
+      - valid_values:
+        - BrazilSouth
+        - FranceCentral
+        - SouthAfricaNorth
+        - AustraliaEast
+        - CanadaCentral
+        - GermanyWestCentral
+        - CentralIndia
+        - CentralUS
+        - NorthEurope
+        - JapanEast
+        - EastUS
+        - NorwayEast
+        - KoreaCentral
+        - EastUS2
+        - UKSouth
+        - SoutheastAsia
+        - SouthCentralUS
+        - WestEurope
+        - EastAsia
+        - USGovVirginia
+        - SwedenCentral
+        - ChinaNorth3
+        - WestUS2
+        - WestUS3
+        
+  region_name_b:
+    type: string
+    display_label: Azure location for region B
+    description: Select Azure location name for region B
+    default: WestEurope
+    constraints:
+      - valid_values:
+        - BrazilSouth
+        - FranceCentral
+        - SouthAfricaNorth
+        - AustraliaEast
+        - CanadaCentral
+        - GermanyWestCentral
+        - CentralIndia
+        - CentralUS
+        - NorthEurope
+        - JapanEast
+        - EastUS
+        - NorwayEast
+        - KoreaCentral
+        - EastUS2
+        - UKSouth
+        - SoutheastAsia
+        - SouthCentralUS
+        - WestEurope
+        - EastAsia
+        - USGovVirginia
+        - SwedenCentral
+        - ChinaNorth3
+        - WestUS2
+        - WestUS3
 
   resource_prefix:
     type: string
@@ -39,44 +87,20 @@ inputs:
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
 
-data_types:
-
-  cloud_credentials:
-    properties:
-      azure_tenant_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_tenant_id] }
-      azure_subscription_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_subscription_id] }
-      azure_client_id:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_client_id] }
-      azure_client_secret:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, azure_client_secret] }
-      public_key_content:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, public_key_content] }
-      private_key_content:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, private_key_content] }
-  
-  cloud_credentials_a:
-    derived_from: cloud_credentials
-    properties:
-      region_name:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, region_name_a] }
-
-  cloud_credentials_b:
-    derived_from: cloud_credentials
-    properties:
-      region_name:
-        type: string
-        default: { get_environment_capability: [cloud_credentials, region_name_b ] }
-
 node_templates:
+
+  key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { concat: ["RSA-", { get_sys: [deployment, id] }] }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          inputs:
+            store_public_key_material: true
+            store_private_key_material: true
+
   prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
@@ -90,33 +114,48 @@ node_templates:
           blueprint_archive: blueprints/aks.zip
           external_resource: false
         deployment:
-          id: aks_cluster_a
           inputs: 
-            resource_config: {}
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
-            cloud_credentials: { get_input: cloud_credentials_a }
+            cloud_credentials:
+              azure_tenant_id: { get_secret: azure_tenant_id }
+              azure_subscription_id: { get_secret: azure_subscription_id }
+              azure_client_id: { get_secret: azure_client_id }
+              azure_client_secret: { get_secret: azure_client_secret }
+              public_key_content: { get_secret: public_key_content }
+              private_key_content: { get_secret: private_key_content }
+              region_name: { get_input: region_name_a }
           auto_inc_suffix: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix
+      - type: cloudify.relationships.depends_on
+        target: key
 
   aks_cluster_b:
-   type: cloudify.nodes.ServiceComponent
-   properties:
-     resource_config:
-       blueprint:
-         blueprint_archive: blueprints/aks.zip
-         external_resource: false
-       deployment:
-         id: aks_cluster_b
-         inputs: 
-           resource_config: {}
-           resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'bdr' ] }
-           cloud_credentials: { get_input: cloud_credentials_b }
-         auto_inc_suffix: true
-   relationships:
-     - type: cloudify.relationships.depends_on
-       target: prefix
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: blueprints/aks.zip
+          external_resource: false
+        deployment:
+          inputs: 
+            resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'bdr' ] }
+            cloud_credentials:
+              azure_tenant_id: { get_secret: azure_tenant_id }
+              azure_subscription_id: { get_secret: azure_subscription_id }
+              azure_client_id: { get_secret: azure_client_id }
+              azure_client_secret: { get_secret: azure_client_secret }
+              public_key_content: { get_secret: public_key_content }
+              private_key_content: { get_secret: private_key_content }
+              region_name: { get_input: region_name_b }
+          auto_inc_suffix: true
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: prefix
+      - type: cloudify.relationships.depends_on
+        target: key
+    
 
   load_balancer:
     type: cloudify.nodes.ServiceComponent
@@ -126,10 +165,16 @@ node_templates:
           blueprint_archive: blueprints/lb.zip
           external_resource: false
         deployment:
-          id: load_balancer
           inputs: 
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
-            cloud_credentials: { get_input: cloud_credentials_b }
+            cloud_credentials:
+              azure_tenant_id: { get_secret: azure_tenant_id }
+              azure_subscription_id: { get_secret: azure_subscription_id }
+              azure_client_id: { get_secret: azure_client_id }
+              azure_client_secret: { get_secret: azure_client_secret }
+              public_key_content: { get_secret: public_key_content }
+              private_key_content: { get_secret: private_key_content }
+              region_name: { get_input: region_name_b }
             fqdn_primary: { get_attribute: [ aks_cluster_a, capabilities, hello_world_fqdn ] }
             fqdn_secondary: { get_attribute: [ aks_cluster_b, capabilities, hello_world_fqdn ] }
             resource_group_name: { get_attribute: [ aks_cluster_a, capabilities, rg_id ] }
@@ -150,14 +195,20 @@ node_templates:
           blueprint_archive: blueprints/database.zip
           external_resource: false
         deployment:
-          id: database_dr
           inputs: 
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
-            cloud_credentials: { get_input: cloud_credentials_a }
+            cloud_credentials:
+              azure_tenant_id: { get_secret: azure_tenant_id }
+              azure_subscription_id: { get_secret: azure_subscription_id }
+              azure_client_id: { get_secret: azure_client_id }
+              azure_client_secret: { get_secret: azure_client_secret }
+              public_key_content: { get_secret: public_key_content }
+              private_key_content: { get_secret: private_key_content }
+              region_name: { get_input: region_name_a }
             resource_group_a: { get_attribute: [ aks_cluster_a, capabilities, resource_group_name ] }
             resource_group_b: { get_attribute: [ aks_cluster_b, capabilities, resource_group_name ] }
-            location_a: { get_input: [ cloud_credentials_a, region_name ] }
-            location_b: { get_input: [ cloud_credentials_b, region_name ] } 
+            location_a: { get_input: region_name_a }
+            location_b: { get_input: region_name_b }
             subnet_a: { get_attribute: [ aks_cluster_a, capabilities, private_subnet_ids, 0 ] }
             subnet_b: { get_attribute: [ aks_cluster_b, capabilities, private_subnet_ids, 0 ] }
           auto_inc_suffix: true
@@ -178,11 +229,18 @@ node_templates:
           id: storage_dr
           inputs: 
             resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
-            cloud_credentials: { get_input: cloud_credentials_a }
+            cloud_credentials:
+              azure_tenant_id: { get_secret: azure_tenant_id }
+              azure_subscription_id: { get_secret: azure_subscription_id }
+              azure_client_id: { get_secret: azure_client_id }
+              azure_client_secret: { get_secret: azure_client_secret }
+              public_key_content: { get_secret: public_key_content }
+              private_key_content: { get_secret: private_key_content }
+              region_name: { get_input: region_name_a }
             resource_group_a: { get_attribute: [ aks_cluster_a, capabilities, resource_group_name ] }
             resource_group_b: { get_attribute: [ aks_cluster_b, capabilities, resource_group_name ] }
-            location_a: { get_input: [ cloud_credentials_a, region_name ] }
-            location_b: { get_input: [ cloud_credentials_b, region_name ] } 
+            location_a: { get_input: region_name_a }
+            location_b: { get_input: region_name_b }
           auto_inc_suffix: true
     relationships:
      - type: cloudify.relationships.depends_on
@@ -191,33 +249,33 @@ node_templates:
        target: aks_cluster_a
 
 outputs:
+
   tm_endpoint:
-    value:
-      - { get_attribute: [ load_balancer, capabilities, tm_endpoint ] }
+    value: { get_attribute: [ load_balancer, capabilities, tm_endpoint ] }
       
   database_enpoint:
-    value:
-      - { get_attribute: [ database, capabilities, sql_endpoint ] }
+    value: { get_attribute: [ database, capabilities, sql_endpoint ] }
   
   database_password:
-    value: 
-      - { get_attribute: [ database, capabilities, database_password ] }
+    value: { get_attribute: [ database, capabilities, database_password ] }
 
   database_login: 
-    value:
-      - { get_attribute: [ database, capabilities, database_login ] }
+    value: { get_attribute: [ database, capabilities, database_login ] }
   
   database_name: 
-    value:
-      - { get_attribute: [ database, capabilities, database_name ] }
+    value: { get_attribute: [ database, capabilities, database_name ] }
 
   database_port:
     value: '1433'
 
   primary_storage_id: 
-    value:
-      - { get_attribute: [ storage, capabilities, primary_storage_id ] }
+    value: { get_attribute: [ storage, capabilities, primary_storage_id ] }
 
   failover_storage_id: 
-    value:
-      - { get_attribute: [ storage, capabilities, failover_storage_id ] }
+    value: { get_attribute: [ storage, capabilities, failover_storage_id ] }
+  
+  public_key_content: 
+    value: { get_attribute: [ key, public_key_export ] }
+  
+  private_key_content:  
+    value: { get_attribute: [ key, private_key_export ] }

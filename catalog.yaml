@@ -738,16 +738,6 @@ topics:
         path: pg_ce/services/kubernetes_dr_eks
         description: Creating Disaster Recovery EKS service
 
-      - id: Environment_AWS_DR
-        name: Production-Env-DR-AWS-CFY
-        path: pg_ce/environments/aws
-        description: Creating Disaster Recovery AWS environment
-
-      - id: Environment_Azure_DR
-        name:  Production-Env-DR-Azure-CFY
-        path: pg_ce/environments/azure
-        description: Creating Disaster Recovery Azure environment
-
   - name: K8S_Discovery
     target_path: s3_json_file
     blueprints:
