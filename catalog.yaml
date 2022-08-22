@@ -571,6 +571,11 @@ topics:
         name: Disk-GCP-TFM
         path: terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
+    #Costs estimation
+      - id: terraform_infracosts
+        name: InfraCosts-AWS-TFM
+        path: terraform/infracosts
+        description: Create an InfraCosts example using Terraform automation
 
   - name: helm_services
     target_path: s3_json_file
@@ -898,6 +903,11 @@ topics:
         name: Multi-Cloud-LocalStack-Application-Server-Setup
         path: other/multicloud/localstack
         description: Create Multicloud Localstack appliction with Server Setup 
+      
+      - id: tf_infracosts
+        name: InfraCosts-AWS-TFM
+        path: terraform/infracosts
+        description: Create an InfraCosts example using Terraform automation
 
   - name: docker_services
     target_path: s3_json_file
