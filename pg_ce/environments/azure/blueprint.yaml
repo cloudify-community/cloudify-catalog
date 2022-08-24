@@ -17,31 +17,31 @@ inputs:
     default: EastUS
     constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
-        
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
+
   azure_location_name_a:
     type: string
     display_label: Azure location for region B
@@ -49,30 +49,30 @@ inputs:
     default: WestEurope
     constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
 
 node_templates:
   key:
@@ -89,8 +89,10 @@ node_templates:
 
 capabilities:
   cloud_type:
+    description: Cloud provider
     value: azure_dr
   cloud_credentials:
+    description: Cloud credentials
     value:
       azure_tenant_id: { get_secret: azure_tenant_id }
       azure_subscription_id: { get_secret: azure_subscription_id }
@@ -100,4 +102,3 @@ capabilities:
       private_key_content: { get_attribute: [key, private_key_export] }
       region_name_a: { get_input: azure_location_name_a }
       region_name_b: { get_input: azure_location_name_b }
-

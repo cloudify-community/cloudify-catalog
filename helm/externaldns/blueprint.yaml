@@ -94,6 +94,5 @@ labels:
 
 capabilities:
   external_access_points:
-    value: { concat: [ { get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, ip ] }, ":", { get_input: access_port }  ] }
-
- 
+    description: External access points
+    value: { concat: [ { get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, ip ] }, ":", { get_input: access_port } ] }

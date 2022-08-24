@@ -25,7 +25,7 @@ inputs:
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-  
+
   azure_region_name_primary:
     type: string
     display_label: Azure region to create resources in
@@ -33,30 +33,30 @@ inputs:
     default: EastUS
     constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
 
   azure_region_name_secondary:
     type: string
@@ -65,30 +65,30 @@ inputs:
     default: WestUS2
     constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
 
 node_templates:
 
@@ -98,11 +98,11 @@ node_templates:
       predefined_value: { get_input: resource_prefix }
 
   resource_group:
-    type: cloudify.azure.nodes.ResourceGroup
+    type: cloudify.nodes.azure.ResourceGroup
     properties:
       name: { concat: [ { get_attribute: [ prefix, value ] }, cosmosdbrg ] }
       location: { get_input: azure_region_name_primary }
-      azure_config: *azure_config
+      client_config: *azure_config
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on
@@ -112,14 +112,14 @@ node_templates:
     properties:
       client_config: *azure_config
       location: { get_input: azure_region_name_primary }
-      resource_group_name: { concat: [  { get_attribute: [ prefix, value ] }, cosmosdbrg ] }
+      resource_group_name: { concat: [ { get_attribute: [ prefix, value ] }, cosmosdbrg ] }
       params:
         location: { get_input: azure_region_name_primary }
         primaryRegion: { get_input: azure_region_name_primary }
         secondaryRegion: { get_input: azure_region_name_secondary }
-        databaseName:  { concat: [  { get_attribute: [ prefix, value ] }, cosmosdb ] }
-        containerName: { concat: [  { get_attribute: [ prefix, value ] }, container ] }
-        accountName: { concat: [  { get_attribute: [ prefix, value ] }, cloudify ] }
+        databaseName: { concat: [ { get_attribute: [ prefix, value ] }, cosmosdb ] }
+        containerName: { concat: [ { get_attribute: [ prefix, value ] }, container ] }
+        accountName: { concat: [ { get_attribute: [ prefix, value ] }, cloudify ] }
       template_file: 'templates/cosmosdb.json'
     relationships:
       - target: resource_group
@@ -127,12 +127,17 @@ node_templates:
 
 capabilities:
   resource_group:
+    description: CosmosDB Resource Group name
     value: { concat: [ { get_attribute: [ prefix, value ] }, cosmosdbrg ] }
-  uri_cosmos_db_account: 
-    value: { concat: [ https://, { concat: [  { get_attribute: [ prefix, value ] }, cloudify ] }, .documents.azure.com:443/ ] } 
-  account_name: 
-    value: { concat: [  { get_attribute: [ prefix, value ] }, cloudify ] }
+  uri_cosmos_db_account:
+    description: CosmosDB account URI
+    value: { concat: [ https://, { concat: [ { get_attribute: [ prefix, value ] }, cloudify ] }, .documents.azure.com:443/ ] }
+  account_name:
+    description: Account Name
+    value: { concat: [ { get_attribute: [ prefix, value ] }, cloudify ] }
   database_name:
-    value: { concat: [  { get_attribute: [ prefix, value ] }, cosmosdb ] }
+    description: CosmosDB database name
+    value: { concat: [ { get_attribute: [ prefix, value ] }, cosmosdb ] }
   container_name:
-    value: { concat: [  { get_attribute: [ prefix, value ] }, container ] }
+    description: CosmosDB container name
+    value: { concat: [ { get_attribute: [ prefix, value ] }, container ] }

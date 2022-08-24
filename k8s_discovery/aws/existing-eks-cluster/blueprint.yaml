@@ -6,7 +6,7 @@ imports:
 
 inputs:
 
-  aws-acaws-access-key-id-secret:
+  aws-access-key-id-secret:
     type: string
     display_label: AWS Access Key ID Secret Name
     description: The secret name with your AWS Access Key ID value
@@ -45,7 +45,7 @@ node_templates:
       client_config: *client_config
       use_external_resource: true
       resource_id: { get_input: resource_name }
-      store_kube_config_in_runtime: True
+      store_kube_config_in_runtime: true
 
 capabilities:
 
@@ -56,8 +56,10 @@ capabilities:
       configuration: { get_attribute: [ eks_cluster, kubeconf ] }
 
   endpoint:
+    description: Endpoint
     value: { get_attribute: [ eks_cluster, kubeconf, clusters, 0, cluster, server ] }
 
   connection_details:
+    description: Connection details
     value:
       file_content: { get_attribute: [ eks_cluster, kubeconf ] }

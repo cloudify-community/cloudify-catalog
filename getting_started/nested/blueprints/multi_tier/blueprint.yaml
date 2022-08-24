@@ -1,7 +1,8 @@
 tosca_definitions_version: cloudify_dsl_1_4
 
 description: >
- The multi tier blueprint example shows how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types. 
+ The multi tier blueprint example shows how you can use the Cloudify
+ TOSCA based DSL to model relationships between multiple node types.
  We will use a multi tier topology of a classic web application
 
 imports:
@@ -51,7 +52,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: DB
-        
+
   demo_http_web_server_2:
     type: cloudify.nodes.WebServer
     properties:
@@ -67,7 +68,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: DB
-        
+
   demo_http_web_server_3:
     type: cloudify.nodes.WebServer
     properties:
@@ -83,7 +84,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: DB
-        
+
   DB:
     type: cloudify.nodes.Database
     interfaces:

@@ -25,7 +25,7 @@ inputs:
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-  
+
   azure_region_name:
     type: string
     display_label: Azure region to create resources in
@@ -33,30 +33,30 @@ inputs:
     default: EastUS
     constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
 
 node_templates:
 
@@ -64,9 +64,9 @@ node_templates:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: { get_input: resource_prefix }
-  
+
   resource_group:
-    type: cloudify.azure.nodes.ResourceGroup
+    type: cloudify.nodes.azure.ResourceGroup
     properties:
       name: { concat: [ { get_attribute: [ prefix, value ] }, hubrg] }
       location: { get_input: azure_region_name }
@@ -91,8 +91,11 @@ node_templates:
 
 capabilities:
   resource_group:
+    description: Created resource group name
     value: { get_attribute: [ resource_group, resource, name ] }
-  hub_name: 
+  hub_name:
+    description: Created hub name
     value: { concat: [ { get_attribute: [ prefix, value ] }, hub ] }
-  hub_namespace: 
+  hub_namespace:
+    description: Created hub namespace
     value: { concat: [ { get_attribute: [ prefix, value ] }, namespace ] }

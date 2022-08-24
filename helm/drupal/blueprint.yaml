@@ -14,7 +14,7 @@ inputs:
       Username to be set in application
     type: string
     default: admin
-  
+
   password:
     display_label: Password
     description: |
@@ -101,12 +101,14 @@ node_templates:
         target: release
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - helm
 
 capabilities:
   url:
-    value: { concat: ["http://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, hostname] }] } 
+    description: URL
+    value: { concat: ["http://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, hostname] }] }
   login_page:
+    description: Login page URL
     value: { concat: ["http://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, hostname] }, "/user/login"] }

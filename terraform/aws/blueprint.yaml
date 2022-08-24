@@ -112,6 +112,7 @@ node_templates:
 
 capabilities:
   name:
+    description: Name
     value: { get_attribute: [ cloud_resources, resources, example_vm, instances, 0, attributes, tags, Name ] }
 
   endpoint:

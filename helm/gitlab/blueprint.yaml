@@ -42,7 +42,7 @@ inputs:
     default: "10.10.10.10"
     constraints:
       - pattern: ^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$
-  
+
 node_templates:
 
   password_generator:
@@ -110,17 +110,20 @@ node_templates:
         type: cloudify.relationships.depends_on
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - helm
 
 capabilities:
   root_password:
+    description: Root Password
     value: { get_attribute: [ password_generator, master_password ] }
   gitlab_domain:
-    value: { concat: [ gitlab., { get_input:  domain  } ] }
+    description: Gitlab Domain
+    value: { concat: [ gitlab., { get_input: domain } ] }
   gitlab_registry:
-    value: { concat: [ registry., { get_input:  domain  } ] }
+    description: Gitlab Registry
+    value: { concat: [ registry., { get_input: domain } ] }
   gitlab_minio:
-    value: { concat: [ minio., { get_input:  domain  } ] }
- 
+    description: Gitlab minio
+    value: { concat: [ minio., { get_input: domain } ] }

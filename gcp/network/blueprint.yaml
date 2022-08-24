@@ -42,7 +42,7 @@ inputs:
 
 dsl_definitions:
 
-  client_config: &gcp_config
+  client_config: &client_config
     auth:
       type: service_account
       auth_uri: https://accounts.google.com/o/oauth2/auth
@@ -62,31 +62,35 @@ node_templates:
   network:
     type: cloudify.gcp.nodes.Network
     properties:
-      gcp_config: *client_config
+      client_config: *client_config
       name: { concat: [ { get_input: resource_prefix }, 'network', { get_input: resource_suffix } ] }
       auto_subnets: false
 
   subnet:
     type: cloudify.gcp.nodes.SubNetwork
     properties:
-      gcp_config: *client_config
+      client_config: *client_config
       name: { concat: [ { get_input: resource_prefix }, 'subnet', { get_input: resource_suffix } ] }
       subnet: { get_input: subnet_cidr }
       region: { get_input: region }
     relationships:
-    - type: cloudify.gcp.relationships.contained_in_network
-      target: network
+      - type: cloudify.relationships.gcp.contained_in_network
+        target: network
 
 capabilities:
 
   network:
+    description: Created network name
     value: { get_property: [ network, name ] }
 
   subnet:
+    description: Created subnet name
     value: { get_property: [ subnet, name ] }
 
   zone:
+    description: Selected zone
     value: { get_input: zone }
 
   region:
+    description: Selected region
     value: { get_input: region }

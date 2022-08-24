@@ -52,7 +52,9 @@ capabilities:
           debug: false
 
   endpoint:
+    description: Endpoint
     value: { concat: [ 'https://', { get_attribute: [kubernetes-cluster-attributes, endpoint] }]}
 
   connection_details:
+    description: Connection deatails
     value: *kubernetes_master_configuration

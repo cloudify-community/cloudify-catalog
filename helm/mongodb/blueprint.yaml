@@ -102,11 +102,14 @@ labels:
       - helm
 capabilities:
   root_password:
+    description: Root password
     value: { get_attribute: [ password_generator, master_password ] }
   mongodb_ip:
+    description: MongoDB ip address
     value:
       {
         get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, ip ],
       }
   port:
+    description: Port
     value: { get_attribute: [ svc, kubernetes, spec, ports, 0, port ] }

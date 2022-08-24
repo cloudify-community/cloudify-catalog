@@ -73,7 +73,7 @@ inputs:
 
   vcenter_connection_config:
     type: dict
-    description: vCenter connection configuration 
+    description: vCenter connection configuration
     default:
       username: { get_secret: vsphere_username }
       password: { get_secret: vsphere_password }
@@ -84,7 +84,6 @@ inputs:
       auto_placement: { get_secret: vsphere_auto_placement }
       allow_insecure: { get_secret: vsphere_allow_insecure }
     hidden: true
-
 
 node_templates:
   vm:

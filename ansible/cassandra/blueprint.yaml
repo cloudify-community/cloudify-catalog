@@ -16,6 +16,7 @@ labels:
 inputs:
 
   infra_name:
+    display_label: Infrastructure Name
     description: >
       Name of infrastructure blueprint to deploy.
     type: string
@@ -26,12 +27,14 @@ inputs:
 
   # we using the virtual machine image that is under maintenance
   infra_archive:
+    display_label: Infrastructure Archive
     description: >
       URL of infra zip file.
     type: string
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
+    display_label: Infrastructure Exists
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false

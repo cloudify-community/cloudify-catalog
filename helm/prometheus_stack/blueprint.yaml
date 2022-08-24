@@ -52,7 +52,7 @@ node_templates:
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       resource_config:
         name: { get_input: release_name }
-        chart:  prometheus-community/kube-prometheus-stack
+        chart: prometheus-community/kube-prometheus-stack
         set_values:
           - name: grafana.adminPassword
             value: { get_attribute: [ password_generator, master_password ] }
@@ -79,20 +79,21 @@ node_templates:
         apiVersion: v1
         kind: Service
         metadata:
-          name: { concat: [ { get_input: release_name }, -grafana ] } 
+          name: { concat: [ { get_input: release_name }, -grafana ] }
           namespace: default
     relationships:
       - type: cloudify.relationships.depends_on
         target: release
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - helm
 
 capabilities:
   grafana_page:
+    description: Url to Grafana login page
     value: { concat: [ { get_attribute: [svc_grafana, kubernetes, status, load_balancer, ingress, 0, ip ] }, "/login"] }
   grafana_password:
+    description: Grafana password
     value: { get_attribute: [ password_generator, master_password ] }
-

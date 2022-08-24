@@ -17,11 +17,11 @@ inputs:
     default: EastUS
     constraints:
       - valid_values:
-        - EastUS
-        - CentralUS
-        - WestUS
-        - WestEurope
-        - CanadaCentral
+          - EastUS
+          - CentralUS
+          - WestUS
+          - WestEurope
+          - CanadaCentral
 
 node_templates:
   key:
@@ -38,8 +38,10 @@ node_templates:
 
 capabilities:
   cloud_type:
+    description: Cloud provider name
     value: azure
   cloud_credentials:
+    description: Cloud credentials
     value:
       azure_tenant_id: { get_secret: azure_tenant_id }
       azure_subscription_id: { get_secret: azure_subscription_id }

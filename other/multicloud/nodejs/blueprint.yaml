@@ -30,7 +30,8 @@ inputs:
     description: >
       URL of infra zip file.
     type: string
-    # Don't update this line - it is being updated automatically during merging. The getting-started.zip will have the updated URL.
+    # Don't update this line - it is being updated automatically during merging. The getting-started.zip will have
+    # the updated URL.
     default: 'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
 
   infra_exists:
@@ -120,11 +121,3 @@ outputs:
   admin_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { get_attribute: [ infrastructure, deployment, id ] }, endpoint ] }, ':8080' ] }
-
-
-
-
-
-
-
-

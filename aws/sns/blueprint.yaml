@@ -5,7 +5,6 @@ imports:
   - plugin:cloudify-aws-plugin
 
 inputs:
-
   aws_region_name:
     description: AWS Region Name
     display_label: AWS Region Name
@@ -42,14 +41,12 @@ inputs:
     default: TestQueue
 
 dsl_definitions:
-
   client_config: &client_config
     aws_access_key_id: { get_secret: aws_access_key_id }
     aws_secret_access_key: { get_secret: aws_secret_access_key }
     region_name: { get_input: aws_region_name }
 
 node_templates:
-
   subscription:
     type: cloudify.nodes.aws.SNS.Subscription
     properties:
