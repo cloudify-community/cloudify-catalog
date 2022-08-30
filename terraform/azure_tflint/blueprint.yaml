@@ -77,7 +77,7 @@ node_templates:
         provider:
           providers: []
         variables:
-          region: { get_input: azure_region }
+          region: { get_input: azure_region_name }
           subscription_id: { get_secret: azure_subscription_id }
           tenant_id: { get_secret: azure_tenant_id }
           client_id: { get_secret: azure_client_id }
