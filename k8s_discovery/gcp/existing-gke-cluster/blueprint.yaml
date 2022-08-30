@@ -20,7 +20,7 @@ inputs:
 
   kubernetes_cluster_name:
     type: string
-    display_name: Kubernetes Cluster Name
+    display_label: Kubernetes Cluster Name
     description: Kubernetes Cluster Name
 
 dsl_definitions:

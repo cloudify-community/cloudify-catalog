@@ -31,6 +31,7 @@ inputs:
 
   resource_group_name:
     description: Resource Group name, combination of prefix and suffix
+    display_label: Resource Group Name
     type: string
     default: { concat: [ { get_input: resource_group_name_preffix }, { get_input: resource_suffix } ] }
     hidden: true

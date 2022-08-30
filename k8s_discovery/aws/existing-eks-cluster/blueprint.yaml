@@ -26,7 +26,7 @@ inputs:
 
   resource_name:
     type: string
-    display_name: Resource Name
+    display_label: Resource Name
     description: EKS Cluster resource id
     default: eks_cluster
 

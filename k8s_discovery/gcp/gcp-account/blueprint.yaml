@@ -15,6 +15,7 @@ inputs:
     default: gcp_credentials
 
   zone:
+    display_label: The zone to deploy resources in
     type: string
     default: 'us-west1-a'
 
