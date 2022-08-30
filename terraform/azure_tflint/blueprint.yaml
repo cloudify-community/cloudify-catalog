@@ -66,8 +66,8 @@ node_templates:
     type: cloudify.nodes.terraform
     properties:
       resource_config:
-        use_existing_resource: { get_input: use_existing_terraform }
-      terraform_config: { get_input: terraform_config }
+        use_existing_resource: false
+      terraform_config: {}
 
   terraform_module:
     type: cloudify.nodes.terraform.Module
