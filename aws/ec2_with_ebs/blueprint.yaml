@@ -39,6 +39,7 @@ inputs:
 
   availability_zone:
     description: Availability Zone
+    display_label: Avability Zone
     type: string
     default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }
     hidden: true
@@ -76,6 +77,7 @@ inputs:
   instance_type:
     description: EC2 Instance Tpe
     display_label: Instance Type
+    type: string
     default: t2.medium
     constraints:
       - valid_values:
