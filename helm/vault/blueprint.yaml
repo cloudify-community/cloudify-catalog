@@ -9,12 +9,14 @@ imports:
 
 inputs:
   high_avability:
+    display_label: High avability mode on/off
     description: |
       High avability mode on/off
     type: string
     default: "true"
 
   release_name:
+    display_label: Name of the helm release
     description: |
       Name of the helm release
     type: string

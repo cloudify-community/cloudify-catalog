@@ -9,24 +9,28 @@ imports:
 
 inputs:
   username:
+    display_label: Username to be set in application
     description: |
       Username to be set in application
     type: string
     default: admin
   
   password:
+    display_label: Password to be set in application
     description: |
       Password to be set in application
     type: string
     default: Cl0ud1fY!
 
   email:
+    display_label: Email to be set in application
     description: |
       Email to be set in application
     type: string
     default: user@cloudify.co
 
   release_name:
+    display_label: Name of the helm release
     description: |
       Name of the helm release
     type: string

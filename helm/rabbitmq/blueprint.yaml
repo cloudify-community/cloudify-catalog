@@ -9,12 +9,14 @@ imports:
 
 inputs:
   release_name:
+    display_label: Name of the helm release
     description: |
       Name of the helm release
     type: string
     default: example
 
   replica_count:
+    display_label: Number of replicas
     description: |
       Number of replcas
     type: string
