@@ -8,7 +8,7 @@ inputs:
 
   aws_region_name:
     description: AWS region name
-    display_label: AWS Regionn Name
+    display_label: AWS Region Name
     type: string
     default: us-east-1
     constraints:
