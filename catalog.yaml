@@ -576,6 +576,23 @@ topics:
         name: InfraCosts-AWS-TFM
         path: terraform/infracosts
         description: Create an InfraCosts example using Terraform automation
+    #Tf lint
+      - id: terraform_aws_tflint
+        name: TFLint-AWS-TFM
+        path: terraform/aws_tflint
+        description: Create a TFlint example using Terraform automation
+      - id: terraform_aws_tfsec
+        name: TFSec-AWS-TFM
+        path: terraform/aws_tfsec
+        description: Create TFSec example using Terraform automation
+      - id: terraform_azure_tflint
+        name: TFLint-Azure-TFM
+        path: terraform/azure_tflint
+        description: Create TFLint example using Terraform automation
+      - id: terraform_azure_tfsec
+        name: TFSec-Azure-TFM
+        path: terraform/azure_tfsec
+        description: Create TFSec example using Terraform automation
 
   - name: helm_services
     target_path: s3_json_file
