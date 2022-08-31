@@ -10,6 +10,7 @@ imports:
   - plugin:cloudify-utilities-plugin
 
 inputs:
+
   agent_user:
     type: string
     display_label: VM username
@@ -18,6 +19,7 @@ inputs:
   
   agent_key_name:
     type: string
+    diplay_label: Agent key name for AWS
     default: agent_key
 
   region_name:
@@ -46,6 +48,7 @@ inputs:
         - t2.large  
 
   image_id:
+    dislay_label: AMI AWS id
     description: The map between region and image id, it is used in EC2 instance to select the right image id per selected region
     type: dict
     default:
@@ -57,6 +60,7 @@ inputs:
     hidden: true
 
   aws_credentials:
+    display_labe: The credentials for AWS
     description: The credentials for AWS
     type: dict
     default:

@@ -18,6 +18,7 @@ inputs:
       Resource names created in Azure by the blueprint can be
       customized by supplying a prefix string (e.g. 'test_')
     default: ''
+
   subscription_id:
     type: string
     display_label: Enter Microsoft Azure subscription ID
@@ -26,6 +27,7 @@ inputs:
       user account in Azure. This can be found in the
       Subscriptions tab on your dashboard.
     default: {get_secret: azure_subscription_id }
+
   tenant_id:
     type: string
     display_label: Enter Microsoft Azure tenant ID
@@ -34,6 +36,7 @@ inputs:
        the Azure Active Directory dashboard by accessing
        your directory.
     default: {get_secret: azure_tenant_id }
+
   client_id:
     type: string
     display_label: Enter Microsoft Azure client ID
@@ -42,6 +45,7 @@ inputs:
       the Azure Active Directory dashboard by accessing
       your directory.
     default: {get_secret: azure_client_id}
+
   client_secret:
     type: string
     display_label: Microsoft Azure client secret key
@@ -49,11 +53,13 @@ inputs:
       A Microsoft Azure client secret key. This can be found
       or generated in the same location as your client ID.
     default: {get_secret: azure_secret_key}
+
   vm_size:
     type: string
     display_label: Enter location specific VM size
     description: Location/region VM size name, e.g. 'Standard_M8ms'
     default: Standard_B1s
+
   location:
     type: string
     display_label: Azure location
@@ -66,31 +72,37 @@ inputs:
           - WestUS
           - WestEurope
           - CanadaCentral
+
   image_publisher:
     type: string
     display_label: Enter image publisher
     description: Image publisher name, e.g. 'Canonical'
     default: Canonical
+
   image_offer:
     type: string
     display_label: Enter OS offer
     description: Enter OS offer, e.g. 'UbuntuServer'
     default: UbuntuServer
+
   image_sku:
     type: string
     display_label: Enter image SKU
     description: Enter image SKU, e.g. '18.04-LTS'
     default: '18.04-LTS'
+
   image_version:
     type: string
     display_label: Enter image version
     description: Enter image version, e.g. 'latest'
     default: latest
+
   admin_username:
     type: string
     display_label: Enter desired admin username
     description: Enter desired admin username
     default: {get_secret: azure_admin_username}
+    
   admin_password:
     type: string
     display_label: Enter admin password

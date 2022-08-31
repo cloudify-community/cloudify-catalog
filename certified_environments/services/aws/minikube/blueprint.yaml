@@ -12,6 +12,7 @@ labels:
       - service
 
 inputs:
+
   resource_prefix:
     type: string
     display_label: Resource Prefix

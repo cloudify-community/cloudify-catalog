@@ -11,6 +11,7 @@ labels:
       - service
 
 inputs:
+
   resource_prefix:
     type: string
     description: The resource prefix for resources naming
@@ -18,6 +19,7 @@ inputs:
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
+      
   region_name:
     type: string
     display_label: Region Name

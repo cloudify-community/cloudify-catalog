@@ -80,9 +80,9 @@ inputs:
 
   resource_prefix:
     type: string
+    display_label: Resource Prefix
     description: |
       If not provided, it will be auto-generated.
-    display_label: Resource Prefix
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'

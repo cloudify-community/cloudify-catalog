@@ -14,6 +14,7 @@ dsl_definitions:
 
 inputs:
   cloud_credentials:
+    type: dict
     default:
       azure_tenant_id: { get_secret: azure_tenant_id }
       azure_subscription_id: { get_secret: azure_subscription_id }

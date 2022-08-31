@@ -40,16 +40,19 @@ inputs:
 
   availability_zone_1:
     type: string
+    display_label: Availability zone 1
     default: { concat: [ { get_input: aws_region_name }, 'a' ] }
     hidden: true
 
   availability_zone_2:
     type: string
+    display_label: Availability zone 1
     default: { concat: [ { get_input: aws_region_name }, 'b' ] }
     hidden: true
 
   cidr_block:
     type: string
+    display_label: 
     default: 10.0.0.0/16
     hidden: true
 

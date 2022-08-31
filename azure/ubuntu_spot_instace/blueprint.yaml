@@ -31,6 +31,7 @@ inputs:
     display_label: The admin login name
     description:  The admin login name
     default: cloudify
+    
   azure_region_name:
     type: string
     display_label: Azure region to create resources in

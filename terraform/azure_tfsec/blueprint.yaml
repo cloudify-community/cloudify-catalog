@@ -30,13 +30,17 @@ inputs:
           
   module_source:
     type: string
+    display_label: Module source URL
     default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
 
   module_source_path:
     type: string
+    display_label: Terraform module path
     default: "template/modules/azure/public_vm/"
 
   tfsec_config:
+    type: dict
+    display_label: TFsec source URL
     default:
       enable: true
       flags_override:

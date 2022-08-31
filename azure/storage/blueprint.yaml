@@ -15,6 +15,7 @@ inputs:
       Resource names created in Azure by the blueprint can be
       customized by supplying a prefix string (e.g. 'test_')
     default: ''
+
   subscription_id:
     type: string
     display_label: Enter Microsoft Azure subscription ID
@@ -23,6 +24,7 @@ inputs:
       user account in Azure. This can be found in the
       Subscriptions tab on your dashboard.
     default: {get_secret: azure_subscription_id }
+
   tenant_id:
     type: string
     display_label: Enter Microsoft Azure tenant ID
@@ -31,6 +33,7 @@ inputs:
        the Azure Active Directory dashboard by accessing
        your directory.
     default: {get_secret: azure_tenant_id }
+
   client_id:
     type: string
     display_label: Enter Microsoft Azure client ID
@@ -39,6 +42,7 @@ inputs:
       the Azure Active Directory dashboard by accessing
       your directory.
     default: {get_secret: azure_client_id}
+
   client_secret:
     type: string
     display_label: Microsoft Azure client secret key
@@ -46,6 +50,7 @@ inputs:
       A Microsoft Azure client secret key. This can be found
       or generated in the same location as your client ID.
     default: {get_secret: azure_secret_key}
+
   account_type:
     display_label: Select storage type
     description: The type of storage to use
@@ -58,6 +63,7 @@ inputs:
           - Standard_GRS
           - Standard_RAGRS
           - Premium_LRS
+          
   location:
     type: string
     display_label: Azure location

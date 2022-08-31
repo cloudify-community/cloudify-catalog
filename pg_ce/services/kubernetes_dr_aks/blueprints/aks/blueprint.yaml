@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin?version= >=3.7.8
-  - plugin:cloudify-kubernetes-plugin?version= >=2.13.14 
+  - plugin:cloudify-kubernetes-plugin?version= >=2.13.15 
   - plugin:cloudify-helm-plugin
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
 
@@ -17,15 +17,18 @@ dsl_definitions:
 inputs:
 
   resource_config:
+    type: dict
+    display_label: Resource Config
     default:
       service_account_namespace: default
       service_cidr: 10.0.8.0/23
       docker_bridge_cidr: 10.0.10.1/23
       dns_service_ip: "10.0.8.2"
       node_pool_size: 1
-    display_label: Resource Config
 
   cloud_credentials:
+    type: dict
+    display_label: Cloud Credentials
     default:
       azure_tenant_id: { get_secret: azure_tenant_id }
       azure_subscription_id: { get_secret: azure_subscription_id }
@@ -34,7 +37,6 @@ inputs:
       public_key_content: { get_secret: public_key_content }
       private_key_content: { get_secret: private_key_content }
       region_name: { get_secret: region_name }
-    display_label: Cloud Credentials
     description: Cloud Credentials
 
   resource_prefix:

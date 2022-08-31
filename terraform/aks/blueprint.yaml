@@ -6,6 +6,7 @@ imports:
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
 
 inputs:
+
   resource_prefix:
     type: string
     description: The resource prefix for resources naming
@@ -13,6 +14,7 @@ inputs:
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
+
   azure_location_name:
     type: string
     description: Azure location name

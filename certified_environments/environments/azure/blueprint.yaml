@@ -10,6 +10,7 @@ labels:
       - environment
 
 inputs:
+
   azure_location_name:
     type: string
     display_label: Azure location

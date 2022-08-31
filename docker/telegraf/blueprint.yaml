@@ -11,42 +11,56 @@ imports:
 inputs:
 
   infra_name:
+    type: string
+    display_label: Name of the provider to deploy resources
     description: >
       Name of infrastructure blueprint to deploy.
-    type: string
     constraints:
       - valid_values:
           - azure
           - aws
 
   infra_archive:
+    type: string
+    display_label: URL for infra zip archive
     description: >
       URL of infra zip file.
-    type: string
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
+    type: string
+    display_label: Set if infra exists or not 
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
 
   infra_deployment_id:
+    type: string
+    display_label: The infrastructure deployment id
     description: The blueprint name, the deployment name.
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
   user_name:
+    type: string
+    display_label: The influxdb user
     description: The username to set for the system's initial super-user
     default: cloudify
   
   bucket: 
+    type: string
+    display_label: The bucket name
     description: The name to set for the system's initial bucket 
     default: cloudify
   
   org: 
+    type: string
+    display_label: Organization name
     description: The name to set for the system's initial organization
     default: cloudify
 
-  token: 
+  token:
+    type: string
+    display_label: Influxdb authorization token 
     description: Token to auth with the influxdb from telegraf
     default: 9859DAA6-3B3F-48FE-A981-AE9D31FBB334
     hidden: true

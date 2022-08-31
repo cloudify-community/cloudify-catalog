@@ -14,7 +14,7 @@ inputs:
 
   aws_region_name:
     description: AWS region name
-    display_label: AWS Regionn Name
+    display_label: AWS Region name
     type: string
     default: us-east-1
     constraints:
@@ -38,7 +38,8 @@ inputs:
 
   availability_zone:
     type: string
-    description: The availability zone in the AWS Region.
+    display_label: The avability zone in the AWS region
+    description: The availability zone in the AWS region
     default: { concat: [ { get_input: aws_region_name }, 'b' ] }
 
 
