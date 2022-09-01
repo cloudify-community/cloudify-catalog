@@ -60,7 +60,7 @@ inputs:
     hidden: true
 
   aws_credentials:
-    display_labe: The credentials for AWS
+    display_label: The credentials for AWS
     description: The credentials for AWS
     type: dict
     default:

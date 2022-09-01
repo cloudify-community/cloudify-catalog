@@ -21,7 +21,7 @@ inputs:
           - aws
 
   # we using the virtual machine image that is under maintenance
-   infra_archive:
+  infra_archive:
     display_label: URL for infra zip archive
     description: >
       URL of infra zip file.
