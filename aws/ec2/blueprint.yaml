@@ -19,21 +19,21 @@ inputs:
   
   agent_key_name:
     type: string
-    diplay_label: Agent key name for AWS
+    display_label: Agent key name for AWS
     default: agent_key
 
   region_name:
-      type: string
-      display_label: AWS Region Name
-      description: Select AWS region name
-      default: us-east-1
-      constraints:
-        - valid_values:
-          - us-east-1 #US East (N. Virginia)
-          - us-west-1 #US West (N. California)
-          - us-west-2 #US West (Oregon)
-          - ca-central-1  #Canada (Central)
-          - eu-west-1 #Europe (Ireland)
+    type: string
+    display_label: AWS Region Name
+    description: Select AWS region name
+    default: us-east-1
+    constraints:
+      - valid_values:
+        - us-east-1 #US East (N. Virginia)
+        - us-west-1 #US West (N. California)
+        - us-west-2 #US West (Oregon)
+        - ca-central-1  #Canada (Central)
+        - eu-west-1 #Europe (Ireland)
 
   instance_type:
     description: Select instance size
@@ -48,7 +48,7 @@ inputs:
         - t2.large  
 
   image_id:
-    dislay_label: AMI AWS id
+    display_label: AMI AWS id
     description: The map between region and image id, it is used in EC2 instance to select the right image id per selected region
     type: dict
     default:
