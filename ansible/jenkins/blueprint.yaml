@@ -11,6 +11,7 @@ imports:
 inputs:
 
   infra_name:
+    display_label: Name of the provider to deploy resources
     description: >
       Name of infrastructure blueprint to deploy.
     type: string
@@ -21,29 +22,30 @@ inputs:
 
  # we using the virtual machine image that is under maintenance
   infra_archive:
+    display_label: Name of the resoruces to deploy
     description: >
       URL of infra zip file.
     type: string
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
+    type: string
+    display_label: Set if infra exists or not 
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
 
   infra_deployment_id:
+    type: string
+    display_label: The infrastructure deployment id
     description: The blueprint name, the deployment name.
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
   admin_password:
     type: string
-    description: A message to display on the home page of the deployed web server
+    display_label: Jenkin Admin password
+    description: Admin password to be set
     default: { get_secret: jenkins_admin_password }
-
-  website_message:
-    type: string
-    description: A message to display on the home page of the deployed web server
-    default: Welcome to Jenkins, deployed by Cloudify
     
 node_templates:
 

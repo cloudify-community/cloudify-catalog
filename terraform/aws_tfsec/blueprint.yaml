@@ -48,16 +48,20 @@ inputs:
 
   module_source:
     type: string
+    display_label: Module source URL
     description: Module source URL
     default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
 
   module_source_path:
     type: string
+    display_label: Module to deploy path
     description: Module to deploy path
     default: "template/modules/public_vm/"
 
   tfsec_config:
     default: 
+      type: string
+      display_label: TFSec source URL
       enable: true
       flags_override:
       - soft_fail

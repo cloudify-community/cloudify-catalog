@@ -11,6 +11,7 @@ labels:
       - service
 
 inputs:
+
   password:
     type: string
     description: The password for database user
@@ -18,6 +19,7 @@ inputs:
     default: 'Cloudify193!'
     constraints:
       - pattern: '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,16}$'
+
   resource_prefix: 
     type: string
     description: The resource prefix for resources naming
@@ -25,6 +27,7 @@ inputs:
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
+      
   region:
     type: string
     description: Azure location name

@@ -11,14 +11,19 @@ imports:
 inputs:
 
   user_name: 
+    type: string 
+    display_label: The user name to create database for
     description: The user name to create database for
     default: cloudify
 
   db_name: 
+    type: string
+    display_label: The database name to create
     description: The database name to create
     default: cloudify
 
   infra_name:
+    display_label: Name of the provider to deploy resources
     description: >
       Name of infrastructure blueprint to deploy.
     type: string
@@ -27,20 +32,24 @@ inputs:
           - azure
           - aws
 
-  # we using the virtual machine image that is under maintenance
   infra_archive:
+    display_label: URL for infra zip archive
     description: >
       URL of infra zip file.
     type: string
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
 
   infra_exists:
+    display_label: Set if infra exists or not 
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
+    type: string
     default: false
 
   infra_deployment_id:
+    display_label: The infrastructure deployment id
     description: The blueprint name, the deployment name.
+    type: string
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
 node_templates:

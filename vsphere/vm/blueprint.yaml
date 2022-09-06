@@ -73,6 +73,7 @@ inputs:
 
   vcenter_connection_config:
     type: dict
+    display_label: vCenter connection configuration
     description: vCenter connection configuration
     default:
       username: { get_secret: vsphere_username }

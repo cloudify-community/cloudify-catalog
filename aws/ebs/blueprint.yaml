@@ -45,12 +45,14 @@ inputs:
 
   availability_zone:
     description: Availability Zone
+    display_label: Availability Zone
     type: string
     default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }
     hidden: true
 
   aws_credentials:
     description: AWS Credentials
+    display_label: AWS Credentials
     type: dict
     default:
       aws_access_key_id: { get_secret: aws_access_key_id }

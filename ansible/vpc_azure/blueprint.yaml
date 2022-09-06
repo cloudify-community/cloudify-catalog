@@ -15,6 +15,7 @@ inputs:
   region_name:
       type: string
       default: EastUS
+      display_label: Azure region name
       constraints:
       - valid_values:
         - BrazilSouth

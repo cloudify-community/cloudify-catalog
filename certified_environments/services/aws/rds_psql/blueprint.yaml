@@ -13,6 +13,7 @@ dsl_definitions:
 
 
 inputs:
+
   cloud_credentials:
     type: cloud_credentials
     display_label: Cloud Credentials

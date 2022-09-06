@@ -16,6 +16,7 @@ inputs:
 
   cloud_credentials:
     type: dict
+    display_label: Azure Cloud Credentials
     default:
       azure_tenant_id: { get_secret: azure_tenant_id }
       azure_subscription_id: { get_secret: azure_subscription_id }

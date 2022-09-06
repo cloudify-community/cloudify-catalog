@@ -30,6 +30,7 @@ inputs:
           - ap-northeast-1  #Asia Pacific (Tokyo)
 
   availability_zone_suffix:
+    display_label: Availability Zone Suffix
     description: Availability Zone Suffix
     type: string
     default: a
@@ -40,6 +41,7 @@ inputs:
           - c
 
   availability_zone:
+    display_label: The availability zone in the AWS Region.
     description: The availability zone in the AWS Region.
     type: string
     default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }

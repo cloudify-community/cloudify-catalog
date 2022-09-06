@@ -13,16 +13,19 @@ dsl_definitions:
     client_secret: { get_input: [ cloud_credentials, azure_client_secret ] }
 
 inputs:
+
   cloud_credentials:
     type: cloud_credentials
     display_label: Cloud Credentials
     description: Cloud Credentials from AWS env.
     default: {}
+
   resource_config:
     type: resource_config
     display_label: Resource Config
     description: Master username
     default: {}
+    
   resource_prefix:
     type: string
     display_label: Resource Prefix

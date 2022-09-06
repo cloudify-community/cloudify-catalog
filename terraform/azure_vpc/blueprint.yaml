@@ -6,6 +6,7 @@ imports:
   - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
 
 inputs:
+
   resource_prefix:
     type: string
     description: The resource prefix for resources naming

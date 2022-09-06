@@ -11,6 +11,7 @@ labels:
       - environment
 
 inputs:
+
   aws_region_name:
     type: string
     description: AWS Region Name

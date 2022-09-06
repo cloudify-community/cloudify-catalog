@@ -13,6 +13,7 @@ inputs:
 
   region_name:
       type: string
+      display_label: AWS region name
       default: 'us-east-1'
       constraints:
         - valid_values:
@@ -42,6 +43,7 @@ inputs:
 
   instance_type:
     type: string
+    display_label: VM size
     default: t2.medium
     constraints:
       - valid_values:

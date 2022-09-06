@@ -30,14 +30,17 @@ inputs:
 
   module_source:
     type: string
+    display_label: Module URL source
     default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
 
   module_source_path:
     type: string
+    display_label: Terraform module path
     default: "template/modules/azure/public_vm/"
 
   tflint_config:
     type: dict
+    display_label: TFLint source URL
     default:
       enable: true
       installation_source: https://github.com/terraform-linters/tflint/releases/download/v0.34.1/tflint_linux_amd64.zip
