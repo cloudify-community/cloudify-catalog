@@ -11,26 +11,32 @@ imports:
 inputs:
 
   repo_name:
+    display_label: Name of the repo to add.
     description: >
       Name of the repo to add.
     type: string
 
   chart_name:
+    display_label: Chart package name to deploy from repo.
     description: >
       Chart package name to deploy from repo.
+
   helm_installation_source:
+    display_label: Helm download link
     description: >
       Helm download link.
     type: string
     default: 'https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz'
 
   repo_url:
+    display_label: URL of the repo to add.
     description: >
       URL of the repo to add. For example:
       https://kubernetes-charts.storage.googleapis.com/
     type: string
 
   kube_config:
+    display_label: Kube config path.
     description: >
       kubeconfig path.
     type: string

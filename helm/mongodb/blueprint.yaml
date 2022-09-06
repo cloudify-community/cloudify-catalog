@@ -10,12 +10,14 @@ imports:
 inputs:
 
   replica_count:
+    display_label: Number of pod replicas
     description: |
       Number of pod replicas
     type: string
     default: "1"
 
   release_name:
+    display_label: Name of the helm release
     description: |
       Name of the helm release
     type: string

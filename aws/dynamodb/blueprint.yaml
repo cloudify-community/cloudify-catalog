@@ -41,6 +41,7 @@ inputs:
 
   aws_credentials:
     description: AWS credenntials
+    display_label: AWS credentials
     type: dict
     default:
       aws_access_key_id: { get_secret: aws_access_key_id }

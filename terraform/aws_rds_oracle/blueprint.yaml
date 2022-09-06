@@ -18,6 +18,7 @@ inputs:
     default: 'password'
     constraints:
       - pattern: '^[a-zA-Z0-9_.-]*$'
+      
   resource_prefix: 
     type: string
     description: The resource prefix for resources naming

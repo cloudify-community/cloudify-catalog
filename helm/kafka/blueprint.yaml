@@ -10,24 +10,28 @@ imports:
 inputs:
 
   release_name:
+    display_label: Name of the helm release
     description: |
       Name of the helm release
     type: string
     default: example
 
   zookeeper_user:
+    display_label: Name of the zookeeper user
     description: |
       Name of the zookeeper user
     type: string
     default: zkuser
 
   kafka_user:
+    display_label: NAme of the Kafka user
     description: |
       Name of the kafka user
     type: string
     default: kafkauser
 
   access_port:
+    display_label: Access port
     description: |
       The port number used for broker access
     type: string

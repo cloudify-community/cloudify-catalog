@@ -16,14 +16,17 @@ inputs:
   cloud_credentials:
     type: cloud_credentials
     description: Cloud Credentials from AWS env.
+    display_label: Cloud Crednetials from AWS env.
     default: {}
   resource_config:
     type: resource_config
     description: Master username
+    display_label: Master username
     default: {}
   resource_prefix:
     type: string
     description: The resource prefix for resources naming
+    display_label: The resource prefix for resource naming
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'

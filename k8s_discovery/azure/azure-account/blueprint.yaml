@@ -9,21 +9,24 @@ inputs:
 
   subscription-id-secret:
     type: string
-    display_name: Subscription ID Secret Name
+    display_label: Subscription ID Secret Name
     required: false
     default: azure_subscription_id
 
   tenant-id-secret:
+    display_label: Tenent Id Secret
     type: string
     required: false
     default: azure_tenant_id
 
   client-id-secret:
+    display_label: Azure Client ID
     type: string
     required: false
     default: azure_client_id
 
   client-secret-secret:
+    display_label: Client Secret
     type: string
     required: false
     default: azure_client_secret

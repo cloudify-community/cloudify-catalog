@@ -56,6 +56,7 @@ inputs:
   
   container_instance_image:
     description: Container Instance Image (Amazon Linux AMI 2.0.20181112 x86_64 ECS HVM GP2 - amzn2-ami-ecs-hvm-2.0.20181112-x86_64-ebs)
+    display_label: Container Instance Image AMi
     type: dict
     default:
       us-east-1: ami-0a6b7e0cc0b1f464f
