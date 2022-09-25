@@ -33,7 +33,7 @@ pipeline{
                   claimName: shared-data
             containers:
               - name: jnlp
-                image: jenkins/inbound-agent:4.3-4
+                image: jenkins/inbound-agent:4.11.2-2
                 resources:
                   limits:
                     cpu: 0.3
