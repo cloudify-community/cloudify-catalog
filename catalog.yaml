@@ -925,6 +925,11 @@ topics:
         name: InfraCosts-AWS-TFM
         path: terraform/infracosts
         description: Create an InfraCosts example using Terraform automation
+      
+      - id: backstage
+        name: Backstage-AWS-CFY
+        path: other/backstage
+        description: Create a backstage proof of concept example
 
   - name: docker_services
     target_path: s3_json_file
