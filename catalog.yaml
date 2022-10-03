@@ -46,15 +46,15 @@ topics:
 
       - id: ex1-input-output-blueprint
         name: Input-Outputs-Example
-        path: getting_started/input_outputs 
-        description: | 
+        path: getting_started/input_outputs
+        description: |
           Input and outputs - describing the most basic blueprint structure
 
       - id: Multi-Tier-Example
         name: Multi-Tier-Example
         path: getting_started/multi_tier
         description: |
-          The multi tier blueprint example - describes how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types. 
+          The multi tier blueprint example - describes how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types.
           We will use a multi tier topology of a classic web application
 
       - id: Nested-Example
@@ -202,7 +202,7 @@ topics:
         name: VM-AWS-TFM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
-       
+
       - id: tf_eks
         name: EKS-AWS-TFM
         path: terraform/eks
@@ -219,12 +219,12 @@ topics:
         description: Create an AWS S3 using Terraform automation
 
       - id: tf_aws_rds_mariadb
-        name: MariaDB-RDS-AWS-TFM  
+        name: MariaDB-RDS-AWS-TFM
         path: terraform/aws_rds_mariadb
-        description: Create an AWS RDS MariaDB using Terraform 
+        description: Create an AWS RDS MariaDB using Terraform
 
       - id: tf_rds_oracle
-        name: Oracle-RDS-AWS-TFM  
+        name: Oracle-RDS-AWS-TFM
         path: terraform/aws_rds_oracle
         description: Create an AWS RDS Oracle using Terraform automation
 
@@ -232,7 +232,7 @@ topics:
         name: Postgres-RDS-AWS-TFM
         path: terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
-      
+
       - id: tf_aws_rds_mysql
         name: MySQL-RDS-AWS-CFY
         path: terraform/aws_rds_mysql
@@ -241,42 +241,42 @@ topics:
   - name: azure_services
     target_path: s3_json_file
     blueprints:
-      
+
       - id: Instance-Ubuntu-Arm
         name: VM-Ubuntu-Azure-ARM
         path: azure/deployment
         description: This blueprint creates a Ubuntu instance on Microsoft Azure, along with necessary networking services and a public IP using an Azure ARM template (template.json).  The blueprint generates public and private SSH keys. A keypair (for SSH) is created, stored in the secret store, and attached to the provisioned instance, via the Azure template inputs.  If a secret with the same name(s) is present in the secret store, it is used.
-      
+
       - id: instance-Ubuntu-Azure-Plugin
         name: VM-Ubuntu-Azure-CFY
         path: azure/instance
         description: This blueprint starts a Ubuntu VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-      
+
       - id: Instance-Ubuntu-Spot-Arm
         name: VM-Ubuntu-Spot-Azure-ARM
         path: azure/ubuntu_spot_instance
         description: Create a Ubuntu VM Spot Instance using ARM template
-      
+
       - id: Instance-Ubuntu-Disk-Storage-Arm
         name: VM-Ubuntu-Disk-Azure-ARM
         path: azure/ubuntu_disk_storage
-        description: Create a u Ubuntu VM with managed disk storage 
-      
+        description: Create a u Ubuntu VM with managed disk storage
+
       - id: Spot-Instance-Windows-Arm
         name: VM-Windows-Spot-Azure-ARM
         path: azure/spot_instance
         description: Create a Windows VM Spot Instance using ARM template
-      
+
       - id: Loadbalancer-Azure-Plugin
         name: LB-Azure-CFY
         path: azure/lb
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-      
+
       - id: Storage-Azure-Plugin
         name: Storage-Azure-CFY
         path: azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
-      
+
       - id: Notification-Hub-Arm
         name: Notification-Hub-Azure-ARM
         path: azure/notification_hub
@@ -445,7 +445,10 @@ topics:
         name: VM-Ubuntu-AWS-TFM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
-      
+      - id: terraform_eks_istio
+        name: Terraform_AWS_EKS_Istio
+        path: terraform/eks-istio
+        description: Create an EKS AWS with Istio using Terraform automation
       - id: terraform_tfc
         name: VM-Ubuntu-CloudEnterprise-TFM
         path: terraform/tfc
@@ -501,7 +504,7 @@ topics:
         name: Oracle-Azure-TFM
         path: terraform/azure_oracle
         description: Create an Azure Oracle database using Terraform automation
-      
+
       - id: terraform_gcp_oracle
         name: Oracle-GCP-TFM
         path: terraform/gcp_oracle
@@ -516,7 +519,7 @@ topics:
         name: MariaDB-Azure-TFM
         path: terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
-      
+
       - id: terraform_gcp_mariadb
         name: MariaDB-GCP-TFM
         path: terraform/gcp_mariadb
@@ -531,7 +534,7 @@ topics:
         name: MySQL-AWS-TFM
         path: terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
-      
+
       - id: terraform_gcp_mysql
         name: MySQL-GCP-TFM
         path: terraform/gcp_mysql
@@ -551,7 +554,7 @@ topics:
         name: PostgreSQL-AWS-TFM
         path: terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
-      
+
       - id: terraform_gcp_postgresql
         name: PostgreSQL-GCP-TFM
         path: terraform/gcp_postgresql
@@ -711,7 +714,10 @@ topics:
   - name: k8s-examples
     target_path: s3_json_file
     blueprints:
-    
+      - id: Kubernetes_AWS_EKS_Istio
+        name: Kubernetes_AWS_EKS_Istio
+        path: kubernetes/eks-istio
+        description: Setup a Kubernetes cluster with Istio in AWS leveraging EKS
       - id: tf_kube_gke
         name: GKE-GCP-TFM
         path: terraform/gke
@@ -782,7 +788,7 @@ topics:
   - name: vmware_services
     target_path: s3_json_file
     blueprints:
-    
+
       - id: vsphere_vm
         name: VM-Centos-vSphere-CFY
         path: vsphere/vm
@@ -796,12 +802,12 @@ topics:
   - name: ansible_services
     target_path: s3_json_file
     blueprints:
-    
+
       - id: nginx_ansible
         name: Ansible-Nginx-CFY
         path: ansible/nginx
         description: Create Nginx service using Ansible plugin
-      
+
       - id: cassandra_ansible
         name: Ansible-Cassandra-CFY
         path: ansible/cassandra
@@ -836,22 +842,22 @@ topics:
         name: Ansible-MySQL-CFY
         path: ansible/mysql
         description: Create MySQL service using Ansible plugin
-      
+
       - id: postgresql_ansible
         name: Ansible-Postgres-CFY
         path: ansible/postgresql
         description: Create Postgres service using Ansible plugin
-      
+
       - id: oracle_ansible
         name: Ansible-Oracle-CFY
         path: ansible/oracle
         description: Create Oracle service using Ansible plugin
-      
+
       - id: prometheus_ansible
         name: Ansible-Prometheus-CFY
         path: ansible/prometheus
         description: Create Prometheus service using Ansible plugin
-      
+
       - id: rabbitmq_ansible
         name: Ansible-Rabbitmq-CFY
         path: ansible/rabbitmq
@@ -900,11 +906,11 @@ topics:
         name: OpenStack-Basics-VM-Setup
         path: other/openstack/vm
         description: Create vSphere VM
-      
+
       - id: openstack_basic_service
         name: OpenStack-Basics-Simple-Service-Setup
         path: other/openstack/simple_service
-        description: Create vSphere Service 
+        description: Create vSphere Service
 
       - id: multicloud_nodejs_app
         name: Multi-Cloud-NodeJS-Application-Server-Setup
@@ -914,13 +920,13 @@ topics:
       - id: multicloud_jboss
         name: Multi-Cloud-JBoss-Application-Server-Setup
         path: other/multicloud/jboss
-        description: Create Multicloud JBoss appliction with Server Setup 
+        description: Create Multicloud JBoss appliction with Server Setup
 
       - id: multicloud_localstack
         name: Multi-Cloud-LocalStack-Application-Server-Setup
         path: other/multicloud/localstack
-        description: Create Multicloud Localstack appliction with Server Setup 
-      
+        description: Create Multicloud Localstack appliction with Server Setup
+
       - id: tf_infracosts
         name: InfraCosts-AWS-TFM
         path: terraform/infracosts
@@ -943,7 +949,7 @@ topics:
         name: Docker-Elastic-CFY
         path: docker/elasticsearch
         description: Creating Elasticsearch serivce using Docker plugin
-    
+
       - id: hello_docker
         name: Docker-HelloWorld-CFY
         path: docker/helloworld
@@ -958,22 +964,22 @@ topics:
         name: Docker-Influxdb-CFY
         path: docker/influxdb
         description: Creating Httpd service using Docker plugin
-      
+
       - id: mariadb_docker
         name: Docker-MariaDB-CFY
         path: docker/mariadb
         description: Creating MariaDB service using Docker plugin
-      
+
       - id: memcached_docker
         name: Docker-Memcached-CFY
         path: docker/memcached
         description: Creating Memcached service using Docker plugin
-      
+
       - id: mongo_docker
         name: Docker-MongoDB-CFY
         path: docker/mongo
         description: Creating MongoDB service using Docker plugin
-      
+
       - id: mysql_docker
         name: Docker-MySQL-CFY
         path: docker/mysql
@@ -983,17 +989,17 @@ topics:
         name: Docker-Nextcloud-CFY
         path: docker/nextcloud
         description: Creating Nextcloud service using Docker plugin
-      
+
       - id: nginx_docker
         name: Docker-Nginx-CFY
         path: docker/nginx
         description: Creating Nginx service using Docker plugin
-      
+
       - id: postgres_docker
         name: Docker-Postgres-CFY
         path: docker/postgres
         description: Creating PostgresSQL service using Docker plugin
-      
+
       - id: rabbitmq_docker
         name: Docker-RabbitMQ-CFY
         path: docker/rabbitmq
@@ -1003,17 +1009,17 @@ topics:
         name: Docker-Sonarquebe-CFY
         path: docker/sonarqube
         description: Creating Sonarquebe service using Docker plugin
-      
+
       - id: telegraf_docker
         name: Docker-Telegraf-CFY
         path: docker/telegraf
         description: Creating Telegraf service using Docker plugin
-      
+
       - id: traefik_docker
         name: Docker-Traefik-CFY
         path: docker/traefik
         description: Creating Traefik service using Docker plugin
-      
+
       - id: wordpress_docker
         name: Docker-Wordpress-CFY
         path: docker/wordpress
