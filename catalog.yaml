@@ -352,7 +352,7 @@ topics:
         path: terraform/eks
         description: Create an EKS AWS using Terraform automation
       - id: terraform_eks_istio
-        name: Terraform_AWS_EKS_Istio
+        name: K8s-Istio-AWS-TFM
         path: terraform/eks-istio
         description: Create an EKS AWS with Istio using Terraform automation
       - id: terraform_azure_vpc
@@ -530,7 +530,7 @@ topics:
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
       - id: Kubernetes_AWS_EKS_Istio
-        name: Kubernetes_AWS_EKS_Istio
+        name: K8s-Istio-AWS-CFY
         path: kubernetes/eks-istio
         description: Setup a Kubernetes cluster with Istio in AWS leveraging EKS
       - id: Kubernetes_Azure_AKS
