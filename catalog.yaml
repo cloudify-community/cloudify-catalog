@@ -445,10 +445,12 @@ topics:
         name: VM-Ubuntu-AWS-TFM
         path: terraform/aws
         description: Create an AWS VM using Terraform automation
+        
       - id: terraform_eks_istio
-        name: Terraform_AWS_EKS_Istio
+        name: K8s-Istio-AWS-TFM
         path: terraform/eks-istio
         description: Create an EKS AWS with Istio using Terraform automation
+        
       - id: terraform_tfc
         name: VM-Ubuntu-CloudEnterprise-TFM
         path: terraform/tfc
@@ -711,13 +713,14 @@ topics:
         path: helm/vault
         description: Installing Vault helm chart on top of K8s cluster
 
-  - name: k8s-examples
+  - name: k8s_services
     target_path: s3_json_file
     blueprints:
       - id: Kubernetes_AWS_EKS_Istio
-        name: Kubernetes_AWS_EKS_Istio
+        name: K8s-Istio-AWS-CFY
         path: kubernetes/eks-istio
         description: Setup a Kubernetes cluster with Istio in AWS leveraging EKS
+        
       - id: tf_kube_gke
         name: GKE-GCP-TFM
         path: terraform/gke
