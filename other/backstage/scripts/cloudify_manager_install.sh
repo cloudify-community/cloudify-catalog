@@ -23,5 +23,3 @@ sudo cfy_manager install \
     --admin-password "${ADMIN_PASSWORD}"
 
 rm -f /tmp/license.yaml
-
-https://repository.cloudifysource.org/cloudify/6.3.1/community-release/cloudify-manager-install-6.3.1-community.el7.x86_64.rpm
