@@ -648,6 +648,11 @@ topics:
         path: helm/jenkins
         description: Installing Jenkins helm chart on top of K8s cluster
 
+      - id: bitbucket
+        name: Bitbucket-K8s-HLM
+        path: helm/bitbucket
+        description: Installing Bitbucket helm chart on top of K8s cluster
+
       - id: kafka
         name: Kafka-K8s-HLM
         path: helm/kafka
