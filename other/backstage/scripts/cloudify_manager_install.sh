@@ -10,7 +10,6 @@
 CM_RPM_URL='https://repository.cloudifysource.org/cloudify/6.3.1/community/cloudify-manager-install-6.3.1-ga.el7.x86_64.rpm'
 RPM_NAME='cloudify-manager-install-6.3.1-ga.el7.x86_64.rpm'
 
-
 curl ${CM_RPM_URL} -o ${RPM_NAME}
 sudo yum install -y ${RPM_NAME}
 
