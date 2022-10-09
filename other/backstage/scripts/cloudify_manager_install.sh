@@ -7,15 +7,15 @@
 # - PUBLIC_IP - public IP of the host VM
 # - ADMIN_PASSWORD - password to set for the Cloudify Manager's admin user
 
-CM_RPM_URL='https://repository.cloudifysource.org/cloudify/6.3.1/ga-release/cloudify-manager-install-6.3.1-ga.el7.x86_64.rpm'
+CM_RPM_URL='http://repository.cloudifysource.org/cloudify/6.3.1/community/cloudify-manager-install-6.3.1-ga.el7.x86_64.rpm'
 RPM_NAME='cloudify-manager-install-6.3.1-ga.el7.x86_64.rpm'
 
 
 curl ${CM_RPM_URL} -o ${RPM_NAME}
 sudo yum install -y ${RPM_NAME}
 
-echo "${LICENSE}" > /tmp/license.yaml
-sudo sed -i "s/cloudify_license_path: ''/cloudify_license_path: \/tmp\/license.yaml/" /etc/cloudify/config.yaml
+# echo "${LICENSE}" > /tmp/license.yaml
+# sudo sed -i "s/cloudify_license_path: ''/cloudify_license_path: \/tmp\/license.yaml/" /etc/cloudify/config.yaml
 
 sudo cfy_manager install \
     --private-ip "${PRIVATE_IP}" \
@@ -23,3 +23,5 @@ sudo cfy_manager install \
     --admin-password "${ADMIN_PASSWORD}"
 
 rm -f /tmp/license.yaml
+
+https://repository.cloudifysource.org/cloudify/6.3.1/community-release/cloudify-manager-install-6.3.1-community.el7.x86_64.rpm
