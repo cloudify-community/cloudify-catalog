@@ -289,7 +289,6 @@ node_templates:
               <<: *vm_cm_fabric_env
             process:
               env:
-                LICENSE: { concat: ['"', { get_secret: LICENSE }, '"'] }
                 PRIVATE_IP:
                   get_capability:
                     - { get_attribute: [cloudify_manager_vm, deployment, id] }
