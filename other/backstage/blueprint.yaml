@@ -205,7 +205,7 @@ node_templates:
           blueprint_archive: { get_input: vm_archive }
           main_file_name: blueprint.yaml
         deployment:
-          # id: github_runner_vm
+          id: github_runner_vm
           auto_inc_suffix: false
           inputs:
             instance_type: t2.medium
