@@ -238,6 +238,15 @@ topics:
         path: terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
 
+  - name: cloudify-manager
+    target_path: s3_json_file
+    blueprints:
+
+      - id: Cloudify-Manager-EC2
+        name: Cloudify-Manager-AWS-CFY
+        path: cloudify_manager/ec2
+        description: This blueprint creates EC2 instance and installs the Cloudify Manager from predifined rpm URL
+
   - name: azure_services
     target_path: s3_json_file
     blueprints:

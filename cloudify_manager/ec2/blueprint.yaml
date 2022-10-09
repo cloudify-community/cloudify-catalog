@@ -1,0 +1,209 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-aws-plugin
+  - plugin:cloudify-fabric-plugin
+
+inputs:
+
+  rpm_url:
+    type: string
+    display_label: URL for Cloudify Manager rpm
+    description: >
+      Cloudify Manager installation RPM 
+    default: https://repository.cloudifysource.org/cloudify/6.3.1/ga-release/cloudify-manager-install-6.3.1-ga.el7.x86_64.rpm
+  
+  vm_archive:
+    type: string
+    display_label: URL for vm zip archive
+    description: >
+      URL of vm zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/aws/ec2_without_network/ec2.zip
+
+  network_archive:
+    type: string
+    display_label: URL for network zip archive
+    description: >
+      URL of network zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/aws/network/network.zip
+
+  region_name:
+    type: string
+    display_label: AWS Region Name
+    description: Select AWS region name
+    default: ca-central-1
+    constraints:
+      - valid_values:
+        - us-east-1
+        - us-west-1
+        - us-west-2
+        - eu-west-1
+        - ca-central-1
+
+dsl_definitions:
+
+  fabric_env: &vm_cm_fabric_env
+    host_string:
+      get_capability:
+        - { get_attribute: [cloudify_manager_vm, deployment, id] }
+        - public_ip
+    user: centos
+    key:
+      get_capability:
+        - { get_attribute: [cloudify_manager_vm, deployment, id] }
+        - private_key
+
+node_templates:
+
+  cloudify_manager_admin_password:
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      uppercase: 1
+      lowercase: 1
+      symbols: -1
+  
+# AWS network resources for all VMs
+  network:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: false
+          id: network
+          blueprint_archive: { get_input: network_archive }
+          main_file_name: blueprint.yaml
+        deployment:
+          id: network
+          auto_inc_suffix: false
+          inputs:
+            region_name: { get_input: region_name }
+
+# Setup security group reference
+  security_group:
+    type: cloudify.nodes.aws.ec2.SecurityGroup
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: region_name }
+      use_external_resource: true
+      resource_id: { get_capability: [ network, security_group_id ]  }
+      resource_config:
+        GroupName: security_group_cloudify
+        Description: Created by Cloudify
+        VpcId: { get_capability: [ network, vpc_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+# Setup SG rules
+  security_group_rules:
+    type: cloudify.nodes.aws.ec2.SecurityGroupRuleIngress
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: region_name }
+      resource_config:
+        IpPermissions:
+          - IpProtocol: tcp
+            FromPort: 22
+            ToPort: 22
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 443
+            ToPort: 443
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 5671
+            ToPort: 5671
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 8000
+            ToPort: 8000
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 53333
+            ToPort: 53333
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+    relationships:
+    - type: cloudify.relationships.contained_in
+      target: security_group
+
+# Cloudify Manager VM
+  cloudify_manager_vm:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: false
+          id: cloudify_manager_vm
+          blueprint_archive: { get_input: vm_archive }
+          main_file_name: blueprint.yaml
+        deployment:
+          id: cloudify_manager_vm
+          auto_inc_suffix: false
+          inputs:
+            instance_type: t2.large
+            region_name: { get_input: region_name }
+            ssh_key_secret_name: cloudify_manager_vm_ssh_key
+            subnet_id:
+              get_capability:
+                - { get_attribute: [network, deployment, id] }
+                - subnet_id
+            security_group_id:
+              get_capability:
+                - { get_attribute: [network, deployment, id] }
+                - security_group_id
+            ec2_name: cloudify_manager_vm
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+  cloudify_manager_install:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/cloudify_manager_install.sh
+            fabric_env:
+              <<: *vm_cm_fabric_env
+            process:
+              env:
+                CM_RPM_URL: { get_input: [ rpm_url ] }
+                PRIVATE_IP:
+                  get_capability:
+                    - { get_attribute: [cloudify_manager_vm, deployment, id] }
+                    - private_ip
+                PUBLIC_IP:
+                  get_capability:
+                    - { get_attribute: [cloudify_manager_vm, deployment, id] }
+                    - public_ip
+                ADMIN_PASSWORD: { get_attribute: [ cloudify_manager_admin_password, password ] }
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: cloudify_manager_vm
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+capabilities:
+
+  cloudify_manager_endpoint:
+    description: The endpoint of Cloudify Manager installed on VM
+    value:
+      concat:
+        - 'https://'
+        - get_capability:
+          - { get_attribute: [cloudify_manager_vm, deployment, id] }
+          - public_ip
