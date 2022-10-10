@@ -447,7 +447,7 @@ topics:
         description: Create an AWS VM using Terraform automation
         
       - id: terraform_eks_istio
-        name: K8s-Istio-AWS-TFM
+        name: Istio-AWS-TFM
         path: terraform/eks-istio
         description: Create an EKS AWS with Istio using Terraform automation
         
@@ -716,22 +716,6 @@ topics:
   - name: k8s_services
     target_path: s3_json_file
     blueprints:
-      - id: Kubernetes_AWS_EKS_Istio
-        name: K8s-Istio-AWS-CFY
-        path: kubernetes/eks-istio
-        description: Setup a Kubernetes cluster with Istio in AWS leveraging EKS
-        
-      - id: tf_kube_gke
-        name: GKE-GCP-TFM
-        path: terraform/gke
-        description: Create a Google Platform Kubernetes using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/gke.png
-
-      - id: tf_kube_aks
-        name: AKS-Azure-TFM
-        path: terraform/aks
-        description: Create an Azure Kubernetes using Terraform automation
-        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/aks.png
 
       - id: tf_kube_eks
         name: EKS-AWS-TFM
@@ -744,10 +728,42 @@ topics:
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
 
+      - id: Kubernetes_AWS_EKS_DR
+        name: EKS-DR-AWS-TFM
+        path: pg_ce/services/kubernetes_dr_eks
+        description: Creating Disaster Recovery EKS service
+
+      - id: terraform_eks_istio_k8s
+        name: Istio-AWS-TFM
+        path: terraform/eks-istio
+        description: Create an EKS AWS with Istio using Terraform automation
+      
+      - id: Kubernetes_AWS_EKS_Istio
+        name: Istio-AWS-CFY
+        path: kubernetes/eks-istio
+        description: Setup a Kubernetes cluster with Istio in AWS leveraging EKS
+        
+      - id: tf_kube_aks
+        name: AKS-Azure-TFM
+        path: terraform/aks
+        description: Create an Azure Kubernetes using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/aks.png
+
       - id: Kubernetes_Azure_AKS
         name: AKS-Azure-CFY
         path: kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
+
+      - id: Kubernetes_Azure_AKS_DR
+        name: AKS-DR-Azure-TFM
+        path: pg_ce/services/kubernetes_dr_aks
+        description: Creating Disaster Recovery AKS service
+
+      - id: tf_kube_gke
+        name: GKE-GCP-TFM
+        path: terraform/gke
+        description: Create a Google Platform Kubernetes using Terraform automation
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/gke.png
 
       - id: Kubernetes_GCP_GKE
         name: GKE-GCP-CFY
@@ -758,16 +774,6 @@ topics:
         name: Optimized-Cluster-SpotOcean-TFM
         path: kubernetes/spot
         description: Create a Spot Ocean Kubernetes cost optimized Cluster
-
-      - id: Kubernetes_Azure_AKS_DR
-        name: AKS-DR-Azure-TFM
-        path: pg_ce/services/kubernetes_dr_aks
-        description: Creating Disaster Recovery AKS service
-
-      - id: Kubernetes_AWS_EKS_DR
-        name: EKS-DR-AWS-TFM
-        path: pg_ce/services/kubernetes_dr_eks
-        description: Creating Disaster Recovery EKS service
 
   - name: K8S_Discovery
     target_path: s3_json_file
