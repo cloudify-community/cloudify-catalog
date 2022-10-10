@@ -10,7 +10,6 @@ imports:
 inputs:
 
   release_name:
-    display_label: Name of the helm release
     description: |
       Name of the helm release
     type: string
@@ -18,7 +17,7 @@ inputs:
 
 node_templates:
 
-  secrets:
+  password_generator:
     type: cloudify.nodes.PasswordSecret
     properties:
       length: 12
@@ -50,7 +49,7 @@ node_templates:
       client_config:
         configuration:
           api_options:
-            host: { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
+            host: { get_environment_capability: kubernetes_cluster_host }
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       resource_config:
@@ -61,13 +60,13 @@ node_templates:
           - name: controller.serviceType
             value: LoadBalancer
           - name: controller.adminPassword
-            value: { get_attribute: [ secrets, password ] }
+            value: { get_attribute: [ password_generator, password ] }
     relationships:
       - target: helm_install
         type: cloudify.helm.relationships.run_on_host
       - target: repo
         type: cloudify.relationships.depends_on
-      - target: secrets
+      - target: password_generator
         type: cloudify.relationships.depends_on
 
   svc:
@@ -76,7 +75,7 @@ node_templates:
       client_config:
         configuration:
           api_options:
-            host: { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
+            host: { get_environment_capability: kubernetes_cluster_host }
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       use_external_resource: true
@@ -85,18 +84,20 @@ node_templates:
         apiVersion: v1
         kind: Service
         metadata:
-          name: {concat : [ { get_input: release_name }, -jenkins ] }
+          name: {concat: [ { get_input: release_name }, -jenkins ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: release
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - helm
 
 capabilities:
   url:
-    value: { concat: ["http://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip ] }] } 
+    description: URL
+    value: { concat: [ "http://", { get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, ip ] } ] }
   password_jenkins:
-    value: { get_attribute: [ secrets, password ] }
+    description: Admin Jenkins Password
+    value: { get_attribute: [ password_generator, password ] }
