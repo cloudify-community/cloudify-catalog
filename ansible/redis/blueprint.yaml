@@ -43,20 +43,24 @@ inputs:
 node_templates:
 
   master_password:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
 
   slave_password:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
           
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
@@ -112,8 +116,8 @@ node_templates:
                     ansible_become: true
                     ansible_ssh_common_args: -o StrictHostKeyChecking=no
             run_data:
-              slave_password: { get_attribute: [ slave_password, master_password ] }
-              master_password: { get_attribute: [ master_password, master_password ] }
+              slave_password: { get_attribute: [ slave_password, password ] }
+              master_password: { get_attribute: [ master_password, password ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -130,12 +134,12 @@ outputs:
   
   slave_password:
     description: Redis Slave password
-    value: { get_attribute: [ slave_password, master_password ] }
+    value: { get_attribute: [ slave_password, password ] }
   
   master_password:
     description: Redis Master password
-    value: { get_attribute: [ master_password, master_password ] }
+    value: { get_attribute: [ master_password, password ] }
   
   test_command:
     description: Command to test service with the redis-cli tool
-    value: { concat: [ "redis-cli -h", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] } ,"-p 6379 -a", { get_attribute: [ master_password, master_password ] } ]}
+    value: { concat: [ "redis-cli -h", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] } ,"-p 6379 -a", { get_attribute: [ master_password, password ] } ]}

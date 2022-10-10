@@ -10,6 +10,7 @@ imports:
 inputs:
 
   release_name:
+    display_label: Name of the helm release
     description: |
       Name of the helm release
     type: string
@@ -17,13 +18,15 @@ inputs:
 
 node_templates:
 
-  password_generator:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+  secrets:
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
 
   helm_install:
     type: cloudify.nodes.helm.Binary
@@ -47,7 +50,7 @@ node_templates:
       client_config:
         configuration:
           api_options:
-            host: { get_environment_capability: kubernetes_cluster_host }
+            host: { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       resource_config:
@@ -58,13 +61,13 @@ node_templates:
           - name: controller.serviceType
             value: LoadBalancer
           - name: controller.adminPassword
-            value: { get_attribute: [ password_generator, master_password ] }
+            value: { get_attribute: [ secrets, password ] }
     relationships:
       - target: helm_install
         type: cloudify.helm.relationships.run_on_host
       - target: repo
         type: cloudify.relationships.depends_on
-      - target: password_generator
+      - target: secrets
         type: cloudify.relationships.depends_on
 
   svc:
@@ -73,7 +76,7 @@ node_templates:
       client_config:
         configuration:
           api_options:
-            host: { get_environment_capability: kubernetes_cluster_host }
+            host: { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       use_external_resource: true
@@ -82,20 +85,18 @@ node_templates:
         apiVersion: v1
         kind: Service
         metadata:
-          name: {concat: [ { get_input: release_name }, -jenkins ] }
+          name: {concat : [ { get_input: release_name }, -jenkins ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: release
 
 labels:
-  obj-type:
-    values:
+  obj-type: 
+    values: 
       - helm
 
 capabilities:
   url:
-    description: URL
-    value: { concat: [ "http://", { get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, ip ] } ] }
+    value: { concat: ["http://", { get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, ip ] }] } 
   password_jenkins:
-    description: Admin Jenkins Password
-    value: { get_attribute: [ password_generator, master_password ] }
+    value: { get_attribute: [ secrets, password ] }

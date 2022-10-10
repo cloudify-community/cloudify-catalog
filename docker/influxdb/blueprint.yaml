@@ -124,12 +124,14 @@ node_templates:
         target: infrastructure
 
   password_generator:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
       
   docker_influxdb_container:
     type: cloudify.nodes.docker.container
@@ -146,7 +148,7 @@ node_templates:
           name: influxdb
           ports: [ 8086 ]
           environment: [
-           { concat: [ "DOCKER_INFLUXDB_INIT_PASSWORD=", { get_attribute: [ password_generator, master_password ] } ] }, 
+           { concat: [ "DOCKER_INFLUXDB_INIT_PASSWORD=", { get_attribute: [ password_generator, password ] } ] }, 
            { concat: [ "DOCKER_INFLUXDB_INIT_MODE=setup" ] },
            { concat: [ "DOCKER_INFLUXDB_INIT_USERNAME=", { get_input: user_name } ] },
            { concat: [ "DOCKER_INFLUXDB_INIT_ORG=", { get_input: org }] },
@@ -167,7 +169,7 @@ outputs:
   
   influxdb_password:
     description: Influxdb password
-    value: { get_attribute: [ password_generator, master_password ] }
+    value: { get_attribute: [ password_generator, password ] }
   
   influxdb_user:
     description: Influxdb user
