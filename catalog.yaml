@@ -737,7 +737,8 @@ topics:
         name: Istio-AWS-TFM
         path: terraform/eks-istio
         description: Create an EKS AWS with Istio using Terraform automation
-      
+        image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/eks.png
+
       - id: Kubernetes_AWS_EKS_Istio
         name: Istio-AWS-CFY
         path: kubernetes/eks-istio
