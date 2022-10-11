@@ -2,22 +2,37 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
+  - plugin:cloudify-aws-plugin
   - plugin:cloudify-fabric-plugin
 
 inputs:
 
+  vm_archive:
+    type: string
+    display_label: URL for vm zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/aws/ec2_without_network/ec2.zip
+
+  network_archive:
+    type: string
+    display_label: URL for network zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/aws/network/network.zip
+
   region_name:
-      type: string
-      display_label: AWS Region Name
-      description: Select AWS region name
-      default: ca-central-1
-      constraints:
-        - valid_values:
-          - us-east-1
-          - us-west-1
-          - us-west-2
-          - eu-west-1
-          - ca-central-1
+    type: string
+    display_label: AWS Region Name
+    description: Select AWS region name
+    default: ca-central-1
+    constraints:
+      - valid_values:
+        - us-east-1
+        - us-west-1
+        - us-west-2
+        - eu-west-1
+        - ca-central-1
 
   install_dir:
     type: string
@@ -99,13 +114,85 @@ node_templates:
         blueprint:
           external_resource: false
           id: network
-          blueprint_archive: vm/vm.zip
-          main_file_name: network_blueprint.yaml
+          blueprint_archive: { get_input: network_archive }
+          main_file_name: blueprint.yaml
         deployment:
           id: network
           auto_inc_suffix: false
           inputs:
             region_name: { get_input: region_name }
+
+# Setup security group reference
+  security_group:
+    type: cloudify.nodes.aws.ec2.SecurityGroup
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: region_name }
+      use_external_resource: true
+      resource_id: { get_capability: [ network, security_group_id ]  }
+      resource_config:
+        GroupName: security_group_cloudify
+        Description: Created by Cloudify
+        VpcId: { get_capability: [ network, vpc_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+# Setup SG rules
+  security_group_rules:
+    type: cloudify.nodes.aws.ec2.SecurityGroupRuleIngress
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: region_name }
+      resource_config:
+        IpPermissions:
+          - IpProtocol: tcp
+            FromPort: 22
+            ToPort: 22
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 443
+            ToPort: 443
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 5432
+            ToPort: 5432
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 5671
+            ToPort: 5671
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 7007
+            ToPort: 7007
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 8000
+            ToPort: 8000
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 53333
+            ToPort: 53333
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+    relationships:
+    - type: cloudify.relationships.contained_in
+      target: security_group
 
 # GitHub runner VM
   github_runner_vm:
@@ -115,8 +202,8 @@ node_templates:
         blueprint:
           external_resource: false
           id: github_runner_vm
-          blueprint_archive: vm/vm.zip
-          main_file_name: vm_blueprint.yaml
+          blueprint_archive: { get_input: vm_archive }
+          main_file_name: blueprint.yaml
         deployment:
           id: github_runner_vm
           auto_inc_suffix: false
@@ -168,8 +255,8 @@ node_templates:
         blueprint:
           external_resource: false
           id: cloudify_manager_vm
-          blueprint_archive: vm/vm.zip
-          main_file_name: vm_blueprint.yaml
+          blueprint_archive: { get_input: vm_archive }
+          main_file_name: blueprint.yaml
         deployment:
           id: cloudify_manager_vm
           auto_inc_suffix: false
@@ -202,7 +289,6 @@ node_templates:
               <<: *vm_cm_fabric_env
             process:
               env:
-                LICENSE: { concat: ['"', { get_secret: LICENSE }, '"'] }
                 PRIVATE_IP:
                   get_capability:
                     - { get_attribute: [cloudify_manager_vm, deployment, id] }
@@ -260,8 +346,8 @@ node_templates:
         blueprint:
           external_resource: false
           id: backstage_vm
-          blueprint_archive: vm/vm.zip
-          main_file_name: vm_blueprint.yaml
+          blueprint_archive: { get_input: vm_archive }
+          main_file_name: blueprint.yaml
         deployment:
           id: backstage_vm
           auto_inc_suffix: false
