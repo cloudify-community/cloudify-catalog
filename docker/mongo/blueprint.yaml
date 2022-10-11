@@ -106,12 +106,14 @@ node_templates:
         target: infrastructure
 
   password_generator:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
     
   docker_redis_container:
     type: cloudify.nodes.docker.container
@@ -124,7 +126,7 @@ node_templates:
         container_args:
           name: mongodb
           environment: [
-           { concat: [ "MONGO_INITDB_ROOT_PASSWORD=", { get_attribute: [ password_generator, master_password ] } ] }, 
+           { concat: [ "MONGO_INITDB_ROOT_PASSWORD=", { get_attribute: [ password_generator, password ] } ] }, 
            { concat: [ "MONGO_INITDB_ROOT_USERNAME=", { get_input: user_name } ] } 
           ]
           ports: [ 27017 ]
@@ -145,7 +147,7 @@ outputs:
   
   mongodb_password:
     description: mongodb password
-    value: { get_attribute: [ password_generator, master_password ] }
+    value: { get_attribute: [ password_generator, password ] }
   
   mongodb_user:
     description: mongodb user

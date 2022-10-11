@@ -94,12 +94,14 @@ node_templates:
         target: prefix
 
   password_generator:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
 
   database_stack:
     type: cloudify.nodes.aws.CloudFormation.Stack
@@ -136,7 +138,7 @@ node_templates:
                   DBInstanceClass: db.r6g.large
                   Engine: postgres
                   MasterUsername: { get_input: [ resource_config, master_username ] }
-                  MasterUserPassword: { get_attribute: [ password_generator, master_password ] }
+                  MasterUserPassword: { get_attribute: [ password_generator, password ] }
                   VPCSecurityGroups:
                     - Ref: MyDBSecurityGroup
                   DBSubnetGroupName: { Ref: MyDBSubnetGroup }
@@ -160,4 +162,4 @@ capabilities:
   master_username:
     value: { get_input: [ resource_config, master_username ] }
   master_password:
-    value: { get_attribute: [ password_generator, master_password] }
+    value: { get_attribute: [ password_generator, password] }

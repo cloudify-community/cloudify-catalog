@@ -66,12 +66,14 @@ node_templates:
       predefined_value: { get_input: resource_prefix }
   
   password_generator:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
 
   resource_group:
     type: cloudify.azure.nodes.ResourceGroup
@@ -91,7 +93,7 @@ node_templates:
       resource_group_name: { concat: [ { get_attribute: [ prefix, value ] }, cinstancerg ] }
       params:
         location: { get_input: azure_region_name }
-        mysqlPassword: { get_attribute: [ password_generator, master_password ] }
+        mysqlPassword: { get_attribute: [ password_generator, password ] }
       template_file: 'templates/hello_world.json'
     relationships:
       - target: resource_group
@@ -107,4 +109,4 @@ capabilities:
   wordpress_fqdn: 
     value: { get_attribute: [ wordpress_deployment, outputs, siteFQDN, value ] }
   mysql_password: 
-    value: { get_attribute: [ password_generator, master_password ] }
+    value: { get_attribute: [ password_generator, password ] }

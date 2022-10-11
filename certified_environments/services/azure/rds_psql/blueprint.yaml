@@ -91,12 +91,14 @@ node_templates:
         target: prefix
 
   password_generator:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
 
   database_deployment:
     type: cloudify.azure.Deployment
@@ -109,7 +111,7 @@ node_templates:
         location: { get_input: [ cloud_credentials, region_name ] }
         serverName: { concat: [ { get_attribute: [ prefix, value ] }, '-postgresql-server' ] }
         administratorLogin: { get_input: [ resource_config, master_username ] }
-        administratorLoginPassword: { get_attribute: [ password_generator, master_password ] }
+        administratorLoginPassword: { get_attribute: [ password_generator, password ] }
         subnetName: { get_attribute: [ network, capabilities, private_subnet_ids, 0 ] }
         virtualNetworkRuleName: "AllowSubnet"
         skuCapacity: 2
@@ -135,4 +137,4 @@ capabilities:
   master_username:
     value: { get_input: [ resource_config, master_username ] }
   master_password:
-    value: { get_attribute: [ password_generator, master_password] }
+    value: { get_attribute: [ password_generator, password] }

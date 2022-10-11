@@ -44,12 +44,14 @@ node_templates:
 
   # we creating the password for postgres admin/master user
   master_password:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
   
   #we creating the prefix for the deployment resources i.e. infrastructure
   infra_prefix:
@@ -120,7 +122,7 @@ node_templates:
                         ansible_become: true
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
                 run_data:
-                  master_password: { get_attribute: [ master_password, master_password ] }
+                  master_password: { get_attribute: [ master_password, password ] }
 
 outputs:
 
@@ -134,7 +136,7 @@ outputs:
     
   master_password:
     description: Postgres Master password
-    value: { get_attribute: [ master_password, master_password ] }
+    value: { get_attribute: [ master_password, password ] }
 
   login_command:
     description: Connection to postgres server by psql client

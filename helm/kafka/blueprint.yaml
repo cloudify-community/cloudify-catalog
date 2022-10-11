@@ -36,28 +36,34 @@ inputs:
 node_templates:
 
   password_jks:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
 
   password_zookeeper:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
 
   password_kafka:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
 
   helm_install:
     type: cloudify.nodes.helm.Binary
@@ -99,25 +105,25 @@ node_templates:
           - name: auth.tls.existingSecrets[1]
             value: kafka-jks-0
           - name: auth.tls.password
-            value: { get_attribute: [password_jks, master_password] }
+            value: { get_attribute: [password_jks, password] }
           - name: auth.sasl.jaas.clientUsers[0]
             value: { get_input: kafka_user }
           - name: auth.sasl.jaas.clientPasswords[0]
-            value: { get_attribute: [password_kafka, master_password] }
+            value: { get_attribute: [password_kafka, password] }
           - name: auth.sasl.jaas.zookeeperUser
             value: { get_input: zookeeper_user }
           - name: auth.sasl.jaas.zookeeperPassword
-            value: { get_attribute: [password_zookeeper, master_password] }
+            value: { get_attribute: [password_zookeeper, password] }
           - name: zookeeper.auth.enabled
             value: "true"
           - name: zookeeper.auth.serverUsers
             value: { get_input: zookeeper_user }
           - name: zookeeper.auth.serverPasswords
-            value: { get_attribute: [password_zookeeper, master_password] }
+            value: { get_attribute: [password_zookeeper, password] }
           - name: zookeeper.auth.clientUser
             value: { get_input: zookeeper_user }
           - name: zookeeper.auth.clientPassword
-            value: { get_attribute: [password_zookeeper, master_password] }
+            value: { get_attribute: [password_zookeeper, password] }
           - name: externalAccess.service.type
             value: LoadBalancer
           - name: externalAccess.enabled
@@ -198,7 +204,7 @@ capabilities:
 
   zookeeper_password:
     description: Zookeeper password
-    value: { get_attribute: [ password_zookeeper, master_password ] }
+    value: { get_attribute: [ password_zookeeper, password ] }
 
   zookeeper_user:
     description: Zookeeper user
@@ -206,7 +212,7 @@ capabilities:
 
   kafka_password:
     description: Kafka password
-    value: { get_attribute: [ password_kafka, master_password ] }
+    value: { get_attribute: [ password_kafka, password ] }
 
   kafka_user:
     description: Kafka user
@@ -214,4 +220,4 @@ capabilities:
 
   jks_password:
     description: JSK passowrd
-    value: { get_attribute: [ password_jks, master_password ] }
+    value: { get_attribute: [ password_jks, password ] }

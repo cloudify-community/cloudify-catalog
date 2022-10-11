@@ -99,12 +99,14 @@ node_templates:
         target: infrastructure
 
   password_generator:
-    type: cloudify.nodes.Root
-    interfaces:
-      cloudify.interfaces.lifecycle:
-        create:
-          executor: central_deployment_agent
-          implementation: scripts/generate-password.sh
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
     
   docker_redis_container:
     type: cloudify.nodes.docker.container
@@ -117,7 +119,7 @@ node_templates:
         container_args:
           command:  "docker-entrypoint.sh postgres"
           name: postgres
-          environment: [ { concat: [ "POSTGRES_PASSWORD=", { get_attribute: [ password_generator, master_password ] } ] } ]
+          environment: [ { concat: [ "POSTGRES_PASSWORD=", { get_attribute: [ password_generator, password ] } ] } ]
           detach: True
           ports: [ 5432 ]
           host_config:
@@ -140,5 +142,5 @@ outputs:
 
   postgres_password:
     description: Postgres root password
-    value: { get_attribute: [ password_generator, master_password ] }
+    value: { get_attribute: [ password_generator, password ] }
   
