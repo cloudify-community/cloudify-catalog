@@ -3,6 +3,9 @@
 
 set -e
 
+sudo bash -c "echo 'sanity: True' > /opt/manager/sanity_mode"
+sudo chown cfyuser. /opt/manager/sanity_mode
+
 export PYTHONPATH='/opt/cfy/lib/python3.6/site-packages:'$PYTHONPATH
 
 AWS_WAGON_URL='http://repository.cloudifysource.org/cloudify/wagons/cloudify-aws-plugin/latest/cloudify_aws_plugin-3.0.5-centos-Core-py36-none-linux_x86_64.wgn'
@@ -95,3 +98,5 @@ cfy install -b backstage_entity_push \
             -i "repo_url=${backstage_entities_repo_url}" \
             -i "branch_name=main" \
             ${BACKSTAGE_ENTITY_PUSH_BLUEPRINT_ZIP_URL}
+
+sudo rm /opt/manager/sanity_mode
