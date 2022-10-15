@@ -202,7 +202,7 @@ node_templates:
       resource_config:
         blueprint:
           external_resource: false
-          blueprint_archive: manager.zip #{ get_input: vm_archive }
+          blueprint_archive: { get_input: cm_archive }
           main_file_name: blueprint.yaml
         deployment:
           auto_inc_suffix: false
