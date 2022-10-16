@@ -39,8 +39,8 @@ node_templates:
         configuration:
           api_options: &api_options
             host:  { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
-            api_key: { get_secret: token }
-            ssl_ca_cert: { get_secret: ssl_ca_cert }
+            api_key: { get_environment_capability: token }
+            ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       resource_config:
         name: { get_input: release_name }
         chart: sonatype/nexus-repository-manager
