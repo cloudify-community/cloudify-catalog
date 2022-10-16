@@ -64,3 +64,6 @@ The created deployment will have label `obj-type` equal to `helm`
 | ------------- | ------------------------------------- |
 | url           | URL of the nexus app              |
 
+## note 
+
+setting the environment variable NEXUS_SECURITY_RANDOMPASSWORD to false in the blueprint give you an initial static passwords (admin/admin123) where you can change it after deploying nexus from the nexus interface.
