@@ -1,9 +1,9 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 description: >
   The blueprint creates an EC2 instance with public IP on AWS.
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.1/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
   - plugin:cloudify-utilities-plugin
 
@@ -21,6 +21,7 @@ inputs:
     default: t2.micro
 
   image_id:
+    display_label: Image ID
     description: >
       The map between region and image id, it is used in EC2 instance
       to select the right image id per selected region
@@ -35,6 +36,7 @@ inputs:
 
   aws_credentials:
     description: The credentials for AWS
+    display_label: AWS credentials
     type: dict
     default:
       aws_access_key_id: { get_secret: aws_access_key_id }
@@ -44,23 +46,28 @@ inputs:
 
   ssh_key_secret_name:
     description: Name of a Secret that stores SSH Key
+    display_label: SSH Key secret name
     type: string
     hidden: true
     default: ec2_ssh_key
 
   subnet_id:
+    display_label: Subnet ID
     type: string
     description: AWS Resource ID of the Subnet
 
   security_group_id:
+    display_label: Security Group ID
     type: string
     description: AWS Resource ID of the Security Group
 
   ec2_name:
+    display_label: EC2 name
     type: string
     description: Name of the EC2 instance
 
 node_templates:
+
   nic:
     type: cloudify.nodes.aws.ec2.Interface
     properties:

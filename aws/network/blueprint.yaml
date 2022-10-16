@@ -1,10 +1,10 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 description: >
   The blueprint creates VPC and all necessary network resources on AWS
   in order to spin up EC2 instances.
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.3.1/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
   - plugin:cloudify-utilities-plugin
 
@@ -25,6 +25,7 @@ inputs:
     hidden: true
 
 node_templates:
+
   vpc:
     type: cloudify.nodes.aws.ec2.Vpc
     properties:
@@ -98,46 +99,6 @@ node_templates:
           - IpProtocol: icmp
             FromPort: -1
             ToPort: -1
-            IpRanges:
-              - CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: 22
-            ToPort: 22
-            IpRanges:
-              - CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: 80
-            ToPort: 80
-            IpRanges:
-              - CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: 443
-            ToPort: 443
-            IpRanges:
-              - CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: 5432
-            ToPort: 5432
-            IpRanges:
-              - CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: 5671
-            ToPort: 5671
-            IpRanges:
-              - CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: 7007
-            ToPort: 7007
-            IpRanges:
-              - CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: 8000
-            ToPort: 8000
-            IpRanges:
-              - CidrIp: 0.0.0.0/0
-          - IpProtocol: tcp
-            FromPort: 53333
-            ToPort: 53333
             IpRanges:
               - CidrIp: 0.0.0.0/0
     relationships:
