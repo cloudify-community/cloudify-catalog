@@ -1,0 +1,88 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: Cloudify helm-wordpress blueprint. Installs Wordpress Helm chart on top of Kubernetes cluster.
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-helm-plugin
+  - plugin:cloudify-kubernetes-plugin
+
+inputs:
+
+  release_name:
+    description: |
+      Name of the helm release
+    type: string
+    default: nexus-rm
+
+node_templates:
+  helm_install:
+    type: cloudify.nodes.helm.Binary
+    properties:
+      use_existing_resource: false
+      installation_source: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
+
+  repo:
+    type: cloudify.nodes.helm.Repo
+    properties:
+      resource_config:
+        name: sonatype
+        repo_url: https://sonatype.github.io/helm3-charts/
+    relationships:
+      - target: helm_install
+        type: cloudify.helm.relationships.run_on_host
+
+  release:
+    type: cloudify.nodes.helm.Release
+    properties:
+      client_config:
+        configuration:
+          api_options:
+            host: https://F89BF27892F1A6A21EDD7857A7ED0330.yl4.ca-central-1.eks.amazonaws.com
+            api_key: { get_secret: token }
+            ssl_ca_cert: { get_secret: ssl_ca_cert }
+      resource_config:
+        name: { get_input: release_name }
+        chart: sonatype/nexus-repository-manager
+        values_file: values.yaml
+        set_values:
+           - name: service.type
+             value: LoadBalancer
+
+    relationships:
+      - target: helm_install
+        type: cloudify.helm.relationships.run_on_host
+      - target: repo
+        type: cloudify.relationships.depends_on
+
+
+  svc:
+     type: cloudify.kubernetes.resources.Service
+     properties:
+       client_config:
+         configuration:
+           api_options:
+            host: https://F89BF27892F1A6A21EDD7857A7ED0330.yl4.ca-central-1.eks.amazonaws.com
+            api_key: { get_secret: token }
+            ssl_ca_cert: { get_secret: ssl_ca_cert }
+       use_external_resource: true
+       allow_node_redefinition: false
+       definition:
+         apiVersion: v1
+         kind: Service
+         metadata:
+           name: {concat : [ { get_input: release_name }, -nexus-repository-manager ] }
+     relationships:
+       - type: cloudify.relationships.depends_on
+         target: release
+
+labels:
+  obj-type:
+    values:
+      - helm
+
+capabilities:
+  url:
+    description: URL
+    value: { concat: [ "http://", { get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, hostname ] },":8081" ] }
+ 
