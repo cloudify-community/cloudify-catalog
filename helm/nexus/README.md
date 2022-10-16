@@ -43,15 +43,15 @@ the node type is responisble for installation of the helm binary in v3.9.0
 The type is `cloudify.nodes.helm.Binary`. 
 
 ### Repo
-the node type is responisble for downloading the Bitnami repository.
+the node type is responisble for downloading the sonatype repository.
 The type is `cloudify.nodes.helm.Repo`. 
 
 ### Release
-the node type is responisble for installing the nexus deployment using the official Bitnami chart.
+the node type is responisble for installing the nexus deployment using the official sonatype helm3 chart.
 The type is `cloudify.nodes.helm.Release`. 
 
 ### Svc
-the node type is responisble for getting the details of the running service. It's used in capabilities for exposing the URLs.
+the node type is responsible for getting the details of the running service. It's used in capabilities for exposing the URLs.
 The type is `cloudify.kubernetes.resources.Service`.
 
 ## Labels
@@ -66,4 +66,4 @@ The created deployment will have label `obj-type` equal to `helm`
 
 ## note 
 
-setting the environment variable NEXUS_SECURITY_RANDOMPASSWORD to false in the blueprint give you an initial static passwords (admin/admin123) where you can change it after deploying nexus from the nexus interface.
+values.yaml file has NEXUS_SECURITY_RANDOMPASSWORD set to false which gives you an initial static passwords (admin/admin123) where you can change it after deploying nexus from the nexus interface.
