@@ -47,7 +47,7 @@ the node type is responisble for downloading the Bitnami repository.
 The type is `cloudify.nodes.helm.Repo`. 
 
 ### Release
-the node type is responisble for installing the Jenkins deployment using the official Bitnami chart.
+the node type is responisble for installing the nexus deployment using the official Bitnami chart.
 The type is `cloudify.nodes.helm.Release`. 
 
 ### Svc
