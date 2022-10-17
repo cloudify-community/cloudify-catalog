@@ -71,11 +71,11 @@ node_templates:
           - name: bitbucket.resources.container.requests.cpu
             value: 1
           - name: bitbucket.resources.jvm.maxHeap
-            value: 512m
+            value: 1G
           - name: bitbucket.resources.jvm.minHeap
-            value: 256m
-          - name: bitbucket.clustering.enabled
-            value: true
+            value: 512m
+          - name: ingress.https
+            value: "false"
     relationships:
       - target: helm_install
         type: cloudify.helm.relationships.run_on_host
