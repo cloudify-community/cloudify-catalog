@@ -64,6 +64,7 @@ node_templates:
       resource_config:
         name: { get_input: release_name }
         chart: atlassian-data-center/bitbucket
+        values_file: values.yaml
         set_values:
           - name: bitbucket.service.type
             value: LoadBalancer
