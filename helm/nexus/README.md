@@ -5,7 +5,7 @@
 This chart installs a single Nexus Repository instance within a Kubernetes cluster that has a single node (server) configured.
 
 
-## Prerequistes 
+## Prerequisites
 
 Kubernetes 1.19+
 PV provisioner support in the underlying infrastructure
