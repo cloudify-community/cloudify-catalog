@@ -56,11 +56,12 @@ inputs:
 
   backstage_entities_repo_url:
     type: string
-    default: github.com/jakubcierlik/backstage_entities_test.git
+    display_label: User URL for github repo
+    default: https://github.com/cloudify-community/backstage_entities_test.git
     description: >
       URL of the GitHub repository the Backstage entity definition should
-      be pushed to. Should not contain 'http' nor 'https' prefix.
-    hidden: true
+      be pushed to. Should not contain 'http' nor 'https' prefix. 
+      User needs to create repo that has contributor access to 
 
 dsl_definitions:
   fabric_env: &vm_runner_fabric_env
