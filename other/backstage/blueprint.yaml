@@ -56,7 +56,7 @@ inputs:
 
   backstage_entities_repo_url:
     type: string
-    display_label: User URL for github repo
+    display_label: Backstage Entities github repo URL 
     default: https://github.com/cloudify-community/backstage_entities_test.git
     description: >
       URL of the GitHub repository the Backstage entity definition should
