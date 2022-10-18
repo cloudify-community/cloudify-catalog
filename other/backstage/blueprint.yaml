@@ -342,7 +342,7 @@ capabilities:
 
   cloudify_manager_endpoint:
     description: The endpoint of Cloudify Manager
-    value: { concat: [ 'https://', { get_attribute: [ cloudify_manager_vm, capabilities, cloudify_manager_endpoint ] } ] }
+    value: { get_attribute: [ cloudify_manager_vm, capabilities, cloudify_manager_endpoint ] }
 
   backstage_endpoint:
     description: The endpoint of Backstage
