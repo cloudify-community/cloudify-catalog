@@ -350,4 +350,4 @@ capabilities:
 
   backstage_endpoint:
     description: The endpoint of Backstage
-    value: { concat: [ 'http://' { get_attribute: [ backstage_vm, capabilities, public_ip ] } ] }
+    value: { concat: [ 'http://', { get_attribute: [ backstage_vm, capabilities, public_ip ] } ] }
