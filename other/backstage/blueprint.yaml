@@ -340,10 +340,6 @@ labels:
 
 capabilities:
 
-  github_runner_endpoint:
-    description: The endpoint of VM which serves as Github runner
-    value: { get_attribute: [ github_runner_vm, capabilities, public_ip ] }
-
   cloudify_manager_endpoint:
     description: The endpoint of Cloudify Manager
     value: { concat: [ 'https://', { get_attribute: [ cloudify_manager_vm, capabilities, cloudify_manager_endpoint ] } ] }
