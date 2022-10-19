@@ -637,6 +637,11 @@ topics:
         path: helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
 
+      - id: Nexus
+        name: Nexus-K8s-HLM
+        path: helm/nexus
+        description: Installing Nexus Repository helm chart on top of K8s cluster
+
       - id: autoscaler
         name: Autoscaler-K8s-HLM
         path: helm/autoscaler
@@ -742,7 +747,7 @@ topics:
         description: Create an AWS Kubernetes using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/eks.png
 
-      - id: Kubernetes_AWS_EKS
+      - id: kubernetes_aws_eks
         name: EKS-AWS-CFY
         path: kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
