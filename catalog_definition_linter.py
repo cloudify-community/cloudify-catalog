@@ -304,6 +304,7 @@ class Catalog:
 				logging.error(
 					"""The different values for the same blueprint path"""
 					""" were detected in below catalog items: \n\n{}""".format(msg))
+				result = False
 		return result
 
 	def validate(self) -> bool:
