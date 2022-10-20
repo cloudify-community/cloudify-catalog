@@ -65,6 +65,12 @@ class Blueprint:
 	def __init__(self, **kwargs):
 		self.__dict__.update(kwargs)
 
+	def __repr__(self):
+		return " ".join(['Blueprint(', self.name, self.id, self.path, self.description,')'])
+	
+	def __hash__(self):
+		return hash(repr(self))
+
 	def validate_mandatory_fields(self) -> bool:
 		"""Validates if the instance's mandatory properties are defined:
 			- id
@@ -227,6 +233,17 @@ class Catalog:
 			for topic in kwargs["topics"]:
 				self.topics.append(Topic(**topic))
 
+	def validate_duplicate_fields(self) -> bool:
+		"""Validates if the instance's properties are not duplicated:
+			- id
+			- name
+			- path
+		"""
+		result = True
+		for topic in self.topics:
+			print(topic.id)
+		return result
+
 	def validate_mandatory_fields(self) -> bool:
 		"""Validates if the instance's mandatory properties are defined:
 			- s3_base_url
@@ -260,7 +277,35 @@ class Catalog:
 				result = False
 			else:
 				topic_names.append(topic.name)
-		return False
+		return result
+
+	def validate_paths_equal_properties(self) -> bool:
+		"""Test if items with the same path has the same properties such
+			- id
+			- name
+			- description
+		"""
+		blueprints = sum([ topic.blueprints for topic in self.topics], [])
+		result = True
+		paths = {}
+
+		for bp in blueprints:
+			if bp.path not in paths:
+				paths[bp.path] = [bp]
+			else:
+				if hash(bp.path) not in [ hash(item) for item in paths[bp.path] ]:
+					paths[bp.path].append(bp)
+				
+		for _, props in paths.items(): 
+			if len(props) > 1:
+				msg = ""
+				for bp in props:
+					msg +="id: {}\nname: {}\npath: {}\ndescription: {}\n\n".format(bp.id, bp.name, bp.path, bp.description)
+				logging.error(
+					"""The different values for the same blueprint path"""
+					""" were detected in below catalog items: \n\n{}""".format(msg))
+				result = False
+		return result
 
 	def validate(self) -> bool:
 		"""Validates if the instance addresses:
@@ -275,6 +320,7 @@ class Catalog:
 		"""
 		result = True
 		result = result or self.validate_mandatory_fields()
+		
 		if not validate_url(self.s3_base_url):
 			logging.error("s3_base_url is not a valid URL")
 			result = False
@@ -296,7 +342,8 @@ class Catalog:
 		if not validate_url(self.raw_github_url):
 			logging.error("raw_github_url value \"{}\" is not a valid url".format(self.raw_github_url))
 			result = False
-		self.validate_topics_names_unique()
+		result = self.validate_topics_names_unique()
+		result = self.validate_paths_equal_properties()
 		for topic in self.topics:
 			if not topic.validate():
 				result = False
