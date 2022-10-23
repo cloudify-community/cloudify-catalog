@@ -1,6 +1,6 @@
 tosca_definitions_version: cloudify_dsl_1_4
 
-description: Cloudify helm-wordpress blueprint. Installs Wordpress Helm chart on top of Kubernetes cluster.
+description: Cloudify helm-bitbucket blueprint. Installs Bitbucket Helm chart on top of Kubernetes cluster.
 
 imports:
   - cloudify/types/types.yaml
