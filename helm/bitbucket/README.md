@@ -2,7 +2,7 @@
 
 ## General
 
-The blueprint installs Bitbucket on top of Kubernetes cluster using the official Bitnami Helm chart.
+The blueprint installs Bitbucket on top of Kubernetes cluster using the official Atlassian Helm chart.
 
 ## Requirements
 
