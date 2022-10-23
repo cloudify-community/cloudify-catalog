@@ -293,10 +293,11 @@ class Catalog:
 			if bp.path not in paths:
 				paths[bp.path] = [bp]
 			else:
-				if hash(bp.path) not in [ hash(item) for item in paths[bp.path] ]:
+				if hash(bp) not in [ hash(item) for item in paths[bp.path] ]:
 					paths[bp.path].append(bp)
 				
 		for _, props in paths.items(): 
+			
 			if len(props) > 1:
 				msg = ""
 				for bp in props:
