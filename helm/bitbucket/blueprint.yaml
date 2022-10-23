@@ -97,7 +97,7 @@ node_templates:
         apiVersion: v1
         kind: Service
         metadata:
-          name: { concat: [ { get_input: release_name }, "-master" ] }
+          name: { concat: [ { get_input: release_name } ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: release
