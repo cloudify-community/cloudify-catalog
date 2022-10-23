@@ -19,6 +19,7 @@ The blueprint uses secrets to connect to cloud, you need to configure them prior
 | --------------------- | ---------------------------------------------------------------------------------- |
 | aws_access_key_id     | AWS Access Key ID                                                                  |
 | aws_aceess_secret_key | AWS Access Secret Key                                                              |
+| kubernetes_token      | a dummy value - changeme                                                           |
 
 ## Plugins
 
