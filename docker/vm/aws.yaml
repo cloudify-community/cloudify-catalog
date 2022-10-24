@@ -138,7 +138,7 @@ node_templates:
           Filters:
           - Name: name
             Values:
-            - CentOS 7.7.1908 x86_64 with cloud-init (HVM)
+            - CentOS 7.9.2009 - HVM
           - Name: owner-id
             Values:
             - 057448758665
@@ -232,7 +232,7 @@ node_templates:
       client_config: *client_config
       resource_config:
         CidrBlock: 10.10.4.0/24
-        AvailabilityZone: { concat: [ { get_input: aws_region_name }, 'b' ] }
+        AvailabilityZone: { concat: [ { get_input: region_name }, 'b' ] }
     relationships:
     - type: cloudify.relationships.depends_on
       target: vpc
