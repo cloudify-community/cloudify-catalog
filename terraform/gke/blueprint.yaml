@@ -8,8 +8,8 @@ imports:
 labels:
   csys-obj-type:
     values:
-      - service
-
+      - environment
+      
 inputs:
   project_id:
     type: string
