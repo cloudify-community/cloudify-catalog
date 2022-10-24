@@ -774,7 +774,7 @@ capabilities:
     value: *kubernetes_master_configuration
 
 outputs:
-  endpoint:
+  kubernetes_cluster_host:
     description: Kubernetes endpoint
     value:
       { get_attribute: [eks_cluster, kubeconf, clusters, 0, cluster, server] }

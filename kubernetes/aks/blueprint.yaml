@@ -298,6 +298,6 @@ capabilities:
 
 outputs:
 
-  endpoint:
+  kubernetes_cluster_host:
     description: Kubernetes endpoint
     value: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }

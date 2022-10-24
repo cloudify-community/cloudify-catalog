@@ -21,6 +21,18 @@ inputs:
     type: string
     default: ex2
 
+  service_account_name:
+    description: Service Account name
+    display_label: Service Account Name
+    type: string
+    default: examples-user
+
+  service_account_namespace:
+    description: Service Account Namespace
+    display_label: Service Account Namespace
+    type: string
+    default: default
+
 dsl_definitions:
 
   gcp_config: &gcp_config
@@ -61,6 +73,105 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: kubernetes-cluster
+
+  new_service_account:
+    type: cloudify.kubernetes.resources.ServiceAccount
+    properties:
+      client_config: &kube_client_config
+        authentication: 
+          gcp_service_account: { get_secret: gcp_credentials }
+        configuration:
+          api_options:
+            host: { concat: [ 'https://', { get_attribute: [kubernetes-cluster-attributes, endpoint] }]}
+            verify_ssl: false
+            debug: false
+      definition:
+        apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+          name: { get_input: service_account_name }
+          namespace: { get_input: service_account_namespace }
+      options:
+        namespace: { get_input: service_account_namespace }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: kubernetes-cluster
+
+  new_role_binding:
+    type: cloudify.kubernetes.resources.RoleBinding
+    properties:
+      client_config: *kube_client_config
+      definition:
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
+        metadata:
+          name: { get_input: service_account_name }
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: cluster-admin
+        subjects:
+        - kind: ServiceAccount
+          name: { get_input: service_account_name }
+          namespace: { get_input: service_account_namespace }
+      options:
+        namespace: { get_input: service_account_namespace }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: kubernetes-cluster
+      - type: cloudify.relationships.depends_on
+        target: new_service_account
+
+  secret:
+    type: cloudify.kubernetes.resources.CustomBlueprintDefinedResource
+    properties:
+      client_config: *kube_client_config
+      use_external_resource: true
+      definition:
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: {get_attribute: [new_service_account, kubernetes, secrets, 0, name]}
+      api_mapping:
+        create:
+          api: CoreV1Api
+          method: create_namespaced_secret
+          payload: V1Secret
+        read:
+          api: CoreV1Api
+          method: read_namespaced_secret
+        update:
+          api: CoreV1Api
+          method: replace_namespaced_secret
+          payload: V1Secret
+        delete:
+          api: CoreV1Api
+          method: delete_namespaced_secret
+          payload: V1DeleteOptions
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: kubernetes-cluster
+      - type: cloudify.relationships.depends_on
+        target: new_role_binding
+      - type: cloudify.relationships.depends_on
+        target: new_service_account
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        delete: {}
+
+  store_token_and_kubeconfig:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/store_kube_token_and_config.py
+          executor: central_deployment_agent
+          inputs:
+            kube_token: { get_attribute: [ secret, kubernetes, data, token ] }
+            ssl_certificate: { get_attribute: [kubernetes-cluster-attributes, masterAuth, clusterCaCertificate] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: secret
 
   sanity_pod:
     type: cloudify.kubernetes.resources.FileDefinedResource
@@ -104,12 +215,17 @@ labels:
 
 capabilities:
 
-  endpoint:
-    description: Endpoint
+  kubernetes_cluster_host:
     value: { concat: [ 'https://', { get_attribute: [kubernetes-cluster-attributes, endpoint] }]}
+
+  token:
+    value: { get_attribute: [ store_token_and_kubeconfig, token ] }
+
+  ssl_ca_cert:
+    value: { get_attribute: [ store_token_and_kubeconfig, ssl_ca_cert ] }
 
 outputs:
 
-  endpoint:
+  kubernetes_cluster_host:
     description: Endpoint
     value: { concat: [ 'https://', { get_attribute: [kubernetes-cluster-attributes, endpoint] }]}
