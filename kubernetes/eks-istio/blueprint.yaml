@@ -7,6 +7,11 @@ imports:
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
   - plugin:cloudify-helm-plugin?version= >=0.3.0
 
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
 inputs:
 
   aws_region_name:
@@ -854,12 +859,6 @@ node_templates:
     relationships:
       - target: istio_ingress_gateway
         type: cloudify.relationships.depends_on
-
-
-labels:
-  obj-type:
-    values:
-      - k8s
 
 capabilities:
 

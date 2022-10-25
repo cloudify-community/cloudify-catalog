@@ -7,9 +7,9 @@ imports:
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 labels:
-  obj-type:
+  csys-obj-type:
     values:
-      - k8s
+      - environment
 
 inputs:
   aws_access_key_id:
