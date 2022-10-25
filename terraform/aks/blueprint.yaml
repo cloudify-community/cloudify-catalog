@@ -31,7 +31,7 @@ inputs:
 labels:
   csys-obj-type:
     values:
-      - service
+      - environment
 
 node_templates:
   prefix:
@@ -57,39 +57,30 @@ node_templates:
           location: { get_input : azure_location_name }
           prefix: { get_attribute : [prefix, value] }
         source:
-          location: templates/tf-aks-master.zip
-        source_path: tf-aks-master
+          location: templates/aks.zip
+        source_path: aks
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
 
 capabilities:
-  rg_id:
+
+  kubernetes_cluster_name:
     description: |
-      Azure ID of the Resource Group
-    value: { get_attribute: [ terraform_module, resources, rg, instances, 0, attributes, name ] }
-  aks_id:
-    description: |
-      Azure ID of the AKS
-    value: { get_attribute: [ terraform_module, resources, aks, instances, 0, attributes, name ] }
-  resources_location:
-    description: |
-      Location of the resources
-    value: { get_input : azure_location_name }
+      Kubernetes Cluster name
+    value: { get_attribute: [ terraform_module, outputs, cluster_name, value ] }
+
   kubernetes_cluster_host:
     description: |
       Kubernetes Cluster host
-    value: { get_attribute: [ terraform_module, outputs, host ] }
-  kube_config:
+    value: { get_attribute: [ terraform_module, outputs, kubernetes_cluster_host, value ] }
+
+  token:
     description: |
-      Kubernetes Configuration
-    value: { get_attribute: [ terraform_module, outputs, kube_config ] }
-  kubernetes_cluster_username:
+      Kubernetes token
+    value: { get_attribute: [ terraform_module, outputs, admin_token, value ] }
+
+  ssl_ca_cert:
     description: |
-      Kubernetes Cluster Username
-    value: { get_attribute: [ terraform_module, outputs, cluster_username ] }
-  kubernetes_cluster_password:
-    description: |
-      Kubernetes Cluster Password
-    value: { get_attribute: [ terraform_module, outputs, cluster_password ] }
-  
+      SSL CA certificate
+    value: { get_attribute: [ terraform_module, outputs, ssl_ca_cert, value ] }

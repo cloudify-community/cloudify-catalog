@@ -36,7 +36,7 @@ class ParseTestData():
         ids = []
         for blueprint in bps:
             ids.append(blueprint.get("id"))
-        return ids
+        return set(ids)
 
 if __name__ =="__main__":
 

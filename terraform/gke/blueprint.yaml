@@ -8,7 +8,7 @@ imports:
 labels:
   csys-obj-type:
     values:
-      - service
+      - environment
 
 inputs:
   project_id:
@@ -88,8 +88,8 @@ node_templates:
           prefix: { get_attribute : [ prefix, value ] } 
           project_id: { get_input: project_id }
         source:
-          location: templates/tf-gke-master.zip
-        source_path: tf-gke-master
+          location: templates/gke.zip
+        source_path: gke
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on
@@ -97,30 +97,27 @@ node_templates:
         type: cloudify.terraform.relationships.run_on_host
 
 capabilities:
-  region:
-    description: |
-      GKE region
-    value: { get_attribute: [ terraform_module, outputs, region, value ] }
-  project_id:
-    description: |
-      GCP project id
-    value: { get_attribute: [ terraform_module, outputs, project_id, value ] }
+
   kubernetes_cluster_name:
     description: |
       Kubernetes Cluster name
     value: { get_attribute: [ terraform_module, outputs, kubernetes_cluster_name, value ] }
+
+  kubernetes_dashboard_ip:
+    description: |
+      Kuberenetes Dashboard hostname
+    value: { get_attribute: [ terraform_module, outputs, dashboard_ip, value ] }
+
   kubernetes_cluster_host:
     description: |
       Kubernetes Cluster host
     value: { get_attribute: [ terraform_module, outputs, kubernetes_cluster_host, value ] }
+
   token:
     description: |
-      Kubernetes Dashboard token
+      Kubernetes token
     value: { get_attribute: [ terraform_module, outputs, admin_token, value ] }
-  dashboard_ip:
-    description: |
-      Kuberenetes Dashboard hostname
-    value: { get_attribute: [ terraform_module, outputs, dashboard_ip, value ] }
+
   ssl_ca_cert:
     description: |
       SSL CA Cert

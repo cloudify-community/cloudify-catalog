@@ -8,7 +8,7 @@ imports:
 labels:
   csys-obj-type:
     values:
-      - service
+      - environment
 
 inputs:
 
@@ -70,8 +70,8 @@ node_templates:
           region: { get_input : region_name }
           prefix: { get_attribute : [prefix, value] } 
         source:
-          location: templates/tf-eks-master.zip
-        source_path: tf-eks-master
+          location: templates/eks.zip
+        source_path: eks
     relationships:
       - target: prefix
         type: cloudify.relationships.depends_on
@@ -79,23 +79,29 @@ node_templates:
         type: cloudify.terraform.relationships.run_on_host
 
 capabilities:
-  kubernetes_cluster_host:
-    description: |
-      Kubernetes Cluster host
-    value: { get_attribute: [ terraform_module, outputs, kubernetes_cluster_host ] }
-  token:
-    description: |
-      Kubernetes Dashboard token
-    value: { get_attribute: [ terraform_module, outputs, admin_token ] }
-  dashboard_hostname:
-    description: |
-      Kuberenetes Dashboard hostname
-    value: { get_attribute: [ terraform_module, outputs, dashboard_hostname ] }
+
   kubernetes_cluster_name:
     description: |
       Kubernetes Cluster name
-    value: { get_attribute: [ terraform_module, outputs, cluster_name ] }
-  region:
+    value: { get_attribute: [ terraform_module, outputs, cluster_name, value ] }
+
+  kubernetes_dashboard_hostname:
     description: |
-      EKS region
-    value: { get_attribute: [ terraform_module, outputs, region ] }
+      Kuberenetes Dashboard hostname
+    value: { get_attribute: [ terraform_module, outputs, dashboard_hostname, value ] }
+  
+  kubernetes_cluster_host:
+    description: |
+      Kubernetes Cluster host
+    value: { get_attribute: [ terraform_module, outputs, kubernetes_cluster_host, value ] }
+
+  token:
+    description: |
+      Kubernetes token
+    value: { get_attribute: [ terraform_module, outputs, admin_token, value ] }
+
+  ssl_ca_cert:
+    description: |
+      SSL CA certificate
+    value: { get_attribute: [ terraform_module, outputs, admin_token, value ] }
+  

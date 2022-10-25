@@ -170,6 +170,19 @@ node_templates:
       - target: vpc
         type: cloudify.relationships.depends_on
 
+  store_token:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/store_kube_token.py
+          executor: central_deployment_agent
+          inputs:
+            kube_token: { get_attribute: [ eks_cluster, outputs, cluster_token, value ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: eks_cluster
+
   service_account:
     type: cloudify.nodes.terraform.Module
     properties:
@@ -180,12 +193,25 @@ node_templates:
         variables:
           cluster_endpoint: { get_attribute: [ eks_cluster, outputs, cluster_endpoint, value ] }
           cluster_certificate_authority: { get_attribute: [ eks_cluster, outputs, cluster_certificate_authority, value ] }
-          cluster_token: { get_attribute: [ eks_cluster, outputs, cluster_token, value ] }
+          cluster_token: { get_secret: kubernetes_token }
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
       - target: eks_cluster
         type: cloudify.relationships.depends_on
+
+  update_token:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/store_kube_token.py
+          executor: central_deployment_agent
+          inputs:
+            kube_token: { get_attribute: [ service_account, outputs, cluster_service_account_token, value ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: service_account
 
   istio:
     type: cloudify.nodes.terraform.Module
@@ -197,7 +223,7 @@ node_templates:
         variables:
           cluster_endpoint: { get_attribute: [ eks_cluster, outputs, cluster_endpoint, value ] }
           cluster_certificate_authority: { get_attribute: [ eks_cluster, outputs, cluster_certificate_authority, value ] }
-          cluster_token: { get_attribute: [ service_account, outputs, cluster_service_account_token, value ] }
+          cluster_token: { get_secret: kubernetes_token }
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
@@ -209,13 +235,13 @@ capabilities:
   aws_region:
     value: { get_input: region }
 
-  cluster_endpoint:
+  kubernetes_cluster_host:
     value: { get_attribute: [ eks_cluster, outputs, cluster_endpoint, value ] }
 
-  cluster_certificate_authority:
+  ssl_ca_cert:
     value: { get_attribute: [ eks_cluster, outputs, cluster_certificate_authority, value ] }
 
-  cluster_token:
+  token:
     value: { get_attribute: [ service_account, outputs, cluster_service_account_token, value ] }
 
   istio_ingress:
