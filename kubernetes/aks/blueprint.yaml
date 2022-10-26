@@ -9,6 +9,11 @@ imports:
   - plugin:cloudify-kubernetes-plugin?version= >=2.7.0
   - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
 inputs:
   location:
     description: Azure Location
@@ -273,10 +278,6 @@ node_templates:
           implementation: keys.cloudify_ssh_key.operations.create
           inputs:
             store_private_key_material: true
-labels:
-  obj-type:
-    values:
-      - k8s
 
 capabilities:
 

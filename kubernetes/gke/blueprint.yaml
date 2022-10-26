@@ -8,6 +8,11 @@ imports:
   - plugin:cloudify-gcp-plugin?version= >=1.6.0
   - plugin:cloudify-kubernetes-plugin?version= !=2.11.0
 
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
 inputs:
   zone:
     description: Zone
@@ -207,11 +212,6 @@ node_templates:
         stop: {}
         delete: {}
         postdelete: {}
-
-labels:
-  obj-type:
-    values:
-      - k8s
 
 capabilities:
 
