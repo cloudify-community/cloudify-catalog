@@ -103,5 +103,5 @@ capabilities:
   ssl_ca_cert:
     description: |
       SSL CA certificate
-    value: { get_attribute: [ terraform_module, outputs, admin_token, value ] }
+    value: { get_attribute: [ terraform_module, outputs, ssl_ca_cert, value ] }
   
