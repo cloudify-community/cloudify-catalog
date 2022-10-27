@@ -3,7 +3,7 @@
 ## General
 The blueprint deploys a VM of specific flavor and template inside the vSphere environment
 
-## Requirmennts
+## Requirements
 In order to run successfully the blueprint you'll need vSphere vCenter credentials, endpoint information and Resource Pool configured in vCenter. There has to be a network exisitng in the vCenter that the VM will connecto to.
 
 ## Secrets
