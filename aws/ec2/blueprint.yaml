@@ -58,6 +58,18 @@ inputs:
       us-west-2: ami-024b56adf74074ca6
       eu-west-1: ami-0eee6eb870dc1cefa
     hidden: true
+  
+  subnet_zone: 
+    display_label: AWS subnet zone
+    description: The map between region and subnet zone
+    type: dict
+    default: 
+      ca-central-1: b
+      us-east-1: a
+      us-west-1: a
+      us-west-2: a
+      eu-west-1: a
+    hidden: true
 
   aws_credentials:
     display_label: The credentials for AWS
@@ -120,7 +132,7 @@ node_templates:
     properties:
       resource_config:
         CidrBlock: 10.0.0.0/16
-        AvailabilityZone: { concat: [ { get_input: region_name }, b ] }
+        AvailabilityZone: { concat: [ { get_input: region_name }, { get_input: [ subnet_zone, { get_input: region_name } ] } ] }
       client_config: { get_input: aws_credentials}
     relationships:
     - type: cloudify.relationships.depends_on
