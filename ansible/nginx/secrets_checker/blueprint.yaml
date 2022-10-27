@@ -1,0 +1,25 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  
+inputs:
+  aws_access_key_id: 
+    type: string
+    
+  aws_secret_access_key: 
+    type: string
+
+  subscription_id: 
+    type: string
+    
+  tenant_id:
+    type: string 
+
+  client_id:
+    type: string
+
+  client_secret:
+    type: string 
+
+node_templates:
