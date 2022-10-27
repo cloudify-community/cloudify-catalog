@@ -78,7 +78,7 @@ inputs:
 
 node_templates:
 
-  secret_checker:
+  secrets_checker:
     type: cloudify.nodes.Component
     properties:
       resource_config:
