@@ -1,0 +1,14 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: Cloudify Wordpress blueprint. Deploys Wordpress service with Ansible Cloudify plugin.
+
+imports:
+  - cloudify/types/types.yaml
+
+
+dsl_definitions:
+
+  client_config: &client_config
+    aws_access_key_id: { get_secret: aws_access_key_id }
+    aws_secret_access_key: { get_secret: aws_secret_access_key }
+    region_name: { get_input: aws_region_name }
