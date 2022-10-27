@@ -9,6 +9,11 @@ imports:
 
 inputs:
 
+  rg_id:
+    description: Resource group ID
+    display_label: resource group id
+    type: string
+    
   security_group_id:
     type: string
 

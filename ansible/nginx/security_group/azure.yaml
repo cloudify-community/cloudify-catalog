@@ -102,7 +102,7 @@ node_templates:
       retry_after: { get_input: retry_after }
       resource_config:
         securityRules:
-        - name: Redis
+        - name: Ngnix
           properties:
             description: HTTP access
             protocol: Tcp
