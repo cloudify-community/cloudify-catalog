@@ -18,7 +18,7 @@ inputs:
     description: >
       Helm download link.
     type: string
-    default: 'https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz'
+    default: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
     constraints:
       - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 

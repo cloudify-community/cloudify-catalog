@@ -22,7 +22,7 @@ inputs:
     description: >
       Helm download link.
     type: string
-    default: 'https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz'
+    default: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
 
   repo_url:
     description: >
