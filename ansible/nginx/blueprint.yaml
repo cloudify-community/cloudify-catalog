@@ -46,6 +46,13 @@ inputs:
     description: A message to display on the home page of the deployed web server
     default: Welcome to NGINX, deployed by Cloudify
 
+  secrets_checker_archive:
+    display_label: URL for secrets checker archive
+    description: > 
+      Component is used for validation if every needed secrets are provided
+    type: string
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_checker/secrets_checker.zip
+
   aws_access_key_id: 
     type: string
     default: { get_secret: aws_access_key_id }
@@ -83,7 +90,7 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "secrets_checker.zip"
+          blueprint_archive: { get_input: secrets_checker_archive }
           main_file_name: "blueprint.yaml"
         deployment:
           inputs: 
