@@ -76,6 +76,13 @@ node_templates:
         tenant_id: { get_secret: azure_tenant_id }
         client_id: { get_secret: azure_client_id }
         client_secret: { get_secret: azure_client_secret }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        configure:
+          implementation: cfy_extensions.cloudify_types.component.create
+          inputs: 
+            secrets: 
+              dummy: dummy
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
