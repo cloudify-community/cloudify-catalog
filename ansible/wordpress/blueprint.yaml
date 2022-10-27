@@ -42,14 +42,6 @@ inputs:
 
 node_templates:
 
-  secret_validation:
-    type: cloudify.nodes.Component
-    properties:
-      resource_config:
-        blueprint:
-          blueprint_archive: "secret_validation.zip"
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
-
   #we creating the prefix for the deployment resources i.e. infrastructure
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
