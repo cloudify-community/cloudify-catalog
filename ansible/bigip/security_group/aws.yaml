@@ -9,6 +9,12 @@ imports:
 
 inputs:
 
+  rg_id:
+    description: Mocked Resource group ID
+    display_label: mocked resource group id
+    type: string
+    default: ""
+
   security_group_id:
     type: string
 

@@ -67,6 +67,24 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
 
+  secrurity_group_rules:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: "security_group.zip"
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: false
+        deployment:
+          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
+          inputs:
+            rg_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , rg_id ] }
+            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
+            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+
   app:
     type: cloudify.nodes.ansible.Playbook
     interfaces:
