@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
@@ -7,10 +7,19 @@ imports:
 
 inputs:
 
+  rg_id:
+    description: Resource group ID
+    display_label: resource group id
+    type: string
+
   vpc_id:
+    description: VPC id
+    display_label: resource group id
     type: string
 
   security_group_id:
+    description: SG id
+    display_label: security group id
     type: string
 
   region_name:
@@ -74,6 +83,14 @@ dsl_definitions:
     client_secret: { get_secret: azure_client_secret }
 
 node_templates:
+
+  resource_group:
+    type: cloudify.azure.nodes.ResourceGroup
+    properties:
+      use_external_resource: true
+      name: { get_input: rg_id }
+      location: { get_input: region_name }
+      azure_config: *azure_config
 
   network_security_group:
     type: cloudify.azure.nodes.network.NetworkSecurityGroup

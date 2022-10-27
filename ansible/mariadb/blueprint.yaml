@@ -10,6 +10,12 @@ imports:
 
 inputs:
 
+  rg_id:
+    description: Mocked Resource group ID
+    display_label: mocked resource group id
+    type: string
+    default: ""
+    
   infra_name:
     display_label: Name of the provider to deploy resources
     description: >
@@ -90,6 +96,7 @@ node_templates:
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
+            rg_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , rg_id ] }
             vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
             security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
     relationships:

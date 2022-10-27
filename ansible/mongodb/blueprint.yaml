@@ -112,6 +112,7 @@ node_templates:
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
+            rg_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , rg_id ] }
             vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
             security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
     relationships:

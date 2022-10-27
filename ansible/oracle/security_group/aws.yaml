@@ -9,6 +9,12 @@ imports:
   - plugin:cloudify-terraform-plugin?version= >=0.15.0
 
 inputs:
+  
+  rg_id:
+    description: Mocked Resource group ID
+    display_label: mocked resource group id
+    type: string
+    default: ""
 
   vm_id:
     type: string
