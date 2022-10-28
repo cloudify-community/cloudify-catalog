@@ -19,5 +19,5 @@ for secret in secrets:
         missing.append(secret)
 
 if missing:
-    raise exceptions.CloudifyClientError("Please, create missing {} secret value for: {}".format(
-        provider.upper(), " and ".join(missing)), status_code=404)
+    raise exceptions.NonRecoverableError("Please, create missing {} secret value for: {}".format(
+        provider.upper(), " and ".join(missing)))
