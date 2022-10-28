@@ -118,6 +118,13 @@ inputs:
     display_label: Agent Key name
     default: agent_key
 
+  secrets_validation_archive:
+    display_label: URL for secrets checker archive
+    description: > 
+      Component is used for validation if every needed secrets are provided
+    type: string
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_validation/secrets_validation.zip
+
 dsl_definitions:
 
   azure_config: &azure_config
@@ -318,6 +325,9 @@ node_templates:
       name: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
       location: { get_input: location }
       azure_config: *azure_config
+    relationships:
+    - type: cloudify.relationships.depends_on
+      target: secrets_validation
 
   agent_key:
     type: cloudify.keys.nodes.RSAKey
@@ -333,6 +343,20 @@ node_templates:
           implementation: keys.cloudify_ssh_key.operations.create
           inputs:
             store_private_key_material: true
+    relationships:
+    - type: cloudify.relationships.depends_on
+      target: secrets_validation
+
+  secrets_validation:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: secrets_validation_archive }
+          main_file_name: "blueprint.yaml"
+        deployment:
+          inputs: 
+            provider: azure
 
 capabilities:
 
