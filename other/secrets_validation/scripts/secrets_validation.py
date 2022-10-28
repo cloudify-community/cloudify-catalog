@@ -1,4 +1,5 @@
 from cloudify_rest_client import exceptions
+from cloudify.exceptions import NonRecoverableError
 from cloudify.manager import get_rest_client
 from cloudify.state import ctx_parameters as inputs
 
@@ -19,5 +20,5 @@ for secret in secrets:
         missing.append(secret)
 
 if missing:
-    raise exceptions.NonRecoverableError("Please, create missing {} secret value for: {}".format(
+    raise NonRecoverableError("Please, create missing {} secret value for: {}".format(
         provider.upper(), " and ".join(missing)))
