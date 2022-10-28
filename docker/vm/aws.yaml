@@ -68,6 +68,13 @@ inputs:
     description: Control parameters for names in resources.
     default: 'example'
 
+   secrets_validation_archive:
+    display_label: URL for secrets checker archive
+    description: > 
+      Component is used for validation if every needed secrets are provided
+    type: string
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_validation/secrets_validation.zip
+
 dsl_definitions:
 
   client_config: &client_config
@@ -251,6 +258,9 @@ node_templates:
       client_config: *client_config
       resource_config:
         CidrBlock: 10.10.0.0/16
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: secrets_validation
 
   cloud_init:
     type: cloudify.nodes.CloudInit.CloudConfig
@@ -280,6 +290,20 @@ node_templates:
           implementation: keys.cloudify_ssh_key.operations.create
           inputs:
             store_private_key_material: true
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: secrets_validation
+
+  secrets_validation:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: secrets_validation_archive }
+          main_file_name: "blueprint.yaml"
+        deployment:
+          inputs: 
+            provider: aws
 
 capabilities:
 
