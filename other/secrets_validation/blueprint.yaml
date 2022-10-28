@@ -1,0 +1,27 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+
+inputs:
+  provider: 
+    display_label: Provider name
+    description: |
+      The provider name for which the secret validation availability will be provided 
+    type: string
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+
+node_templates:
+
+  secrets_validation:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/secrets_validation.py
+          executor: central_deployment_agent
+          inputs:
+            provider: { get_input: infra_name }
