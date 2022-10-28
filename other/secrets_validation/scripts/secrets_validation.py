@@ -1,14 +1,10 @@
-from http import client
-
-from cloudify import ctx
 from cloudify_rest_client import exceptions
 from cloudify.manager import get_rest_client
-from cloudify.state import ctx_parameters as inputss
+from cloudify.state import ctx_parameters as inputs
 
 client = get_rest_client()
 provider = inputs["provider"].lower()
 missing = []
-message = {1: "Please create missing {} secret: {}"}
 
 if provider == "aws":
     secrets = ["aws_access_key_id", "aws_secret_access_key"]
