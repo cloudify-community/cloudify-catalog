@@ -24,4 +24,4 @@ node_templates:
           implementation: scripts/secrets_validation.py
           executor: central_deployment_agent
           inputs:
-            provider: { get_input: infra_name }
+            provider: { get_input: provider }
