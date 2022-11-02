@@ -14,7 +14,6 @@ inputs:
     default: 'europe-west1'
     constraints:
       - valid_values:
-        - us-west-1
         - asia-south1
         - asia-south2
         - asia-east1
@@ -166,13 +165,7 @@ node_templates:
         tcp:
           - 22
           - 80
-          - 443
-          - 9990
-          - 8080
-          - 2375
-          - 53333
-          - 4566
-          - 4571
+
       sources:
         - 0.0.0.0/0
     relationships:
