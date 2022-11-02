@@ -19,7 +19,7 @@ inputs:
       - asia-east1
       - asia-east2
       - asia-northeast1
-      - asia-northeast2	
+      - asia-northeast2
       - asia-northeast3
       - asia-southeast1
       - australia-southeast1
@@ -61,14 +61,15 @@ inputs:
     description: A small GCP machine type.
     default: n1-standard-2
     constraints:
-      - n1-standard-1
-      - n1-standard-2
-      - n1-standard-4
-      - n1-standard-8
-      - n1-standard-16
-      - n1-standard-32
-      - n1-standard-64
-      - n1-standard-96
+      valid_values:
+        - n1-standard-1
+        - n1-standard-2
+        - n1-standard-4
+        - n1-standard-8
+        - n1-standard-16
+        - n1-standard-32
+        - n1-standard-64
+        - n1-standard-96
 
   agent_user:
     description: >
