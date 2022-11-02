@@ -165,6 +165,7 @@ node_templates:
         tcp:
           - 22
           - 80
+          - 2375
 
       sources:
         - 0.0.0.0/0
