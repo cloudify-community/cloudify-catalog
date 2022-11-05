@@ -1,4 +1,9 @@
 #!/bin/bash -e
+
+if test -f /etc/yum.repos.d/google-cloud.repo; then
+    sudo sed -i "/enabled=1/c\enabled=0" /etc/yum.repos.d/google-cloud.repo
+fi
+
 ME=$(echo $USER)
 sudo su
 curl -fsSL https://get.docker.com -o get-docker.sh; sh get-docker.sh
