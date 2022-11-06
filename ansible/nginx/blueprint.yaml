@@ -11,33 +11,33 @@ imports:
 inputs:
 
   infra_name:
+    type: string
     display_label: Name of the provider to deploy resources
     description: >
       Name of infrastructure blueprint to deploy.
-    type: string
     constraints:
       - valid_values:
           - azure
           - aws
 
   infra_archive:
+    type: string
     display_label: URL for infra zip archive
     description: >
       URL of infra zip file.
-    type: string
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/multicloud/vm/vm.zip
 
   infra_exists:
+    type: string
     display_label: Set if infra exists or not 
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
-    type: string
     default: false
 
   infra_deployment_id:
+    type: string
     display_label: The infrastructure deployment id
     description: The blueprint name, the deployment name.
-    type: string
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
   website_message:
@@ -46,26 +46,7 @@ inputs:
     description: A message to display on the home page of the deployed web server
     default: Welcome to NGINX, deployed by Cloudify
 
-  secrets_validation_archive:
-    display_label: URL for secrets checker archive
-    description: > 
-      Component is used for validation if every needed secrets are provided
-    type: string
-    hidden: true
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_validation/secrets_validation.zip
-
 node_templates:
-
-  secrets_validation:
-    type: cloudify.nodes.Component
-    properties:
-      resource_config:
-        blueprint:
-          blueprint_archive: { get_input: secrets_validation_archive }
-          main_file_name: "blueprint.yaml"
-        deployment:
-          inputs: 
-            provider: { get_input: infra_name }
 
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
@@ -77,16 +58,15 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: "vm.zip" #{ get_input: infra_archive }
+          main_file_name: 
           external_resource: { get_input: infra_exists }
-        deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
+        deployment: 
+          inputs: 
+            provider_name: { get_input: infra_name }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
-      - type: cloudify.relationships.depends_on
-        target: secrets_validation
 
   secrurity_group_rules:
     type: cloudify.nodes.Component

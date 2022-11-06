@@ -13,10 +13,12 @@ inputs:
       - valid_values:
           - azure
           - aws
+          - gcp
 
 node_templates:
 
-  secrets_validation:
+  #check if secrets exists
+  secrets_exists_validation:
     type: cloudify.nodes.Root
     interfaces:
       cloudify.interfaces.lifecycle:
@@ -25,3 +27,15 @@ node_templates:
           executor: central_deployment_agent
           inputs:
             provider: { get_input: provider }
+  
+  #check if the values are correct
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { concat: [ "providers/", { get_input: provider }, ".zip" ] }
+          main_file_name: "blueprint.yaml"
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: secrets_exists_validation

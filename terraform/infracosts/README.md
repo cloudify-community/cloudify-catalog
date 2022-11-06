@@ -37,19 +37,14 @@ If the user provides empty value of default the prefix will be gerenated automat
 
 ## Node Types
 
-### Prefix
-The node type is responsible to create a Prefix for the purpose of naming resources.\
-The type is `eaas.nodes.UniquePrefixGenerator`.
+### Secret Validation
+The node type is responsible for validation of the existence & values of cloud credentials.\
+Derived type is `cloudify.nodes.ServiceComponent`
 
-For more details on the type can be found in the [link](https://github.com/cloudify-community/eaas-example/blob/master/utils/custom_types.yaml)
-
-### Terraform
-The node type is responsible for configuration the host for terraform.\
-The type is `cloudify.nodes.terraform`.
-
-### Terraform Module
+### Infracosts
 The node type responsible for deploying the terraform code.\
-Derived type is `cloudify.nodes.terraform.Module`
+Derived type is `cloudify.nodes.ServiceComponent`
+
 
 ## Labels
 
