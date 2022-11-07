@@ -1,0 +1,250 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-gcp-plugin?version= >=1.6.0
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+inputs:
+
+  region:
+    type: string
+    description: The GCP region to deploy the application in, such as europe-west1.
+    default: 'europe-west1'
+    constraints:
+      - valid_values:
+        - asia-south1
+        - asia-south2
+        - asia-east1
+        - asia-east2
+        - asia-northeast1
+        - asia-northeast2
+        - asia-northeast3
+        - asia-southeast1
+        - australia-southeast1
+        - australia-southeast2
+        - europe-central2
+        - europe-north2
+        - europe-southwest1
+        - europe-west1
+        - europe-west2
+        - europe-west3
+        - europe-west4
+        - europe-west6
+        - europe-west8
+        - europe-west9
+        - northamerica-northeast1
+        - northamerica-northeast2
+        - southamerica-east1
+        - us-central1
+        - us-east1
+        - us-east4
+        - us-west1
+        - us-west2
+        - us-west3
+        - us-west4
+
+  zone:
+    type: string
+    description: The GCP zone to deploy the application in, such as europe-west1-b.
+    default: { concat: [ { get_input: region }, -b ] } 
+
+  image:
+    type: string
+    description: Centos image.
+    default: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20191210
+
+
+  instance_type:
+    type: string
+    description: A small GCP machine type.
+    default: n1-standard-2
+    constraints:
+      - valid_values:
+        - n1-standard-1
+        - n1-standard-2
+        - n1-standard-4
+        - n1-standard-8
+        - n1-standard-16
+        - n1-standard-32
+        - n1-standard-64
+        - n1-standard-96
+
+  agent_user:
+    description: >
+      The username of the agent running on the instance created from the image.
+    default: 'centos'
+
+  agent_key_name:
+    type: string
+    default: agent_key
+
+  env_name:
+    type: string
+    description: Control parameters for names in resources.
+    default: 'example'
+
+
+dsl_definitions:
+
+  client_config: &gcp_config
+    auth: { get_secret: gcp_credentials }
+    zone: { get_input: zone }
+
+node_templates:
+
+
+  docker:
+    type: cloudify.nodes.ApplicationServer
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/install_docker.sh
+            fabric_env: &fabric_env
+              host_string: { get_attribute: [ vm, ip ] }
+              user: { get_input: agent_user }
+              key: { get_attribute: [agent_key, private_key_export] }
+            use_sudo: true
+        delete:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/uninstall_docker.sh
+            fabric_env: *fabric_env
+            use_sudo: true
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: vm
+
+  vm:
+    type: cloudify.gcp.nodes.Instance
+    properties:
+      gcp_config: *gcp_config
+      agent_config:
+        install_method: none
+        key: { get_attribute: [agent_key, private_key_export] }
+        user: { get_input: agent_user }
+      use_public_ip: true
+      zone: { get_input: zone }
+      external_ip: true
+    relationships:
+    - type: cloudify.relationships.connected_to
+      target: firewall
+    - type: cloudify.relationships.depends_on
+      target: subnet
+    - type: cloudify.relationships.depends_on
+      target: agent_key
+    - type: cloudify.relationships.depends_on
+      target: disk
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/gcp/key.py
+          executor: central_deployment_agent
+          inputs:
+            user: { get_input: agent_user }
+            ssh_keys:
+              - { get_attribute: [agent_key, public_key_export] }
+
+
+  disk:
+    type: cloudify.gcp.nodes.Volume
+    properties:
+      gcp_config: *gcp_config
+      image: { get_input: image }
+      size: 20
+      boot: true
+
+  firewall:
+    type: cloudify.gcp.nodes.FirewallRule
+    properties:
+      gcp_config: *gcp_config
+      allowed:
+        tcp:
+          - 22
+          - 80
+          - 2375
+
+      sources:
+        - 0.0.0.0/0
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: network
+
+  subnet:
+    type: cloudify.gcp.nodes.SubNetwork
+    properties:
+      region: { get_input: region }
+      subnet: 10.11.12.0/22
+      gcp_config: *gcp_config
+    relationships:
+    - type: cloudify.gcp.relationships.contained_in_network
+      target: network
+
+  network:
+    type: cloudify.gcp.nodes.Network
+    properties:
+      gcp_config: *gcp_config
+      auto_subnets: false
+
+  agent_key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { get_input: agent_key_name }
+        openssh_format: true
+      use_secret_store: true
+      use_secrets_if_exist: true
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: keys.cloudify_ssh_key.operations.create
+          inputs:
+            store_private_key_material: true
+
+groups:
+
+  vm-group:
+    members:
+    - vm
+    - disk
+
+policies:
+
+  vm-group-policy:
+    type: cloudify.policies.scaling
+    properties:
+      default_instances: 1
+    targets: [vm-group]
+
+capabilities:
+
+  endpoint:
+    description: The external endpoint of the application.
+    value: { get_attribute: [ vm, ip ] }
+
+  user:
+    description: user ID.
+    value: { get_input: agent_user }
+
+  key_content:
+    description: Private agent key
+    value: { get_attribute: [agent_key, private_key_export] }
+
+  security_group_id: 
+    description: Security group resource ID.
+    value: { get_attribute: [ firewall, resource_id ] }
+
+  vpc_id:
+    description: VPC resource ID.
+    value: { get_attribute: [ network, resource_id ] }
+
+  vm_id: 
+    description: VM resource ID.
+    value: { get_attribute: [ vm, resource_id ] }
+  
+  rg_id: 
+    description: Mock resource group id - to be compatible with Azure VM template
+    value: 'mocked_resource_group_id'

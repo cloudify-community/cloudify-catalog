@@ -1,0 +1,365 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-azure-plugin
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+inputs:
+
+  env_name:
+    type: string
+    display_label: Environment name
+    description: Control parameters for names in resources.
+    default: 'cfyinfra'
+
+  resource_prefix:
+    type: string
+    display_label: Resources name prefix
+    default: {  get_input: env_name }
+
+  resource_suffix:
+    type: string
+    display_label: Resources name suffix
+    default: '0'
+
+  location:
+    type: string
+    display_label: Azure region
+    description: Your Azure Region.
+    default: eastus2
+    constraints:
+      - valid_values:
+          - centralus
+          - eastus
+          - eastus2
+          - westus
+          - northcentralus
+          - southcentralus
+          - westcentralus
+          - westus2
+          - northeurope
+          - westeurope
+          - uksouth
+          - ukwest
+          - francecentral
+          - francesouth
+          - switzerlandnorth
+          - switzerlandwest
+          - germanynorth
+          - germanywestcentral
+          - norwaywest
+          - norwayeast
+          - canadacentral
+          - canadaeast
+          - brazilsouth
+          - southafricanorth
+          - southafricawest
+          - eastasia
+          - southeastasia
+          - japanwest
+          - japaneast
+          - southindia
+          - centralindia
+          - westindia
+          - koreacentral
+          - koreasouth
+          - uaecentral
+          - uaenorth
+          - australiaeast
+          - australiasoutheast
+          - australiacentral
+          - australiacentral2
+
+  image:
+    type: string
+    display_label: Azure VM image name
+    description: >
+      Image to use.
+    default:
+      publisher: OpenLogic
+      offer: CentOS
+      sku: 7.6
+      version: latest
+
+  size:
+    type: string
+    display_label: Virtual machine size
+    description: >
+       Name of Virtual Machine Size in Azure.
+    type: string
+    default: Standard_B4ms
+    constraints:
+      - valid_values:
+          - Standard_B1s
+          - Standard_B1ms
+          - Standard_B2s
+          - Standard_B2ms
+          - Standard_B4ms
+          - Standard_B8ms
+          - Standard_B12ms
+          - Standard_B16ms
+          - Standard_B20ms
+
+  retry_after:
+    type: integer
+    display_label: Retry after time
+    default: 60
+
+  agent_user:
+    type: string
+    display_label: The user name of the VM
+    description: The user name of the agent on the instance created from the image.
+    default: centos
+
+  agent_key_name:
+    type: string
+    display_label: Agent Key name
+    default: agent_key
+
+dsl_definitions:
+
+  azure_config: &azure_config
+    subscription_id: { get_secret: azure_subscription_id }
+    tenant_id: { get_secret: azure_tenant_id }
+    client_id: { get_secret: azure_client_id }
+    client_secret: { get_secret: azure_client_secret }
+
+node_templates:
+
+  docker:
+    type: cloudify.nodes.ApplicationServer
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/install_docker.sh
+            fabric_env: &fabric_env
+              host_string: { get_attribute: [ vm, public_ip ] }
+              user: { get_input: agent_user }
+              key: { get_attribute: [agent_key, private_key_export] }
+            use_sudo: true
+        delete:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/uninstall_docker.sh
+            fabric_env: *fabric_env
+            use_sudo: true
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: vm
+
+  vm:
+    type: cloudify.azure.nodes.compute.VirtualMachine
+    properties:
+      name: { concat: [ { get_input: resource_prefix }, vm, { get_input: resource_suffix } ] }
+      location: { get_input: location }
+      retry_after: { get_input: retry_after }
+      os_family: linux
+      azure_config: *azure_config
+      resource_config:
+        hardwareProfile:
+          vmSize: { get_input: size }
+        storageProfile:
+          imageReference: { get_input: image }
+        osProfile:
+          adminUsername: { get_input: agent_user }
+          adminPassword: ''
+          linuxConfiguration:
+            ssh:
+              publicKeys:
+              - keydata: { get_attribute: [agent_key, public_key_export] }
+                path: { concat: [ '/home/', { get_input: agent_user }, '/.ssh/authorized_keys' ] }
+            disablePasswordAuthentication: true
+      agent_config:
+        install_method: none
+        key: { get_attribute: [agent_key, private_key_export] }
+        user: { get_input: agent_user }
+      use_public_ip: true
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+    - type: cloudify.azure.relationships.connected_to_storage_account
+      target: storage_account
+    - type: cloudify.azure.relationships.connected_to_availability_set
+      target: availability_set
+    - type: cloudify.azure.relationships.connected_to_nic
+      target: nic
+    - type: cloudify.relationships.depends_on
+      target: agent_key
+
+  nic:
+    type: cloudify.azure.nodes.network.NetworkInterfaceCard
+    properties:
+      location: { get_input: location }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+    - type: cloudify.azure.relationships.nic_connected_to_network_security_group
+      target: network_security_group
+    - type: cloudify.azure.relationships.nic_connected_to_ip_configuration
+      target: ip_config
+
+  ip_config:
+    type: cloudify.azure.nodes.network.IPConfiguration
+    properties:
+      location: { get_input: location }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+      resource_config:
+        privateIPAllocationMethod: Dynamic
+    relationships:
+    - type: cloudify.azure.relationships.ip_configuration_connected_to_subnet
+      target: subnet
+    - type: cloudify.azure.relationships.ip_configuration_connected_to_public_ip
+      target: ip
+
+  network_security_group:
+    type: cloudify.azure.nodes.network.NetworkSecurityGroup
+    properties:
+      name: {concat : [{get_input: resource_prefix},nsg,{get_input: resource_suffix}]}
+      location: { get_input: location }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+      resource_config:
+        securityRules:
+        - name: ssh
+          properties:
+            description: SSH access
+            protocol: Tcp
+            sourcePortRange: '*'
+            destinationPortRange: 22
+            sourceAddressPrefix: '*'
+            destinationAddressPrefix: '*'
+            priority: 100
+            access: 'Allow'
+            direction: Inbound
+        - name: docker_api_port
+          properties:
+            description: HTTP access
+            protocol: Tcp
+            sourcePortRange: '*'
+            destinationPortRange: 2375
+            sourceAddressPrefix: '*'
+            destinationAddressPrefix: '*'
+            priority: 104
+            access: 'Allow'
+            direction: Inbound
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+
+  ip:
+    type: cloudify.azure.nodes.network.PublicIPAddress
+    properties:
+      location: { get_input: location }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+      resource_config:
+        publicIPAllocationMethod: Static
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+
+  availability_set:
+    type: cloudify.azure.nodes.compute.AvailabilitySet
+    properties:
+      name: { concat : [{get_input: resource_prefix},availset,{get_input: resource_suffix}]}
+      location: { get_input: location }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+
+  storage_account:
+    type: cloudify.azure.nodes.storage.StorageAccount
+    properties:
+      location: { get_input: location }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+      resource_config:
+        accountType: Standard_LRS
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+
+  subnet:
+    type: cloudify.azure.nodes.network.Subnet
+    properties:
+      resource_group_name: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
+      name: { concat: [ { get_input: resource_prefix }, sub, { get_input: resource_suffix } ] }
+      azure_config: *azure_config
+      location: { get_input: location }
+      resource_config:
+        addressPrefix: 10.10.0.0/24
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_virtual_network
+      target: network
+
+  network:
+    type: cloudify.azure.nodes.network.VirtualNetwork
+    properties:
+      resource_group_name: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
+      name: { concat: [ { get_input: resource_prefix }, vn, { get_input: resource_suffix } ] }
+      azure_config: *azure_config
+      location: { get_input: location }
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+
+  resource_group:
+    type: cloudify.azure.nodes.ResourceGroup
+    properties:
+      name: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
+      location: { get_input: location }
+      azure_config: *azure_config
+
+  agent_key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { get_input: agent_key_name }
+        openssh_format: true
+      use_secret_store: true
+      use_secrets_if_exist: true
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: keys.cloudify_ssh_key.operations.create
+          inputs:
+            store_private_key_material: true
+
+capabilities:
+
+  endpoint:
+    description: The external endpoint of the application.
+    value: { get_attribute: [ vm, public_ip ] }
+
+  user:
+    description: user ID.
+    value: { get_input: agent_user }
+
+  key_content:
+    description: Private agent key
+    value: { get_attribute: [agent_key, private_key_export] }
+
+  security_group_id:
+    description: Name of the security group 
+    value: {concat : [ { get_input: resource_prefix},nsg, { get_input: resource_suffix } ] }
+
+  vpc_id:
+    description: Name of the network
+    value: { concat: [ { get_input: resource_prefix }, vn, { get_input: resource_suffix } ] }
+
+  vm_id:
+    description: Name of the VM
+    value: { concat: [ { get_input: resource_prefix }, vm, { get_input: resource_suffix } ] }
+
+  rg_id:
+    description: Name of the resource group
+    value: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
