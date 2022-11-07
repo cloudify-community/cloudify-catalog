@@ -61,7 +61,7 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { get_input: secrests_validation_archive }
+          blueprint_archive: { get_input: secrets_validation_archive }
           main_file_name: "blueprint.yaml"
         deployment:
           inputs: 
@@ -81,7 +81,7 @@ node_templates:
             region_name: { get_input: region } 
     relationships:
     - type: cloudify.relationships.depends_on
-      target: secrets_exists_validation
+      target: secrets_validation
 
 
   
