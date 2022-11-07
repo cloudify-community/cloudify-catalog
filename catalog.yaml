@@ -982,7 +982,7 @@ topics:
         description: Create a backstage proof of concept example
       
       - id: multicloud_vm
-        name: Multicloud VM
+        name: Multicloud-VM-CFY
         path: other/multicloud/vm
         description: Create a VM on choosed cloud provider
 
