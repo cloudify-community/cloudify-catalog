@@ -51,7 +51,7 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { get_input: secrests_validation_archive }
+          blueprint_archive: { get_input: secrets_validation_archive }
           main_file_name: "blueprint.yaml"
         deployment:
           inputs: 
