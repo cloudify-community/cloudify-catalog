@@ -56,6 +56,7 @@ node_templates:
         deployment:
           inputs: 
             secrets: { get_input: [ secrets_to_validate, { get_input: provider_name } ] }
+            provider: { get_input: provider_name }
   
   virtual_machine:
     type: cloudify.nodes.Component
