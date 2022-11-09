@@ -257,6 +257,11 @@ topics:
         path: cloudify_manager/ec2
         description: This blueprint creates EC2 instance and installs the Cloudify Manager from predifined rpm URL
 
+      - id: Cloudify-Manager-Discovery
+        name: Cloudify-Manager-Discovery-CFY
+        path: cloudify_manager/discovery
+        description: This bluperints adds sub-manager and places it as an environment
+
   - name: azure_services
     target_path: s3_json_file
     blueprints:
@@ -975,6 +980,11 @@ topics:
         name: Backstage-AWS-CFY
         path: other/backstage
         description: Create a backstage proof of concept example
+      
+      - id: multicloud_vm
+        name: Multicloud-VM-CFY
+        path: other/multicloud/vm
+        description: Create a VM on choosed cloud provider
 
   - name: docker_services
     target_path: s3_json_file

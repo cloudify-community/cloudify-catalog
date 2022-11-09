@@ -1,0 +1,50 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-terraform-plugin
+
+inputs:
+
+  region:
+    type: string
+    description: Azure location name
+    display_label: Azure location name
+    default: EastUS
+    constraints:
+      - valid_values:
+        - EastUS
+        - CentralUS
+        - WestUS
+        - WestEurope
+        - CanadaCentral
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+node_templates:
+
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/0.15.1/terraform_0.15.1_linux_amd64.zip
+
+  terraform_module:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        variables:
+          subscription_id: { get_secret : azure_subscription_id }
+          tenant_id: { get_secret : azure_tenant_id }
+          client_id: { get_secret : azure_client_id }
+          client_secret: { get_secret : azure_client_secret }
+          location: { get_input : region }
+        source:
+          location: templates.zip
+        source_path: templates
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host

@@ -41,7 +41,7 @@
 
     - name: Make sure image
       copy:
-        src: cloudify-logo.png
+        src: Cloudify-Logo.png
         dest: /var/www/example.com/public_html/image.png
 
     - name: Make sure index html
