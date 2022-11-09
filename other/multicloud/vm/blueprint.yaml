@@ -73,31 +73,31 @@ capabilities:
 
   endpoint:
     description: The external endpoint of the application.
-    value: { get_capability: [ virtual_machine, endpoint ] }
+    value: { get_attribute: [ virtual_machine, capabilities, endpoint ] }
 
   user:
     description: User ID.
-    value: { get_capability: [ virtual_machine, user ] }
+    value: { get_attribute: [ virtual_machine, capabilities, user ] }
 
   key_content:
     description: Private agent key
-    value: { get_capability: [ virtual_machine, key_content ] }
+    value: { get_attribute: [ virtual_machine, capabilities, key_content ] }
 
   security_group_id: 
     description: Security group resource ID.
-    value: { get_capability: [ virtual_machine, security_group_id ] }
+    value: { get_attribute: [ virtual_machine, capabilities, security_group_id ] }
 
   vpc_id:
     description: VPC resource ID.
-    value: { get_capability: [ virtual_machine, vpc_id ] }
+    value: { get_attribute: [ virtual_machine, capabilities, vpc_id ] }
 
   vm_id: 
     description: VM resource ID.
-    value: { get_capability: [ virtual_machine, vm_id ] }
+    value: { get_attribute: [ virtual_machine, capabilities, vm_id ] }
   
   rg_id: 
     description: Mock resource group id - to be compatible with Azure VM template
-    value: { get_capability: [ virtual_machine, rg_id ] }
+    value: { get_attribute: [ virtual_machine, capabilities, rg_id ] }
 
   
   
