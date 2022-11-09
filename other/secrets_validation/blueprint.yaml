@@ -4,16 +4,24 @@ imports:
   - cloudify/types/types.yaml
 
 inputs:
+
   provider: 
     display_label: Provider name
     description: |
       The provider name for which the secret validation availability will be provided 
     type: string
+    default: aws
     constraints:
       - valid_values:
           - azure
           - aws
           - gcp
+  
+  secrets: 
+    display_label: Secrets list
+    description: |
+      Secret list to validate
+    type: list
 
 node_templates:
 
@@ -26,7 +34,7 @@ node_templates:
           implementation: scripts/secrets_validation.py
           executor: central_deployment_agent
           inputs:
-            provider: { get_input: provider }
+            secrets: { get_input: secrets }
   
   #check if the values are correct
   infrastructure:
