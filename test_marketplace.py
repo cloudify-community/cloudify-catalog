@@ -9,7 +9,7 @@ ids = test_data.get_blueprints_ids()
 args_upload = test_data.get_upload_args()
 
 def test_always_passes():
-    for arg in args_upload: 
-        proc_upload = subprocess.run(arg)
+    for id in ids: 
+        proc_upload = subprocess.run(args_upload.get('ex1-input-output-blueprint'))
         break
     assert proc_upload.returncode == 0
