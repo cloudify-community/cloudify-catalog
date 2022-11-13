@@ -1,0 +1,10 @@
+[
+    {
+        "id" : "gen-ssh-cert-service-component",
+        "inputs" : {
+            "provider" : "aws",
+            "sds" : "123"
+        },
+        "parent" : "eks"
+    }
+]
