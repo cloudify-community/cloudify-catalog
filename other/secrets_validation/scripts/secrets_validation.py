@@ -21,4 +21,4 @@ if missing:
     ctx.logger.error(
         "Please, create missing secret value for: {}".format(" and ".join(missing)))
     raise NonRecoverableError(
-        "Missing {} provider secret value for: {}".format(" and ".join(missing)))
+        "Missing secret value for: {}".format(" and ".join(missing)))

@@ -37,7 +37,7 @@ node_templates:
             secrets: { get_input: secrets }
   
   #check if the values are correct
-  secrets_values_validation:
+  secrets_value_validation:
     type: cloudify.nodes.Component
     properties:
       resource_config:
