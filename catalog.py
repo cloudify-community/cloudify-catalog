@@ -87,12 +87,12 @@ def get_readme_url(blueprint: dict, raw_github_url: str) -> str:
 def get_image_url(blueprint: dict, raw_github_url: str) -> str:
     image_url = blueprint['image_url'] if 'image_url' in blueprint.keys(
     ) else None
-    broken_bps_ids = get_broken_bps_ids()
-    logging.info("Broken bps: {}".format(broken_bps_ids))
+    # broken_bps_ids = get_broken_bps_ids()
+    # logging.info("Broken bps: {}".format(broken_bps_ids))
     if image_url is None and 'path' in blueprint.keys():
         image_url = "{}/{}/logo.png".format(raw_github_url, blueprint['path'])
-    if blueprint.get("id") in broken_bps_ids:
-        image_url = "{}/logos/logo.png".format(raw_github_url)
+    # if blueprint.get("id") in broken_bps_ids:
+    #     image_url = "{}/logos/logo.png".format(raw_github_url)
     return image_url
 
 

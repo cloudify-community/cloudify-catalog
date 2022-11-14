@@ -200,51 +200,51 @@ pipeline{
     //     }
     //   }
     // }
-    // stage('build'){
-    //   steps{
-    //     container('python'){
-    //       dir("${env.WORKSPACE}/${env.PROJECT}"){
-    //         setupGithubSSHKey()
-    //         sh """
-    //         export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
-    //         python catalog.py
-    //         """
-    //       }
-    //     }
-    //   }
-    // }
-    // stage('validate_built_catalogs'){
-    //   steps{
-    //     container('python'){
-    //       dir("${env.WORKSPACE}/${env.PROJECT}"){
-    //         setupGithubSSHKey()
-    //         sh """
-    //           python catalog_linter.py
-    //         """
-    //       }
-    //     }
-    //   }
-    // }
-    // stage('upload_artifacts'){
-    //   steps{
-    //     withCredentials([
-    //           usernamePassword(
-    //               credentialsId: 'aws-cli', 
-    //               usernameVariable: 'ID', 
-    //               passwordVariable: 'SECRET'
-    //               )]) {
-    //           container('python'){
-    //             dir("${env.WORKSPACE}/${env.PROJECT}"){
-    //               setupGithubSSHKey()
-    //               sh '''
-    //                 export ID="$ID"
-    //                 export SECRET="$SECRET"
-    //                 python upload_artifacts.py 
-    //               '''
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    stage('build'){
+      steps{
+        container('python'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            setupGithubSSHKey()
+            sh """
+            export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+            python catalog.py
+            """
+          }
+        }
+      }
+    }
+    stage('validate_built_catalogs'){
+      steps{
+        container('python'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            setupGithubSSHKey()
+            sh """
+              python catalog_linter.py
+            """
+          }
+        }
+      }
+    }
+    stage('upload_artifacts'){
+      steps{
+        withCredentials([
+              usernamePassword(
+                  credentialsId: 'aws-cli', 
+                  usernameVariable: 'ID', 
+                  passwordVariable: 'SECRET'
+                  )]) {
+              container('python'){
+                dir("${env.WORKSPACE}/${env.PROJECT}"){
+                  setupGithubSSHKey()
+                  sh '''
+                    export ID="$ID"
+                    export SECRET="$SECRET"
+                    python upload_artifacts.py 
+                  '''
+            }
+          }
+        }
+      }
+    }
   }
 }
