@@ -34,9 +34,9 @@ def testBlueprints(){
     sh """#!/bin/bash
     scp -i ~/.ssh/ec2_ssh_key -r * centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
-sudo pip3 install -U pytest pyyaml 
+sudo pip3 install -U pytest pytest_sets pyyaml
 cd /home/centos
-pytest --capture=sys --color=yes --code-highlight=yes
+pytest --capture=sys --color=yes --code-highlight=yes -m ${env.TEST_CASE}
 EOT
 """
 }

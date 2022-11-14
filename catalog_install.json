@@ -1,10 +1,11 @@
 [
     {
-        "id" : "gen-ssh-cert-service-component",
-        "inputs" : {
-            "provider" : "aws",
-            "sds" : "123"
-        },
-        "parent" : "eks"
+        "id" : "gen-ssh-cert-service-component"
+    },
+    {
+        "id" : "ex3-relationship-blueprint"
+    },
+    {
+        "id" : "ex4-nested-blueprint"
     }
 ]

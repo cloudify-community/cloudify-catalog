@@ -20,21 +20,21 @@ class ParseTestData():
     def _get_bps(self):
         bps = [ item['blueprints'] for item in self._yaml_data['topics'] ]
         bps = [ item for itemw in bps for item in itemw ]  
-        return bps  
+        return bps
 
     def get_create_deployment_args(self):
 
         args = {}
 
         for item in self._json_data:
-            command = ["cfy", "deployments", "create", "-b", item.get("id")]
+            command = ["cfy", "deployments", "create", "-b", item.get("id") ]
             if item.get('inputs'):
                 inputs = []
                 for input, value in item.get('inputs').items():
                     inputs.append('-i {}={}'.format(input, value))
                 command = command + inputs
             if item.get('parent'):
-                command = command + ['--labels csys-obj-parent:{}'.format(item.get('parent'))]
+                command = command + [ '--labels csys-obj-parent:{}'.format(item.get('parent')) ]
             args[item.get('id')] = command
         return args
 
