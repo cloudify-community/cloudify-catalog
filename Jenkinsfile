@@ -57,7 +57,7 @@ pipeline{
                   runAsUser: 0
                   privileged: true
               - name: cloudify
-                image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
+                image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.10
                 volumeMounts:
                   - mountPath: /dev/shm
                     name: dshm
@@ -113,27 +113,32 @@ pipeline{
           container('cloudify'){
             dir("${env.WORKSPACE}/${env.PROJECT}"){
               common = load "common.groovy"
+              sh """
+                set -eux
+                pip install --upgrade pip
+                pip install -r requirements.txt
+            """
             }
           }
         }
       }
     }
-    stage('install dependencies'){
-      steps {
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            sh """
-              set -eux
-              pip install --upgrade pip
-              pip install -r requirements.txt
-            """
-          }
-        }
-      }
-    }
+    // stage('install dependencies'){
+    //   steps {
+    //     container('python'){
+    //       dir("${env.WORKSPACE}/${env.PROJECT}"){
+    //         sh """
+    //           set -eux
+    //           pip install --upgrade pip
+    //           pip install -r requirements.txt
+    //         """
+    //       }
+    //     }
+    //   }
+    // }
     stage('validate_catalog_yaml'){
       steps{
-        container('python'){
+        container('cloudify'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             sh """
               python catalog_definition_linter.py
@@ -202,7 +207,7 @@ pipeline{
     // }
     stage('build'){
       steps{
-        container('python'){
+        container('cloudify'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             setupGithubSSHKey()
             sh """
@@ -215,7 +220,7 @@ pipeline{
     }
     stage('validate_built_catalogs'){
       steps{
-        container('python'){
+        container('cloudify'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             setupGithubSSHKey()
             sh """
@@ -233,7 +238,7 @@ pipeline{
                   usernameVariable: 'ID', 
                   passwordVariable: 'SECRET'
                   )]) {
-              container('python'){
+              container('cloudify'){
                 dir("${env.WORKSPACE}/${env.PROJECT}"){
                   setupGithubSSHKey()
                   sh '''
