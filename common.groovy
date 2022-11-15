@@ -36,15 +36,9 @@ def testBlueprints(){
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 sudo pip3 install -U pytest pytest-steps pyyaml
 cd /home/centos
-pytest --capture=sys --color=yes --code-highlight=yes -m ${env.TEST_CASE}
+pytest --capture=sys --color=yes --code-highlight=yes -m ${env.TEST_CASE} --junitxml=${TEST_RESULT_PATH}
 EOT
 """
-}
-
-def downloadTestReport(file_source, file_destination){
-  sh """#!/bin/bash 
-  scp -i ~/.ssh/ec2_ssh_key centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):${file_source} ${file_destination}
-  """
 }
 
 def terminateCloudifyManager(){
@@ -54,66 +48,6 @@ def terminateCloudifyManager(){
     cfy exec start uninstall --force -d \${dep_id}
     cfy dep del -f \${dep_id}
     cfy blu del -f ${env.BP_ID}
-  """
-}
-
-def checkCoverage(){
-  sh """#!/bin/bash
-    set -euxo pipefail
-    export NVM_DIR='/root/.nvm'
-    . "\$NVM_DIR/nvm.sh"
-
-    echo Checking coverage...
-    npm run coverageCheck
-  """
-}
-
-def createPackage(){
-  sh """#!/bin/bash
-    set -euxo pipefail
-    echo "Installing dependencies..."
-    apt-get update -y
-    apt-get install -y libxcomposite-dev rsync libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-
-    export NVM_DIR='/root/.nvm'
-    . "\$NVM_DIR/nvm.sh"
-
-    echo "Creating package..."
-    npm run beforebuild
-    npm run build:coverage
-    npm run zip
-  """
-}
-
-
-def runComponentTests(){
-  sh """#!/bin/bash
-    set -euxo pipefail
-    export NVM_DIR='/root/.nvm'
-    . "\$NVM_DIR/nvm.sh"
-
-    echo Starting cypress components tests...
-    export NODE_OPTIONS='--max-old-space-size=8192'
-    npm run test:frontend:components
-  """
-}
-
-def runTests(){
-  sh """#!/bin/bash
-    set -euxo pipefail
-    export MANAGER_PROTOCOL=https
-    export MANAGER_IP=\$(cat ${env.WORKSPACE}/pipelines-k8s/system-ui-tests/capabilities.json | jq '.endpoint.value' | tr -d '"')
-    export MANAGER_USER=centos
-    export SSH_KEY_PATH=~/.ssh/ec2_ssh_key
-
-    export NVM_DIR='/root/.nvm'
-    . "\$NVM_DIR/nvm.sh"
-
-    echo "Uploading package..."
-    npm run upload
-
-    echo "Starting system tests..."
-    npm run e2e -- -s '\${TEST_SPEC:-**/*}'
   """
 }
 

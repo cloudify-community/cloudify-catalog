@@ -12,30 +12,27 @@ from pygit2 import Repository
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 TEST_RESULT_PATH = os.environ["TEST_RESULT_PATH"]
-
+BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
 
 def read_xml(path):
     try:
         tree = ET.parse(path)
-        return tree.getroot()
+        return tree.getroot().getchildren() #return test suites
     except FileNotFoundError:
         logging.info(
             'The test result file was not found under: {} path'.format(path))
         return None
 
-
 def get_broken_bps_ids():
-    test_data = read_xml(TEST_RESULT_PATH)
+    test_suites = read_xml(TEST_RESULT_PATH)
     broken_bps = []
-    if test_data:
-        for test in test_data:
-            if test.getchildren():
-                broken_bps.append(test.attrib.get(
-                    "name").split(' ')[4][1:-2])
-        return broken_bps
-    else:
-        return broken_bps
-
+    if test_suites:
+        for suite in test_suites:   
+            for test_case in suite:
+                match = BP_NAME.search(test_case.attrib.get('name'))
+                if match: 
+                    broken_bps.append(match[0])
+    return broken_bps
 
 def create_build_directories():
     """Creates a build directory and catalogs directory in it
@@ -87,12 +84,12 @@ def get_readme_url(blueprint: dict, raw_github_url: str) -> str:
 def get_image_url(blueprint: dict, raw_github_url: str) -> str:
     image_url = blueprint['image_url'] if 'image_url' in blueprint.keys(
     ) else None
-    # broken_bps_ids = get_broken_bps_ids()
-    # logging.info("Broken bps: {}".format(broken_bps_ids))
+    broken_bps_ids = get_broken_bps_ids()
+    logging.info("Broken bps: {}".format(broken_bps_ids))
     if image_url is None and 'path' in blueprint.keys():
         image_url = "{}/{}/logo.png".format(raw_github_url, blueprint['path'])
-    # if blueprint.get("id") in broken_bps_ids:
-    #     image_url = "{}/logos/logo.png".format(raw_github_url)
+    if blueprint.get("id") in broken_bps_ids:
+        image_url = "{}/logos/logo.png".format(raw_github_url)
     return image_url
 
 

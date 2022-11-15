@@ -38,40 +38,20 @@ pipeline{
                   limits:
                     cpu: 0.3
                     memory: 256Mi
-              - name: python
-                image: python:3.8
-                resources:
-                  requests:
-                    cpu: 0.5
-                    memory: 1Gi
-                  limits:
-                    cpu: 1
-                    memory: 1Gi
-                volumeMounts:
-                  - mountPath: /tmp/data
-                    name: shared-data-volume
-                command:
-                - cat
-                tty: true
-                securityContext:
-                  runAsUser: 0
-                  privileged: true
               - name: cloudify
                 image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.10
                 volumeMounts:
                   - mountPath: /dev/shm
                     name: dshm
-                  - mountPath: /tmp/data
-                    name: shared-data-volume
                 command:
                 - cat
                 tty: true
                 resources:
                   requests:
-                    cpu: 0.5
+                    cpu: 1.0
                     memory: 1Gi
                   limits:
-                    memory: 1Gi
+                    memory: 2Gi
                 securityContext:
                   runAsUser: 0
                   privileged: true
@@ -103,7 +83,7 @@ pipeline{
     SUFFIX = "6.4.0-.dev1" 
     TEST_CASE = "${params.TEST_CASE}"
     TEST_RESULT_DIR = "/tmp/data"
-    TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/nosetests.xml"
+    TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/junit_report.xml"
   }
   stages{
     stage('prepare'){
@@ -123,19 +103,6 @@ pipeline{
         }
       }
     }
-    // stage('install dependencies'){
-    //   steps {
-    //     container('python'){
-    //       dir("${env.WORKSPACE}/${env.PROJECT}"){
-    //         sh """
-    //           set -eux
-    //           pip install --upgrade pip
-    //           pip install -r requirements.txt
-    //         """
-    //       }
-    //     }
-    //   }
-    // }
     stage('validate_catalog_yaml'){
       steps{
         container('cloudify'){
@@ -192,19 +159,6 @@ pipeline{
       }
     }
     }
-    // when { expression { params.TEST_BLUEPRINTS } }
-    // stage('download_test_artifacts'){
-    //   steps{
-    //     script{
-    //       container('cloudify'){
-    //          dir("${env.WORKSPACE}/${env.PROJECT}") {
-    //           echo 'Copy artifacts'
-    //           common.downloadTestReport("/home/centos/nosetests.xml", "${env.TEST_RESULT_PATH}")
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
     stage('build'){
       steps{
         container('cloudify'){
