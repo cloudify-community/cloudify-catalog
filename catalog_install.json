@@ -1,6 +1,10 @@
 [
     {
-        "id" : "gen-ssh-cert-service-component"
+        "id" : "gen-ssh-cert-service-component",
+        "inputs" : {
+            "provider" : "aws"
+        },
+        "parent" : "eks"
     },
     {
         "id" : "ex3-relationship-blueprint"
