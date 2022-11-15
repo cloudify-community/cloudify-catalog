@@ -82,7 +82,7 @@ pipeline{
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1" 
     TEST_CASE = "${params.TEST_CASE}"
-    TEST_RESULT_DIR = "/tmp/data"
+    TEST_RESULT_DIR = "/tmp"
     TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/junit_report.xml"
   }
   stages{
