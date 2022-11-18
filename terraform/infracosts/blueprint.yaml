@@ -44,7 +44,7 @@ inputs:
         - ap-southeast-1  #Asia Pacific (Singapore)
         - ap-southeast-2  #Asia Pacific (Sydney)
         - ap-northeast-1  #Asia Pacific (Tokyo)
-
+        
   secrets_validation_archive:
     type: string
     display_label: URL for secrets vallidation zip archive
@@ -52,6 +52,14 @@ inputs:
       URL of infra zip file.
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_validation/secrets_validation.zip
     hidden: true
+  
+  infracost_api_key: 
+    type: string
+    display_label: Infracost api key
+    description: | 
+      The api key for infracost service
+    hidden: true
+    default: { get_secret: infracost_api_key }
     
 node_templates:
 
@@ -79,6 +87,7 @@ node_templates:
           inputs:
             password: { get_input: password }
             region_name: { get_input: region } 
+            infra_cost: { get_input: infracost_api_key }
     relationships:
     - type: cloudify.relationships.depends_on
       target: secrets_validation
