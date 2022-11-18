@@ -41,8 +41,8 @@ pipeline{
               - name: cloudify
                 image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.10
                 volumeMounts:
-                  - mountPath: /dev/shm
-                    name: dshm
+                  - mountPath: /tmp/data
+                    name: shared-data-volume
                 command:
                 - cat
                 tty: true
@@ -82,7 +82,7 @@ pipeline{
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1" 
     TEST_CASE = "${params.TEST_CASE}"
-    TEST_RESULT_DIR = "/dev/shm"
+    TEST_RESULT_DIR = "/tmp/data"
     TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/junit_report.xml"
   }
   stages{

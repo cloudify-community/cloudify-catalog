@@ -7,7 +7,7 @@ import shutil
 import xml.etree.ElementTree as ET
 
 import yaml
-from pygit2 import Repository
+# from pygit2 import Repository
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
