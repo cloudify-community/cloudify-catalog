@@ -36,7 +36,7 @@ def testBlueprints(){
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
 sudo pip3 install -U pytest pytest-steps pyyaml
 cd /home/centos
-pytest --capture=sys --color=yes --code-highlight=yes -m ${env.TEST_CASE} --junitxml=${env.TEST_RESULT_PATH}
+pytest --capture=sys --color=yes --code-highlight=yes -m ${env.TEST_CASE} --junitxml=/tmp/junit_report.xml
 EOT
 """
 }
@@ -48,6 +48,12 @@ def terminateCloudifyManager(){
     cfy exec start uninstall --force -d \${dep_id}
     cfy dep del -f \${dep_id}
     cfy blu del -f ${env.BP_ID}
+  """
+}
+
+def downloadTestReport(file_source, file_destination){
+  sh """#!/bin/bash 
+  scp -i ~/.ssh/ec2_ssh_key centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):${file_source} ${file_destination}
   """
 }
 

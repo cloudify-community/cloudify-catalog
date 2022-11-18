@@ -159,6 +159,18 @@ pipeline{
       }
     }
     }
+    stage('download_test_artifacts'){
+      steps{
+        script{
+          container('cloudify'){
+             dir("${env.WORKSPACE}/${env.PROJECT}") {
+              echo 'Copy artifacts'
+              common.downloadTestReport("/tmp/junit_report.xml", "${env.TEST_RESULT_PATH}")
+            }
+          }
+        }
+      }
+    }
     stage('build'){
       steps{
         container('cloudify'){
