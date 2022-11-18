@@ -157,7 +157,7 @@ def main():
         logging.info('processing catalog %s' % package['name'])
         if 'blueprints' in package:
             result = []
-
+            broken_bps = get_broken_bps_ids()
             for blueprint in package['blueprints']:
                 logging.info("processing blueprint %s" % blueprint['id'])
 
@@ -165,7 +165,7 @@ def main():
                 html_url = get_html_url(blueprint, github_url)
                 readme_url = get_readme_url(blueprint, raw_github_url)
                 main_blueprint = get_main_blueprint(blueprint)
-                broken_bps = get_broken_bps_ids()
+                
                 image_url = get_image_url(blueprint, raw_github_url, broken_bps)
 
                 archive_blueprint(blueprint)
