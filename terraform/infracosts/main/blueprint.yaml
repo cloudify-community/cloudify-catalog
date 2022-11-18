@@ -57,7 +57,8 @@ inputs:
     display_label: Infracost api key
     description: | 
       The api key for infracost service
-    hidden: true  
+    default: { get_secret: infracost_api_key }
+    hidden: true
 
 node_templates:
 
