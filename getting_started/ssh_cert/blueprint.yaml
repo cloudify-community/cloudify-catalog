@@ -11,7 +11,7 @@ inputs:
     default: 'MyKey'
     display_label: Key Name
     type: string
-sadasd
+
 node_templates:
   ssh_key:
     type: cloudify.keys.nodes.RSAKey

@@ -16,7 +16,7 @@ args_uninstall = test_data.get_uninstall_args()
 
 
 @pytest.mark.upload
-@pytest.mark.parametrize("id", list(args_upload.keys())[:10])
+@pytest.mark.parametrize("id", args_upload.keys())
 def test_upload(id):
     proc = subprocess.run(args_upload.get(id), stdout=subprocess.PIPE)
     assert proc.returncode == 0, proc.stdout
