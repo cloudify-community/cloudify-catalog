@@ -5,7 +5,6 @@ import os
 import re
 import shutil
 import xml.etree.ElementTree as ET
-from junitparser import JUnitXml
 
 import yaml
 from pygit2 import Repository
@@ -17,8 +16,8 @@ BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
 
 def read_xml(path):
     try:
-        test_suites =JUnitXml.fromfile(path)
-        return test_suites
+        test_suites = ET.parse(path)
+        return test_suites.getroot()
     except FileNotFoundError:
         logging.info(
             'The test result file was not found under: {} path'.format(path))
@@ -30,8 +29,10 @@ def get_broken_bps_ids():
     if test_suites:
         for suite in test_suites:   
             for test_case in suite:
-                if not test_case.is_passed:
-                    broken_bps.append(BP_NAME.search(test_case.name)[0])
+                if list(test_case):
+                    match = BP_NAME.search(test_case.attrib.get('name'))
+                    if match: 
+                        broken_bps.append(match[0])
     return broken_bps
 
 def create_build_directories():

@@ -1,6 +1,5 @@
 pyyaml
 pytest
 pytest-steps
-junitparser
 pygit2
 boto3
