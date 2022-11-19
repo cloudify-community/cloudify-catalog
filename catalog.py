@@ -7,7 +7,7 @@ import shutil
 import xml.etree.ElementTree as ET
 
 import yaml
-# from pygit2 import Repository
+from pygit2 import Repository
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
@@ -17,7 +17,7 @@ BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
 def read_xml(path):
     try:
         tree = ET.parse(path)
-        return tree.getroot().getchildren() #return test suites
+        return tree.getroot() #return test suites
     except FileNotFoundError:
         logging.info(
             'The test result file was not found under: {} path'.format(path))
