@@ -1,4 +1,5 @@
 import subprocess
+import logging
 
 import pytest
 from pytest_steps import test_steps
@@ -26,6 +27,12 @@ def test_upload(id):
 @test_steps("create_deployment", "install_deployment", "uninstall_deployment")
 @pytest.mark.parametrize("id", args_executions_start.keys())
 def test_install(id):
+    #assuming that install & update could be run separetely
+    try:
+        upload_bp = subprocess.run(args_upload.get(id), stdout=subprocess.PIPE)
+        logging.info(upload_bp.stdout)
+    except Exception as err:
+        logging.error(err)
     try:
         create_deployment = subprocess.run(
             args_create_deployment.get(id), stdout=subprocess.PIPE)

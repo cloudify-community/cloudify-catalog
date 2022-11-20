@@ -26,6 +26,7 @@ echo ${env.LICENSE} | base64 -d > /tmp/cfy-license.yaml\n
 cfy license upload /tmp/cfy-license.yaml
 cfy secrets create aws_access_key_id -s ${env.AWS_ACCESS_KEY_ID}
 cfy secrets create aws_secret_access_key -s ${env.AWS_SECRET_ACCESS_KEY}
+cfy secrets create infracost_api_key -s ${env.INFRACOST_API_KEY}
 EOT
 """
 }

@@ -13,7 +13,10 @@ def secrets = [
   ],
   [path: 'secret/jenkins/cloudify', engineVersion: 2, secretValues: [
     [envVar: 'LICENSE', vaultKey: 'license']]
-  ]
+  ],
+  [path: 'secret/jenkins/infracost', engineVersion: 2, secretValues: [
+    [envVar: 'INFRACOST_API_KEY', vaultKey: 'api_key']]
+  ],
 ]
 
 @Library('pipeline-shared-library') _
