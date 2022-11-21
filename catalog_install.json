@@ -1,0 +1,14 @@
+[
+    {
+        "id" : "gen-ssh-cert-service-component"
+    },
+    {
+        "id" : "ex3-relationship-blueprint"
+    },
+    {
+        "id" : "ex4-nested-blueprint"
+    },
+    {
+        "id" : "tf_infracosts"
+    }
+]

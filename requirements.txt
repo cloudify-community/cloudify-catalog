@@ -1,4 +1,5 @@
-validators
 pyyaml
+pytest
+pytest-steps
 pygit2
 boto3

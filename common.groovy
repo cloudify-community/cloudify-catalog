@@ -26,6 +26,7 @@ echo ${env.LICENSE} | base64 -d > /tmp/cfy-license.yaml\n
 cfy license upload /tmp/cfy-license.yaml
 cfy secrets create aws_access_key_id -s ${env.AWS_ACCESS_KEY_ID}
 cfy secrets create aws_secret_access_key -s ${env.AWS_SECRET_ACCESS_KEY}
+cfy secrets create infracost_api_key -s ${env.INFRACOST_API_KEY}
 EOT
 """
 }
@@ -34,17 +35,11 @@ def testBlueprints(){
     sh """#!/bin/bash
     scp -i ~/.ssh/ec2_ssh_key -r * centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):/home/centos
     ssh -i ~/.ssh/ec2_ssh_key -l centos \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') <<'EOT'
-sudo pip3 install -U parameterized pyyaml nose rednose
+sudo pip3 install -U pytest pytest-steps pyyaml
 cd /home/centos
-nosetests --verbosity=2 --rednose ./ -a type=${env.TEST_CASE} --with-xunit
+pytest --capture=sys --color=yes --code-highlight=yes -m ${env.TEST_CASE} --junitxml=/tmp/junit_report.xml
 EOT
 """
-}
-
-def downloadTestReport(file_source, file_destination){
-  sh """#!/bin/bash 
-  scp -i ~/.ssh/ec2_ssh_key centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):${file_source} ${file_destination}
-  """
 }
 
 def terminateCloudifyManager(){
@@ -57,63 +52,9 @@ def terminateCloudifyManager(){
   """
 }
 
-def checkCoverage(){
-  sh """#!/bin/bash
-    set -euxo pipefail
-    export NVM_DIR='/root/.nvm'
-    . "\$NVM_DIR/nvm.sh"
-
-    echo Checking coverage...
-    npm run coverageCheck
-  """
-}
-
-def createPackage(){
-  sh """#!/bin/bash
-    set -euxo pipefail
-    echo "Installing dependencies..."
-    apt-get update -y
-    apt-get install -y libxcomposite-dev rsync libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-
-    export NVM_DIR='/root/.nvm'
-    . "\$NVM_DIR/nvm.sh"
-
-    echo "Creating package..."
-    npm run beforebuild
-    npm run build:coverage
-    npm run zip
-  """
-}
-
-
-def runComponentTests(){
-  sh """#!/bin/bash
-    set -euxo pipefail
-    export NVM_DIR='/root/.nvm'
-    . "\$NVM_DIR/nvm.sh"
-
-    echo Starting cypress components tests...
-    export NODE_OPTIONS='--max-old-space-size=8192'
-    npm run test:frontend:components
-  """
-}
-
-def runTests(){
-  sh """#!/bin/bash
-    set -euxo pipefail
-    export MANAGER_PROTOCOL=https
-    export MANAGER_IP=\$(cat ${env.WORKSPACE}/pipelines-k8s/system-ui-tests/capabilities.json | jq '.endpoint.value' | tr -d '"')
-    export MANAGER_USER=centos
-    export SSH_KEY_PATH=~/.ssh/ec2_ssh_key
-
-    export NVM_DIR='/root/.nvm'
-    . "\$NVM_DIR/nvm.sh"
-
-    echo "Uploading package..."
-    npm run upload
-
-    echo "Starting system tests..."
-    npm run e2e -- -s '\${TEST_SPEC:-**/*}'
+def downloadTestReport(file_source, file_destination){
+  sh """#!/bin/bash 
+  scp -i ~/.ssh/ec2_ssh_key centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):${file_source} ${file_destination}
   """
 }
 
