@@ -9,6 +9,6 @@
         "id" : "ex4-nested-blueprint"
     },
     {
-        "id" : "InfraCosts-AWS-TFM"
+        "id" : "tf_infracosts"
     }
 ]
