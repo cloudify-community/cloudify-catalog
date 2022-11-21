@@ -10,5 +10,8 @@
     },
     {
         "id" : "tf_infracosts"
+    },
+    {
+        "id" : "grafana_ansible"
     }
 ]

@@ -21,11 +21,11 @@ inputs:
           - aws
 
   infra_archive:
+    type: string
     display_label: URL for infra zip archive
     description: >
       URL of infra zip file.
-    type: string
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/multicloud/vm/vm.zip
 
   infra_exists:
     display_label: Set if infra exists or not 
@@ -40,60 +40,7 @@ inputs:
     type: string
     default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
-  secrets_checker_archive:
-    display_label: URL for secrets checker archive
-    description: > 
-      Component is used for validation if every needed secrets are provided
-    type: string
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_checker/secrets_checker.zip
-
-  aws_access_key_id: 
-    type: string
-    default: { get_secret: aws_access_key_id }
-    hidden: true
-
-  aws_secret_access_key: 
-    type: string
-    hidden: true
-    default: { get_secret: aws_secret_access_key }
-  
-  subscription_id: 
-    type: string
-    default: { get_secret: azure_subscription_id }
-    hidden: true
-    
-  tenant_id:
-    type: string 
-    default: { get_secret: azure_tenant_id }
-    hidden: true
-
-  client_id:
-    type: string
-    default: { get_secret: azure_client_id }
-    hidden: true
-
-  client_secret:
-    type: string 
-    default: { get_secret: azure_client_secret }
-    hidden: true
-
 node_templates:
-
-  secrets_checker:
-    type: cloudify.nodes.Component
-    properties:
-      resource_config:
-        blueprint:
-          blueprint_archive: { get_input: secrets_checker_archive }
-          main_file_name: "blueprint.yaml"
-        deployment:
-          inputs: 
-            tenant_id: { get_input: tenant_id }
-            client_secret: { get_input: client_secret }
-            client_id:  { get_input: client_id }
-            subscription_id:  { get_input: subscription_id }
-            aws_access_key_id: { get_input: aws_access_key_id }
-            aws_secret_access_key: { get_input: aws_secret_access_key }
 
   # we creating the password for RabbitMQ admin/master user
   master_password:
