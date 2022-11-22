@@ -13,7 +13,10 @@ def secrets = [
   ],
   [path: 'secret/jenkins/cloudify', engineVersion: 2, secretValues: [
     [envVar: 'LICENSE', vaultKey: 'license']]
-  ]
+  ],
+  [path: 'secret/jenkins/infracost', engineVersion: 2, secretValues: [
+    [envVar: 'INFRACOST_API_KEY', vaultKey: 'api_key']]
+  ],
 ]
 
 @Library('pipeline-shared-library') _
@@ -38,29 +41,9 @@ pipeline{
                   limits:
                     cpu: 0.3
                     memory: 256Mi
-              - name: python
-                image: python:3.8
-                resources:
-                  requests:
-                    cpu: 0.5
-                    memory: 1Gi
-                  limits:
-                    cpu: 1
-                    memory: 1Gi
-                volumeMounts:
-                  - mountPath: /tmp/data
-                    name: shared-data-volume
-                command:
-                - cat
-                tty: true
-                securityContext:
-                  runAsUser: 0
-                  privileged: true
               - name: cloudify
-                image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.6
+                image: 263721492972.dkr.ecr.eu-west-1.amazonaws.com/cloudify-python3.10
                 volumeMounts:
-                  - mountPath: /dev/shm
-                    name: dshm
                   - mountPath: /tmp/data
                     name: shared-data-volume
                 command:
@@ -68,10 +51,10 @@ pipeline{
                 tty: true
                 resources:
                   requests:
-                    cpu: 0.5
+                    cpu: 1.0
                     memory: 1Gi
                   limits:
-                    memory: 1Gi
+                    memory: 2Gi
                 securityContext:
                   runAsUser: 0
                   privileged: true
@@ -103,7 +86,7 @@ pipeline{
     SUFFIX = "6.4.0-.dev1" 
     TEST_CASE = "${params.TEST_CASE}"
     TEST_RESULT_DIR = "/tmp/data"
-    TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/nosetests.xml"
+    TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/junit_report.xml"
   }
   stages{
     stage('prepare'){
@@ -113,27 +96,19 @@ pipeline{
           container('cloudify'){
             dir("${env.WORKSPACE}/${env.PROJECT}"){
               common = load "common.groovy"
-            }
-          }
-        }
-      }
-    }
-    stage('install dependencies'){
-      steps {
-        container('python'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            sh """
-              set -eux
-              pip install --upgrade pip
-              pip install -r requirements.txt
+              sh """
+                set -eux
+                pip install --upgrade pip
+                pip install -r requirements.txt
             """
+            }
           }
         }
       }
     }
     stage('validate_catalog_yaml'){
       steps{
-        container('python'){
+        container('cloudify'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             sh """
               python catalog_definition_linter.py
@@ -193,7 +168,7 @@ pipeline{
           container('cloudify'){
              dir("${env.WORKSPACE}/${env.PROJECT}") {
               echo 'Copy artifacts'
-              common.downloadTestReport("/home/centos/nosetests.xml", "${env.TEST_RESULT_PATH}")
+              common.downloadTestReport("/tmp/junit_report.xml", "${env.TEST_RESULT_PATH}")
             }
           }
         }
@@ -201,7 +176,7 @@ pipeline{
     }
     stage('build'){
       steps{
-        container('python'){
+        container('cloudify'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             setupGithubSSHKey()
             sh """
@@ -214,7 +189,7 @@ pipeline{
     }
     stage('validate_built_catalogs'){
       steps{
-        container('python'){
+        container('cloudify'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
             setupGithubSSHKey()
             sh """
@@ -232,7 +207,7 @@ pipeline{
                   usernameVariable: 'ID', 
                   passwordVariable: 'SECRET'
                   )]) {
-              container('python'){
+              container('cloudify'){
                 dir("${env.WORKSPACE}/${env.PROJECT}"){
                   setupGithubSSHKey()
                   sh '''
