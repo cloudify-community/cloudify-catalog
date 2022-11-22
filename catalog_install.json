@@ -12,6 +12,9 @@
         "id" : "tf_infracosts"
     },
     {
-        "id" : "grafana_ansible"
+        "id" : "grafana_ansible", 
+        "inputs" : {
+            "infra_name" : "aws"
+        }
     }
 ]
