@@ -92,6 +92,68 @@ node_templates:
     - type: cloudify.relationships.depends_on
       target: secrets_validation
 
+capabilities:
+
+  capabilities:
+    modules_cost:
+      description: |
+        cost estmation for creating all of the modules
+      value: { get_attribute: [ infracosts, capabilities , modules_cost ] }
+
+    modules_plan:
+      description: |
+        terraform plan for all of the modules
+      value: { get_attribute: [ infracosts, capabilities , modules_plan ] }
+
+    kubernetes_cluster_host:
+      description: |
+        Kubernetes Cluster host
+      value: { get_attribute: [ infracosts, capabilities , kubernetes_cluster_host ] }
+
+    token:
+      description: |
+        Kubernetes Dashboard token
+      value: { get_attribute: [ infracosts, capabilities , token ] }
+
+    dashboard_hostname:
+      description: |
+        Kuberenetes Dashboard hostname
+      value: { get_attribute: [ infracosts, capabilities , dashboard_hostname ] }
+
+    kubernetes_cluster_name:
+      description: |
+        Kubernetes Cluster name
+      value: { get_attribute: [ infracosts, capabilities , kubernetes_cluster_name ] }
+
+    rds_username:
+      description: |
+        RDS PostgreSql username
+      value: { get_attribute: [ infracosts, capabilities , rds_username ] }
+
+    rds_port:
+      description: |
+        RDS PostgreSql port
+      value: { get_attribute: [ infracosts, capabilities , rds_port ] }
+
+    rds_hostname:
+      description: |
+        RDS PostgreSql hostname
+      value: { get_attribute: [ infracosts, capabilities , rds_hostname ] }
+
+    rds_password:
+      description: |
+        RDS PostgreSql password
+      value: { get_attribute: [ infracosts, capabilities , rds_password ] }
+
+    bucket_url:
+      description: |
+        S3 bucket URL
+      value: { get_attribute: [ infracosts, capabilities , bucket_url ] }
+
+    region:
+      description: |
+        EKS region
+      value: { get_attribute: [ infracosts, capabilities , region ] }
 
   
   
