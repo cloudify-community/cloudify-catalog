@@ -41,12 +41,6 @@ inputs:
     type: string
     default: false
 
-  infra_deployment_id:
-    display_label: The infrastructure deployment id
-    description: The blueprint name, the deployment name.
-    type: string
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
-
 node_templates:
 
   # we creating the password for RabbitMQ admin/master user
@@ -60,12 +54,6 @@ node_templates:
       symbols: 3
       use_secret_if_exists: false
 
-  #we creating the prefix for the deployment resources i.e. infrastructure
-  infra_prefix:
-    type: eaas.nodes.UniquePrefixGenerator
-    properties:
-      predefined_value: ""
-
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
   # we point the node to use particular infrastructure cloud provider within 
@@ -76,13 +64,11 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: "blueprint.yaml"
           external_resource: { get_input: infra_exists }
-        deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
-    relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
+        deployment: 
+          inputs: 
+            provider_name: { get_input: infra_name }
   
   # we setting the mariadb port to be open
   secrurity_group_rules:
@@ -94,11 +80,10 @@ node_templates:
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: false
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            rg_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , rg_id ] }
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -123,9 +108,9 @@ node_templates:
                   instances:
                     hosts:
                       instance:
-                        ansible_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
-                        ansible_user:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
-                        ansible_ssh_private_key_file:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+                        ansible_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+                        ansible_user: { get_attribute: [ infrastructure, capabilities, user ] }
+                        ansible_ssh_private_key_file: { get_attribute: [ infrastructure, capabilities, key_content ] }
                         ansible_become: true
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
                 run_data:
@@ -136,7 +121,7 @@ outputs:
 
   mariadb_endpoint:
     description: MariaDB Host IP
-    value: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+    value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
   
   mariadb_port:
     description: MariaDB Port
@@ -148,4 +133,4 @@ outputs:
   
   master_login_command:
     description: Connection to mongo server by mysql client
-    value: { concat : [ "mysql -h ", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, " -u root -p ", { get_attribute: [ master_password, password ] } ] }
+    value: { concat : [ "mysql -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] }, " -u root -p ", { get_attribute: [ master_password, password ] } ] }

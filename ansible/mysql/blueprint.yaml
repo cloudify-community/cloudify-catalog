@@ -21,11 +21,11 @@ inputs:
           - aws
 
   infra_archive:
+    type: string
     display_label: URL for infra zip archive
     description: >
       URL of infra zip file.
-    type: string
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/multicloud/vm/vm.zip
 
   infra_exists:
     display_label: Set if infra exists or not 
@@ -55,65 +55,8 @@ inputs:
     display_label: Mysql app user password
     default: { get_secret: mysql_appuser_password }
 
-  secrets_checker_archive:
-    display_label: URL for secrets checker archive
-    description: > 
-      Component is used for validation if every needed secrets are provided
-    type: string
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_checker/secrets_checker.zip
-
-  aws_access_key_id: 
-    type: string
-    default: { get_secret: aws_access_key_id }
-    hidden: true
-
-  aws_secret_access_key: 
-    type: string
-    hidden: true
-    default: { get_secret: aws_secret_access_key }
-  
-  subscription_id: 
-    type: string
-    default: { get_secret: azure_subscription_id }
-    hidden: true
-    
-  tenant_id:
-    type: string 
-    default: { get_secret: azure_tenant_id }
-    hidden: true
-
-  client_id:
-    type: string
-    default: { get_secret: azure_client_id }
-    hidden: true
-
-  client_secret:
-    type: string 
-    default: { get_secret: azure_client_secret }
-    hidden: true
 
 node_templates:
-
-  secrets_checker:
-    type: cloudify.nodes.Component
-    properties:
-      resource_config:
-        blueprint:
-          blueprint_archive: { get_input: secrets_checker_archive }
-          main_file_name: "blueprint.yaml"
-        deployment:
-          inputs: 
-            tenant_id: { get_input: tenant_id }
-            client_secret: { get_input: client_secret }
-            client_id:  { get_input: client_id }
-            subscription_id:  { get_input: subscription_id }
-            aws_access_key_id: { get_input: aws_access_key_id }
-            aws_secret_access_key: { get_input: aws_secret_access_key }
-
-  infra_prefix:
-    type: eaas.nodes.UniquePrefixGenerator
-    properties:
-      predefined_value: ""
 
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
@@ -125,13 +68,11 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: "blueprint.yaml"
           external_resource: { get_input: infra_exists }
-        deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
-    relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
+        deployment: 
+          inputs: 
+            provider_name: { get_input: infra_name }
   
   # we setting the mariadb port to be open
   secrurity_group_rules:
@@ -143,11 +84,10 @@ node_templates:
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: false
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            rg_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , rg_id ] }
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -182,9 +122,9 @@ node_templates:
                   instances:
                     hosts:
                       instance:
-                        ansible_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
-                        ansible_user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user] }
-                        ansible_ssh_private_key_file: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content] }
+                        ansible_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+                        ansible_user: { get_attribute: [ infrastructure, capabilities, user ] }
+                        ansible_ssh_private_key_file: { get_attribute: [ infrastructure, capabilities, key_content ] }
                         ansible_become: True
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
                 run_data:
@@ -197,11 +137,11 @@ capabilities:
 
   application_endpoint:
     description: The external endpoint of the DB application.
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':3306' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':3306' ] }
   
   mysql_endpoint:
     description: MySQL endpoint
-    value: { concat: [ { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':3306' ] }
+    value: { concat: [ { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':3306' ] }
   
   mysql_password:
     description: MYSQL root password

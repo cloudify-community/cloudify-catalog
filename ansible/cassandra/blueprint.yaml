@@ -39,12 +39,6 @@ inputs:
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
-
-  infra_deployment_id:
-    type: string
-    display_label: The infrastructure deployment id
-    description: The blueprint name, the deployment name.
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
     
 node_templates:
 
@@ -59,12 +53,6 @@ node_templates:
       symbols: 3
       use_secret_if_exists: false
   
-  #we creating the prefix for the deployment resources i.e. infrastructure
-  infra_prefix:
-    type: eaas.nodes.UniquePrefixGenerator
-    properties:
-      predefined_value: ""
-
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
   # we point the node to use particular infrastructure cloud provider within 
@@ -75,13 +63,11 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: "blueprint.yaml"
           external_resource: { get_input: infra_exists }
-        deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
-    relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
+        deployment: 
+          inputs: 
+            provider_name: { get_input: infra_name }
   
   # we setting the postgres ports to be open
   secrurity_group_rules:
@@ -93,11 +79,10 @@ node_templates:
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: false
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            rg_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , rg_id ] }
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -123,9 +108,9 @@ node_templates:
                   instances:
                     hosts:
                       instance:
-                        ansible_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
-                        ansible_user:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
-                        ansible_ssh_private_key_file:  { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+                        ansible_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+                        ansible_user: { get_attribute: [ infrastructure, capabilities, user ] }
+                        ansible_ssh_private_key_file: { get_attribute: [ infrastructure, capabilities, key_content ] }
                         ansible_become: true
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
                 run_data:
@@ -135,7 +120,7 @@ outputs:
 
   cassandra_endpoint:
     description: Cassandra Host IP
-    value: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+    value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
   
   cassandra_port:
     description: Postgres Port
