@@ -94,7 +94,6 @@ node_templates:
 
 capabilities:
 
-  capabilities:
     modules_cost:
       description: |
         cost estmation for creating all of the modules
