@@ -141,12 +141,6 @@ node_templates:
               user: { get_input: agent_user }
               key: { get_attribute: [agent_key, private_key_export] }
             use_sudo: true
-        delete:
-          implementation: fabric.fabric_plugin.tasks.run_script
-          inputs:
-            script_path: scripts/uninstall_docker.sh
-            fabric_env: *fabric_env
-            use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: vm
