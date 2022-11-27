@@ -52,9 +52,9 @@ pipeline{
                 resources:
                   requests:
                     cpu: 1.0
-                    memory: 1Gi
+                    memory: 3Gi
                   limits:
-                    memory: 2Gi
+                    memory: 3.5Gi
                 securityContext:
                   runAsUser: 0
                   privileged: true
