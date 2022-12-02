@@ -9,7 +9,7 @@ class ParseTestData():
             self._yaml_data = yaml.load(file_, Loader=yaml.FullLoader)
         with open(install_path, "rb") as file_:
             self._json_data = json.load(file_)
-        if(verbose): 
+        if(verbose):
             logging.info("YAML: {}".format(self._yaml_data))
             logging.info("JSON: {}".format(self._json_data))
 
@@ -19,7 +19,7 @@ class ParseTestData():
 
     def _get_bps(self):
         bps = [ item['blueprints'] for item in self._yaml_data['topics'] ]
-        bps = [ item for itemw in bps for item in itemw ]  
+        bps = [ item for itemw in bps for item in itemw ]
         return bps
 
     def get_create_deployment_args(self):
@@ -47,7 +47,7 @@ class ParseTestData():
 
     def get_uninstall_args(self):
         args = {}
-        for item in self._json_data: 
+        for item in self._json_data:
             command = [ "cfy", "uninstall", "-f", item.get("id") ]
             args[item.get('id')] =  command
         return args
@@ -59,7 +59,7 @@ class ParseTestData():
             command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path")+"/blueprint.yaml" ]
             args[ blueprint.get("id") ] = command
         return args
-    
+
     def get_blueprints_ids(self):
         bps = self._get_bps()
         ids = []
@@ -73,4 +73,3 @@ if __name__ =="__main__":
     #print(tests.get_blueprints_ids())
     #print(tests.get_upload_args())
     print(tests.get_create_deployment_args())
-
