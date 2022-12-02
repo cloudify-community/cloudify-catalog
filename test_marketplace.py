@@ -33,17 +33,16 @@ def test_install(id):
         logging.info(upload_bp.stdout)
     except Exception as err:
         logging.error(err)
-    try:
-        create_deployment = subprocess.run(
-            args_create_deployment.get(id), stdout=subprocess.PIPE)
-        assert create_deployment.returncode == 0, create_deployment.stdout
-        yield
-        executions_start = subprocess.run(
-            args_executions_start.get(id), stdout=subprocess.PIPE)
-        assert executions_start.returncode == 0, executions_start.stdout
-        yield
-    finally:
-        uninstall_start = subprocess.run(
-            args_uninstall.get(id), stdout=subprocess.PIPE)
-        assert uninstall_start.returncode == 0, uninstall_start.stdout
-        yield
+
+    create_deployment = subprocess.run(
+        args_create_deployment.get(id), stdout=subprocess.PIPE)
+    assert create_deployment.returncode == 0, create_deployment.stdout
+    yield
+    executions_start = subprocess.run(
+        args_executions_start.get(id), stdout=subprocess.PIPE)
+    assert executions_start.returncode == 0, executions_start.stdout
+    yield
+    uninstall_start = subprocess.run(
+        args_uninstall.get(id), stdout=subprocess.PIPE)
+    assert uninstall_start.returncode == 0, uninstall_start.stdout
+    yield

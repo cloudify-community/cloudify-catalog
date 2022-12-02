@@ -83,10 +83,11 @@ pipeline{
     PROJECT = 'cloudify-catalog'
     WORKSPACE = "${env.WORKSPACE}"
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
-    SUFFIX = "6.4.0-.dev1" 
+    SUFFIX = "6.4.0-.dev1"
     TEST_CASE = "${params.TEST_CASE}"
     TEST_RESULT_DIR = "/tmp/data"
     TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/junit_report.xml"
+    ENV_METADATA = "http://169.254.169.254/latest/meta-data/"
   }
   stages{
     stage('prepare'){
