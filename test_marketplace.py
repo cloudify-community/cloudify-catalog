@@ -15,6 +15,21 @@ args_create_deployment = test_data.get_create_deployment_args()
 args_executions_start = test_data.get_executions_start_args()
 args_uninstall = test_data.get_uninstall_args()
 
+#single_blueprint
+import os
+single_blueprint = [os.environ.get('TEST_BLUEPRINT')]
+
+
+@pytest.mark.single_upload
+@pytest.mark.parametrize("id", single_blueprint)
+def test_single_upload(id):
+    if id:
+        if not id in args_upload.keys():
+            exit(-1)
+        test_upload(id)
+    else:
+        raise Exception("Invalid blueprint_id")
+
 
 @pytest.mark.upload
 @pytest.mark.parametrize("id", args_upload.keys())
@@ -33,16 +48,28 @@ def test_install(id):
         logging.info(upload_bp.stdout)
     except Exception as err:
         logging.error(err)
+    try:
+        create_deployment = subprocess.run(
+            args_create_deployment.get(id), stdout=subprocess.PIPE)
+        assert create_deployment.returncode == 0, create_deployment.stdout
+        yield
+        executions_start = subprocess.run(
+            args_executions_start.get(id), stdout=subprocess.PIPE)
+        assert executions_start.returncode == 0, executions_start.stdout
+        yield
+    finally:
+        uninstall_start = subprocess.run(
+            args_uninstall.get(id), stdout=subprocess.PIPE)
+        assert uninstall_start.returncode == 0, uninstall_start.stdout
+        yield
 
-    create_deployment = subprocess.run(
-        args_create_deployment.get(id), stdout=subprocess.PIPE)
-    assert create_deployment.returncode == 0, create_deployment.stdout
-    yield
-    executions_start = subprocess.run(
-        args_executions_start.get(id), stdout=subprocess.PIPE)
-    assert executions_start.returncode == 0, executions_start.stdout
-    yield
-    uninstall_start = subprocess.run(
-        args_uninstall.get(id), stdout=subprocess.PIPE)
-    assert uninstall_start.returncode == 0, uninstall_start.stdout
-    yield
+
+@pytest.mark.single_install
+@pytest.mark.parametrize("id", single_blueprint)
+def test_single_install(id):
+    if id:
+        if not id in args_upload.keys():
+            exit(-1)
+        test_install(id)
+    else:
+        raise Exception("Invalid blueprint_id")

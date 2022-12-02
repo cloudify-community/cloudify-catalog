@@ -73,10 +73,11 @@ pipeline{
   triggers {
     cron(env.BRANCH_NAME == '6.4.0-build' ? '0 */12 * * *' : '')
   }
-  
+
   parameters {
     booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: true, description: 'Test blueprints from marketplace.')
-    choice(name: 'TEST_CASE', choices: "upload\ninstall", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true.')
+    string(name: 'TEST_BLUEPRINT', defaultValue: '', description: 'Blueprint ID to test.')
+    choice(name: 'TEST_CASE', choices: "upload\ninstall\nsingle_upload\nsingle_install", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true, single_{option} takes into account the value from TEST_BLUEPRINT')
   }
 
   environment {
@@ -85,15 +86,17 @@ pipeline{
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1"
     TEST_CASE = "${params.TEST_CASE}"
+    TEST_BLUEPRINT = "${params.TEST_BLUEPRINT}"
     TEST_RESULT_DIR = "/tmp/data"
     TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/junit_report.xml"
-    ENV_METADATA = "http://169.254.169.254/latest/meta-data/"
+    EC2_META_DATA = "http://169.254.169.254/latest/meta-data/"
   }
+
   stages{
     stage('prepare'){
       when { expression { params.TEST_BLUEPRINTS } }
       steps {
-        script{ 
+        script{
           container('cloudify'){
             dir("${env.WORKSPACE}/${env.PROJECT}"){
               common = load "common.groovy"
@@ -145,7 +148,7 @@ pipeline{
     stage('test_blueprints'){
       when { expression { params.TEST_BLUEPRINTS } }
       steps {
-        script { 
+        script {
           buildState = 'FAILURE'
           catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
           'FAILURE') {
@@ -204,8 +207,8 @@ pipeline{
       steps{
         withCredentials([
               usernamePassword(
-                  credentialsId: 'aws-cli', 
-                  usernameVariable: 'ID', 
+                  credentialsId: 'aws-cli',
+                  usernameVariable: 'ID',
                   passwordVariable: 'SECRET'
                   )]) {
               container('cloudify'){
@@ -214,7 +217,7 @@ pipeline{
                   sh '''
                     export ID="$ID"
                     export SECRET="$SECRET"
-                    python upload_artifacts.py 
+                    python upload_artifacts.py
                   '''
             }
           }
