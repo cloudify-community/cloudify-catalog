@@ -54,7 +54,7 @@ def test_install(id):
         assert create_deployment.returncode == 0, create_deployment.stdout
         yield
         executions_start = subprocess.run(
-            args_executions_start.get(id), stdout=subprocess.PIPE)
+            args_executions_start.get(id), stdout=subprocess.PIPE, timeout=900)
         assert executions_start.returncode == 0, executions_start.stdout
         yield
     finally:
