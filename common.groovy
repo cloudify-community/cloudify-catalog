@@ -35,7 +35,8 @@ def testBlueprints(){
     sh """#!/bin/bash
     cfy profiles use \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') -u admin -p admin --skip-credentials-validation --ssl
     export CLOUDIFY_SSL_TRUST_ALL=true
-    pytest --capture=sys --verbose --color=yes --code-highlight=yes -m ${env.TEST_CASE} --junitxml=/tmp/junit_report.xml
+    export PYTHONWARNINGS="ignore:Unverified HTTPS request"
+    pytest --capture=sys --verbose --color=yes --code-highlight=yes -m ${env.TEST_CASE} --junitxml=${env.TEST_RESULT_PATH}
 """
 }
 
@@ -46,12 +47,6 @@ def terminateCloudifyManager(){
     cfy exec start uninstall --force -d \${dep_id}
     cfy dep del -f \${dep_id}
     cfy blu del -f ${env.BP_ID}
-  """
-}
-
-def downloadTestReport(file_source, file_destination){
-  sh """#!/bin/bash 
-  scp -i ~/.ssh/ec2_ssh_key centos@\$(cat capabilities.json | jq '.endpoint.value' | tr -d '"'):${file_source} ${file_destination}
   """
 }
 
