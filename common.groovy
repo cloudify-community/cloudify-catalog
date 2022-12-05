@@ -34,6 +34,7 @@ EOT
 def testBlueprints(){
     sh """#!/bin/bash
     cfy profiles use \$(cat capabilities.json | jq '.endpoint.value' | tr -d '"') -u admin -p admin --skip-credentials-validation --ssl
+    export CLOUDIFY_SSL_TRUST_ALL=true
     pytest --capture=sys --verbose --color=yes --code-highlight=yes -m ${env.TEST_CASE} --junitxml=/tmp/junit_report.xml
 """
 }
