@@ -52,9 +52,9 @@ pipeline{
                 resources:
                   requests:
                     cpu: 1.0
-                    memory: 1Gi
+                    memory: 3Gi
                   limits:
-                    memory: 2Gi
+                    memory: 3.5Gi
                 securityContext:
                   runAsUser: 0
                   privileged: true
@@ -89,7 +89,9 @@ pipeline{
     TEST_BLUEPRINT = "${params.TEST_BLUEPRINT}"
     TEST_RESULT_DIR = "/tmp/data"
     TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/junit_report.xml"
+    EC2_META_DATA = "http://169.254.169.254/latest/meta-data/"
   }
+
   stages{
     stage('prepare'){
       when { expression { params.TEST_BLUEPRINTS } }
@@ -163,18 +165,6 @@ pipeline{
         }
       }
     }
-    }
-    stage('download_test_artifacts'){
-      steps{
-        script{
-          container('cloudify'){
-             dir("${env.WORKSPACE}/${env.PROJECT}") {
-              echo 'Copy artifacts'
-              common.downloadTestReport("/tmp/junit_report.xml", "${env.TEST_RESULT_PATH}")
-            }
-          }
-        }
-      }
     }
     stage('build'){
       steps{
