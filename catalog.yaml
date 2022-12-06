@@ -76,12 +76,12 @@ topics:
 
       - id: EnvironmentAzure
         name: Production-ENV-Azure-CFY
-        path: /tabs/certified_environments/environments/azure
+        path: tabs/certified_environments/environments/azure
         description: Creating Azure environment
 
       - id: EksAWS
         name: EKS-AWS-CFY
-        path: /tabs/certified_environments/services/aws/eks
+        path: tabs/certified_environments/services/aws/eks
         description: Creating EKS service
 
       - id: MinikubeAWS
@@ -334,7 +334,7 @@ topics:
 
       - id: tf_azure_storage
         name: Storage-Azure-TFM
-        path: tabs/erraform/azure_storage
+        path: tabs/terraform/azure_storage
         description: Create an Azure Blob Storage automation
 
       - id: tf_azure_vpc
