@@ -1,0 +1,158 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: >
+  This blueprint creates an AWS infrastructure environment.
+
+imports:
+  - cloudify/types/types.yaml
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+inputs:
+
+  password:
+    type: string
+    description: The password for database user
+    display_label: The password for database user
+    default: 'password'
+    constraints:
+      - pattern: '^[a-zA-Z0-9_.-]*$'
+
+  region:
+    type: string
+    description: AWS region name
+    display_label: AWS region name
+    default: 'us-west-1'
+    constraints:
+      - valid_values:
+        - us-east-1 #US East (N. Virginia)
+        - us-east-2 #US East (Ohio)
+        - us-west-1 #US West (N. California)
+        - us-west-2 #US West (Oregon)
+        - ca-central-1  #Canada (Central)
+        - eu-central-1  #Europe (Frankfurt)
+        - eu-west-1 #Europe (Ireland)
+        - eu-west-2 #Europe (London)
+        - eu-south-1  #Europe (Milan)
+        - eu-west-3 #Europe (Paris)
+        - eu-north-1  #Europe (Stockholm)
+        - ap-northeast-3  #Asia Pacific (Osaka)
+        - ap-northeast-2  #Asia Pacific (Seoul)
+        - ap-southeast-1  #Asia Pacific (Singapore)
+        - ap-southeast-2  #Asia Pacific (Sydney)
+        - ap-northeast-1  #Asia Pacific (Tokyo)
+        
+  secrets_validation_archive:
+    type: string
+    display_label: URL for secrets vallidation zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_validation/secrets_validation.zip
+    hidden: true
+  
+  infracost_api_key: 
+    type: string
+    display_label: Infracost api key
+    description: | 
+      The api key for infracost service
+    hidden: true
+    default: { get_secret: infracost_api_key }
+    
+node_templates:
+
+  #check if secrets existance & value validation
+  secrets_validation:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: secrets_validation_archive }
+          main_file_name: "blueprint.yaml"
+        deployment:
+          inputs: 
+            secrets: [ infracost_api_key, aws_access_key_id, aws_secret_access_key ]
+
+  #install infracosts
+  infracosts:
+    type: cloudify.nodes.Component
+    properties: 
+      resource_config: 
+        blueprint: 
+          blueprint_archive: "main.zip"
+          main_file_name: "blueprint.yaml"
+        deployment:
+          inputs:
+            password: { get_input: password }
+            region_name: { get_input: region } 
+            infra_cost: { get_input: infracost_api_key }
+    relationships:
+    - type: cloudify.relationships.depends_on
+      target: secrets_validation
+
+capabilities:
+
+    modules_cost:
+      description: |
+        cost estmation for creating all of the modules
+      value: { get_attribute: [ infracosts, capabilities , modules_cost ] }
+
+    modules_plan:
+      description: |
+        terraform plan for all of the modules
+      value: { get_attribute: [ infracosts, capabilities , modules_plan ] }
+
+    kubernetes_cluster_host:
+      description: |
+        Kubernetes Cluster host
+      value: { get_attribute: [ infracosts, capabilities , kubernetes_cluster_host ] }
+
+    token:
+      description: |
+        Kubernetes Dashboard token
+      value: { get_attribute: [ infracosts, capabilities , token ] }
+
+    dashboard_hostname:
+      description: |
+        Kuberenetes Dashboard hostname
+      value: { get_attribute: [ infracosts, capabilities , dashboard_hostname ] }
+
+    kubernetes_cluster_name:
+      description: |
+        Kubernetes Cluster name
+      value: { get_attribute: [ infracosts, capabilities , kubernetes_cluster_name ] }
+
+    rds_username:
+      description: |
+        RDS PostgreSql username
+      value: { get_attribute: [ infracosts, capabilities , rds_username ] }
+
+    rds_port:
+      description: |
+        RDS PostgreSql port
+      value: { get_attribute: [ infracosts, capabilities , rds_port ] }
+
+    rds_hostname:
+      description: |
+        RDS PostgreSql hostname
+      value: { get_attribute: [ infracosts, capabilities , rds_hostname ] }
+
+    rds_password:
+      description: |
+        RDS PostgreSql password
+      value: { get_attribute: [ infracosts, capabilities , rds_password ] }
+
+    bucket_url:
+      description: |
+        S3 bucket URL
+      value: { get_attribute: [ infracosts, capabilities , bucket_url ] }
+
+    region:
+      description: |
+        EKS region
+      value: { get_attribute: [ infracosts, capabilities , region ] }
+
+  
+  

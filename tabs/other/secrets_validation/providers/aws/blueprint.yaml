@@ -1,0 +1,60 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-terraform-plugin?version
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+inputs:
+      
+  region_name:
+    type: string
+    description: AWS region name
+    display_label: AWS region name
+    default: 'us-west-1'
+    constraints:
+      - valid_values:
+        - us-east-1 #US East (N. Virginia)
+        - us-east-2 #US East (Ohio) 
+        - us-west-1 #US West (N. California)  
+        - us-west-2 #US West (Oregon) 
+        - ca-central-1  #Canada (Central) 
+        - eu-central-1  #Europe (Frankfurt) 
+        - eu-west-1 #Europe (Ireland) 
+        - eu-west-2 #Europe (London)  
+        - eu-south-1  #Europe (Milan) 
+        - eu-west-3 #Europe (Paris) 
+        - eu-north-1  #Europe (Stockholm) 
+        - ap-northeast-3  #Asia Pacific (Osaka) 
+        - ap-northeast-2  #Asia Pacific (Seoul) 
+        - ap-southeast-1  #Asia Pacific (Singapore) 
+        - ap-southeast-2  #Asia Pacific (Sydney)  
+        - ap-northeast-1  #Asia Pacific (Tokyo) 
+
+node_templates:
+      
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/0.15.1/terraform_0.15.1_linux_amd64.zip
+
+  terraform_module:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        environment_variables:
+          AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
+          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
+        variables:
+          region: { get_input : region_name }
+        source:
+          location: templates.zip
+        source_path: templates
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host

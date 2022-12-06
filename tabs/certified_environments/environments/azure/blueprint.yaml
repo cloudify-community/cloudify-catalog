@@ -1,0 +1,54 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-utilities-plugin
+
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
+inputs:
+
+  azure_location_name:
+    type: string
+    display_label: Azure location
+    description: Select Azure location name
+    default: EastUS
+    constraints:
+      - valid_values:
+          - EastUS
+          - CentralUS
+          - WestUS
+          - WestEurope
+          - CanadaCentral
+
+node_templates:
+  key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { concat: ["RSA-", { get_sys: [deployment, id] }] }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          inputs:
+            store_public_key_material: true
+            store_private_key_material: true
+
+capabilities:
+  cloud_type:
+    description: Cloud provider name
+    value: azure
+  cloud_credentials:
+    description: Cloud credentials
+    value:
+      azure_tenant_id: { get_secret: azure_tenant_id }
+      azure_subscription_id: { get_secret: azure_subscription_id }
+      azure_client_id: { get_secret: azure_client_id }
+      azure_client_secret: { get_secret: azure_client_secret }
+      public_key_content: { get_attribute: [key, public_key_export] }
+      private_key_content: { get_attribute: [key, private_key_export] }
+      region_name: { get_input: azure_location_name }
+

@@ -1,0 +1,246 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-terraform-plugin?version= >=0.15.0
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+inputs:
+
+  password:
+    type: string
+    description: The password for database user
+    display_label: The password for database user
+    default: 'password'
+    constraints:
+      - pattern: '^[a-zA-Z0-9_.-]*$'
+
+  resource_prefix:
+    type: string
+    description: The resource prefix for resources naming
+    display_label: The resource prefix for resources naming
+    default: ''
+    constraints:
+      - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
+
+  region_name:
+    type: string
+    description: AWS region name
+    display_label: AWS region name
+    default: 'us-west-1'
+    constraints:
+      - valid_values:
+        - us-east-1 #US East (N. Virginia)
+        - us-east-2 #US East (Ohio)
+        - us-west-1 #US West (N. California)
+        - us-west-2 #US West (Oregon)
+        - ca-central-1  #Canada (Central)
+        - eu-central-1  #Europe (Frankfurt)
+        - eu-west-1 #Europe (Ireland)
+        - eu-west-2 #Europe (London)
+        - eu-south-1  #Europe (Milan)
+        - eu-west-3 #Europe (Paris)
+        - eu-north-1  #Europe (Stockholm)
+        - ap-northeast-3  #Asia Pacific (Osaka)
+        - ap-northeast-2  #Asia Pacific (Seoul)
+        - ap-southeast-1  #Asia Pacific (Singapore)
+        - ap-southeast-2  #Asia Pacific (Sydney)
+        - ap-northeast-1  #Asia Pacific (Tokyo)
+        
+  infra_cost:
+    type: string
+    display_label: Infracost api key
+    description: | 
+      The api key for infracost service
+    default: { get_secret: infracost_api_key }
+    hidden: true
+
+node_templates:
+
+  prefix:
+    type: eaas.nodes.UniquePrefixGenerator
+    properties:
+      predefined_value: { get_input: resource_prefix }
+
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip
+
+  eks_terraform_module:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      general_executor_process:
+        max_sleep_time: 2500
+      max_stored_filesize: 1500000
+      resource_config:
+        environment_variables:
+          AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
+          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
+        variables:
+          region: { get_input : region_name }
+          prefix: { get_attribute : [prefix, value] }
+        source:
+          location: templates/tf-eks-master.zip
+        source_path: tf-eks-master
+      infracost_config:
+        api_key: { get_secret: infracost_api_key }
+        enable: true
+    relationships:
+      - target: prefix
+        type: cloudify.relationships.depends_on
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        configure:
+          implementation: tf.cloudify_tf.tasks.plan
+          inputs:
+            source: { get_property: [SELF, resource_config, source ] }
+            source_path: { get_property: [SELF, resource_config, source_path ] }
+            force: false
+        start:
+          implementation: tf.cloudify_tf.tasks.infracost
+          inputs:
+            infracost_config: { get_property: [SELF, infracost_config] }
+
+  s3_terraform_module:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        environment_variables:
+          AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
+          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
+        variables:
+          bucket_name: { concat: [ { get_attribute: [ prefix, value ] }, bucket ] }
+          bucket_region: { get_input: region_name }
+        source:
+          location: templates/tf-bucket-master.zip
+        source_path: tf-bucket-master
+      infracost_config:
+        api_key: { get_secret: infracost_api_key }
+        enable: true
+    relationships:
+      - target: prefix
+        type: cloudify.relationships.depends_on
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        configure:
+          implementation: tf.cloudify_tf.tasks.plan
+          inputs:
+            source: { get_property: [SELF, resource_config, source ] }
+            source_path: { get_property: [SELF, resource_config, source_path ] }
+            force: false
+        start:
+          implementation: tf.cloudify_tf.tasks.infracost
+          inputs:
+            infracost_config: { get_property: [SELF, infracost_config] }
+
+  rds_terraform_module:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      general_executor_process:
+        max_sleep_time: 2500
+      max_stored_filesize: 1500000
+      resource_config:
+        environment_variables:
+          AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
+          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
+        variables:
+          prefix: { get_attribute : [prefix, value] }
+          password: { get_input : password }
+        source:
+          location: templates/tf-postgresql-master.zip
+        source_path: tf-postgresql-master
+      infracost_config:
+        api_key: { get_secret: infracost_api_key }
+        enable: true
+    relationships:
+      - target: prefix
+        type: cloudify.relationships.depends_on
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        configure:
+          implementation: tf.cloudify_tf.tasks.plan
+          inputs:
+            source: { get_property: [SELF, resource_config, source ] }
+            source_path: { get_property: [SELF, resource_config, source_path ] }
+            force: false
+        start:
+          implementation: tf.cloudify_tf.tasks.infracost
+          inputs:
+            infracost_config: { get_property: [SELF, infracost_config] }
+
+capabilities:
+  modules_cost:
+    description: |
+      cost estmation for creating all of the modules
+    value:
+      concat:
+        - { get_attribute: [ eks_terraform_module, plain_text_infracost ] }
+        - |
+          .
+        - { get_attribute: [ s3_terraform_module, plain_text_infracost ] }
+        - |
+          .
+        - { get_attribute: [ rds_terraform_module, plain_text_infracost ] }
+  modules_plan:
+    description: |
+      terraform plan for all of the modules
+    value:
+      concat:
+        - { get_attribute: [ eks_terraform_module, plain_text_plan ] }
+        - |
+          .
+        - { get_attribute: [ s3_terraform_module, plain_text_plan ] }
+        - |
+          .
+        - { get_attribute: [ rds_terraform_module, plain_text_plan ] }
+  kubernetes_cluster_host:
+    description: |
+      Kubernetes Cluster host
+    value: { get_attribute: [ eks_terraform_module, outputs, kubernetes_cluster_host ] }
+  token:
+    description: |
+      Kubernetes Dashboard token
+    value: { get_attribute: [ eks_terraform_module, outputs, admin_token ] }
+  dashboard_hostname:
+    description: |
+      Kuberenetes Dashboard hostname
+    value: { get_attribute: [ eks_terraform_module, outputs, dashboard_hostname ] }
+  kubernetes_cluster_name:
+    description: |
+      Kubernetes Cluster name
+    value: { get_attribute: [ eks_terraform_module, outputs, cluster_name ] }
+  rds_username:
+    description: |
+      RDS PostgreSql username
+    value: { get_attribute: [ rds_terraform_module, outputs, rds_username ] }
+  rds_port:
+    description: |
+      RDS PostgreSql port
+    value: { get_attribute: [ rds_terraform_module, outputs, rds_port ] }
+  rds_hostname:
+    description: |
+      RDS PostgreSql hostname
+    value: { get_attribute: [ rds_terraform_module, outputs, rds_hostname ] }
+  rds_password:
+    description: |
+      RDS PostgreSql password
+    value: { get_attribute: [ rds_terraform_module, outputs, rds_password ] }
+  bucket_url:
+    value: { concat: [ 'https://', { s3_terraform_module: [ terraform_module, resources, bucket, instances, 0, attributes, bucket_regional_domain_name ] } ] }
+  region:
+    description: |
+      EKS region
+    value: { get_attribute: [ rds_terraform_module, outputs, region ] }

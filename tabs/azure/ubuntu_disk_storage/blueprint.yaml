@@ -1,0 +1,109 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-azure-plugin?version= >=3.0.10
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+dsl_definitions:
+  client_config: &azure_config
+    subscription_id: { get_secret: azure_subscription_id }
+    tenant_id: { get_secret: azure_tenant_id }
+    client_id: { get_secret: azure_client_id }
+    client_secret: { get_secret: azure_client_secret }
+
+inputs:
+  resource_prefix:
+    type: string
+    display_label: The resource prefix for resources naming
+    description: The resource prefix for resources naming
+    default: ''
+    constraints:
+      - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
+  
+  admin_login: 
+    type: string
+    display_label: The admin login name
+    description:  The admin login name
+    default: cloudify
+    
+  azure_region_name:
+    type: string
+    display_label: Azure region to create resources in
+    description: Azure region to create resources in
+    default: EastUS
+    constraints:
+      - valid_values:
+        - BrazilSouth
+        - FranceCentral
+        - SouthAfricaNorth
+        - AustraliaEast
+        - CanadaCentral
+        - GermanyWestCentral
+        - CentralIndia
+        - CentralUS
+        - NorthEurope
+        - JapanEast
+        - EastUS
+        - NorwayEast
+        - KoreaCentral
+        - EastUS2
+        - UKSouth
+        - SoutheastAsia
+        - SouthCentralUS
+        - WestEurope
+        - EastAsia
+        - USGovVirginia
+        - SwedenCentral
+        - ChinaNorth3
+        - WestUS2
+        - WestUS3
+
+node_templates:
+
+  prefix:
+    type: eaas.nodes.UniquePrefixGenerator
+    properties:
+      predefined_value: { get_input: resource_prefix }
+
+  resource_group:
+    type: cloudify.azure.nodes.ResourceGroup
+    properties:
+      name: { concat: [ { get_attribute: [ prefix, value ] }, ubuntuspotrg ] }
+      location: { get_input: azure_region_name }
+      azure_config: *azure_config
+    relationships:
+      - target: prefix
+        type: cloudify.relationships.depends_on
+
+  ubuntu_disk_storage_deployment:
+    type: cloudify.azure.Deployment
+    properties:
+      client_config: *azure_config
+      location: { get_input: azure_region_name }
+      resource_group_name: { get_attribute: [ resource_group, resource, name ] }
+      params:
+        adminUsername: { get_input: admin_login }
+        adminPasswordOrKey: { get_secret: public_key_content }
+        dnsLabelPrefix: { get_attribute: [ prefix, value ] }
+      template_file: 'templates/ubuntu_disk_storage.json'
+    relationships:
+      - target: resource_group
+        type: cloudify.relationships.depends_on
+      - target: prefix
+        type: cloudify.relationships.depends_on
+
+capabilities:
+  resource_group:
+    value: { get_attribute: [ resource_group, resource, name ] }
+  admin_login:
+    value: { get_input: admin_login }
+  hostname: 
+    value: { get_attribute: [ ubuntu_disk_storage_deployment, outputs, hostname, value ]}
+  ssh_command:
+    value: {get_attribute: [ubuntu_disk_storage_deployment, outputs, sshCommand, value ] }

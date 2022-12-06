@@ -1,0 +1,132 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: Cloudify Redis blueprint. Deploys Redis service with Ansible Cloudify plugin.
+
+imports:
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - cloudify/types/types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-ansible-plugin
+
+inputs:
+
+  infra_name:
+    display_label: Name of the provider to deploy resources
+    description: >
+      Name of infrastructure blueprint to deploy.
+    type: string
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+
+  infra_archive:
+    type: string
+    display_label: URL for infra zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/multicloud/vm/vm.zip
+
+  infra_exists:
+    display_label: Set if infra exists or not 
+    description: >
+      Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
+    type: string
+    default: false
+
+node_templates:
+
+  master_password:
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
+
+  slave_password:
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
+          
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: "blueprint.yaml"
+          external_resource: { get_input: infra_exists }
+        deployment: 
+          inputs: 
+            provider_name: { get_input: infra_name }
+  
+  secrurity_group_rules:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: "security_group.zip"
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: false
+        deployment:
+          inputs:
+            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+
+  redis:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: ansible.cloudify_ansible.tasks.run
+          inputs:
+            site_yaml_path: playbooks/install_redis.yaml
+            sources:
+              foo_group:
+                hosts:
+                  foo_host:
+                    ansible_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+                    ansible_user: { get_attribute: [ infrastructure, capabilities, user ] }
+                    ansible_ssh_private_key_file: { get_attribute: [ infrastructure, capabilities, key_content ] }
+                    ansible_become: true
+                    ansible_ssh_common_args: -o StrictHostKeyChecking=no
+            run_data:
+              slave_password: { get_attribute: [ slave_password, password ] }
+              master_password: { get_attribute: [ master_password, password ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+
+outputs:
+
+  redis_endpoint:
+    description: Redis Host IP
+    value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+  
+  redis_port:
+    description: Redis Port
+    value: "6379"
+  
+  slave_password:
+    description: Redis Slave password
+    value: { get_attribute: [ slave_password, password ] }
+  
+  master_password:
+    description: Redis Master password
+    value: { get_attribute: [ master_password, password ] }
+  
+  test_command:
+    description: Command to test service with the redis-cli tool
+    value: { concat: [ "redis-cli -h", { get_attribute: [ infrastructure, capabilities, endpoint ] } ,"-p 6379 -a", { get_attribute: [ master_password, password ] } ] }

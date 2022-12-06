@@ -1,0 +1,18 @@
+- hosts: all
+  become: true
+  tasks:
+
+    - name: Download and install Docker Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.21.2/docker-compose-Linux-x86_64
+        dest: /usr/bin/docker-compose
+        mode: 0755
+
+    - name: Copy compose file
+      ansible.builtin.template:
+        src: templates/docker-compose.yaml
+        dest: /tmp/docker-compose.yaml
+
+    - name: Run docker compose
+      shell: |
+        docker-compose up -d chdir=/tmp

@@ -1,0 +1,197 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-gcp-plugin?version= >=1.6.0
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+labels:
+  obj-type:
+    values:
+      - vm
+      - service
+
+inputs:
+
+  region:
+    type: string
+    display_label: The GCP region to deploy the application in, such as europe-west1.
+    description: The GCP region to deploy the application in, such as europe-west1.
+    default: 'europe-west1'
+
+  zone:
+    type: string
+    display_label: The GCP zone to deploy the application in, such as europe-west1-b.
+    description: The GCP zone to deploy the application in, such as europe-west1-b.
+    default: 'europe-west1-b'
+
+  image:
+    type: string
+    display_label: URL to the Centos image.
+    description: Centos image.
+    default: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20191210
+    constraints:
+      - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
+
+  instance_type:
+    type: string
+    display_label: A small GCP machine type.
+    description: A small GCP machine type.
+    default: n1-standard-2
+
+  agent_user:
+    type: string
+    display_label: Username
+    description: >
+      The username of the agent running on the instance created from the image.
+    default: 'centos'
+
+  agent_key_name:
+    type: string
+    display_label: Agent key name
+    description: Agent key that will be generated for username
+    default: agent_key
+
+  env_name:
+    type: string
+    display_label: Control parameters for names in resources.
+    description: Control parameters for names in resources.
+    default: 'example'
+
+dsl_definitions:
+
+  client_config: &client_config
+    auth:
+      type: service_account
+      auth_uri: https://accounts.google.com/o/oauth2/auth
+      token_uri: https://accounts.google.com/o/oauth2/token
+      auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs
+      client_x509_cert_url: { get_secret: gcp_client_x509_cert_url }
+      client_email: { get_secret: gcp_client_email }
+      client_id: { get_secret: gcp_client_id }
+      project_id: { get_secret: gcp_project_id }
+      private_key_id: { get_secret: gcp_private_key_id }
+      private_key: { get_secret: gcp_private_key }
+    project: { get_secret: gcp_project_id }
+    zone: { get_input: zone }
+
+node_templates:
+
+  vm:
+    type: cloudify.gcp.nodes.Instance
+    properties:
+      client_config: *client_config
+      agent_config:
+        install_method: none
+        key: { get_attribute: [agent_key, private_key_export] }
+        user: { get_input: agent_user }
+      use_public_ip: true
+      zone: { get_input: zone }
+      external_ip: true
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: firewall
+      - type: cloudify.relationships.depends_on
+        target: subnet
+      - type: cloudify.relationships.depends_on
+        target: agent_key
+      - type: cloudify.relationships.depends_on
+        target: disk
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/key.py
+          executor: central_deployment_agent
+          inputs:
+            user: { get_input: agent_user }
+            ssh_keys:
+              - { get_attribute: [agent_key, public_key_export] }
+
+  disk:
+    type: cloudify.gcp.nodes.Volume
+    properties:
+      client_config: *client_config
+      image: { get_input: image }
+      size: 20
+      boot: true
+
+  firewall:
+    type: cloudify.gcp.nodes.FirewallRule
+    properties:
+      client_config: *client_config
+      allowed:
+        tcp:
+          - 22
+          - 80
+          - 443
+          - 9990
+          - 8080
+          - 2375
+          - 53333
+          - 4566
+          - 4571
+      sources:
+        - 0.0.0.0/0
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: network
+
+  subnet:
+    type: cloudify.gcp.nodes.SubNetwork
+    properties:
+      region: { get_input: region }
+      subnet: 10.11.12.0/22
+      client_config: *client_config
+    relationships:
+      - type: cloudify.gcp.relationships.contained_in_network
+        target: network
+
+  network:
+    type: cloudify.gcp.nodes.Network
+    properties:
+      client_config: *client_config
+      auto_subnets: false
+
+  agent_key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { get_input: agent_key_name }
+        openssh_format: true
+      use_secret_store: true
+      use_secrets_if_exist: true
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: keys.cloudify_ssh_key.operations.create
+          inputs:
+            store_private_key_material: true
+
+groups:
+
+  vm-group:
+    members:
+      - vm
+      - disk
+
+policies:
+
+  vm-group-policy:
+    type: cloudify.policies.scaling
+    properties:
+      default_instances: 1
+    targets: [vm-group]
+
+capabilities:
+
+  endpoint:
+    description: The external endpoint of the application.
+    value: { get_attribute: [ vm, ip ] }
+
+  user:
+    description: user ID.
+    value: { get_input: agent_user }
+
+  key_content:
+    description: Private agent key
+    value: { get_attribute: [agent_key, private_key_export] }

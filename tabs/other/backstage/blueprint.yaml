@@ -1,0 +1,350 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-aws-plugin
+  - plugin:cloudify-fabric-plugin
+
+inputs:
+  cm_archive:
+    type: string
+    display_label: URL for vm zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/cloudify_manager/ec2/ec2.zip
+
+  vm_archive:
+    type: string
+    display_label: URL for vm zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/aws/ec2_without_network/ec2.zip
+
+  network_archive:
+    type: string
+    display_label: URL for network zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/aws/network/network.zip
+
+  region_name:
+    type: string
+    display_label: AWS Region Name
+    description: Select AWS region name
+    default: us-west-1
+    constraints:
+      - valid_values:
+        - us-east-1
+        - us-west-1
+        - us-west-2
+        - eu-west-1
+        - ca-central-1
+
+  install_dir:
+    type: string
+    display_label: Installation directory
+    default: /opt/backstage
+    description: >
+      Directory to install backstage to. Will be created and owned by
+      centos user.
+
+  port:
+    type: integer
+    display_label: Port for the backstage service
+    default: 80
+    description: TCP port for the Backstage frontend to listen on.
+
+  backstage_entities_repo_url:
+    type: string
+    display_label: Backstage Entities github repo URL 
+    default: github.com/cloudify-community/backstage_entities_test.git
+    description: >
+      URL of the GitHub repository the Backstage entity definition should
+      be pushed to. Should not contain 'http' nor 'https' prefix. 
+      User needs to create his/her own repo that has contributor access. 
+
+dsl_definitions:
+  fabric_env: &vm_runner_fabric_env
+    host_string: { get_attribute: [github_runner_vm, capabilities, public_ip ] }
+    user: centos
+    key: { get_attribute: [github_runner_vm, capabilities, private_key ] } 
+
+  fabric_env: &vm_cm_fabric_env
+    host_string: { get_attribute: [cloudify_manager_vm, capabilities, public_ip ] }
+    user: centos
+    key: { get_attribute: [cloudify_manager_vm, capabilities, private_key ] }
+
+  fabric_env: &vm_backstage_fabric_env
+    host_string: { get_attribute: [backstage_vm, capabilities, public_ip ] }
+    user: centos
+    key: { get_attribute: [ backstage_vm, capabilities, private_key ] }
+
+node_templates:
+
+  cloudify_manager_admin_password:
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      uppercase: 1
+      lowercase: 1
+      symbols: -1
+  
+  postgres_password:
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      uppercase: 1
+      lowercase: 1
+      symbols: -1
+
+# AWS network resources for all VMs
+  network:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: false
+          blueprint_archive: { get_input: network_archive }
+          main_file_name: blueprint.yaml
+        deployment:
+          auto_inc_suffix: false
+          inputs:
+            region_name: { get_input: region_name }
+
+# Setup security group reference
+  security_group:
+    type: cloudify.nodes.aws.ec2.SecurityGroup
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: region_name }
+      use_external_resource: true
+      resource_id: { get_attribute: [ network, capabilities, security_group_id ]  }
+      resource_config:
+        GroupName: security_group_cloudify
+        Description: Created by Cloudify
+        VpcId: { get_attribute: [ network, capabilities, vpc_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+# Setup SG rules
+  security_group_rules:
+    type: cloudify.nodes.aws.ec2.SecurityGroupRuleIngress
+    properties:
+      client_config:
+        aws_access_key_id: { get_secret: aws_access_key_id }
+        aws_secret_access_key: { get_secret: aws_secret_access_key }
+        region_name: { get_input: region_name }
+      resource_config:
+        IpPermissions:
+          - IpProtocol: tcp
+            FromPort: 22
+            ToPort: 22
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 5432
+            ToPort: 5432
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 7007
+            ToPort: 7007
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+    relationships:
+    - type: cloudify.relationships.contained_in
+      target: security_group
+
+# # GitHub runner VM
+  github_runner_vm:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: false
+          blueprint_archive: { get_input: vm_archive }
+          main_file_name: blueprint.yaml
+        deployment:
+          auto_inc_suffix: false
+          inputs:
+            instance_type: t2.medium
+            region_name: { get_input: region_name }
+            ssh_key_secret_name: github_runner_vm_ssh_key
+            subnet_id: { get_attribute: [network, capabilities, subnet_id ] }
+            security_group_id: { get_attribute: [network, capabilities, security_group_id ] }
+            ec2_name: github_runner_vm
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+  github_runner_configure:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/github_runner_configure.sh
+            fabric_env:
+              <<: *vm_runner_fabric_env
+            process:
+              env:
+                SSH_PUBLIC_KEY: { concat: [ '"', { get_attribute: [ github_runner_vm, capabilities, public_key ] }, '"' ] }
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: github_runner_vm
+
+
+# Cloudify Manager Service Component
+  cloudify_manager_vm:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: false
+          blueprint_archive: { get_input: cm_archive }
+          main_file_name: blueprint.yaml
+        deployment:
+          auto_inc_suffix: false
+          inputs:
+            region_name: { get_input: region_name }
+            vpc_id: { get_attribute: [network, capabilities, vpc_id] }
+            subnet_id: { get_attribute: [network, capabilities, subnet_id ] }
+            security_group_id: { get_attribute: [network, capabilities, security_group_id ] }
+    relationships:
+    - type: cloudify.relationships.depends_on
+      target: security_group
+            
+  cloudify_manager_resource_upload:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        start:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/cloudify_manager_upload_resources.sh
+            fabric_env:
+              <<: *vm_cm_fabric_env
+            process:
+              env:
+                aws_access_key_id: { get_secret: aws_access_key_id }
+                aws_secret_access_key: { get_secret: aws_secret_access_key }
+                cloudify_host: { get_attribute: [cloudify_manager_vm, capabilities, public_ip ] }
+                cloudify_user: admin
+                cloudify_password: { get_attribute: [ cloudify_manager_admin_password, password ] }
+                github_token: { get_secret: github_token }
+                runner_host: { get_attribute: [github_runner_vm, capabilities, public_ip ] }
+                runner_vm_user: centos
+                runner_root_user: root
+                runner_key_private: { concat: ['"', { get_attribute:  [ github_runner_vm, capabilities, private_key ] }, '"' ] }
+                region_name: { get_input: region_name }
+                backstage_entities_repo_url: { get_input: backstage_entities_repo_url }
+                github_username: { get_secret: github_username }
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: cloudify_manager_vm
+      - type: cloudify.relationships.depends_on
+        target: github_runner_vm
+
+# Backstage VM
+  backstage_vm:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: false
+          blueprint_archive: { get_input: vm_archive }
+          main_file_name: blueprint.yaml
+        deployment:
+          auto_inc_suffix: false
+          inputs:
+            instance_type: t2.large
+            region_name: { get_input: region_name }
+            ssh_key_secret_name: backstage_vm_ssh_key
+            subnet_id: { get_attribute: [network, capabilities, subnet_id ] }
+            security_group_id: { get_attribute: [network, capabilities, security_group_id ] }
+            ec2_name: backstage_vm
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+  backstage_db:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        precreate:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/postgres_install.sh
+            fabric_env:
+              <<: *vm_backstage_fabric_env
+            process:
+              env:
+                POSTGRES_PASSWORD: { get_attribute: [ postgres_password, password ] }
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: backstage_vm
+
+  app:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        precreate:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/backstage_prerequsites.sh
+            fabric_env:
+              <<: *vm_backstage_fabric_env
+            process:
+              env:
+                INSTALL_DIR: { get_input: install_dir }
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/backstage_install.sh
+            fabric_env:
+              <<: *vm_backstage_fabric_env
+            process:
+              env:
+                INSTALL_DIR: { get_input: install_dir }
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/backstage_configure.sh
+            fabric_env:
+              <<: *vm_backstage_fabric_env
+            process:
+              env:
+                INSTALL_DIR: { get_input: install_dir }
+                POSTGRES_PASSWORD: { get_attribute: [ postgres_password, password ] }
+                HOST: { get_attribute: [backstage_vm, capabilities, private_ip ] }
+                HOST_PUBLIC: { get_attribute: [backstage_vm, capabilities, public_ip ] }
+                PORT: { get_input: port }
+                GITHUB_TOKEN: { get_secret: github_token }
+                BACKSTAGE_ENTITIES_REPO_URL: { get_input: backstage_entities_repo_url }
+        start:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: scripts/backstage_start.sh
+            fabric_env: *vm_backstage_fabric_env
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: backstage_vm
+      - type: cloudify.relationships.connected_to
+        target: backstage_db
+
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
+capabilities:
+
+  cloudify_manager_endpoint:
+    description: The endpoint of Cloudify Manager
+    value: { get_attribute: [ cloudify_manager_vm, capabilities, cloudify_manager_endpoint ] }
+
+  backstage_endpoint:
+    description: The endpoint of Backstage
+    value: { concat: [ 'http://', { get_attribute: [ backstage_vm, capabilities, public_ip ] } ] }

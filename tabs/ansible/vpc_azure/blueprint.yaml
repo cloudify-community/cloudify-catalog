@@ -1,0 +1,110 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: >
+  This blueprint creates an AWS infrastructure environment using Ansible.
+  libselinux-python/libselinux-python3 on the manager VM is prerequisite.
+
+imports:
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - plugin:cloudify-ansible-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+inputs:
+
+  region_name:
+      type: string
+      default: EastUS
+      display_label: Azure region name
+      constraints:
+      - valid_values:
+        - BrazilSouth
+        - FranceCentral
+        - SouthAfricaNorth
+        - AustraliaEast
+        - CanadaCentral
+        - GermanyWestCentral
+        - CentralIndia
+        - CentralUS
+        - NorthEurope
+        - JapanEast
+        - EastUS
+        - NorwayEast
+        - KoreaCentral
+        - EastUS2
+        - UKSouth
+        - SoutheastAsia
+        - SouthCentralUS
+        - WestEurope
+        - EastAsia
+        - USGovVirginia
+        - SwedenCentral
+        - ChinaNorth3
+        - WestUS2
+        - WestUS3
+
+node_templates:
+
+  #we creating the prefix for the deployment resources i.e. infrastructure
+  infra_prefix:
+    type: eaas.nodes.UniquePrefixGenerator
+    properties:
+      predefined_value: ""
+
+  # Use ansible Executor node type in order to execute resources/ansible/playbook.yaml during install workflow.
+  # See https://github.com/cloudify-cosmo/cloudify-ansible-plugin/blob/master/plugin.yaml for more information about the properties provided.
+  install-infra-playbook:
+    type: cloudify.nodes.ansible.Executor
+    properties:
+      playbook_path: playbooks/install_vpc.yaml
+      sources: playbooks/inventory.yaml
+      ansible_become: true
+      run_data:
+        resource_group_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_rg" ]}
+        vpc_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_vpc" ]}
+        subnet_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_subnet" ]}
+        location:  { get_input: region_name }
+      ansible_env_vars: &env_vars
+        AZURE_SUBSCRIPTION_ID: { get_secret: azure_subscription_id }
+        AZURE_CLIENT_ID: { get_secret: azure_client_id }
+        AZURE_SECRET: { get_secret: azure_client_secret }
+        AZURE_TENANT: { get_secret: azure_tenant_id }
+      extra_packages: &extra_packages
+        - ansible[azure]==2.9.5
+        - selinux
+        - ndg-httpsclient
+        - pyopenssl
+        - pyasn1
+        - urllib3
+
+  # Override stop lifecycle interface for executing resources/ansible/uninstall-playbook.yaml playbook during uninstall workflow.
+  # Execute ansible.cloudify_ansible.tasks.run task in order to do so.
+  uninstall-infra-playbook:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        stop:
+          implementation: ansible.cloudify_ansible.tasks.run
+          inputs:
+            playbook_path: playbooks/uninstall_vpc.yaml
+            start_at_task: "Deleting resource group"
+            sources: playbooks/inventory.yaml
+            run_data:
+              resource_group_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_rg" ]}
+            ansible_env_vars: *env_vars
+            extra_packages: *extra_packages
+
+capabilities:
+  
+  resource_group_name: 
+    description: Created resource group name.
+    value: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_rg" ]}
+
+  vpc_name:
+    description: Created VPC name.
+    value: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_vpc" ]}
+
+  subnet_name: 
+    description: Created subnet name.
+    value: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_subnet" ]}
+        

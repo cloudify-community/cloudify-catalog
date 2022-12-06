@@ -1,0 +1,297 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: >
+  The blueprint generates SSH public and private keys and stores them in secret store.
+  The public key is used to create Keypair that is attached to the created EC2 instance.
+  In case the SSH key already exists in the secret store they will be used.
+  The blueprint creates VPC, Subnet, Internet Gateway, Security Group, Route Table and EBS.
+  The EC2 instance is created inside the VPC and the EBS is attached to it.
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-aws-plugin
+
+inputs:
+
+  aws_region_name:
+    description: AWS region name
+    display_label: AWS Regionn Name
+    type: string
+    default: us-east-1
+    constraints:
+      - valid_values:
+        - us-east-1 #US East (N. Virginia)
+        - us-west-1 #US West (N. California)
+        - us-west-2 #US West (Oregon)
+        - ca-central-1  #Canada (Central)
+        - eu-west-1 #Europe (Ireland)
+
+  availability_zone_suffix:
+    description: Availability Zone Suffix
+    display_label: Availability Zone
+    type: string
+    default: a
+    constraints:
+      - valid_values:
+        - a
+        - b
+        - c
+
+  availability_zone:
+    description: Availability Zone
+    display_label: Avability Zone
+    type: string
+    default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }
+    hidden: true
+
+  vpc_cidr:
+    description: VPC CIDR
+    display_label: VPC CIDR
+    type: string
+    default: 10.10.0.0/16
+    constraints:
+      - pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}($|/(16|24))$
+
+  public_subnet_cidr:
+    description: Public subnet CIDR
+    display_label: Public Subnet CIDR
+    type: string
+    default: 10.10.0.0/24
+    constraints:
+      - pattern: ^([0-9]{1,3}\.){3}[0-9]{1,3}($|/(16|24))$
+
+  ebs_volume_attachment_device:
+    description: EBS Volume Attachment Device
+    display_label: EBS Volume Attachment Device
+    type: string
+    default: /dev/sdh
+    constraints:
+      - pattern: ^(.+)\/([^\/]+)$
+
+  key_name:
+    description: Key name
+    display_label: Key Name
+    type: string
+    default: test-key
+
+  instance_type:
+    description: EC2 Instance Tpe
+    display_label: Instance Type
+    type: string
+    default: t2.medium
+    constraints:
+      - valid_values:
+        - t2.micro
+        - t2.small
+        - t2.medium
+        - t2.large
+
+  volume_attachment_device:
+    description: Volume Attachment Device
+    display_label: Volume Attachment Device
+    type: string
+    default: /dev/sdh
+    constraints:
+      - pattern: ^(.+)\/([^\/]+)$
+
+  image_id:
+    description: The map between region and image id, it is used in EC2 instance to select the right image id per selected region
+    display_label: AWS ami id
+    type: dict
+    default:
+      ca-central-1: ami-033e6106180a626d0
+      us-east-1: ami-03248a0341eadb1f1
+      us-west-1: ami-01dd5a8ef26e6341d
+      us-west-2: ami-024b56adf74074ca6
+      eu-west-1: ami-0eee6eb870dc1cefa
+    hidden: true
+
+  aws_credentials:
+    description: AWS Credentials
+    display_label: AWS Credentials
+    type: dict
+    hidden: true
+    default: 
+      aws_access_key_id: { get_secret: aws_access_key_id }
+      aws_secret_access_key: { get_secret: aws_secret_access_key }
+      region_name: { get_input: aws_region_name }      
+
+node_templates:
+
+  vpc:
+    type: cloudify.nodes.aws.ec2.Vpc
+    properties:
+      client_config: { get_input: aws_credentials }
+      resource_config:
+        CidrBlock: { get_input: vpc_cidr }
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  internet_gateway:
+    type: cloudify.nodes.aws.ec2.InternetGateway
+    properties:
+      client_config: { get_input: aws_credentials }
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: vpc
+
+  public_subnet:
+    type: cloudify.nodes.aws.ec2.Subnet
+    properties:
+      client_config: { get_input: aws_credentials }
+      resource_config:
+        CidrBlock: { get_input: public_subnet_cidr }
+        AvailabilityZone: { get_input: availability_zone }
+      Tags:
+        - Key: Name
+          Value: MySubnet1
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: vpc
+      - type: cloudify.relationships.depends_on
+        target: internet_gateway
+
+  public_subnet_routetable:
+    type: cloudify.nodes.aws.ec2.RouteTable
+    properties:
+      client_config: { get_input: aws_credentials }
+      Tags:
+        - Key: Name
+          Value: MyRouteTable1
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: vpc
+      - type: cloudify.relationships.connected_to
+        target: public_subnet
+
+  route_public_subnet_internet_gateway:
+    type: cloudify.nodes.aws.ec2.Route
+    properties:
+      resource_config:
+        kwargs:
+          DestinationCidrBlock: '0.0.0.0/0'
+      client_config: { get_input: aws_credentials }
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: public_subnet_routetable
+      - type: cloudify.relationships.connected_to
+        target: internet_gateway
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        stop: {}
+
+  security_group:
+    type: cloudify.nodes.aws.ec2.SecurityGroup
+    properties:
+      client_config: { get_input: aws_credentials }
+      resource_config:
+        GroupName: AWSSDKExample
+        Description: Created by aws-instances-example blueprint.yaml.
+        VpcId: { get_attribute: [ vpc, aws_resource_id] }
+      Tags:
+        - Key: Name
+          Value: MyGroup
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: vpc
+
+  security_group_rules:
+    type: cloudify.nodes.aws.ec2.SecurityGroupRuleIngress
+    properties:
+      client_config: { get_input: aws_credentials }
+      resource_config:
+        IpPermissions:
+         - IpProtocol: "-1"
+           FromPort: -1
+           ToPort: -1
+           IpRanges:
+            - CidrIp: 0.0.0.0/0
+           UserIdGroupPairs: [  { GroupId: { get_attribute: [ security_group, aws_resource_id ] } } ]
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: security_group
+
+  nic:
+    type: cloudify.nodes.aws.ec2.Interface
+    properties:
+      client_config: { get_input: aws_credentials }
+      resource_config:
+        kwargs:
+          Description: Created by aws-instances-example blueprint.yaml.
+          SubnetId: { get_attribute: [ public_subnet, aws_resource_id] }
+          Groups:
+            - { get_attribute: [ security_group, aws_resource_id ] }
+      Tags:
+        - Key: Name
+          Value: MyNIC
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: public_subnet
+      - type: cloudify.relationships.depends_on
+        target: security_group
+
+  ip:
+    type: cloudify.nodes.aws.ec2.ElasticIP
+    properties:
+      client_config: { get_input: aws_credentials }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: nic
+
+  key:
+    type: cloudify.nodes.aws.ec2.Keypair
+    properties:
+      client_config: { get_input: aws_credentials }
+      store_in_runtime_properties: true
+      resource_config:
+        KeyName: { get_input: key_name }
+
+  host:
+    type: cloudify.nodes.aws.ec2.Instances
+    properties:
+      client_config: { get_input: aws_credentials }
+      agent_config:
+        install_method: none
+      resource_config:
+        MaxCount: 1
+        MinCount: 1
+        ImageId: { get_input: [ image_id, { get_input: aws_region_name } ] }
+        InstanceType: { get_input: instance_type }
+        kwargs:
+          KeyName: { get_input: key_name }
+      Tags:
+        - Key: Name
+          Value: Host
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: key
+      - type: cloudify.relationships.depends_on
+        target: nic
+      - type: cloudify.relationships.depends_on
+        target: ip      
+
+  ebs_volume:
+    type: cloudify.nodes.aws.ec2.EBSVolume
+    properties:
+      client_config: { get_input: aws_credentials }
+      device_name: { get_input: volume_attachment_device }
+      resource_config:
+        AvailabilityZone: { get_input: availability_zone }
+        Size: 6
+        kwargs:
+          TagSpecifications:
+            - ResourceType: volume
+              Tags:
+                - Key: First
+                  Value: First Volume
+                - Key: Second
+                  Value: Second Volume
+    relationships:
+      - type: cloudify.relationships.aws.ebs.attachment.connected_to
+        target: host
+
+labels:
+  obj-type: 
+    values: 
+      - aws

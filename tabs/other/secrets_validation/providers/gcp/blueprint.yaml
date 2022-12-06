@@ -1,0 +1,79 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-terraform-plugin
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+inputs:
+
+  project_id:
+    type: string
+    description: Google project id
+    display_label: Google project id 
+    default: 'cloudify-cs'
+
+  region_name:
+    type: string
+    description: AWS region name
+    display_label: AWS region name
+    default: 'us-west1'
+    constraints:
+      - valid_values:
+        - us-west1 #The Dalles, Oregon, North America
+        - us-west2 #Los Angeles, California, North America
+        - us-west3 #Salt Lake City, Utah, North America
+        - us-west4 #Las Vegas, Nevada, North America
+        - us-east1 #Moncks Corner, South Carolina, North America
+        - us-east4 #Ashburn, Virginia, North America
+        - us-central1 #Council Bluffs, Iowa, North America
+        - northamerica-northeast1 #Montreal, Quebec, North America
+        - northamerica-northeast2 #Toronto, Ontario, North America
+        - northamerica-east1 #Osasco, Sao Paulo, Brazil, South America
+        - northamerica-west1 #Santiago, Chile, South America
+        - europe-west1 #St. Ghislain, Belgium, Europe
+        - europe-west2 #London, England, Europe
+        - europe-west3 #Frankfurt, Germany Europe
+        - europe-west4 #Eemshaven, Netherlands, Europe
+        - europe-west6 #Zurich, Switzerland, Europe
+        - europe-central2 #Warsaw, Poland, Europe
+        - europe-north1 #Hamina, Finland, Europe
+        - australia-southeast2 #Melbourne, Australia, APAC
+        - australia-southeast1 #Sydney, Australia, APAC
+        - asia-southeast1 #Jurong West, Singapore, APAC
+        - asia-southeast2 #Jakarta, Indonesia, APAC
+        - asia-south1 #Mumbai, India, APAC
+        - asia-south2 #Delhi, India APAC
+        - asia-northeast1 #Tokyo, Japan, APAC
+        - asia-northeast2 #Osaka, Japan, APAC
+        - asia-northeast3 #Seoul, South Korea, APAC
+        - asia-east1 #Changhua County, Taiwan, APAC
+        - asia-east2 #Hong Kong, APAC
+
+node_templates:
+      
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/0.15.1/terraform_0.15.1_linux_amd64.zip
+
+  terraform_module:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        environment_variables:
+          GOOGLE_CREDENTIALS: { get_secret : gcp_credentials }
+        variables:
+          region: { get_input : region_name }
+          project_name: { get_input: project_id }
+        source:
+          location: templates.zip
+        source_path: templates
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host

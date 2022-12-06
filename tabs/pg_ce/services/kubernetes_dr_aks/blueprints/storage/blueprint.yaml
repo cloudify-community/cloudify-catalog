@@ -1,0 +1,85 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-terraform-plugin?version= >=0.15.0
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+inputs:
+  resource_prefix:
+    type: string
+    display_label: Resource Prefix
+    description: Resource Prefix
+
+  cloud_credentials:
+    type: dict
+    default:
+      azure_tenant_id: { get_secret: azure_tenant_id }
+      azure_subscription_id: { get_secret: azure_subscription_id }
+      azure_client_id: { get_secret: azure_client_id }
+      azure_client_secret: { get_secret: azure_client_secret }
+      public_key_content: { get_secret: public_key_content }
+      private_key_content: { get_secret: private_key_content }
+      region_name: { get_secret: region_name }
+    display_label: Cloud Credentials
+    description: Cloud Credentials
+
+  location_a:
+    type: string
+    display_label: Location A
+    description: Location A
+
+  location_b:
+    type: string
+    display_label: Location B
+    description: Location B
+
+  resource_group_a:
+    type: string
+    display_label: Resource Group A
+    description: The resource group name for resource creating
+
+  resource_group_b:
+    type: string
+    display_label: Resource Group B
+    description: The resource group name for resource creating
+
+node_templates:
+
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip
+
+  storage_tf:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        environment_variables:
+          ARM_SUBSCRIPTION_ID: { get_input: [ cloud_credentials, azure_subscription_id ] }
+          ARM_TENANT_ID: { get_input: [ cloud_credentials, azure_tenant_id ] }
+          ARM_CLIENT_ID: { get_input: [ cloud_credentials,  azure_client_id ] }
+          ARM_CLIENT_SECRET: { get_input: [ cloud_credentials, azure_client_secret ] }
+        variables:
+          resource_prefix: { get_input: resource_prefix }
+          resource_group_a: { get_input: resource_group_a }
+          resource_group_b: { get_input: resource_group_b }
+          location_a: { get_input: location_a }
+          location_b: { get_input: location_b }
+        source:
+          location: templates/tf-blob-master.zip
+        source_path: tf-blob-master
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+
+capabilities:
+  primary_storage_id:
+    value: { get_attribute: [ storage_tf, outputs, primary_id, value ] }
+  failover_storage_id:
+    value: { get_attribute: [ storage_tf, outputs, failover_id, value ] }

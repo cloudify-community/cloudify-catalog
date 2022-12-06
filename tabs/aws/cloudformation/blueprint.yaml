@@ -1,0 +1,145 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-aws-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+inputs:
+
+  aws_region_name:
+    type: string
+    description: AWS Region Name
+    display_label: AWS Region Name
+    default: us-east-1
+    constraints:
+      - valid_values:
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - eu-central-1
+          - eu-west-1
+          - eu-west-2
+          - eu-south-1
+          - eu-west-3
+          - eu-north-1
+          - af-south-1
+          - ap-east-1
+          - ap-south-1
+          - ap-northeast-3
+          - ap-northeast-2
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-northeast-1
+          - ca-central-1
+          - cn-north-1
+          - cn-northwest-1
+          - me-south-1
+          - sa-east-1
+
+  vpc_cidr:
+    description: VPC CIDR
+    display_label: VPC CIDR
+    type: string
+    default: 172.30.0.0/16
+
+  subnet_cidr:
+    description: Subnet CIDR
+    display_label: Subnet CIDR
+    type: string
+    default: 172.30.0.0/24
+
+  agent_key_name:
+    description: Agent Key Name
+    display_label: Agent Key Name
+    type: string
+    default: agent_key
+
+  template_url:
+    description: URL to CloudFormation template
+    display_label: Template URL
+    type: string
+    default: https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/blueprints/5.0.5/cloudformation/template.yaml
+
+  env_name:
+    type: string
+    display_label: Environment Name
+    description: Control parameters for names in resources.
+    default: '-a'
+
+  agent_user:
+    type: string
+    display_label: Agent User
+    description: User to connect to the provisioned EC2
+    default: ec2-user
+
+dsl_definitions:
+
+  client_config: &client_config
+    aws_access_key_id: { get_secret: aws_access_key_id }
+    aws_secret_access_key: { get_secret: aws_secret_access_key }
+    region_name: { get_input: aws_region_name }
+
+node_templates:
+
+  two_tier_keypair:
+    type: cloudify.nodes.aws.ec2.Keypair
+    properties:
+      client_config: *client_config
+      resource_config:
+        KeyName: { concat: [ 'two_tier_key', { get_input: env_name } ] }
+        PublicKeyMaterial: { get_attribute: [agent_key, public_key_export] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: agent_key
+
+  two_tier_stack:
+    type: cloudify.nodes.aws.CloudFormation.Stack
+    properties:
+      client_config: *client_config
+      resource_config:
+        kwargs:
+          StackName: { concat: [ 'Two-Tier-Sample-Stack', { get_input: env_name } ] }
+          Parameters:
+            - ParameterKey: InstanceType
+              ParameterValue: t2.small
+            - ParameterKey: KeyName
+              ParameterValue: { concat: [ 'two_tier_key', { get_input: env_name } ] }
+            - ParameterKey: VpcCIDR
+              ParameterValue: { get_input: vpc_cidr }
+            - ParameterKey: SubnetCIDR
+              ParameterValue: { get_input: subnet_cidr }
+          TemplateURL: { get_input: template_url }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: two_tier_keypair
+
+  agent_key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { get_input: agent_key_name }
+        openssh_format: true
+      use_secret_store: true
+      use_secrets_if_exist: true
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: keys.cloudify_ssh_key.operations.create
+          inputs:
+            store_private_key_material: true
+
+capabilities:
+
+  endpoint:
+    description: The external endpoint of the application.
+    value: { get_attribute: [ two_tier_stack, Outputs, 0, OutputValue ] }
+
+  user:
+    description: user ID.
+    value: { get_input: agent_user }
+
+  key_content:
+    description: Private agent key
+    value: { get_attribute: [agent_key, private_key_export] }

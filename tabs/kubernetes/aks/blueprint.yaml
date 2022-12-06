@@ -1,0 +1,304 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: >
+  This blueprint create a managed cluster.
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-azure-plugin?version= >=3.3.0
+  - plugin:cloudify-kubernetes-plugin?version= >=2.7.0
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
+inputs:
+  location:
+    description: Azure Location
+    display_label: Location
+    type: string
+    required: true
+    default: eastus2
+
+  resource_group_name_preffix:
+    description: Resource Group Name prefix
+    display_label: Resource Group Name
+    type: string
+    default: aks-test-rg
+
+  resource_suffix:
+    description: Resource Suffix to be used, must be a letter.
+    display_label: Resource Suffix
+    type: string
+    default: a
+
+  resource_group_name:
+    description: Resource Group name, combination of prefix and suffix
+    type: string
+    default: { concat: [ { get_input: resource_group_name_preffix }, { get_input: resource_suffix } ] }
+    hidden: true
+
+  managed_cluster_name_preffix:
+    description: Managed Cluster Name preffix
+    display_label: Managed Cluster Name Preffix
+    type: string
+    default: aks-test-mc
+
+  managed_cluster_name:
+    description: Managed Cluster Name, combination of prefix and suffix
+    type: string
+    default: { concat: [ { get_input: managed_cluster_name_preffix }, { get_input: resource_suffix } ] }
+    hidden: true
+
+  service_account_name:
+    description: Service Account name
+    display_label: Service Account Name
+    type: string
+    default: examples-user
+
+  service_account_namespace:
+    description: Service Account namespace
+    display_label: Service Account Namespace
+    type: string
+    default: default
+
+  agent_key_name:
+    description: Agent Key Name
+    display_label: Agent Key Name
+    type: string
+    default: agent_key
+
+dsl_definitions:
+  azure_config: &azure_config
+    subscription_id: { get_secret: azure_subscription_id }
+    tenant_id: { get_secret: azure_tenant_id }
+    client_id: { get_secret: azure_client_id }
+    client_secret: { get_secret: azure_client_secret }
+
+  resource_config: &resource_config
+    location: { get_input: location }
+    tags:
+      Name: { concat: [ "AKS_Test", { get_input: resource_suffix } ] }
+      tier: "Testing"
+    kubernetes_version: ""
+    dns_prefix: { concat: [ "akstest", { get_input: resource_suffix } ] }
+    agent_pool_profiles:
+      - name: { concat: [ "nodepool1", { get_input: resource_suffix } ] }
+        count: 3
+        vmSize: "Standard_DS2_v2"
+        osType: "Linux"
+        type: "VirtualMachineScaleSets"
+        availabilityZones:
+          - "1"
+          - "2"
+          - "3"
+        # enableNodePublicIP: true
+        mode: "System"
+    linux_profile:
+      adminUsername: "azureuser"
+      ssh:
+        publicKeys:
+          - keyData: { get_attribute: [agent_key, public_key_export] }
+    network_profile:
+      loadBalancerSku: "standard"
+      outboundType: "loadBalancer"
+      loadBalancerProfile:
+        managedOutboundIps:
+          count: 2
+    service_principal_profile:
+      clientId: { get_secret: client_id }
+      secret: { get_secret: client_secret }
+    addon_profiles: {}
+    enable_rbac: true
+
+node_templates:
+
+  resource_group:
+    type: cloudify.nodes.azure.ResourceGroup
+    properties:
+      name: { get_input: resource_group_name }
+      location: { get_input: location }
+      client_config: *azure_config
+
+  managed_cluster:
+    type: cloudify.nodes.azure.compute.ManagedCluster
+    properties:
+      resource_group: { get_input: resource_group_name }
+      name: { get_input: managed_cluster_name }
+      resource_config: *resource_config
+      client_config: *azure_config
+      store_kube_config_in_runtime: true
+    relationships:
+      - type: cloudify.relationships.azure.contained_in_resource_group
+        target: resource_group
+      - type: cloudify.relationships.depends_on
+        target: agent_key
+
+  kubernetes_master:
+    type: cloudify.kubernetes.nodes.Master
+    properties:
+      configuration: &kubernetes_master_configuration
+        file_content: { get_attribute: [ managed_cluster, kubeconf ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: managed_cluster
+
+  new_service_account:
+    type: cloudify.kubernetes.resources.ServiceAccount
+    properties:
+      client_config:
+        configuration: *kubernetes_master_configuration
+      definition:
+        apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+          name: { get_input: service_account_name }
+          namespace: { get_input: service_account_namespace }
+      options:
+        namespace: { get_input: service_account_namespace }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: kubernetes_master
+
+  new_role_binding:
+    type: cloudify.kubernetes.resources.RoleBinding
+    properties:
+      client_config:
+        configuration: *kubernetes_master_configuration
+      definition:
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
+        metadata:
+          name: { get_input: service_account_name }
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: cluster-admin
+        subjects:
+          - kind: ServiceAccount
+            name: { get_input: service_account_name }
+            namespace: { get_input: service_account_namespace }
+      options:
+        namespace: { get_input: service_account_namespace }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: kubernetes_master
+
+  secret:
+    type: cloudify.kubernetes.resources.CustomBlueprintDefinedResource
+    properties:
+      client_config:
+        configuration: *kubernetes_master_configuration
+      definition:
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: {get_attribute: [new_service_account, kubernetes, secrets, 0, name]}
+      api_mapping:
+        create:
+          api: CoreV1Api
+          method: create_namespaced_secret
+          payload: V1Secret
+        read:
+          api: CoreV1Api
+          method: read_namespaced_secret
+        update:
+          api: CoreV1Api
+          method: replace_namespaced_secret
+          payload: V1Secret
+        delete:
+          api: CoreV1Api
+          method: delete_namespaced_secret
+          payload: V1DeleteOptions
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: kubernetes_master
+      - type: cloudify.relationships.depends_on
+        target: new_role_binding
+      - type: cloudify.relationships.depends_on
+        target: new_service_account
+
+  store_token:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/store_kube_token_and_config.py
+          executor: central_deployment_agent
+          inputs:
+            kube_token: { get_attribute: [ secret, kubernetes, data, token ] }
+            kube_config: { get_attribute: [ managed_cluster, kubeconf ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: secret
+
+  sanity_pod:
+    type: cloudify.kubernetes.resources.FileDefinedResource
+    properties:
+      client_config:
+        configuration:
+          api_options:
+            host: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }
+            api_key: { get_attribute: [ store_token, token ] }
+            debug: false
+            verify_ssl: false
+      validate_resource_status: true
+      file:
+        resource_path: resources/template.yaml
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: store_token
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        precreate: {}
+        create:
+          implementation: kubernetes.cloudify_kubernetes.tasks.file_resource_create
+        configure: {}
+        start:
+          implementation: kubernetes.cloudify_kubernetes.tasks.file_resource_delete
+        poststart: {}
+        prestop: {}
+        stop: {}
+        delete: {}
+        postdelete: {}
+
+  agent_key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { get_input: agent_key_name }
+        openssh_format: true
+      use_secret_store: true
+      use_secrets_if_exist: true
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: keys.cloudify_ssh_key.operations.create
+          inputs:
+            store_private_key_material: true
+
+capabilities:
+
+  kubernetes_cluster_host:
+    description: Kubernetes cluster host
+    value: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }
+
+  token:
+    description: Token
+    value: { get_attribute: [ store_token, token ] }
+
+  ssl_ca_cert:
+    description: SSL CA certificate
+    value: { get_attribute: [ store_token, ssl_ca_cert ] }
+
+  connection_details:
+    description: Connection details
+    value: *kubernetes_master_configuration
+
+outputs:
+
+  kubernetes_cluster_host:
+    description: Kubernetes endpoint
+    value: { get_attribute: [managed_cluster, kubeconf, clusters, 0, cluster, server ] }

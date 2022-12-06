@@ -1,0 +1,123 @@
+- hosts: all
+  connection: local
+  vars:
+    vpc_name: "Cloudify_virtual_machine_example_vpc_{{ resource_suffix }}"
+    subnet_name: "Cloudify_virtual_machine_example_subnet_{{ resource_suffix }}"
+    igw_name: "Cloudify_virtual_machine_example_igw_{{ resource_suffix }}"
+    count: 1
+
+  tasks:
+    # If vpc with same tag exist we fail.
+    - name: Check if vpc exists
+      ec2_vpc_net_info:
+        filters:
+          "tag:Name": "{{ vpc_name }}"
+      register: describe_vpc
+
+    - name: Create VPC
+      ec2_vpc_net:
+        name: "{{ vpc_name }}"
+        cidr_block: 10.10.0.0/16
+        multi_ok: no
+      register: create_vpc
+      when: describe_vpc["vpcs"] == []
+
+    - name: "set fact: VPC ID"
+      set_fact:
+        vpc_id: "{{ create_vpc.vpc.id }}"
+      when: describe_vpc["vpcs"] == []
+
+    - name: "set fact: VPC ID"
+      set_fact:
+        vpc_id: "{{ describe_vpc.vpcs[0].id }}"
+      when: describe_vpc["vpcs"] != []
+
+    # If subnet with same tag exist we fail.
+    - name: Check if vpc subnet exists
+      ec2_vpc_subnet_info:
+        filters:
+          "vpc-id": "{{ vpc_id }}"
+          "cidr-block": 10.10.4.0/24
+          "availability-zone": "{{ availability_zone }}"
+      register: describe_subnet
+
+    - name: Create VPC subnet
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpc_id }}"
+        cidr: 10.10.4.0/24
+        az: "{{ availability_zone }}"
+        tags:
+          Name: "{{ subnet_name }}"
+      register: create_vpc_subnet
+      when: describe_subnet["subnets"] == []
+
+    - name: "set fact: VPC subnet ID"
+      set_fact:
+        vpc_subnet_id:  "{{ create_vpc_subnet.subnet.id }}"
+      when: describe_subnet["subnets"] == []
+
+    - name: "set fact: VPC subnet ID"
+      set_fact:
+        vpc_subnet_id:  "{{ describe_subnet.subnets[0].id }}"
+      when: describe_subnet["subnets"] != []
+
+    # If internet gateway with same tag exist we fail.
+    - name: Check if internet gateway exists
+      ec2_vpc_igw_info:
+        filters:
+          "attachment.vpc-id": "{{ vpc_id }}"
+      register: describe_internet_gateway
+
+    - name: create internet gateway
+      ec2_vpc_igw:
+        vpc_id: "{{ vpc_id }}"
+        tags:
+          Name: "{{ igw_name }}"
+      register: create_gateway
+      when: describe_internet_gateway["internet_gateways"] == []
+
+    - name: "Set fact: Gateway ID"
+      set_fact:
+        internet_gateway_id: "{{ create_gateway.gateway_id }}"
+      when: describe_internet_gateway["internet_gateways"] == []
+
+    - name: "Set fact: Gateway ID"
+      set_fact:
+        internet_gateway_id:  "{{ describe_internet_gateway.internet_gateways[0].internet_gateway_id }}"
+      when: describe_internet_gateway["internet_gateways"] != []
+
+    # public route table that routes through the internet gateway - attach it to public subnet
+    - name: Create route table
+      ec2_vpc_route_table:
+        vpc_id: "{{ vpc_id }}"
+        tags:
+          Name: "{{ vpc_name }}_public"
+        subnets:
+          - "{{ vpc_subnet_id }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{ internet_gateway_id }}"
+      register: create_route_table
+
+    - name: "Set fact: route_table_id"
+      set_fact:
+        route_table_id: "{{ create_route_table.route_table.id }}"
+
+    - name: "Set fact: output dictionary"
+      set_fact:
+        output_dict:
+          vpc_id: "{{ vpc_id }}"
+          vpc_name: "{{ vpc_name }}"
+          subnet_id: "{{ vpc_subnet_id }}"
+          internet_gateway_id: "{{internet_gateway_id}}"
+          route_table_id: "{{route_table_id}}"
+
+    - name: Create /tmp/vpc-example-vars.json
+      file:
+        name: '/tmp/vpc-example-vars.json'
+        state: touch
+
+    - name: Write variables to /tmp/vpc-example-vars.json
+      copy:
+        content: "{{ output_dict | to_nice_json }}"
+        dest: "/tmp/vpc-example-vars.json"

@@ -1,0 +1,103 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: >
+  This blueprint creates infrastructure using Terraform.
+
+imports:
+  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - plugin:cloudify-terraform-plugin
+  - plugin:cloudify-utilities-plugin
+
+labels:
+  csys-obj-type:
+    values:
+      - service
+
+inputs:
+
+  azure_region_name:
+    type: string
+    display_label: Azure location
+    description: Select Azure location name
+    default: EastUS
+    constraints:
+      - valid_values:
+          - EastUS
+          - CentralUS
+          - WestUS
+          - WestEurope
+          - CanadaCentral
+
+  module_source:
+    type: string
+    display_label: Module URL source
+    default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
+
+  module_source_path:
+    type: string
+    display_label: Terraform module path
+    default: "template/modules/azure/public_vm/"
+
+  tflint_config:
+    type: dict
+    display_label: TFLint source URL
+    default:
+      enable: true
+      installation_source: https://github.com/terraform-linters/tflint/releases/download/v0.34.1/tflint_linux_amd64.zip
+    description: |
+      When enable true you must add installation source:
+      Example:
+      enable: true
+      installation_source: 'https://github.com/terraform-linters/tflint/releases/download/v0.34.1/tflint_linux_amd64.zip'
+
+
+node_templates:
+
+  key:
+    type: cloudify.keys.nodes.RSAKey
+    properties:
+      resource_config:
+        key_name: { concat: ["RSA-", { get_sys: [deployment, id] }] }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          inputs:
+            store_public_key_material: true
+            store_private_key_material: true
+
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        use_existing_resource: false
+      terraform_config: {}
+
+  terraform_module:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      tflint_config: { get_input: tflint_config }
+      resource_config:
+        provider:
+          providers: []
+        variables:
+          region: { get_input: azure_region_name }
+          subscription_id: { get_secret: azure_subscription_id }
+          tenant_id: { get_secret: azure_tenant_id }
+          client_id: { get_secret: azure_client_id }
+          client_secret: { get_secret: azure_client_secret }
+          admin_key_public: { get_attribute: [key, public_key_export] }
+          admin_user: admin
+        source:
+          location: { get_input: module_source }
+        source_path: { get_input: module_source_path }
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+      - target: key
+        type: cloudify.relationships.depends_on
+
+capabilities:
+  outputs:
+    value: { get_attribute: [ terraform_module, outputs] }
+  plan:
+    value: { get_attribute: [ terraform_module, plan] }

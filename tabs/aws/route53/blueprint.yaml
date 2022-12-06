@@ -1,0 +1,181 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-aws-plugin
+
+inputs:
+  aws_region_name:
+    description: AWS Region Name
+    display_label: AWS Region Name
+    type: string
+    default: us-east-1
+    constraints:
+      - valid_values:
+          - us-east-1 #US East (N. Virginia)
+          - us-east-2 #US East (Ohio)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-central-1  #Europe (Frankfurt)
+          - eu-west-1 #Europe (Ireland)
+          - eu-west-2 #Europe (London)
+          - eu-south-1  #Europe (Milan)
+          - eu-west-3 #Europe (Paris)
+          - eu-north-1  #Europe (Stockholm)
+          - ap-northeast-3  #Asia Pacific (Osaka)
+          - ap-northeast-2  #Asia Pacific (Seoul)
+          - ap-southeast-1  #Asia Pacific (Singapore)
+          - ap-southeast-2  #Asia Pacific (Sydney)
+          - ap-northeast-1  #Asia Pacific (Tokyo)
+
+  availability_zone_suffix:
+    display_label: Availability Zone Suffix
+    description: Availability Zone Suffix
+    type: string
+    default: a
+    constraints:
+      - valid_values:
+          - a
+          - b
+          - c
+
+  availability_zone:
+    display_label: The availability zone in the AWS Region.
+    description: The availability zone in the AWS Region.
+    type: string
+    default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }
+    hidden: true
+
+  public_subnet_cidr:
+    type: string
+    display_label: Pubic Subnet CIDR
+    description: CIDR for public subnet
+    default: '10.0.0.0/24'
+    constraints:
+      - pattern: ([0-9]{1,3}\.){3}[0-9]{1,3}($|/(16|24))
+
+  vpc_cidr:
+    type: string
+    display_label: VPC CIDR
+    description: CIDR VPC assigned to
+    default: '10.0.0.0/16'
+    constraints:
+      - pattern: ([0-9]{1,3}\.){3}[0-9]{1,3}($|/(16|24))
+
+dsl_definitions:
+
+  client_config: &client_config
+    aws_access_key_id: { get_secret: aws_access_key_id }
+    aws_secret_access_key: { get_secret: aws_secret_access_key }
+    region_name: { get_input: aws_region_name }
+
+node_templates:
+
+  dns_record_set_2:
+    type: cloudify.nodes.aws.route53.RecordSet
+    properties:
+      client_config: *client_config
+      resource_config:
+        kwargs: {}
+    relationships:
+      - type: cloudify.relationships.aws.route53.record_set.connected_to
+        target: dns_hosted_zone
+      - type: cloudify.relationships.depends_on
+        target: instance
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        precreate:
+          implementation: aws.cloudify_aws.route53.resources.record_set.prepare
+          inputs:
+            resource_config:
+              Action: CREATE
+              ResourceRecordSet:
+                Name: { concat: ["dev.", { get_property: [dns_hosted_zone, resource_id] }] }
+                Type: !!str TXT
+                TTL: !!int 60
+                ResourceRecords:
+                  - Value: { concat: [ '"', { get_attribute: [ instance, ip ] }, '"' ] }
+
+  dns_record_set_1:
+    type: cloudify.nodes.aws.route53.RecordSet
+    properties:
+      client_config: *client_config
+      resource_config:
+        kwargs:
+          Action: UPSERT
+          ResourceRecordSet:
+            Name: { concat: ["staging.", { get_property: [dns_hosted_zone, resource_id] }] }
+            Type: !!str TXT
+            TTL: !!int 60
+            ResourceRecords:
+              - Value: '"Created using Cloudify"'
+    relationships:
+      - type: cloudify.relationships.aws.route53.record_set.connected_to
+        target: dns_hosted_zone
+
+  dns_hosted_zone:
+    type: cloudify.nodes.aws.route53.HostedZone
+    properties:
+      resource_id: !!str getcloudify.org
+      client_config: *client_config
+      resource_config:
+        kwargs:
+          HostedZoneConfig:
+            Comment: !!str Cloudify-generated DNS Hosted Zone
+            PrivateZone: !!bool true
+          VPC:
+            VPCRegion: { get_input: aws_region_name }
+            VPCId: { get_attribute: [ dns_vpc, aws_resource_id ] }
+    relationships:
+      - type: cloudify.relationships.aws.route53.hosted_zone.connected_to
+        target: dns_vpc
+
+  instance:
+    type: cloudify.nodes.aws.ec2.Instances
+    properties:
+      agent_config:
+        install_method: none
+      resource_config:
+        MaxCount: 1
+        MinCount: 1
+        ImageId: { get_attribute: [ ubuntu_trusty_ami, aws_resource_id ] }
+        InstanceType: m3.large
+      client_config: *client_config
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: dns_subnet
+      - type: cloudify.relationships.depends_on
+        target: ubuntu_trusty_ami
+
+  ubuntu_trusty_ami:
+    type: cloudify.nodes.aws.ec2.Image
+    properties:
+      resource_config:
+        kwargs:
+          Filters:
+            - Name: name
+              Values:
+                - 'ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20170727'
+            - Name: owner-id
+              Values:
+                - '099720109477'
+      client_config: *client_config
+
+  dns_subnet:
+    type: cloudify.nodes.aws.ec2.Subnet
+    properties:
+      resource_config:
+        CidrBlock: { get_input: public_subnet_cidr }
+        AvailabilityZone: { get_input: availability_zone }
+      client_config: *client_config
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: dns_vpc
+
+  dns_vpc:
+    type: cloudify.nodes.aws.ec2.Vpc
+    properties:
+      resource_config:
+        CidrBlock: { get_input: vpc_cidr }
+      client_config: *client_config

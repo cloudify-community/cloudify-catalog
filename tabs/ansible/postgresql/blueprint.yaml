@@ -1,0 +1,130 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: Cloudify PostgreSQL blueprint. Deploys PostgreSQL service with Ansible Cloudify plugin.
+
+imports:
+  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - cloudify/types/types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-ansible-plugin
+
+inputs:
+
+  infra_name:
+    display_label: Name of the provider to deploy resources
+    description: >
+      Name of infrastructure blueprint to deploy.
+    type: string
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+
+  infra_archive:
+    type: string
+    display_label: URL for infra zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/multicloud/vm/vm.zip
+
+  infra_exists:
+    display_label: Set if infra exists or not 
+    description: >
+      Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
+    type: string
+    default: false
+
+node_templates:
+
+  # we creating the password for postgres admin/master user
+  master_password:
+    type: cloudify.nodes.PasswordSecret
+    properties:
+      length: 12
+      uppercase: 0
+      lowercase: 7
+      digits: 2
+      symbols: 3
+      use_secret_if_exists: false
+
+  # deployment of the infrastructure, we pass the URL as a blueprint archive
+  # the node will automatically fetch the file from the URL host and unzip it
+  # we point the node to use particular infrastructure cloud provider within 
+  # main_file_name param by setting infra_name input as the file name value
+  infrastructure:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: { get_input: infra_archive }
+          main_file_name: "blueprint.yaml"
+          external_resource: { get_input: infra_exists }
+        deployment: 
+          inputs: 
+            provider_name: { get_input: infra_name }
+  
+  # we setting the postgres port to be open
+  secrurity_group_rules:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: "security_group.zip"
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          external_resource: false
+        deployment:
+          inputs:
+            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
+
+  # deployment of the service is made by ansible plugin which run the code 
+  # inside the 'install_postgres.yaml' playbook
+  # we enter the master_password value as a variable
+  # we used this variable in the 'config/set-password.sql.j2' template
+  postgres:
+    type: cloudify.nodes.ansible.Playbook
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        poststart: {}
+    relationships:
+      - type: cloudify.ansible.relationships.run_on_host
+        target: infrastructure
+        source_interfaces:
+          cloudify.interfaces.relationship_lifecycle:
+            establish:
+              inputs:
+                playbook_path: playbooks/install_postgres.yaml
+                sources:
+                  instances:
+                    hosts:
+                      instance:
+                        ansible_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+                        ansible_user: { get_attribute: [ infrastructure, capabilities, user ] }
+                        ansible_ssh_private_key_file: { get_attribute: [ infrastructure, capabilities, key_content ] }
+                        ansible_become: true
+                        ansible_ssh_common_args: -o StrictHostKeyChecking=no
+                run_data:
+                  master_password: { get_attribute: [ master_password, password ] }
+
+outputs:
+
+  redis_endpoint:
+    description: Postgres Host IP
+    value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+  
+  redis_port:
+    description: Postgres Port
+    value: "5432"
+    
+  master_password:
+    description: Postgres Master password
+    value: { get_attribute: [ master_password, password ] }
+
+  login_command:
+    description: Connection to postgres server by psql client
+    value: { concat : [ "psql -U postgres -h", { get_attribute: [ infrastructure, capabilities, endpoint ] } ] }
+  
