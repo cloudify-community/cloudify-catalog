@@ -1,1 +1,0 @@
-https://github.com/cloudify-community/blueprint-examples/tree/cdca92e5abdc799bff86d323207df43c8bc2f756/gcp-example-network

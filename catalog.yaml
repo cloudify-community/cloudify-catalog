@@ -7,6 +7,13 @@ target_path: https://repository.cloudifysource.org/cloudify/blueprints
 github_url: https://github.com/cloudify-community/cloudify-catalog/tree
 raw_github_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog
 
+files:
+  - id: cloud-setup-schema
+    target_path: getting_started/cloudSetup.schema.json
+
+  - id: getting-started-schema
+    target_path: getting_started/cloudSetup.schema.json
+
 topics:
   - name: getting_started
     target_path: s3_json_file
