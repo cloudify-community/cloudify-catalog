@@ -281,7 +281,7 @@ topics:
 
       - id: instance-Ubuntu-Azure-Plugin
         name: VM-Ubuntu-Azure-CFY
-        path: tabs/azure/instance
+        path: tabs/azure/vm
         description: This blueprint starts a Ubuntu VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
 
       - id: Instance-Ubuntu-Spot-Arm
