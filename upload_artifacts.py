@@ -145,10 +145,10 @@ def main():
     #upload catalog tabs directory
     upload_directory(BUILD_DIRECTORY, s3_bucket_name, s3_bucket_directory)
     print_catalogs_urls(BUILD_DIRECTORY, base_url, s3_bucket_directory)
-    
-    # upload getting started directory
-    s3_bucket_directory = "{}".format(
-        catalog[S3_GETTING_STARTED_DIRECTORY])
+
+    # # upload getting started directory
+    s3_bucket_directory = "{}/{}".format(
+        catalog[S3_GETTING_STARTED_DIRECTORY], target_path_subfolder)
     upload_directory(GETTING_STARTED_DIRECTORY, s3_bucket_name, s3_bucket_directory, True)
     print_catalogs_urls(GETTING_STARTED_DIRECTORY, base_url, s3_bucket_directory, True)
 
