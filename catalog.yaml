@@ -1,10 +1,18 @@
 s3_base_url: https://repository.cloudifysource.org
 s3_bucket_name: cloudify-release-eu
 s3_bucket_directory: cloudify/blueprints
+s3_getting_started_directory: cloudify/getting-started
 git_url: https://github.com/cloudify-community/cloudify-catalog
 target_path: https://repository.cloudifysource.org/cloudify/blueprints
 github_url: https://github.com/cloudify-community/cloudify-catalog/tree
 raw_github_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog
+
+files:
+  - id: cloud-setup-schema
+    target_path: getting_started/cloudSetup.schema.json
+
+  - id: getting-started-schema
+    target_path: getting_started/cloudSetup.schema.json
 
 topics:
   - name: getting_started
@@ -12,13 +20,13 @@ topics:
     blueprints:
       - id: gen-ssh-cert-service-component
         name: Gen-SSH-Cert-Example
-        path: getting_started/ssh_cert
+        path: tabs/getting_started/ssh_cert
         description: |
           This blueprint creates SSH key
 
       - id: ex4-nested-blueprint
         name: Service-Composition-Example
-        path: getting_started/service_composition
+        path: tabs/getting_started/service_composition
         description: |
             Service Composition blueprint example - describes how to create relationship between independent services
             In this case we run the same web server and application from ex3 as an independent deployment
@@ -27,7 +35,7 @@ topics:
 
       - id: ex3-relationship-blueprint
         name: Relationship-Example
-        path: getting_started/relationship
+        path: tabs/getting_started/relationship
         description: |
             The relationship blueprint example - describes how to create dependencies between multiple node types resources
             In this case were adding a web application node web calculator that will be contained_in the http_web_server resource
@@ -37,7 +45,7 @@ topics:
 
       - id: ex2-node-type-blueprint
         name: Node-Types-Example
-        path: getting_started/node_types
+        path: tabs/getting_started/node_types
         description: |
             Node types blueprint example - describes how to map the lifecycle of simple resource.
             In this specific example we use an http daemon as the resource.
@@ -46,20 +54,20 @@ topics:
 
       - id: ex1-input-output-blueprint
         name: Input-Outputs-Example
-        path: getting_started/input_outputs
+        path: tabs/getting_started/input_outputs
         description: |
           Input and outputs - describing the most basic blueprint structure
 
       - id: Multi-Tier-Example
         name: Multi-Tier-Example
-        path: getting_started/multi_tier
+        path: tabs/getting_started/multi_tier
         description: |
           The multi tier blueprint example - describes how you can use the Cloudify TOSCA based DSL to model relationships between multiple node types.
           We will use a multi tier topology of a classic web application
 
       - id: Nested-Example
         name: Nested-Example
-        path: getting_started/nested
+        path: tabs/getting_started/nested
         description: |
           The nested blueprint example - describes how you can create a multi-tier or distributed service where each service will have an independent blueprint and lifecycle operation similar to the way micro-services works.
           We will illustrate how we can create a dependency and relationship between those services , pass inputs/output parameters etc.
@@ -70,77 +78,77 @@ topics:
 
       - id: EnvironmentAWS
         name: Production-ENV-AWS-CFY
-        path: certified_environments/environments/aws
+        path: tabs/certified_environments/environments/aws
         description: Creating AWS environment
 
       - id: EnvironmentAzure
         name: Production-ENV-Azure-CFY
-        path: certified_environments/environments/azure
+        path: tabs/certified_environments/environments/azure
         description: Creating Azure environment
 
       - id: EksAWS
         name: EKS-AWS-CFY
-        path: certified_environments/services/aws/eks
+        path: tabs/certified_environments/services/aws/eks
         description: Creating EKS service
 
       - id: MinikubeAWS
         name: Minikube-AWS-CFY
-        path: certified_environments/services/aws/minikube
+        path: tabs/certified_environments/services/aws/minikube
         description: Creating Minikube service
 
       - id: MinioAWS
         name: Minio-AWS-CFY
-        path: certified_environments/services/aws/minio
+        path: tabs/certified_environments/services/aws/minio
         description: Creating Minio service
 
       - id: PsqlAWS
         name: Postgres-AWS-CFY
-        path: certified_environments/services/aws/psql
+        path: tabs/certified_environments/services/aws/psql
         description: Creating PostgreSQL service
 
       - id: RdsPsqlAWS
         name: Postgres-RDS-AWS-CFY
-        path: certified_environments/services/aws/rds_psql
+        path: tabs/certified_environments/services/aws/rds_psql
         description: Creating PostgreSQL on RDS service
 
       - id: S3AWS
         name: S3-AWS-TFM
-        path: certified_environments/services/aws/s3
+        path: tabs/certified_environments/services/aws/s3
         description: Creating S3 service
 
       - id: AksAzure
         name: AKS-Azure-CFY
-        path: certified_environments/services/azure/aks
+        path: tabs/certified_environments/services/azure/aks
         description: Creating AKS service
 
       - id: MinikubeAzure
         name: Minikube-Azure-CFY
-        path: certified_environments/services/azure/minikube
+        path: tabs/certified_environments/services/azure/minikube
         description: Creating Minikube service
 
       - id: MinioAzure
         name: Minio-Azure-CFY
-        path: certified_environments/services/azure/minio
+        path: tabs/certified_environments/services/azure/minio
         description: Creating Minio service
 
       - id: PsqlAzure
         name: Postgres-Azure-CFY
-        path: certified_environments/services/azure/psql
+        path: tabs/certified_environments/services/azure/psql
         description: Creating PostgreSQL service
 
       - id: RdsPsqlAzure
         name: Postgres-RDS-Azure-ARM
-        path: certified_environments/services/azure/rds_psql
+        path: tabs/certified_environments/services/azure/rds_psql
         description: Creating PostgreSQL on RDS service
 
       - id: StorageAzure
         name: Storage-Azure-TFM
-        path: certified_environments/services/azure/storage
+        path: tabs/certified_environments/services/azure/storage
         description: Creating Storage service
 
       - id: EnvironmentAsAService
         name: Environment-as-a-Service-CFY
-        path: certified_environments/eaas
+        path: tabs/certified_environments/eaas
         description: Creating Environment as a Service (consists of networking, K8s, DB & Storage)
 
   - name: aws_services
@@ -148,104 +156,104 @@ topics:
     blueprints:
       - id: DynamoDB
         name: DynamoDB-AWS-CFY
-        path: aws/dynamodb
+        path: tabs/aws/dynamodb
         description: Creating AWS DynamoDB table
 
       - id: EBS
         name: EBS-AWS-CFY
-        path: aws/ebs
+        path: tabs/aws/ebs
         description: Creating EBS volume
 
       - id: EC2
         name: EC2-AWS-CFY
-        path: aws/ec2
+        path: tabs/aws/ec2
         description: Creating generating SSH key, creating a KeyPair and provisioning an EC2 instance
 
       - id: EC2_WITHOUT_NETWORK
         name: EC2-WITHOUT-VPC-CFY
-        path: aws/ec2_without_network
+        path: tabs/aws/ec2_without_network
         description: Creating EC2 without network
 
       - id: AWS_VPC
         name: EC2-VPC
-        path: aws/network
+        path: tabs/aws/network
         description: Creating AWS network
 
       - id: EC2_WITH_EBS
         name: EC2-WITH-EBS-AWS-CFY
-        path: aws/ec2_with_ebs
+        path: tabs/aws/ec2_with_ebs
         description: Creating EC2 inside VPC and EBS
 
       - id: EC2_SPOT_INSTANCES
         name: EC2-SPOT-INSTANCES-AWS-CFY
-        path: aws/ec2_spot_instances
+        path: tabs/aws/ec2_spot_instances
         description: Creating EC2 Spot instance
 
       - id: EC2_CloudFormation
         name: EC2-CloudFormation-CFY
-        path: aws/cloudformation
+        path: tabs/aws/cloudformation
         description: Creating EC2 and netowrking (VPC, Subnet, SecurityGroup, InternetGroup etc.)
 
       - id: ECS
         name: ECS-AWS-CFY
-        path: aws/ecs
+        path: tabs/aws/ecs
         description: Creating ECS
         html_url: https://github.com/cloudify-community/blueprint-examples/tree/master/kubernetes
 
       - id: S3
         name: S3-AWS-CFY
-        path: aws/s3
+        path: tabs/aws/s3
         description: Creating S3 Bucket
 
       - id: SNS
         name: SNS-AWS-CFY
-        path: aws/sns
+        path: tabs/aws/sns
         description: Creating SNS
 
       - id: SQS
         name: SQS-AWS-CFY
-        path: aws/sqs
+        path: tabs/aws/sqs
         description: Creating SQS
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/README.md
 
       - id: tf_aws_vm
         name: VM-Ubuntu-AWS-TFM
-        path: terraform/aws
+        path: tabs/terraform/aws
         description: Create an AWS VM using Terraform automation
 
       - id: tf_eks
         name: EKS-AWS-TFM
-        path: terraform/eks
+        path: tabs/terraform/eks
         description: Create an AWS Kubernetes using Terraform automation
 
       - id: tf_aws_vpc
         name: VPC-AWS-TFM
-        path: terraform/aws_vpc
+        path: tabs/terraform/aws_vpc
         description: Create an AWS VPC using Terraform automation
 
       - id: tf_s3_aws
         name: S3-AWS-TFM
-        path: terraform/aws_s3
+        path: tabs/terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
 
       - id: tf_aws_rds_mariadb
         name: MariaDB-RDS-AWS-TFM
-        path: terraform/aws_rds_mariadb
+        path: tabs/terraform/aws_rds_mariadb
         description: Create an AWS RDS MariaDB using Terraform automation
 
       - id: tf_rds_oracle
         name: Oracle-RDS-AWS-TFM
-        path: terraform/aws_rds_oracle
+        path: tabs/terraform/aws_rds_oracle
         description: Create an AWS RDS Oracle using Terraform automation
 
       - id: tf_aws_rds_postgresql
         name: Postgres-RDS-AWS-TFM
-        path: terraform/aws_rds_postgresql
+        path: tabs/terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
 
       - id: tf_aws_rds_mysql
         name: MySQL-RDS-AWS-TFM
-        path: terraform/aws_rds_mysql
+        path: tabs/terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
 
   - name: cloudify-manager
@@ -254,12 +262,12 @@ topics:
 
       - id: Cloudify-Manager-EC2
         name: Cloudify-Manager-AWS-CFY
-        path: cloudify_manager/ec2
+        path: tabs/cloudify_manager/ec2
         description: This blueprint creates EC2 instance and installs the Cloudify Manager from predifined rpm URL
 
       - id: Cloudify-Manager-Discovery
         name: Cloudify-Manager-Discovery-CFY
-        path: cloudify_manager/discovery
+        path: tabs/cloudify_manager/discovery
         description: This bluperints adds sub-manager and places it as an environment
 
   - name: azure_services
@@ -268,102 +276,102 @@ topics:
 
       - id: Instance-Ubuntu-Arm
         name: VM-Ubuntu-Azure-ARM
-        path: azure/deployment
+        path: tabs/azure/deployment
         description: This blueprint creates a Ubuntu instance on Microsoft Azure, along with necessary networking services and a public IP using an Azure ARM template (template.json).  The blueprint generates public and private SSH keys. A keypair (for SSH) is created, stored in the secret store, and attached to the provisioned instance, via the Azure template inputs.  If a secret with the same name(s) is present in the secret store, it is used.
 
       - id: instance-Ubuntu-Azure-Plugin
         name: VM-Ubuntu-Azure-CFY
-        path: azure/instance
+        path: tabs/azure/vm
         description: This blueprint starts a Ubuntu VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
 
       - id: Instance-Ubuntu-Spot-Arm
         name: VM-Ubuntu-Spot-Azure-ARM
-        path: azure/ubuntu_spot_instance
+        path: tabs/azure/ubuntu_spot_instance
         description: Create a Ubuntu VM Spot Instance using ARM template
 
       - id: Instance-Ubuntu-Disk-Storage-Arm
         name: VM-Ubuntu-Disk-Azure-ARM
-        path: azure/ubuntu_disk_storage
+        path: tabs/azure/ubuntu_disk_storage
         description: Create a u Ubuntu VM with managed disk storage
 
       - id: Spot-Instance-Windows-Arm
         name: VM-Windows-Spot-Azure-ARM
-        path: azure/spot_instance
+        path: tabs/azure/spot_instance
         description: Create a Windows VM Spot Instance using ARM template
 
       - id: Loadbalancer-Azure-Plugin
         name: LB-Azure-CFY
-        path: azure/lb
+        path: tabs/azure/lb
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
 
       - id: Storage-Azure-Plugin
         name: Storage-Azure-CFY
-        path: azure/storage
+        path: tabs/azure/storage
         description: This blueprint starts a Linux VM on Azure. It autogenerates an ssh keypair which it stores in the secret store.  It associates a public ip with the instance
 
       - id: Notification-Hub-Arm
         name: Notification-Hub-Azure-ARM
-        path: azure/notification_hub
+        path: tabs/azure/notification_hub
         description: Create a Notification Hub using ARM template
 
       - id: Service-Bus-Arm
         name: Service-Bus-Azure-ARM
-        path: azure/service_bus
+        path: tabs/azure/service_bus
         description: Create a Service Bus using ARM template
 
       - id: Container-Instance-Arm
         name: Container-Instance-Azure-ARM
-        path: azure/container_instances
+        path: tabs/azure/container_instances
         description: Create a sample container instance with Wordpress & MySQL using ARM template
 
       - id: Disk-Storage-Arm
         name: Disk-Storage-Azure-ARM
-        path: azure/data_disk
+        path: tabs/azure/data_disk
         description: Create a Disk Storage instance using ARM template
 
       - id: CosmosDB-Arm
         name: CosmosDB-Azure-ARM
-        path: azure/cosmos_db
+        path: tabs/azure/cosmos_db
         description: Create a CosmosDB instance using ARM teplate
 
       - id: tf_azure_vm
         name: VM-Ubuntu-Azure-TFM
-        path: terraform/azure
+        path: tabs/terraform/azure
         description: Create an Azure Ubuntu VM using Terraform automation
 
       - id: tf_azure_storage
         name: Storage-Azure-TFM
-        path: terraform/azure_storage
+        path: tabs/terraform/azure_storage
         description: Create an Azure Blob Storage automation
 
       - id: tf_azure_vpc
         name: VPC-Azure-TFM
-        path: terraform/azure_vpc
+        path: tabs/terraform/azure_vpc
         description: Create an Azure VPC using Terraform automation
 
       - id: tf_azure_oracale
         name: Oracle-Azure-TFM
-        path: terraform/azure_oracle
+        path: tabs/terraform/azure_oracle
         description: Create an Azure Oracle database using Terraform automation
 
       - id: tf_azure_mysql
         name: MySQL-Azure-TFM
-        path: terraform/azure_mysql
+        path: tabs/terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
 
       - id: tf_azure_postgres
         name: Postgres-Azure-TFM
-        path: terraform/azure_postgres
+        path: tabs/terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
 
       - id: tf_azure_mariadb
         name: MariaDB-Azure-TFM
-        path: terraform/azure_mariadb
+        path: tabs/terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
 
       - id: tf_aks
         name: AKS-Azure-TFM
-        path: terraform/aks
+        path: tabs/terraform/aks
         description: Create an Azure Kubernetes using Terraform automation
 
   - name: gcp_services
@@ -371,78 +379,78 @@ topics:
     blueprints:
       - id: gcp_vm
         name: VM-Centos-GCP-CFY
-        path: gcp/vm
+        path: tabs/gcp/vm
         description: Create a Centos VM using GCP plugin
 
       - id: gcp_simple_service
         name: VM-Centos-GCP-CFY-Ansible
-        path: gcp/simple_service
+        path: tabs/gcp/simple_service
         description: Create a VM using GCP plugin and setting up Hello World service using Ansible Plugin
 
       - id: tf_gke
         name: GKE-GCP-TFM
-        path: terraform/gke
+        path: tabs/terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
 
       - id: tf_gcp_network
         name: Network-GCP-TFM
-        path: terraform/gcp_network
+        path: tabs/terraform/gcp_network
         description: Create a Google Platform Network using Terraform automation
 
       - id: tf_gcp_storage
         name: Storage-GCP-TFM
-        path: terraform/gcp_storage
+        path: tabs/terraform/gcp_storage
         description: Create a Google Platform Storage using Terraform automation
 
       - id: tf_gcp_queue
         name: Queue-GCP-TFM
-        path: terraform/gcp_queue
+        path: tabs/terraform/gcp_queue
         description: Create a Google Platform Queue service using Terraform automation
 
       - id: tf_gcp_bigtable
         name: Bigtable-GCP-TFM
-        path: terraform/gcp_bigtable
+        path: tabs/terraform/gcp_bigtable
         description: Create a Google Platform Bigtable service using Terraform automation
 
       - id: tf_gcp_disk
         name:  Disk-GCP-TFM
-        path: terraform/gcp_disk
+        path: tabs/terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
 
       - id: tf_gcp_vm
         name: VM-Ubuntu-GCP-TFM
-        path: terraform/gcp
+        path: tabs/terraform/gcp
         description: Create a GCP VM using Terraform automation
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/README.md
 
       - id: tf_gcp_vm_spot
         name: VM-Ubuntu-Spot-GCP-TFM
-        path: terraform/gcp_vm_spot
+        path: tabs/terraform/gcp_vm_spot
         description: Create a Google Platform VM with the spot configuration using Terraform automation
 
       - id: tf_gcp_oracle
         name: Oracle-GCP-TFM
-        path: terraform/gcp_oracle
+        path: tabs/terraform/gcp_oracle
         description: Create a Google Platform Oracle Database the spot configuration using Terraform automation
 
       - id: tf_gcp_postgresql
         name: Postgres-GCP-TFM
-        path: terraform/gcp_postgresql
+        path: tabs/terraform/gcp_postgresql
         description: Create a Google Platform PostgresSQL Database the spot configuration using Terraform automation
 
       - id: tf_gcp_mariadb
         name: MariaDB-GCP-TFM
-        path: terraform/gcp_mariadb
+        path: tabs/terraform/gcp_mariadb
         description: Create a Google Platform MariaDB Database the spot configuration using Terraform automation
 
       - id: tf_gcp_mysql
         name: MySQL-GCP-TFM
-        path: terraform/gcp_mysql
+        path: tabs/terraform/gcp_mysql
         description: Create a Google Platform MySQL Database the spot configuration using Terraform automation
 
       - id: tf_gcp_container_instance
         name: Container-Instance-GCP-TFM
-        path: terraform/gcp_container_instance
+        path: tabs/terraform/gcp_container_instance
         description: Create a Google Platform Container Instance the spot configuration using Terraform automation
 
   - name: terraform_services
@@ -451,176 +459,176 @@ topics:
     #virtual machines
       - id: tf_azure_vm
         name: VM-Ubuntu-Azure-TFM
-        path: terraform/azure
+        path: tabs/terraform/azure
         description: Create an Azure Ubuntu VM using Terraform automation
 
       - id: tf_gcp_vm
         name: VM-Ubuntu-GCP-TFM
-        path: terraform/gcp
+        path: tabs/terraform/gcp
         description: Create a GCP VM using Terraform automation
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/terraform/README.md
 
       - id: tf_openstack_vm
         name: VM-Ubuntu-Openstack-TFM
-        path: terraform/openstack
+        path: tabs/terraform/openstack
         description: Create an OpenStack VM using Terraform automation
 
       - id: tf_aws_vm
         name: VM-Ubuntu-AWS-TFM
-        path: terraform/aws
+        path: tabs/terraform/aws
         description: Create an AWS VM using Terraform automation
         
       - id: tf_eks_istio
         name: Istio-AWS-TFM
-        path: terraform/eks-istio
+        path: tabs/terraform/eks-istio
         description: Create an EKS AWS with Istio using Terraform automation
         
       - id: tf_tfc
         name: VM-Ubuntu-CloudEnterprise-TFM
-        path: terraform/tfc
+        path: tabs/terraform/tfc
         description: Install Terraform Cloud/Enterprise example
     #storages
       - id: tf_azure_storage
         name: Storage-Azure-TFM
-        path: terraform/azure_storage
+        path: tabs/terraform/azure_storage
         description: Create an Azure Blob Storage automation
 
       - id: tf_gcp_storage
         name: Storage-GCP-TFM
-        path: terraform/gcp_storage
+        path: tabs/terraform/gcp_storage
         description: Create a Google Platform Storage using Terraform automation
 
       - id: tf_s3_aws
         name: S3-AWS-TFM
-        path: terraform/aws_s3
+        path: tabs/terraform/aws_s3
         description: Create an AWS S3 using Terraform automation
     #networks
       - id: tf_azure_vpc
         name: VPC-Azure-TFM
-        path: terraform/azure_vpc
+        path: tabs/terraform/azure_vpc
         description: Create an Azure VPC using Terraform automation
 
       - id: tf_gcp_network
         name: Network-GCP-TFM
-        path: terraform/gcp_network
+        path: tabs/terraform/gcp_network
         description: Create a Google Platform Network using Terraform automation
 
       - id: tf_aws_vpc
         name: VPC-AWS-TFM
-        path: terraform/aws_vpc
+        path: tabs/terraform/aws_vpc
         description: Create an AWS VPC using Terraform automation
     #K8s
       - id: tf_aks
         name: AKS-Azure-TFM
-        path: terraform/aks
+        path: tabs/terraform/aks
         description: Create an Azure Kubernetes using Terraform automation
 
       - id: tf_gke
         name: GKE-GCP-TFM
-        path: terraform/gke
+        path: tabs/terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
 
       - id: tf_eks
         name: EKS-AWS-TFM
-        path: terraform/eks
+        path: tabs/terraform/eks
         description: Create an AWS Kubernetes using Terraform automation
     #Databases
     #Oracle
       - id: tf_azure_oracale
         name: Oracle-Azure-TFM
-        path: terraform/azure_oracle
+        path: tabs/terraform/azure_oracle
         description: Create an Azure Oracle database using Terraform automation
 
       - id: tf_gcp_oracle
         name: Oracle-GCP-TFM
-        path: terraform/gcp_oracle
+        path: tabs/terraform/gcp_oracle
         description: Create a Google Platform Oracle Database the spot configuration using Terraform automation
 
       - id: tf_rds_oracle
         name: Oracle-RDS-AWS-TFM
-        path: terraform/aws_rds_oracle
+        path: tabs/terraform/aws_rds_oracle
         description: Create an AWS RDS Oracle using Terraform automation
     #MariaDB
       - id: tf_azure_mariadb
         name: MariaDB-Azure-TFM
-        path: terraform/azure_mariadb
+        path: tabs/terraform/azure_mariadb
         description: Create an Azure MariaDB using Terraform automation
 
       - id: tf_gcp_mariadb
         name: MariaDB-GCP-TFM
-        path: terraform/gcp_mariadb
+        path: tabs/terraform/gcp_mariadb
         description: Create a Google Platform MariaDB Database the spot configuration using Terraform automation
 
       - id: tf_aws_rds_mariadb
         name: MariaDB-RDS-AWS-TFM
-        path: terraform/aws_rds_mariadb
+        path: tabs/terraform/aws_rds_mariadb
         description: Create an AWS RDS MariaDB using Terraform automation
     #Mysql
       - id: tf_azure_mysql
         name: MySQL-Azure-TFM
-        path: terraform/azure_mysql
+        path: tabs/terraform/azure_mysql
         description: Create an Azure Mysql database using Terraform automation
 
       - id: tf_gcp_mysql
         name: MySQL-GCP-TFM
-        path: terraform/gcp_mysql
+        path: tabs/terraform/gcp_mysql
         description: Create a Google Platform MySQL Database the spot configuration using Terraform automation
 
       - id: tf_aws_rds_mysql
         name: MySQL-RDS-AWS-TFM
-        path: terraform/aws_rds_mysql
+        path: tabs/terraform/aws_rds_mysql
         description: Create an AWS RDS MySQL using Terraform automation
     #Postgres
       - id: tf_azure_postgres
         name: Postgres-Azure-TFM
-        path: terraform/azure_postgres
+        path: tabs/terraform/azure_postgres
         description: Create an Azure Postgres DB using Terraform automation
 
       - id: tf_aws_rds_postgresql
         name: Postgres-RDS-AWS-TFM
-        path: terraform/aws_rds_postgresql
+        path: tabs/terraform/aws_rds_postgresql
         description: Create an AWS Postgresql database service using Terraform automation
 
       - id: tf_gcp_postgresql
         name: Postgres-GCP-TFM
-        path: terraform/gcp_postgresql
+        path: tabs/terraform/gcp_postgresql
         description: Create a Google Platform PostgresSQL Database the spot configuration using Terraform automation
     #GCP others
       - id: tf_gcp_queue
         name: Queue-GCP-TFM
-        path: terraform/gcp_queue
+        path: tabs/terraform/gcp_queue
         description: Create a Google Platform Queue service using Terraform automation
 
       - id: tf_gcp_bigtable
         name: Bigtable-GCP-TFM
-        path: terraform/gcp_bigtable
+        path: tabs/terraform/gcp_bigtable
         description: Create a Google Platform Bigtable service using Terraform automation
 
       - id: tf_gcp_disk
         name: Disk-GCP-TFM
-        path: terraform/gcp_disk
+        path: tabs/terraform/gcp_disk
         description: Create a Google Platfrom Disk service using Terraform automation
     #Costs estimation
       - id: tf_infracosts
         name: InfraCosts-AWS-TFM
-        path: terraform/infracosts
+        path: tabs/terraform/infracosts
         description: Create an InfraCosts example using Terraform automation
     #Tf lint
       - id: tf_aws_tflint
         name: TFLint-AWS-TFM
-        path: terraform/aws_tflint
+        path: tabs/terraform/aws_tflint
         description: Create a TFlint example using Terraform automation
       - id: tf_aws_tfsec
         name: TFSec-AWS-TFM
-        path: terraform/aws_tfsec
+        path: tabs/terraform/aws_tfsec
         description: Create TFSec example using Terraform automation
       - id: tf_azure_tflint
         name: TFLint-Azure-TFM
-        path: terraform/azure_tflint
+        path: tabs/terraform/azure_tflint
         description: Create TFLint example using Terraform automation
       - id: tf_azure_tfsec
         name: TFSec-Azure-TFM
-        path: terraform/azure_tfsec
+        path: tabs/terraform/azure_tfsec
         description: Create TFSec example using Terraform automation
 
   - name: helm_services
@@ -629,122 +637,122 @@ topics:
 
       - id: Wordpress
         name: Wordpress-K8s-HLM
-        path: helm/wordpress
+        path: tabs/helm/wordpress
         description: Installing Wordpress helm chart on top of K8s cluster
 
       - id: Drupal
         name: Drupal-K8s-HLM
-        path: helm/drupal
+        path: tabs/helm/drupal
         description: Installing Drupal helm chart on top of K8s cluster
 
       - id: NodeJS
         name: NodeJS-K8s-HLM
-        path: helm/nodejs
+        path: tabs/helm/nodejs
         description: Installing NodeJS helm chart on top of K8s cluster
 
       - id: Nexus
         name: Nexus-K8s-HLM
-        path: helm/nexus
+        path: tabs/helm/nexus
         description: Installing Nexus Repository helm chart on top of K8s cluster
 
       - id: autoscaler
         name: Autoscaler-K8s-HLM
-        path: helm/autoscaler
+        path: tabs/helm/autoscaler
         description: Installing Autoscaler helm chart on top of K8s cluster
 
       - id:  cert_manager
         name: Cert-Manager-K8s-HLM
-        path: helm/cert_manager
+        path: tabs/helm/cert_manager
         description: Installing Cert Manager helm chart on top of K8s cluster
 
       - id: elastic
         name: Elasticsearch-K8s-HLM
-        path: helm/elastic
+        path: tabs/helm/elastic
         description: Installing Elastic helm chart on top of K8s cluster
 
       - id: externaldns
         name: Extenraldns-K8s-HLM
-        path: helm/externaldns
+        path: tabs/helm/externaldns
         description: Installing Externaldns helm chart on top of K8s cluster
 
       - id: gitlab
         name: Gitlab-K8s-HLM
-        path: helm/gitlab
+        path: tabs/helm/gitlab
         description: Installing Gitlab helm chart on top of K8s cluster
 
       - id: grafana
         name: Grafana-K8s-HLM
-        path: helm/grafana
+        path: tabs/helm/grafana
         description: Installing Grafana helm chart on top of K8s cluster
 
       - id: jenkins
         name: Jenkins-K8s-HLM
-        path: helm/jenkins
+        path: tabs/helm/jenkins
         description: Installing Jenkins helm chart on top of K8s cluster
 
       - id: bitbucket
         name: Bitbucket-K8s-HLM
-        path: helm/bitbucket
+        path: tabs/helm/bitbucket
         description: Installing Bitbucket helm chart on top of K8s cluster
 
       - id: kafka
         name: Kafka-K8s-HLM
-        path: helm/kafka
+        path: tabs/helm/kafka
         description: Installing Kafka helm chart on top of K8s cluster
 
       - id: kube_dash
         name: Kubernetes-Dashboard-K8s-HLM
-        path: helm/kube_dash
+        path: tabs/helm/kube_dash
         description: Installing Kubernetes Darshboard helm chart on top of K8s cluster
 
       - id: mongodb
         name: MongoDB-K8s-HLM
-        path: helm/mongodb
+        path: tabs/helm/mongodb
         description: Installing MongoDB helm chart on top of K8s cluster
 
       - id: Mysql
         name: MySQL-K8s-HLM
-        path: helm/mysql
+        path: tabs/helm/mysql
         description: Installing MySQL helm chart on top of K8s cluster
 
       - id: nginx
         name: Nginx-K8s-HLM
-        path: helm/nginx
+        path: tabs/helm/nginx
         description: Installing Nginx helm chart on top of K8s cluster
 
       - id: postgres
         name: PostgresSQL-K8s-HLM
-        path: helm/postgresql
+        path: tabs/helm/postgresql
         description: Installing PostgreSQL helm chart on top of K8s cluster
 
       - id: prometheus
         name: Prometheus-K8s-HLM
-        path: helm/prometheus
+        path: tabs/helm/prometheus
         description: Installing Prometheus helm chart on top of K8s cluster
 
       - id: prometheus_stack
         name: Prometheus-Stack-K8s-HLM
-        path: helm/prometheus_stack
+        path: tabs/helm/prometheus_stack
         description: Installing Prometheus Stack helm chart on top of K8s cluster
 
       - id: rabbitmq
         name: Rabbitmq-K8s-HLM
-        path: helm/rabbitmq
+        path: tabs/helm/rabbitmq
         description: Installing Rabbitmq helm chart on top of K8s cluster
 
       - id: redis
         name: Redis-K8s-HLM
-        path: helm/redis
+        path: tabs/helm/redis
         description: Installing Redis helm chart on top of K8s cluster
 
       - id: traefik
         name: Traefik-K8s-HLM
-        path: helm/traefik
+        path: tabs/helm/traefik
         description: Installing Traefik helm chart on top of K8s cluster
 
       - id: vault
         name: Vault-K8s-HLM
-        path: helm/vault
+        path: tabs/helm/vault
         description: Installing Vault helm chart on top of K8s cluster
 
   - name: k8s_services
@@ -753,61 +761,61 @@ topics:
 
       - id: tf_eks
         name: EKS-AWS-TFM
-        path: terraform/eks
+        path: tabs/terraform/eks
         description: Create an AWS Kubernetes using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/eks.png
 
       - id: aws_eks
         name: EKS-AWS-CFY
-        path: kubernetes/eks
+        path: tabs/kubernetes/eks
         description: Setup a Kubernetes cluster in AWS leveraging EKS
 
       - id: aws_eks_dr
         name: EKS-DR-AWS-TFM
-        path: pg_ce/services/kubernetes_dr_eks
+        path: tabs/pg_ce/services/kubernetes_dr_eks
         description: Creating Disaster Recovery EKS service
 
       - id: tf_eks_istio
         name: Istio-AWS-TFM
-        path: terraform/eks-istio
+        path: tabs/terraform/eks-istio
         description: Create an EKS AWS with Istio using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/eks.png
 
       - id: aws_eks_istio
         name: Istio-AWS-CFY
-        path: kubernetes/eks-istio
+        path: tabs/kubernetes/eks-istio
         description: Setup a Kubernetes cluster with Istio in AWS leveraging EKS
         
       - id: tf_aks
         name: AKS-Azure-TFM
-        path: terraform/aks
+        path: tabs/terraform/aks
         description: Create an Azure Kubernetes using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/aks.png
 
       - id: azure_aks
         name: AKS-Azure-CFY
-        path: kubernetes/aks
+        path: tabs/kubernetes/aks
         description: Setup a Kubernetes cluster in Azure leveraging AKS
 
       - id: azure_aks_dr
         name: AKS-DR-Azure-TFM
-        path: pg_ce/services/kubernetes_dr_aks
+        path: tabs/pg_ce/services/kubernetes_dr_aks
         description: Creating Disaster Recovery AKS service
 
       - id: tf_gke
         name: GKE-GCP-TFM
-        path: terraform/gke
+        path: tabs/terraform/gke
         description: Create a Google Platform Kubernetes using Terraform automation
         image_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/logos/gke.png
 
       - id: gcp_gke
         name: GKE-GCP-CFY
-        path: kubernetes/gke
+        path: tabs/kubernetes/gke
         description: Setup a Kubernetes cluster in GCP leveraging GKE
 
       - id: spot_ocean
         name: Optimized-Cluster-SpotOcean-TFM
-        path: kubernetes/spot
+        path: tabs/kubernetes/spot
         description: Create a Spot Ocean Kubernetes cost optimized Cluster
 
   - name: K8S_Discovery
@@ -816,17 +824,17 @@ topics:
 
       - id: aws_account
         name: Account-AWS-CFY
-        path: k8s_discovery/aws/aws-account
+        path: tabs/k8s_discovery/aws/aws-account
         description: AWS Account Representation
 
       - id: azure_account
         name: Account-Azure-CFY
-        path: k8s_discovery/azure/azure-account
+        path: tabs/k8s_discovery/azure/azure-account
         description: Azure Account Representation
 
       - id: gcp-account
         name: Account-GCP-CFY
-        path: k8s_discovery/gcp/gcp-account
+        path: tabs/k8s_discovery/gcp/gcp-account
         description: GCP Account Representation
 
   - name: vmware_services
@@ -835,12 +843,12 @@ topics:
 
       - id: vsphere_vm
         name: VM-Centos-vSphere-CFY
-        path: vsphere/vm
+        path: tabs/vsphere/vm
         description: Create vSphere VM
 
       - id: vcloud_vm
         name: VM-vCloud-CFY
-        path: vcloud/vm
+        path: tabs/vcloud/vm
         description: Create vCloud VM
 
   - name: ansible_services
@@ -849,97 +857,97 @@ topics:
 
       - id: nginx_ansible
         name: Ansible-Nginx-CFY
-        path: ansible/nginx
+        path: tabs/ansible/nginx
         description: Create Nginx service using Ansible plugin
 
       - id: cassandra_ansible
         name: Ansible-Cassandra-CFY
-        path: ansible/cassandra
+        path: tabs/ansible/cassandra
         description: Create Cassandra service using Ansible plugin
 
       - id: grafana_ansible
         name: Ansible-Grafana-CFY
-        path: ansible/grafana
+        path: tabs/ansible/grafana
         description: Create Grafana service using Ansible plugin
 
       - id: jenkins_ansible
         name: Ansible-Jenkins-CFY
-        path: ansible/jenkins
+        path: tabs/ansible/jenkins
         description: Create Jenkins service using Ansible plugin
 
       - id: kafka_ansible
         name: Ansible-Kafka-CFY
-        path: ansible/kafka
+        path: tabs/ansible/kafka
         description: Create Kafka service using Ansible plugin
 
       - id: mariadb_ansible
         name: Ansible-Mariadb-CFY
-        path: ansible/mariadb
+        path: tabs/ansible/mariadb
         description: Create MariaDB service using Ansible plugin
 
       - id: mongodb_ansible
         name: Ansible-MongoDB-CFY
-        path: ansible/mongodb
+        path: tabs/ansible/mongodb
         description: Create MongoDB service using Ansible plugin
 
       - id: mysql_ansible
         name: Ansible-MySQL-CFY
-        path: ansible/mysql
+        path: tabs/ansible/mysql
         description: Create MySQL service using Ansible plugin
 
       - id: postgresql_ansible
         name: Ansible-Postgres-CFY
-        path: ansible/postgresql
+        path: tabs/ansible/postgresql
         description: Create Postgres service using Ansible plugin
 
       - id: oracle_ansible
         name: Ansible-Oracle-CFY
-        path: ansible/oracle
+        path: tabs/ansible/oracle
         description: Create Oracle service using Ansible plugin
 
       - id: prometheus_ansible
         name: Ansible-Prometheus-CFY
-        path: ansible/prometheus
+        path: tabs/ansible/prometheus
         description: Create Prometheus service using Ansible plugin
 
       - id: rabbitmq_ansible
         name: Ansible-Rabbitmq-CFY
-        path: ansible/rabbitmq
+        path: tabs/ansible/rabbitmq
         description: Create RabbitMQ service using Ansible plugin
 
       - id: redis_ansible
         name: Ansible-Redis-CFY
-        path: ansible/redis
+        path: tabs/ansible/redis
         description: Create Redis service using Ansible plugin
 
       - id: traefik_ansible
         name: Ansible-Traefik-CFY
-        path: ansible/traefik
+        path: tabs/ansible/traefik
         description: Create Traefik service using Ansible plugin
 
       - id: wordpress_ansible
         name: Ansible-Wordpress-CFY
-        path: ansible/wordpress
+        path: tabs/ansible/wordpress
         description: Create Wordpress service using Ansible plugin
 
       - id: influxdb_ansible
         name: Ansible-InfluxDB-CFY
-        path: ansible/influxdb
+        path: tabs/ansible/influxdb
         description: Create InfluxDB+Telegraf+Grafana service using Ansible plugin
 
       - id: bigip_ansible
         name: Ansible-BigIP-CFY
-        path: ansible/bigip
+        path: tabs/ansible/bigip
         description: Create BigIP Http service using Ansible plugin
 
       - id: vpc_aws_ansible
         name: Ansible-AWS-VPC-CFY
-        path: ansible/vpc_aws
+        path: tabs/ansible/vpc_aws
         description: Create AWS VPC service using Ansible plugin
 
       - id: vpc_azure_ansible
         name: Ansible-Azure-VPC-CFY
-        path: ansible/vpc_azure
+        path: tabs/ansible/vpc_azure
         description: Create Azure VPC service using Ansible plugin
 
   - name: other_services
@@ -948,42 +956,42 @@ topics:
 
       - id: openstack_basic_vm
         name: OpenStack-Basics-VM-Setup
-        path: other/openstack/vm
+        path: tabs/other/openstack/vm
         description: Create vSphere VM
 
       - id: openstack_basic_service
         name: OpenStack-Basics-Simple-Service-Setup
-        path: other/openstack/simple_service
+        path: tabs/other/openstack/simple_service
         description: Create vSphere Service
 
       - id: multicloud_nodejs_app
         name: Multi-Cloud-NodeJS-Application-Server-Setup
-        path: other/multicloud/nodejs
+        path: tabs/other/multicloud/nodejs
         description: Create Multicloud Nodejs appliction with Server Setup
 
       - id: multicloud_jboss
         name: Multi-Cloud-JBoss-Application-Server-Setup
-        path: other/multicloud/jboss
+        path: tabs/other/multicloud/jboss
         description: Create Multicloud JBoss appliction with Server Setup
 
       - id: multicloud_localstack
         name: Multi-Cloud-LocalStack-Application-Server-Setup
-        path: other/multicloud/localstack
+        path: tabs/other/multicloud/localstack
         description: Create Multicloud Localstack appliction with Server Setup
 
       - id: tf_infracosts
         name: InfraCosts-AWS-TFM
-        path: terraform/infracosts
+        path: tabs/terraform/infracosts
         description: Create an InfraCosts example using Terraform automation
       
       - id: backstage
         name: Backstage-AWS-CFY
-        path: other/backstage
+        path: tabs/other/backstage
         description: Create a backstage proof of concept example
       
       - id: multicloud_vm
         name: Multicloud-VM-CFY
-        path: other/multicloud/vm
+        path: tabs/other/multicloud/vm
         description: Create a VM on choosed cloud provider
 
   - name: docker_services
@@ -991,85 +999,85 @@ topics:
     blueprints:
       - id: consul_docker
         name: Docker-Consul-CFY
-        path: docker/consul
+        path: tabs/docker/consul
         description: Creating Consul serivce using Docker plugin
 
       - id: elastic_docker
         name: Docker-Elastic-CFY
-        path: docker/elasticsearch
+        path: tabs/docker/elasticsearch
         description: Creating Elasticsearch serivce using Docker plugin
 
       - id: hello_docker
         name: Docker-HelloWorld-CFY
-        path: docker/helloworld
+        path: tabs/docker/helloworld
         description: Creating Helloworld service using Docker plugin
 
       - id: httpd_docker
         name: Docker-Httpd-CFY
-        path: docker/httpd
+        path: tabs/docker/httpd
         description: Creating Httpd service using Docker plugin
 
       - id: influxdb_docker
         name: Docker-Influxdb-CFY
-        path: docker/influxdb
+        path: tabs/docker/influxdb
         description: Creating Httpd service using Docker plugin
 
       - id: mariadb_docker
         name: Docker-MariaDB-CFY
-        path: docker/mariadb
+        path: tabs/docker/mariadb
         description: Creating MariaDB service using Docker plugin
 
       - id: memcached_docker
         name: Docker-Memcached-CFY
-        path: docker/memcached
+        path: tabs/docker/memcached
         description: Creating Memcached service using Docker plugin
 
       - id: mongo_docker
         name: Docker-MongoDB-CFY
-        path: docker/mongo
+        path: tabs/docker/mongo
         description: Creating MongoDB service using Docker plugin
 
       - id: mysql_docker
         name: Docker-MySQL-CFY
-        path: docker/mysql
+        path: tabs/docker/mysql
         description: Creating MySQL service using Docker plugin
 
       - id: nextcloud_docker
         name: Docker-Nextcloud-CFY
-        path: docker/nextcloud
+        path: tabs/docker/nextcloud
         description: Creating Nextcloud service using Docker plugin
 
       - id: nginx_docker
         name: Docker-Nginx-CFY
-        path: docker/nginx
+        path: tabs/docker/nginx
         description: Creating Nginx service using Docker plugin
 
       - id: postgres_docker
         name: Docker-Postgres-CFY
-        path: docker/postgres
+        path: tabs/docker/postgres
         description: Creating PostgresSQL service using Docker plugin
 
       - id: rabbitmq_docker
         name: Docker-RabbitMQ-CFY
-        path: docker/rabbitmq
+        path: tabs/docker/rabbitmq
         description: Creating RabbitMQ service using Docker plugin
 
       - id: sonarquebe_docker
         name: Docker-Sonarquebe-CFY
-        path: docker/sonarqube
+        path: tabs/docker/sonarqube
         description: Creating Sonarquebe service using Docker plugin
 
       - id: telegraf_docker
         name: Docker-Telegraf-CFY
-        path: docker/telegraf
+        path: tabs/docker/telegraf
         description: Creating Telegraf service using Docker plugin
 
       - id: traefik_docker
         name: Docker-Traefik-CFY
-        path: docker/traefik
+        path: tabs/docker/traefik
         description: Creating Traefik service using Docker plugin
 
       - id: wordpress_docker
         name: Docker-Wordpress-CFY
-        path: docker/wordpress
+        path: tabs/docker/wordpress
         description: Creating Wordpress service using Docker plugin

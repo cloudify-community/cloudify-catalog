@@ -12,9 +12,11 @@ logging.basicConfig(level=logging.DEBUG)
 
 CATALOG_FILE_NAME = "catalog.yaml"
 BUILD_DIRECTORY = "build"
+GETTING_STARTED_DIRECTORY = "getting_started"
 S3_BASE_URL = "s3_base_url"
 S3_BUCKET_NAME = "s3_bucket_name"
 S3_BUCKET_DIRECTORY = "s3_bucket_directory"
+S3_GETTING_STARTED_DIRECTORY = "s3_getting_started_directory"
 AWS_ACCESS_KEY_ID = os.environ["ID"]
 AWS_SECRET_ACCCES_KEY = os.environ["SECRET"]
 
@@ -67,7 +69,7 @@ def check_branch(directory: str):
 
 
 def set_target_path(directory: str, root: str, file: str):
-    if "catalogs" in root and check_branch(directory):
+    if "catalogs" in root and check_branch(directory) or root == "":
         target_file = "{}/{}".format(directory, file)
     else:
         target_file = "{}/{}/{}".format(directory,
@@ -75,7 +77,7 @@ def set_target_path(directory: str, root: str, file: str):
     return target_file
 
 
-def upload_directory(source_directory: str, bucket: str, directory: str):
+def upload_directory(source_directory: str, bucket: str, directory: str, without_root: bool = False):
     """Uploads directories and files in the build to S3
 
     :param source_directory: build directory where all the artifact are stored
@@ -86,12 +88,15 @@ def upload_directory(source_directory: str, bucket: str, directory: str):
     catalogs = []
     for root, dirs, files in os.walk(source_directory):
         for file in files:
-            target_file = set_target_path(directory, root, file)
+            if without_root:
+                target_file = set_target_path(directory, "", file)
+            else:
+                target_file = set_target_path(directory, root, file)
             source_file = "{}/{}".format(root, file)
             upload_file(source_file, bucket, target_file)
 
 
-def print_catalogs_urls(build_directory: str, base_url: str, directory: str):
+def print_catalogs_urls(build_directory: str, base_url: str, directory: str, without_root: bool = False):
     """Prints all the catalogs
 
     :param build_directory: build directory
@@ -101,10 +106,11 @@ def print_catalogs_urls(build_directory: str, base_url: str, directory: str):
 
     for root, dirs, files in os.walk(build_directory):
         for file in files:
-
-            if root == 'build/catalogs':
+            if without_root:
+                target_file = set_target_path(directory, "", file)
+            else:
                 target_file = set_target_path(directory, root, file)
-                print("{}/{}".format(base_url, target_file))
+            print("{}/{}".format(base_url, target_file))
 
 
 def set_head():
@@ -136,9 +142,17 @@ def main():
     s3_bucket_directory = "{}/{}".format(
         catalog[S3_BUCKET_DIRECTORY], target_path_subfolder)
 
+    #upload catalog tabs directory
     upload_directory(BUILD_DIRECTORY, s3_bucket_name, s3_bucket_directory)
     print_catalogs_urls(BUILD_DIRECTORY, base_url, s3_bucket_directory)
+
+    # # upload getting started directory
+    s3_bucket_directory = "{}/{}".format(
+        catalog[S3_GETTING_STARTED_DIRECTORY], target_path_subfolder)
+    upload_directory(GETTING_STARTED_DIRECTORY, s3_bucket_name, s3_bucket_directory, True)
+    print_catalogs_urls(GETTING_STARTED_DIRECTORY, base_url, s3_bucket_directory, True)
 
 
 if __name__ == "__main__":
     main()
+
