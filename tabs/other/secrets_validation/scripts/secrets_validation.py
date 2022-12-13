@@ -1,7 +1,9 @@
 import os
 import sys
 import zipfile
-import tempfile
+#import tempfile
+from inspect import getsourcefile
+from os.path import dirname
 
 from cloudify import ctx
 from cloudify_rest_client import exceptions
@@ -17,19 +19,20 @@ missing = []
 
 def _handle_parent_directory(into_dir):
     extracted_files = os.listdir(into_dir)
+    ctx.logger.info(extracted_files)
     if len(extracted_files) == 1:
         inner_dir = os.path.join(into_dir, extracted_files[0])
         if os.path.isdir(inner_dir):
             return inner_dir
     return into_dir
 
-
 def unzip_archive(archive_path, skip_parent_directory=True):
     """
     Unzip a zip archive.
     this method memic strip components
     """
-    into_dir = tempfile.mkdtemp()
+    into_dir = dirname(__file__) #tempfile.mkdtemp()
+    ctx.logger.info("Unzipping to {}".format(into_dir))
     zip_in = None
     try:
         with zipfile.ZipFile(archive_path, 'r') as zip_ref:
@@ -71,3 +74,9 @@ if missing:
 else:
     if inputs["provider"].lower() == "aws":
         validate_aws()
+    elif inputs["provider"].lower() == "azure":
+        pass
+    elif inputs["provider"].lower() == "gcp":
+        pass
+    else:
+        pass

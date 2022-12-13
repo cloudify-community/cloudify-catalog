@@ -141,10 +141,9 @@ class AWSRequestsAuth(requests.auth.AuthBase):
         return canonical_querystring
 
 def validate_aws():
-    
     client = get_rest_client() 
-    access_key = client.secrets.get('aws_access_key_id')
-    secret_key = client.secrets.get('aws_secret_access_key')
+    access_key = client.secrets.get('aws_access_key_id').get('value')
+    secret_key = client.secrets.get('aws_secret_access_key').get('value')
 
     aws_auth = AWSRequestsAuth(access_key, secret_key, host, region, service)
 
