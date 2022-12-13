@@ -4,6 +4,7 @@ from cloudify_rest_client import exceptions
 from cloudify.exceptions import NonRecoverableError
 from cloudify.manager import get_rest_client
 from cloudify.state import ctx_parameters as inputs
+from aws_check_conntection import validate_aws
 
 sys.tracebacklimit = -1
 
@@ -22,3 +23,6 @@ if missing:
         "Please, create missing secret value for: {}".format(" and ".join(missing)))
     raise NonRecoverableError(
         "Missing secret value for: {}".format(" and ".join(missing)))
+else:
+    if inputs["provider"].lower() == "aws":
+        validate_aws()

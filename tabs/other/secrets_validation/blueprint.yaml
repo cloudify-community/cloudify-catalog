@@ -23,10 +23,11 @@ inputs:
       Secret list to validate
     type: list
 
+
 node_templates:
 
-  #check if secrets exists
-  secrets_exists_validation:
+  #check if secrets exists and have correct values
+  secrets_validation:
     type: cloudify.nodes.Root
     interfaces:
       cloudify.interfaces.lifecycle:
@@ -35,15 +36,4 @@ node_templates:
           executor: central_deployment_agent
           inputs:
             secrets: { get_input: secrets }
-  
-  #check if the values are correct
-  secrets_value_validation:
-    type: cloudify.nodes.Component
-    properties:
-      resource_config:
-        blueprint:
-          blueprint_archive: { concat: [ "providers/", { get_input: provider }, ".zip" ] }
-          main_file_name: "blueprint.yaml"
-    relationships:
-      - type: cloudify.relationships.depends_on
-        target: secrets_exists_validation
+            provider: { get_input: provider }
