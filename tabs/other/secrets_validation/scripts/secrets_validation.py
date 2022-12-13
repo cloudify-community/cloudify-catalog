@@ -4,7 +4,7 @@ from cloudify_rest_client import exceptions
 from cloudify.exceptions import NonRecoverableError
 from cloudify.manager import get_rest_client
 from cloudify.state import ctx_parameters as inputs
-from aws_check_conntection import validate_aws
+from check_conntection.aws import validate_aws
 
 sys.tracebacklimit = -1
 
