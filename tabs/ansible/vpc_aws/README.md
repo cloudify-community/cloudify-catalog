@@ -39,7 +39,7 @@ The blueprint uses secrets to connect to Azure, you need to connfigure them prio
 | --------------------------------------------------------------------------------------------------- | ------------------- | ------ | ------------------- |
 | AWS Region Name.                                                                                    | region_name         | string | us-east-1           |
 | Name of infrastructure blueprint to deploy.                                                         | infra_name          | string | aws                 |
-| URL of infra zip file.                                                                              | infra_archive       | string | https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip         |
+| URL of infra zip file.                                                                              | infra_archive       | string | https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/docker/vm/vm.zip         |
 =======
   - plugin:cloudify-docker-plugin
 
