@@ -3,7 +3,18 @@
         "id" : "tf_infracosts"
     },
     {
-        "id" : "grafana_ansible", 
+        "id" : "grafana_ansible",
+        "inputs" : {
+            "infra_name" : "aws"
+        }
+    },
+    {
+        "id" : "nginx_ansible", 
+        "inputs" : {
+            "infra_name" : "aws"
+        }
+    },{
+        "id" : "wordpress_docker",
         "inputs" : {
             "infra_name" : "aws"
         }
