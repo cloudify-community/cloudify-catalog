@@ -59,6 +59,8 @@ unziped_class = unzip_archive(class_path)
 # inject the unzip class to use the module
 sys.path.append(unziped_class)
 from check_connection.aws import validate_aws
+from check_connection.azure import validate_azure
+from check_connection.gcp import validate_gcp
 
 for secret in secrets:
     try:
@@ -75,8 +77,8 @@ else:
     if inputs["provider"].lower() == "aws":
         validate_aws()
     elif inputs["provider"].lower() == "azure":
-        pass
+        validate_azure()
     elif inputs["provider"].lower() == "gcp":
-        pass
+        validate_gcp()
     else:
         pass
