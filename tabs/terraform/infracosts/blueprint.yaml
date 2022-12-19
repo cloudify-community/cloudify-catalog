@@ -50,10 +50,10 @@ inputs:
     display_label: URL for secrets vallidation zip archive
     description: >
       URL of infra zip file.
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/secrets_validation/secrets_validation.zip
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/secrets_validation/secrets_validation.zip
     hidden: true
   
-  infracost_api_key: 
+  infracost_api_key:
     type: string
     display_label: Infracost api key
     description: | 
