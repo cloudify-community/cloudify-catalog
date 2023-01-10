@@ -24,7 +24,7 @@ inputs:
     display_label: URL for infra zip archive
     description: >
       URL of infra zip file.
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/docker/vm/vm.zip
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
 
   infra_exists:
     type: string
