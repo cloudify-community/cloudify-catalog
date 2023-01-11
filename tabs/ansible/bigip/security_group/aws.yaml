@@ -10,20 +10,22 @@ imports:
 inputs:
 
   rg_id:
-    description: Mocked Resource group ID
-    display_label: mocked resource group id
+    description: Resource group ID
+    display_label: Resource Group ID
     type: string
-    default: ""
 
   security_group_id:
+    display_label: Security Group Id
     type: string
 
   vpc_id:
+    display_label: Vpc ID
     type: string
 
   aws_region_name:
+    display_label: AWS Region Name
     type: string
-    default: 'us-east-1'
+    default: us-east-1
     constraints:
       - valid_values:
           - us-east-1
