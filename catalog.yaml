@@ -15,6 +15,15 @@ files:
     target_path: getting_started/cloudSetup.schema.json
 
 topics:
+  - name: utilities
+    target_path: s3_json_file
+    blueprints:
+      - id: security-group
+        name: Security-Group
+        path: tabs/utilities/security_group
+        description: |
+          Security Group for AWS and Azure
+        main_blueprint: aws.yaml
   - name: getting_started
     target_path: s3_json_file
     blueprints:
