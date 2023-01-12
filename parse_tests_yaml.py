@@ -56,7 +56,10 @@ class ParseTestData():
         bps = self._get_bps()
         args = {}
         for blueprint in bps:
-            command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path")+"/blueprint.yaml" ]
+            blueprint_file = "blueprint.yaml"
+            if "main_blueprint" in blueprint.keys():
+                blueprint_file = blueprint.get("main_blueprint")
+            command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file]
             args[ blueprint.get("id") ] = command
         return args
 
