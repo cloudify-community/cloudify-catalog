@@ -20,11 +20,11 @@ inputs:
     default: us-east-1
     constraints:
       - valid_values:
-        - us-east-1 #US East (N. Virginia)
-        - us-west-1 #US West (N. California)
-        - us-west-2 #US West (Oregon)
-        - ca-central-1  #Canada (Central)
-        - eu-west-1 #Europe (Ireland)
+          - us-east-1 #US East (N. Virginia)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-west-1 #Europe (Ireland)
 
   availability_zone_suffix:
     description: Availability Zone Suffix
@@ -33,9 +33,9 @@ inputs:
     default: a
     constraints:
       - valid_values:
-        - a
-        - b
-        - c
+          - a
+          - b
+          - c
 
   availability_zone:
     description: Availability Zone
@@ -81,10 +81,10 @@ inputs:
     default: t2.medium
     constraints:
       - valid_values:
-        - t2.micro
-        - t2.small
-        - t2.medium
-        - t2.large
+          - t2.micro
+          - t2.small
+          - t2.medium
+          - t2.large
 
   volume_attachment_device:
     description: Volume Attachment Device
@@ -111,10 +111,10 @@ inputs:
     display_label: AWS Credentials
     type: dict
     hidden: true
-    default: 
+    default:
       aws_access_key_id: { get_secret: aws_access_key_id }
       aws_secret_access_key: { get_secret: aws_secret_access_key }
-      region_name: { get_input: aws_region_name }      
+      region_name: { get_input: aws_region_name }
 
 node_templates:
 
@@ -202,12 +202,12 @@ node_templates:
       client_config: { get_input: aws_credentials }
       resource_config:
         IpPermissions:
-         - IpProtocol: "-1"
-           FromPort: -1
-           ToPort: -1
-           IpRanges:
-            - CidrIp: 0.0.0.0/0
-           UserIdGroupPairs: [  { GroupId: { get_attribute: [ security_group, aws_resource_id ] } } ]
+          - IpProtocol: "-1"
+            FromPort: -1
+            ToPort: -1
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+            UserIdGroupPairs: [ { GroupId: { get_attribute: [ security_group, aws_resource_id ] } } ]
     relationships:
       - type: cloudify.relationships.contained_in
         target: security_group
@@ -269,7 +269,7 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: nic
       - type: cloudify.relationships.depends_on
-        target: ip      
+        target: ip
 
   ebs_volume:
     type: cloudify.nodes.aws.ec2.EBSVolume
@@ -292,6 +292,6 @@ node_templates:
         target: host
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - aws
