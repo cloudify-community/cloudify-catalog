@@ -53,13 +53,11 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: "blueprint.yaml"
           external_resource: { get_input: infra_exists }
-        deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
-    relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
+        deployment: 
+          inputs: 
+            provider_name: { get_input: infra_name }
 
   image:
     type: cloudify.nodes.ApplicationServer
