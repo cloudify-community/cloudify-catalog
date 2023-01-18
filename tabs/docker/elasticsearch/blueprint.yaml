@@ -3,7 +3,6 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
@@ -25,7 +24,7 @@ inputs:
     description: >
       URL of infra zip file.
     type: string
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/docker/vm/vm.zip
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
 
   infra_exists:
     display_label: Set if infra exists or not 
@@ -34,18 +33,7 @@ inputs:
     type: string
     default: false
 
-  infra_deployment_id:
-    display_label: The infrastructure deployment id
-    description: The blueprint name, the deployment name.
-    type: string
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
-
 node_templates:
-
-  infra_prefix:
-    type: eaas.nodes.UniquePrefixGenerator
-    properties:
-      predefined_value: ""
       
   infrastructure:
     type: cloudify.nodes.Component
@@ -68,13 +56,11 @@ node_templates:
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: false
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
     relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
       - type: cloudify.relationships.depends_on
         target: infrastructure
   
@@ -88,9 +74,9 @@ node_templates:
             commands:
             - docker pull elasticsearch:8.2.0
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
-              user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
-              key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+              host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+              user: { get_attribute: [ infrastructure, capabilities, user ] }
+              key: { get_attribute: [ infrastructure, capabilities, key_content ] }
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -100,16 +86,16 @@ node_templates:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
-        docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+        docker_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
         docker_rest_port: '2375'
       resource_config:
         image_tag: "elasticsearch:8.2.0"
         container_args:
           name: elastic
           command: "/bin/tini -- /usr/local/bin/docker-entrypoint.sh eswrapper"
-          ports: [ 9200, 9300 ]
+          ports: 
+            { "9200/tcp" : "9200", "9300/tcp" : "9300" }
           host_config:
-            port_bindings: { 9200 : 9200 , 9300 : 9300 }
             restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
           environment: [ "discovery.type=single-node" ]
           detach: True
@@ -120,11 +106,11 @@ node_templates:
 outputs:
   docker_api_url:
     description: Administration console URL
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':2375' ] }
   
   elastic_port_1:
-    value: { concat: [ 'https://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9200' ] }
+    value: { concat: [ 'https://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':9200' ] }
 
   elastic_port_2:
-    value: { concat: [ 'https://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9300' ] }
+    value: { concat: [ 'https://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':9300' ] }
 
