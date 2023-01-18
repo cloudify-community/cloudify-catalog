@@ -92,38 +92,46 @@ node_templates:
       location: { get_input: region_name }
       azure_config: *azure_config
 
-  network_security_group:
-    type: cloudify.azure.nodes.network.NetworkSecurityGroup
+  network_security_rule_1:
+    type: cloudify.azure.nodes.network.NetworkSecurityRule
     properties:
-      use_external_resource: true
-      name: { get_input: security_group_id }
+      name: { concat: [ 'cassandra1', get_input: security_group_id  ] }
+      network_security_group_name: { get_input: security_group_id }
       location: { get_input: region_name }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
       resource_config:
-        securityRules:
-        - name: Cassandra1
-          properties:
-            description: HTTP access
-            protocol: Tcp
-            sourcePortRange: '*'
-            destinationPortRange: 7000
-            sourceAddressPrefix: '*'
-            destinationAddressPrefix: '*'
-            priority: 101
-            access: 'Allow'
-            direction: Inbound
-        - name: Cassandra2
-          properties:
-            description: HTTP access
-            protocol: Tcp
-            sourcePortRange: '*'
-            destinationPortRange: 9042
-            sourceAddressPrefix: '*'
-            destinationAddressPrefix: '*'
-            priority: 102
-            access: 'Allow'
-            direction: Inbound
+        description: Cassandra1
+        protocol: Tcp
+        sourcePortRange: '*'
+        destinationPortRange: 7000
+        sourceAddressPrefix: '*'
+        destinationAddressPrefix: '*'
+        priority: 101
+        access: 'Allow'
+        direction: Inbound
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+
+  network_security_rule_2:
+    type: cloudify.azure.nodes.network.NetworkSecurityRule
+    properties:
+      name: { concat: [ 'cassandra2', get_input: security_group_id  ] }
+      network_security_group_name: { get_input: security_group_id }
+      location: { get_input: region_name }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+      resource_config:
+        description: Cassandra2
+        protocol: Tcp
+        sourcePortRange: '*'
+        destinationPortRange: 9042
+        sourceAddressPrefix: '*'
+        destinationAddressPrefix: '*'
+        priority: 102
+        access: 'Allow'
+        direction: Inbound
     relationships:
     - type: cloudify.azure.relationships.contained_in_resource_group
       target: resource_group

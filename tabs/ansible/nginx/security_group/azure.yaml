@@ -95,13 +95,13 @@ node_templates:
   network_security_rule:
     type: cloudify.azure.nodes.network.NetworkSecurityRule
     properties:
-      name: { get_input: security_group_id }
+      name: { concat: [ 'nginx', get_input: security_group_id  ] }
       network_security_group_name: { get_input: security_group_id }
       location: { get_input: region_name }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
       resource_config:
-        description: HTTP access
+        description: HTTP
         protocol: Tcp
         sourcePortRange: '*'
         destinationPortRange: 80

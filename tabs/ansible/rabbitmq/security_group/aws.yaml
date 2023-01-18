@@ -67,48 +67,13 @@ node_templates:
       resource_config:
         IpPermissions:
         - IpProtocol: tcp
-          FromPort: 4369
-          ToPort: 4369
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 25672
-          ToPort: 25672
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
           FromPort: 5672
           ToPort: 5672
           IpRanges:
           - CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
-          FromPort: 5671
-          ToPort: 5671
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
           FromPort: 15672
           ToPort: 15672
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 61613
-          ToPort: 61613
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 61614
-          ToPort: 61614
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 1883
-          ToPort: 1883
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 8883
-          ToPort: 8883
           IpRanges:
           - CidrIp: 0.0.0.0/0
     relationships:

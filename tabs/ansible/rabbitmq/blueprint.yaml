@@ -46,12 +46,6 @@ node_templates:
       digits: 2
       symbols: 3
       use_secret_if_exists: false
-  
-  #we creating the prefix for the deployment resources i.e. infrastructure
-  infra_prefix:
-    type: eaas.nodes.UniquePrefixGenerator
-    properties:
-      predefined_value: ""
 
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
