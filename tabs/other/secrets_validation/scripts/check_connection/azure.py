@@ -13,6 +13,11 @@ if PY2:
 else:
     import http.client as httplib
 
+from cloudify.manager import get_rest_client
+from cloudify.exceptions import NonRecoverableError
+
+sys.tracebacklimit = -1
+
 def authorize_with_azure(azure_tenant, azure_client_id, azure_secret):
 
     url = "https://login.microsoftonline.com/{0}/oauth2/token".format(
@@ -43,22 +48,16 @@ def list_resource_groups(azure_tenant, azure_client_id, azure_secret, azure_subs
     return response.status_code, response.json()
 
 def validate_azure():
-    azure_tenant = ctx.node.properties.get('azure_tenant_id', None)
-    azure_client_id = ctx.node.properties.get('azure_client_id', None)
-    azure_secret = ctx.node.properties.get('azure_client_secret', None)
-    azure_subscription_id = ctx.node.properties.get('azure_subscription_id', None)
+    client = get_rest_client() 
+    azure_tenant = client.secrets.get('azure_tenant_id').get('value')
+    azure_client_id = client.secrets.get('azure_client_id').get('value')
+    azure_secret = client.secrets.get('azure_client_secret').get('value')
+    azure_subscription_id = client.secrets.get('azure_subscription_id').get('value')
 
+    status_code, response_content = list_resource_groups(azure_tenant, azure_client_id, azure_secret, azure_subscription_id)
 
-    if azure_tenant is None or azure_client_id is None or azure_secret is None or azure_subscription_id is None:
-        ctx.instance.runtime_properties['connection_status'] = 'Invalid Credentials'
-        ctx.instance.runtime_properties['debug_action'] = 'Check your input values'
-
-    else:
-
-        status_code, response_content = list_resource_groups(azure_tenant, azure_client_id, azure_secret, azure_subscription_id)
-
-        if status_code != 200:
-            ctx.logger.error(
-                "Invalid Azure credentials : {}".format(response.content.decode('utf-8')))
-            raise NonRecoverableError(
-                "Invalid Azure credentials : {}".format(response.content.decode('utf-8')))
+    if status_code != 200:
+        ctx.logger.error(
+            "Invalid Azure credentials : {}".format(response_content))
+        raise NonRecoverableError(
+            "Invalid Azure credentials : {}".format(response_content))
