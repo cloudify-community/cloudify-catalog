@@ -4,7 +4,6 @@ description: Cloudify Traefik blueprint. Deploys Traefik service with Ansible Cl
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-ansible-plugin
 
 inputs:
