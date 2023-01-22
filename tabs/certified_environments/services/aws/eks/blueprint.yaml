@@ -4,7 +4,7 @@ imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin?version= >=2.5.6
   - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 dsl_definitions:
   aws_client: &aws_client
@@ -48,7 +48,7 @@ data_types:
       service_account_namespace:
         type: string
         default: default
-  
+
   cloud_credentials:
     properties:
       aws_access_key_id:
@@ -66,10 +66,9 @@ data_types:
       private_key_content:
         type: string
         default: { get_environment_capability: [cloud_credentials, private_key_content] }
-      region_name: 
+      region_name:
         type: string
         default: { get_environment_capability: [cloud_credentials, region_name] }
-
 
 node_templates:
   prefix:
@@ -81,13 +80,13 @@ node_templates:
     type: cloudify.nodes.ServiceComponent
     properties:
       resource_config:
-        blueprint:          
+        blueprint:
           id: { concat: [ { get_attribute: [ prefix, value ] }, '-network' ] }
           blueprint_archive: https://github.com/cloudify-community/eaas-example/releases/download/2.0rc1/prod_network.zip
           main_file_name: aws-blueprint.yaml
         deployment:
           id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, deployment ] }
-          inputs: 
+          inputs:
             resource_config:
               eks_cluster_name: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, inputs, eks_cluster_name ] }
             resource_prefix: { get_attribute: [ prefix, value ] }
@@ -169,9 +168,9 @@ node_templates:
               - { get_attribute: [ network, capabilities, public_subnet_ids, 1 ] }
             securityGroupIds:
               - { get_attribute: [ network, capabilities, eks_security_group_id ] }
-            endpointPublicAccess: True
-            endpointPrivateAccess: False
-      store_kube_config_in_runtime: True
+            endpointPublicAccess: true
+            endpointPrivateAccess: false
+      store_kube_config_in_runtime: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix
@@ -325,11 +324,15 @@ node_templates:
 
 capabilities:
   kubernetes_cluster_host:
+    description: Kubernetes cluster host
     value: { get_attribute: [ eks_cluster, kubeconf, clusters, 0, cluster, server ] }
   token:
+    description: Kubernetes cluster token
     value: { get_attribute: [store_token_and_kubeconfig, token] }
   ssl_ca_cert:
+    description: Kubernetes SSL CA certificate
     value: { get_attribute: [store_token_and_kubeconfig, ssl_ca_cert] }
   config:
+    description: Kubernetes cluster kubeconf
     value:
       file_content: { get_attribute: [ eks_cluster, kubeconf ] }
