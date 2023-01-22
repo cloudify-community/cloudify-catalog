@@ -5,43 +5,42 @@ description: >
   libselinux-python/libselinux-python3 on the manager VM is prerequisite.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
-  - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
 
   region_name:
-      type: string
-      default: EastUS
-      display_label: Azure region name
-      constraints:
+    type: string
+    default: EastUS
+    display_label: Azure region name
+    constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
 
 node_templates:
 
@@ -63,7 +62,7 @@ node_templates:
         resource_group_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_rg" ]}
         vpc_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_vpc" ]}
         subnet_name: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_subnet" ]}
-        location:  { get_input: region_name }
+        location: { get_input: region_name }
       ansible_env_vars: &env_vars
         AZURE_SUBSCRIPTION_ID: { get_secret: azure_subscription_id }
         AZURE_CLIENT_ID: { get_secret: azure_client_id }
@@ -95,8 +94,8 @@ node_templates:
             extra_packages: *extra_packages
 
 capabilities:
-  
-  resource_group_name: 
+
+  resource_group_name:
     description: Created resource group name.
     value: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_rg" ]}
 
@@ -104,7 +103,6 @@ capabilities:
     description: Created VPC name.
     value: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_vpc" ]}
 
-  subnet_name: 
+  subnet_name:
     description: Created subnet name.
     value: { concat: [ get_attribute: [ infra_prefix, value ], "cloudify_subnet" ]}
-        
