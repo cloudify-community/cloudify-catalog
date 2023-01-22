@@ -2,9 +2,9 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin?version= >=2.0.7
-  - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-kubernetes-plugin
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 labels:
   csys-obj-type:
@@ -34,10 +34,10 @@ node_templates:
         blueprint:
           id: { concat: [ { get_attribute: [ prefix, value ] }, '-network' ] }
           blueprint_archive: https://github.com/cloudify-community/eaas-example/releases/download/2.0rc1/single_node.zip
-          main_file_name: aws-blueprint.yaml       
+          main_file_name: aws-blueprint.yaml
         deployment:
           id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, dev-small, network, deployment ] }
-          inputs: 
+          inputs:
             resource_config: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, dev-small, network, inputs ] }
             resource_prefix: { get_attribute: [ prefix, value ] }
             cloud_credentials: { get_environment_capability: cloud_credentials }
@@ -77,7 +77,7 @@ node_templates:
     relationships:
       - target: network
         type: cloudify.relationships.depends_on
-  
+
   minikube:
     type: cloudify.nodes.Root
     interfaces:
@@ -115,8 +115,8 @@ node_templates:
             fabric_env: *fabric_env
     relationships:
       - target: docker
-        type: cloudify.relationships.depends_on  
-  
+        type: cloudify.relationships.depends_on
+
   kubernetes_master:
     type: cloudify.kubernetes.nodes.Master
     properties:
@@ -230,11 +230,15 @@ node_templates:
 
 capabilities:
   kubernetes_cluster_host:
+    description: Kubernetes cluster hostname
     value: { get_attribute: [ minikube, config, clusters, 0, cluster, server ] }
   token:
+    description: Kubernetes token
     value: { get_attribute: [ store_token_and_kubeconfig, token ] }
   ssl_ca_cert:
+    description: Kubernetes SSL CA certificate
     value: { get_attribute: [ store_token_and_kubeconfig, ssl_ca_cert ] }
   config:
-    value: 
+    description: Minikube config
+    value:
       file_content: { get_attribute: [ minikube, config ] }
