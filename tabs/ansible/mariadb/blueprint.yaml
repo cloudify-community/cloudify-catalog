@@ -3,19 +3,17 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify MariaDB blueprint. Deploys MariaDB service with Ansible Cloudify plugin.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-ansible-plugin
 
 inputs:
 
   rg_id:
-    description: Mocked Resource group ID
-    display_label: mocked resource group id
+    description: Resource group ID
+    display_label: Resource Group ID
     type: string
-    default: ""
-    
+
   infra_name:
     display_label: Name of the provider to deploy resources
     description: >
@@ -35,7 +33,7 @@ inputs:
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
 
   infra_exists:
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     type: string
@@ -56,7 +54,7 @@ node_templates:
 
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
-  # we point the node to use particular infrastructure cloud provider within 
+  # we point the node to use particular infrastructure cloud provider within
   # main_file_name param by setting infra_name input as the file name value
   infrastructure:
     type: cloudify.nodes.Component
@@ -64,31 +62,31 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: "blueprint.yaml"
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
-  
+
   # we setting the mariadb port to be open
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "security_group.zip"
+          blueprint_archive: security_group.zip
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
-  # deployment of the service is made by ansible plugin which run the code 
+  # deployment of the service is made by ansible plugin which run the code
   # inside the 'install_mariadb.yaml' playbook
   # we enter the master_password value as playbook variable
   mariadb:
@@ -116,21 +114,20 @@ node_templates:
                 run_data:
                   master_password: { get_attribute: [ master_password, password ] }
 
-
 outputs:
 
   mariadb_endpoint:
     description: MariaDB Host IP
     value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
-  
+
   mariadb_port:
     description: MariaDB Port
-    value: "3306"
+    value: 3306
 
   master_password:
     description: Mariadb Master password
     value: { get_attribute: [ master_password, password ] }
-  
+
   master_login_command:
     description: Connection to mongo server by mysql client
-    value: { concat : [ "mysql -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] }, " -u root -p ", { get_attribute: [ master_password, password ] } ] }
+    value: { concat: [ "mysql -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] }, " -u root -p ", { get_attribute: [ master_password, password ] } ] }
