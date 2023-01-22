@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin?version= >=3.0.10
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 labels:
   csys-obj-type:
@@ -25,13 +25,13 @@ inputs:
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-  
-  admin_login: 
+
+  admin_login:
     type: string
     display_label: The admin login name
-    description:  The admin login name
+    description: The admin login name
     default: cloudify
-    
+
   azure_region_name:
     type: string
     display_label: Azure region to create resources in
@@ -39,30 +39,30 @@ inputs:
     default: EastUS
     constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
 
 node_templates:
 
@@ -72,7 +72,7 @@ node_templates:
       predefined_value: { get_input: resource_prefix }
 
   resource_group:
-    type: cloudify.azure.nodes.ResourceGroup
+    type: cloudify.nodes.azure.ResourceGroup
     properties:
       name: { concat: [ { get_attribute: [ prefix, value ] }, ubuntuspotrg ] }
       location: { get_input: azure_region_name }
@@ -101,6 +101,8 @@ node_templates:
 
 capabilities:
   resource_group:
+    description: The resource group nae
     value: { get_attribute: [ resource_group, resource, name ] }
   admin_login:
+    description: The admin login
     value: { get_input: admin_login }
