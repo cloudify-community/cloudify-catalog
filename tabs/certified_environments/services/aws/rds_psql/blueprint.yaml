@@ -3,14 +3,13 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin?version= >=2.5.6
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 dsl_definitions:
   aws_client: &aws_client
     aws_access_key_id: { get_input: [ cloud_credentials, aws_access_key_id ] }
     aws_secret_access_key: { get_input: [ cloud_credentials, aws_secret_access_key ] }
     region_name: { get_input: [ cloud_credentials, region_name ] }
-
 
 inputs:
 
@@ -45,7 +44,7 @@ data_types:
       master_username:
         type: string
         default: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, db, inputs, master_username ] }
-  
+
   cloud_credentials:
     properties:
       aws_access_key_id:
@@ -63,7 +62,7 @@ data_types:
       private_key_content:
         type: string
         default: { get_environment_capability: [cloud_credentials, private_key_content] }
-      region_name: 
+      region_name:
         type: string
         default: { get_environment_capability: [cloud_credentials, region_name] }
 
@@ -83,7 +82,7 @@ node_templates:
           main_file_name: aws-blueprint.yaml
         deployment:
           id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, deployment ] }
-          inputs: 
+          inputs:
             resource_config:
               eks_cluster_name: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, inputs, eks_cluster_name ] }
             resource_prefix: { get_attribute: [ prefix, value ] }
@@ -145,9 +144,9 @@ node_templates:
                 DeletionPolicy: Snapshot
             Outputs:
               IpAddress:
-                Value: { "Fn::GetAtt" : [ "MyDB", "Endpoint.Address" ] }
+                Value: { "Fn::GetAtt": [ "MyDB", "Endpoint.Address" ] }
               Port:
-                Value: { "Fn::GetAtt" : [ "MyDB", "Endpoint.Port" ] }
+                Value: { "Fn::GetAtt": [ "MyDB", "Endpoint.Port" ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix
@@ -158,8 +157,11 @@ node_templates:
 
 capabilities:
   host:
+    description: Host IP Address
     value: { get_attribute: [ database_stack, outputs_items, IpAddress ] }
   master_username:
+    description: PostgreSQL master username
     value: { get_input: [ resource_config, master_username ] }
   master_password:
+    description: PostgreSQL master passowrd
     value: { get_attribute: [ password_generator, password] }
