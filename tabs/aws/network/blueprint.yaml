@@ -6,7 +6,6 @@ description: >
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
-  - plugin:cloudify-utilities-plugin
 
 inputs:
   region_name:
@@ -16,6 +15,7 @@ inputs:
     default: ca-central-1
 
   aws_credentials:
+    display_label: AWS Credentials
     description: The credentials for AWS
     type: dict
     default:
