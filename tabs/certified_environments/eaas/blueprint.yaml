@@ -1,27 +1,26 @@
 tosca_definitions_version: cloudify_dsl_1_4
 
-
 imports:
   - cloudify/types/types.yaml
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
-
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 labels:
   csys-obj-type:
     values:
       - environment
 
-
 inputs:
   resource_prefix:
+    display_label: 'Resource Prefix'
     type: string
     description: |
       If not provided, it will be auto-generated.
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-      
+
   env_type:
+    display_label: 'Env Type'
     description: |
       The environment's type to create
     type: string
@@ -32,13 +31,13 @@ inputs:
           - production
 
   ttl:
+    display_label: 'Ttl'
     description: |
       Minutes of time to live after which the environment will be uninstalled
     type: integer
     default: 60
     constraints:
       - greater_or_equal: 0
-
 
 node_templates:
   prefix:
@@ -60,7 +59,7 @@ node_templates:
           external_resource: true
         deployment:
           id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, { get_input: env_type }, network, deployment ] }
-          inputs: 
+          inputs:
             resource_config: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, { get_input: env_type }, network, inputs ] }
             resource_prefix: { get_attribute: [ prefix, value ] }
             cloud_credentials: { get_environment_capability: cloud_credentials }
@@ -142,7 +141,6 @@ node_templates:
   #   relationships:
   #     - target: network
   #       type: cloudify.relationships.depends_on
-
 
 capabilities:
   k8s_endpoint:
