@@ -51,4 +51,3 @@ capabilities:
       public_key_content: { get_attribute: [key, public_key_export] }
       private_key_content: { get_attribute: [key, private_key_export] }
       region_name: { get_input: azure_location_name }
-
