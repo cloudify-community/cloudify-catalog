@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
@@ -28,7 +28,7 @@ inputs:
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/docker/vm/vm.zip
 
   infra_exists:
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     type: string
@@ -60,7 +60,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
-  
+
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -72,14 +72,14 @@ node_templates:
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, vpc_id ] }
+            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -88,9 +88,9 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull elasticsearch:8.2.0
+              - docker pull elasticsearch:8.2.0
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
+              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint ] }
               user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
               key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
             use_sudo: true
@@ -111,10 +111,10 @@ node_templates:
           command: "/bin/tini -- /usr/local/bin/docker-entrypoint.sh eswrapper"
           ports: [ 9200, 9300 ]
           host_config:
-            port_bindings: { 9200 : 9200 , 9300 : 9300 }
-            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
+            port_bindings: { 9200: 9200, 9300: 9300 }
+            restart_policy: { "MaximumRetryCount": 0, "Name": "always" }
           environment: [ "discovery.type=single-node" ]
-          detach: True
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
@@ -123,10 +123,11 @@ outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
-  
+
   elastic_port_1:
+    description: ES URL for all API calls over HTTP. This includes search and aggregations, monitoring and anything else that uses a HTTP request
     value: { concat: [ 'https://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9200' ] }
 
   elastic_port_2:
+    description: ES URL for communications between nodes in a cluster. For things like cluster updates, master elections, nodes joining/leaving, shard allocation
     value: { concat: [ 'https://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':9300' ] }
-
