@@ -63,7 +63,7 @@ inputs:
           - Standard_GRS
           - Standard_RAGRS
           - Premium_LRS
-          
+
   location:
     type: string
     display_label: Azure location
