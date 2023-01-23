@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin?version= >=0.15.0
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 labels:
   csys-obj-type:
@@ -20,13 +20,12 @@ inputs:
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
 
-
 node_templates:
   prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: { get_input: resource_prefix }
-      
+
   terraform:
     type: cloudify.nodes.terraform
     properties:
@@ -37,7 +36,7 @@ node_templates:
     type: cloudify.nodes.terraform.Module
     properties:
       resource_config:
-        environment_variables: 
+        environment_variables:
           AWS_ACCESS_KEY_ID: { get_environment_capability: [cloud_credentials, aws_access_key_id] }
           AWS_SECRET_ACCESS_KEY: { get_environment_capability: [cloud_credentials, aws_secret_access_key] }
         variables:
@@ -54,4 +53,5 @@ node_templates:
 
 capabilities:
   bucket_url:
+    description: The bucket URL
     value: { concat: [ 'https://', { get_attribute: [ terraform_module, resources, bucket, instances, 0, attributes, bucket_regional_domain_name ] } ] }
