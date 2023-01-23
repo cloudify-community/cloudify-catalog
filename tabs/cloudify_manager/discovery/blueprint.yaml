@@ -1,38 +1,39 @@
 tosca_definitions_version: cloudify_dsl_1_4
 imports:
-  - https://cloudify.co/spec/cloudify/6.4.0/types.yaml
-  - plugin:cloudify-utilities-plugin
-
+  - cloudify/types/types.yaml
 
 blueprint_labels:
   csys-obj-type:
     values:
-    - environment
+      - environment
 
 labels:
   csys-obj-type:
     values:
-     - environment
-
+      - environment
 
 inputs:
 
   cloudify_manager_ip:
+    display_label: Cloudify Manager IP
     description: >
       Address of manager.
     type: string
     default: 3.220.228.50
   cloudify_tenant:
+    display_label: Cloudify Tenant
     description: >
       Cloudify tenant
     type: string
     default: default_tenant
   cloudify_port:
+    display_label: Cloudify Port
     description: >
       Cloudify manager port, 80 for http, 443 for https
     type: string
     default: 80
   cloudify_protocol:
+    display_label: Cloudify Protocol
     description: >
       Cloudify manager protocol
     type: string
@@ -42,10 +43,14 @@ node_templates: {}
 
 capabilities:
   cloudify_manager_endpoint:
+    description: Cloudify Manager IP address
     value: { get_input: cloudify_manager_ip }
   cloudify_manager_tenant:
+    description: Cloudify Manager tenant name
     value: { get_input: cloudify_tenant }
   cloudify_manager_port:
+    description: Cloudify Manager port
     value: { get_input: cloudify_port }
   cloudify_manager_protocol:
+    description: Protocol to connect to Cloudify Manager
     value: { get_input: cloudify_protocol }
