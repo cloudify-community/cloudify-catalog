@@ -3,11 +3,11 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin?version= >=2.0.7
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 inputs:
 
- resource_prefix:
+  resource_prefix:
     type: string
     display_label: Resource Prefix
     description: The resource prefix for resources naming
@@ -114,13 +114,13 @@ node_templates:
     type: cloudify.nodes.ServiceComponent
     properties:
       resource_config:
-        blueprint:          
+        blueprint:
           id: { concat: [ { get_attribute: [ prefix, value ] }, '-network' ] }
           blueprint_archive: https://github.com/cloudify-community/eaas-example/releases/download/2.0rc1/single_node.zip
-          main_file_name: aws-blueprint.yaml      
+          main_file_name: aws-blueprint.yaml
         deployment:
           id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, dev-small, network, deployment ] }
-          inputs: 
+          inputs:
             resource_config: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, dev-small, network, inputs ] }
             resource_prefix: { get_attribute: [ prefix, value ] }
             cloud_credentials: { get_environment_capability: cloud_credentials }
@@ -154,4 +154,5 @@ node_templates:
 
 capabilities:
   bucket_url:
+    description: Bucket URL
     value: { concat: [ 'http://', { get_attribute: [ network, capabilities, s3_vm_ip ] }, ':9000/', { get_secret: [eaas_params, { get_environment_capability: cloud_type }, dev-small, s3, inputs, bucket_name ] } ] }
