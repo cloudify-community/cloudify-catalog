@@ -101,7 +101,7 @@ inputs:
     display_label: Enter desired admin username
     description: Enter desired admin username
     default: {get_secret: azure_admin_username}
-    
+
   admin_password:
     type: string
     display_label: Enter admin password
@@ -140,7 +140,7 @@ node_templates:
       location: {get_input: location}
 
   public_ip:
-    type: cloudify.azure.nodes.network.PublicIPAddress
+    type: cloudify.nodes.azure.network.PublicIPAddress
     properties:
       client_config: *azure_credentials
       location: {get_input: location}
@@ -152,7 +152,7 @@ node_templates:
         target: resource_group
 
   network:
-    type: cloudify.azure.nodes.network.VirtualNetwork
+    type: cloudify.nodes.azure.network.VirtualNetwork
     properties:
       client_config: *azure_credentials
       name: {concat: [{get_input: resource_prefix}, network]}
@@ -162,7 +162,7 @@ node_templates:
         target: resource_group
 
   subnet:
-    type: cloudify.azure.nodes.network.Subnet
+    type: cloudify.nodes.azure.network.Subnet
     properties:
       client_config: *azure_credentials
       name: {concat: [{get_input: resource_prefix}, subnet]}
@@ -174,7 +174,7 @@ node_templates:
         target: network
 
   ip_config:
-    type: cloudify.azure.nodes.network.IPConfiguration
+    type: cloudify.nodes.azure.network.IPConfiguration
     properties:
       client_config: *azure_credentials
       location: { get_input: location }
@@ -187,7 +187,7 @@ node_templates:
         target: public_ip
 
   security_group:
-    type: cloudify.azure.nodes.network.NetworkSecurityGroup
+    type: cloudify.nodes.azure.network.NetworkSecurityGroup
     properties:
       client_config: *azure_credentials
       name: {concat: [{get_input: resource_prefix}, sg]}
@@ -210,7 +210,7 @@ node_templates:
         target: resource_group
 
   nic:
-    type: cloudify.azure.nodes.network.NetworkInterfaceCard
+    type: cloudify.nodes.azure.network.NetworkInterfaceCard
     properties:
       client_config: *azure_credentials
       location: { get_input: location }
@@ -234,7 +234,7 @@ node_templates:
         target: resource_group
 
   vm:
-    type: cloudify.azure.nodes.compute.VirtualMachine
+    type: cloudify.nodes.azure.compute.VirtualMachine
     properties:
       client_config: *azure_credentials
       agent_config:
