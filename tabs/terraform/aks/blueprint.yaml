@@ -43,7 +43,7 @@ node_templates:
     type: cloudify.nodes.terraform
     properties:
       resource_config:
-        installation_source: https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip
+        installation_source: https://releases.hashicorp.com/terraform/1.3.6/terraform_1.3.6_linux_amd64.zip
 
   terraform_module:
     type: cloudify.nodes.terraform.Module
