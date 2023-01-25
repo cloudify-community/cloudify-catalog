@@ -33,12 +33,6 @@ inputs:
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
 
-  infra_deployment_id:
-    type: string
-    display_label: The infrastructure deployment id
-    description: The blueprint name, the deployment name.
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
-
 node_templates:
 
   infrastructure:
