@@ -10,10 +10,10 @@ imports:
 inputs:
 
   rg_id:
-    description: Mocked Resource group ID
-    display_label: mocked resource group id
+    description: Resource group ID
+    display_label: Resource Group ID
     type: string
-    default: ""
+    default: ''
 
   security_group_id:
     type: string
@@ -50,7 +50,6 @@ inputs:
             - me-south-1
             - sa-east-1
     
-
 dsl_definitions:
 
   client_config: &client_config

@@ -73,7 +73,6 @@ inputs:
     type: integer
     default: 60
 
-
 dsl_definitions:
 
   azure_config: &azure_config
@@ -108,7 +107,7 @@ node_templates:
         sourceAddressPrefix: '*'
         destinationAddressPrefix: '*'
         priority: 101
-        access: 'Allow'
+        access: Allow
         direction: Inbound
 
   network_security_rule_2:
@@ -127,7 +126,7 @@ node_templates:
         sourceAddressPrefix: '*'
         destinationAddressPrefix: '*'
         priority: 102
-        access: 'Allow'
+        access: Allow
         direction: Inbound
     relationships:
     - type: cloudify.azure.relationships.contained_in_resource_group

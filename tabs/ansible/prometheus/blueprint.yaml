@@ -42,7 +42,7 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: "blueprint.yaml"
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment: 
           inputs: 
@@ -53,8 +53,8 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "security_group.zip"
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: security_group.zip
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
           inputs:
@@ -72,7 +72,7 @@ node_templates:
         create:
           implementation: ansible.cloudify_ansible.tasks.run
           inputs:
-            site_yaml_path: playbooks/install_prometheus.yaml
+            site.yaml_path: playbooks/install_prometheus.yaml
             sources:
               foo_group:
                 hosts:

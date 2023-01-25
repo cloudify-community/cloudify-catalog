@@ -63,7 +63,7 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: "blueprint.yaml"
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment: 
           inputs: 
@@ -75,8 +75,8 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "security_group.zip"
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: security_group.zip
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
           inputs:
@@ -124,7 +124,7 @@ outputs:
   
   cassandra_port:
     description: Postgres Port
-    value: "9042"
+    value: '9042'
     
   master_password:
     description: Postgres Master password

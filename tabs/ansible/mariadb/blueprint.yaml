@@ -9,12 +9,6 @@ imports:
   - plugin:cloudify-ansible-plugin
 
 inputs:
-
-  rg_id:
-    description: Mocked Resource group ID
-    display_label: mocked resource group id
-    type: string
-    default: ""
     
   infra_name:
     display_label: Name of the provider to deploy resources
@@ -64,7 +58,7 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: "blueprint.yaml"
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment: 
           inputs: 
@@ -76,8 +70,8 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "security_group.zip"
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: security_group.zip
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
           inputs:
