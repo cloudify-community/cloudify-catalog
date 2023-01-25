@@ -45,7 +45,7 @@ node_templates:
   infra_prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
-      predefined_value: ""
+      predefined_value: ''
 
   infrastructure:
     type: cloudify.nodes.Component
@@ -53,7 +53,7 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: "blueprint.yaml"
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment: 
           inputs: 
@@ -69,9 +69,9 @@ node_templates:
             commands:
               - docker pull hello-world:latest
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
-              user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
-              key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+              host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+              user: { get_attribute: [ infrastructure, capabilities, user ] }
+              key: { get_attribute: [ infrastructure, capabilities, key_content ] }
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -81,12 +81,12 @@ node_templates:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
-        docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+        docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], '-', { get_input: infra_deployment_id } ] }, endpoint] }
         docker_rest_port: '2375'
       resource_config:
-        image_tag: "helloworld:latest"
+        image_tag: 'helloworld:latest'
         container_args:
-          command: "hello"
+          command: 'hello'
           name: helloworld
           detach: True
     relationships:
@@ -95,4 +95,4 @@ node_templates:
 outputs:
   docker_api_url:
     description: Administration console URL
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
+    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], '-', { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }

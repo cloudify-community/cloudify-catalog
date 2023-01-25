@@ -3,7 +3,6 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
@@ -49,18 +48,13 @@ inputs:
 
 node_templates:
 
-  infra_prefix:
-    type: eaas.nodes.UniquePrefixGenerator
-    properties:
-      predefined_value: ""
-
   infrastructure:
     type: cloudify.nodes.Component
     properties:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: "blueprint.yaml"
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment: 
           inputs: 
@@ -71,17 +65,15 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "security_group.zip"
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: security_group.zip
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
     relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
       - type: cloudify.relationships.depends_on
         target: infrastructure
   
@@ -95,9 +87,9 @@ node_templates:
             commands:
             - docker pull docker pull mongo:4.4.14
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
-              user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
-              key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+              host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+              user: { get_attribute: [ infrastructure, capabilities, user ] }
+              key: { get_attribute: [ infrastructure, capabilities, key_content ] }
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -127,9 +119,9 @@ node_templates:
            { concat: [ "MONGO_INITDB_ROOT_PASSWORD=", { get_attribute: [ password_generator, password ] } ] }, 
            { concat: [ "MONGO_INITDB_ROOT_USERNAME=", { get_input: user_name } ] } 
           ]
-          ports: [ 27017 ]
+          ports: 
+            { '27017/tcp' : '27017' }
           host_config:
-            port_bindings: { 27017 : 27017 }
             restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
           detach: True
     relationships:
