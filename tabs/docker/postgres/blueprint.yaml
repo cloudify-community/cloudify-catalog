@@ -118,11 +118,11 @@ node_templates:
 outputs:
   docker_api_url:
     description: Administration console URL
-    value: { concat: [ 'http://', { get_capability: [ { get_input: infra_deployment_id }, endpoint] }, ':2375' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':2375' ] }
 
   postgres_endpoint:
     description: postgres endpoint
-    value: { concat: [ { get_capability: [ { concat: [ { get_input: infra_deployment_id } ] }, endpoint] }, ':5432' ] }
+    value: { concat: [ { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':5432' ] }
 
   postgres_password:
     description: Postgres root password

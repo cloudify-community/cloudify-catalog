@@ -122,7 +122,7 @@ node_templates:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
-        docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+        docker_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
         docker_rest_port: '2375'
       resource_config:
         image_tag: "influxdb:2.0"
@@ -151,7 +151,7 @@ node_templates:
 outputs:
   docker_endpoint:
     description: Administration console URL
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':2375' ] }
   
   influxdb_password:
     description: Influxdb password
@@ -171,4 +171,4 @@ outputs:
 
   endpoint:
     description: Influxdb endpoint
-    value: { concat: [ "http://", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8086' ] }
+    value: { concat: [ "http://", { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':8086' ] }
