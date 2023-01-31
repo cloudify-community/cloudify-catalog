@@ -102,7 +102,7 @@ inputs:
     display_label: Enter desired admin username
     description: Enter desired admin username
     default: {get_secret: azure_admin_username}
-    
+
   admin_password:
     type: string
     display_label: Enter admin password

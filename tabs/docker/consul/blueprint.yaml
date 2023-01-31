@@ -27,7 +27,7 @@ inputs:
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
 
   infra_exists:
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     type: string
@@ -46,7 +46,10 @@ node_templates:
         deployment: 
           inputs: 
             provider_name: { get_input: infra_name }
-  
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -55,7 +58,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull consul:latest
+              - docker pull consul:latest
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }

@@ -39,6 +39,7 @@ inputs:
     default: MyApp
 
   aws_credentials:
+    display_label: AWS Credentials
     description: AWS credenntials
     type: dict
     default:

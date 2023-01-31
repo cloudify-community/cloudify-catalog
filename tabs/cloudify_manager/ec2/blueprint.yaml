@@ -11,9 +11,9 @@ inputs:
     type: string
     display_label: URL for Cloudify Manager rpm
     description: >
-      Cloudify Manager installation RPM 
+      Cloudify Manager installation RPM
     default: https://repository.cloudifysource.org/cloudify/6.4.1/community/cloudify-manager-install-6.4.1-ga.el7.x86_64.rpm
-  
+
   vm_archive:
     type: string
     display_label: URL for vm zip archive
@@ -28,29 +28,26 @@ inputs:
     default: us-west-1
     constraints:
       - valid_values:
-        - us-east-1
-        - us-west-1
-        - us-west-2
-        - eu-west-1
-        - ca-central-1
-  
+          - us-east-1
+          - us-west-1
+          - us-west-2
+          - eu-west-1
+          - ca-central-1
+
   vpc_id:
     type: string
     display_label: AWS VPC id
-    description: Enter AWS VPC id
-    default: vpc-0724e0d25b1620bef
+    description: Enter AWS VPC id, e.g vpc-0123e0d53b1620bef
 
-  subnet_id: 
+  subnet_id:
     type: string
     display_label: Subnet id
-    description: Enter AWS subnet id
-    default: subnet-0341c5e01b420917f
+    description: Enter AWS subnet id, e.g subnet-0123c5e01b420917f
 
   security_group_id:
     type: string
     display_label: AWS SG id
-    description: Enter AWS SG id
-    default: sg-00e449a1b3efd0d45
+    description: Enter AWS SG id, e.g sg-00e123a1b3efd0d45
 
 dsl_definitions:
 
@@ -114,9 +111,9 @@ node_templates:
             IpRanges:
               - CidrIp: 0.0.0.0/0
     relationships:
-    - type: cloudify.relationships.contained_in
-      target: security_group
-  
+      - type: cloudify.relationships.contained_in
+        target: security_group
+
 # Cloudify Manager VM
   cloudify_manager:
     type: cloudify.nodes.ServiceComponent
@@ -169,7 +166,7 @@ capabilities:
   cloudify_manager_endpoint:
     description: The endpoint of Cloudify Manager installed on VM
     value: { concat: [ 'https://', { get_attribute: [ cloudify_manager, capabilities, public_ip ] } ] }
-  
+
   public_ip:
     description: The public ip of the CM EC2 instance
     value: { get_attribute: [cloudify_manager, capabilities, public_ip ] }

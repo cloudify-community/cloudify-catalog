@@ -4,7 +4,6 @@ description: Cloudify InfluxDB blueprint. Deploys InfluxDB service with Ansible 
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-ansible-plugin
 
 inputs:
@@ -28,7 +27,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -43,10 +42,10 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
-  
+
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -57,9 +56,9 @@ node_templates:
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -90,9 +89,9 @@ outputs:
   grafana_endpoint:
     description: Grafana Host IP
     value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
-  
+
   grafana_port:
     description: InfluxDB Port
-    value: "3000"
+    value: 3000
 
-  
+

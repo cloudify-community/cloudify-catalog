@@ -3,9 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Nginx blueprint. Deploys Nginx service with Ansible Cloduify plugin.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-ansible-plugin
 
 inputs:
@@ -29,7 +27,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -44,10 +42,10 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
-  
+
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -58,9 +56,9 @@ node_templates:
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -94,19 +92,19 @@ outputs:
   redis_endpoint:
     description: Redis Host IP
     value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
-  
+
   redis_port:
     description: Redis Port
-    value: "6379"
-  
+    value: 6379
+
   slave_password:
     description: Redis Slave password
     value: { get_attribute: [ slave_password, master_password ] }
-  
+
   master_password:
     description: Redis Master password
     value: { get_attribute: [ master_password, master_password ] }
-  
+
   test_command:
     description: Command to test service with the redis-cli tool
-    value: { concat: [ "redis-cli -h", { get_attribute: [ infrastructure, capabilities, endpoint ] } ,"-p 6379 -a", { get_attribute: [ master_password, master_password ] } ]}
+    value: { concat: [ "redis-cli -h", { get_attribute: [ infrastructure, capabilities, endpoint ] }, "-p 6379 -a", { get_attribute: [ master_password, master_password ] } ]}

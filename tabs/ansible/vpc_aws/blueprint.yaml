@@ -5,10 +5,9 @@ description: >
   libselinux-python/libselinux-python3 on the manager VM is prerequisite.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
-  - https://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
-  - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
 
@@ -19,29 +18,28 @@ inputs:
     default: us-east-1
     constraints:
       - valid_values:
-        - us-east-1 #US East (N. Virginia)
-        - us-east-2 #US East (Ohio)
-        - us-west-1 #US West (N. California)
-        - us-west-2 #US West (Oregon)
-        - ca-central-1  #Canada (Central)
-        - eu-central-1  #Europe (Frankfurt)
-        - eu-west-1 #Europe (Ireland)
-        - eu-west-2 #Europe (London)
-        - eu-south-1  #Europe (Milan)
-        - eu-west-3 #Europe (Paris)
-        - eu-north-1  #Europe (Stockholm)
-        - ap-northeast-3  #Asia Pacific (Osaka)
-        - ap-northeast-2  #Asia Pacific (Seoul)
-        - ap-southeast-1  #Asia Pacific (Singapore)
-        - ap-southeast-2  #Asia Pacific (Sydney)
-        - ap-northeast-1  #Asia Pacific (Tokyo)
+          - us-east-1 #US East (N. Virginia)
+          - us-east-2 #US East (Ohio)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-central-1  #Europe (Frankfurt)
+          - eu-west-1 #Europe (Ireland)
+          - eu-west-2 #Europe (London)
+          - eu-south-1  #Europe (Milan)
+          - eu-west-3 #Europe (Paris)
+          - eu-north-1  #Europe (Stockholm)
+          - ap-northeast-3  #Asia Pacific (Osaka)
+          - ap-northeast-2  #Asia Pacific (Seoul)
+          - ap-southeast-1  #Asia Pacific (Singapore)
+          - ap-southeast-2  #Asia Pacific (Sydney)
+          - ap-northeast-1  #Asia Pacific (Tokyo)
 
   availability_zone:
     type: string
     display_label: The avability zone in the AWS region
     description: The availability zone in the AWS region
     default: { concat: [ { get_input: aws_region_name }, 'b' ] }
-
 
 node_templates:
 
@@ -91,13 +89,13 @@ node_templates:
               route_table_id: { get_attribute: [aws_infra_info, route_table_id] }
               subnet_id: { get_attribute: [aws_infra_info, subnet_id] }
               vpc_id: { get_attribute: [aws_infra_info, vpc_id] }
-              vpc_name:  { get_attribute: [aws_infra_info, vpc_name] }
+              vpc_name: { get_attribute: [aws_infra_info, vpc_name] }
             ansible_env_vars: *env_vars
             extra_packages: *extra_packages
     relationships:
       - type: cloudify.relationships.depends_on
         target: aws_infra_info
-  
+
   aws_infra_info:
     type: cloudify.nodes.Root
     interfaces:
@@ -113,9 +111,8 @@ capabilities:
 
   vpc_id:
     description: Created VPC id.
-    value:  { get_attribute: [aws_infra_info, vpc_id] }
+    value: { get_attribute: [aws_infra_info, vpc_id] }
 
   subnet_id:
     description: Created subnet id.
-    value:  { get_attribute: [aws_infra_info, subnet_id] }
-
+    value: { get_attribute: [aws_infra_info, subnet_id] }

@@ -3,9 +3,8 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Cassandra blueprint. Deploys Cassandra service with Ansible Cloduify plugin.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-ansible-plugin
 
 labels:
@@ -39,7 +38,7 @@ inputs:
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
-    
+
 node_templates:
 
   # we creating the password for postgres admin/master user
@@ -52,10 +51,10 @@ node_templates:
       digits: 2
       symbols: 3
       use_secret_if_exists: false
-  
+
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
-  # we point the node to use particular infrastructure cloud provider within 
+  # we point the node to use particular infrastructure cloud provider within
   # main_file_name param by setting infra_name input as the file name value
   infrastructure:
     type: cloudify.nodes.Component
@@ -65,10 +64,10 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
-  
+
   # we setting the postgres ports to be open
   secrurity_group_rules:
     type: cloudify.nodes.Component
@@ -80,14 +79,14 @@ node_templates:
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
-  # deployment of the service is made by ansible plugin which run the code 
+  # deployment of the service is made by ansible plugin which run the code
   # inside the 'install_postgres.yaml' playbook
   # we enter the master_password value as a variable
   # we used this variable in the 'templates/docker-compose.yaml.j2' template
@@ -121,10 +120,10 @@ outputs:
   cassandra_endpoint:
     description: Cassandra Host IP
     value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
-  
+
   cassandra_port:
     description: Postgres Port
-    value: '9042'
+    value: 9042
     
   master_password:
     description: Postgres Master password

@@ -45,6 +45,7 @@ inputs:
           - c
 
   availability_zone:
+    display_label: Availability Zone
     description: Availability Zone, combination of region and availability zone suffix
     type: string
     default: { concat: [ { get_input: aws_region_name }, { get_input: availability_zone_suffix } ] }

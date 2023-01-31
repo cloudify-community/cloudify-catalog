@@ -3,9 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Installs MySQL with Ansible on AWS/Azure environments.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
-  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
-  - plugin:cloudify-fabric-plugin
+  - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
 
 inputs:
@@ -28,7 +26,7 @@ inputs:
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
 
   infra_exists:
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     type: string
@@ -44,23 +42,22 @@ inputs:
     type: string
     display_label: MySQL root user password
     default: { get_secret: mysql_root_password }
-    
+
   mysql_app_user:
     type: string
     display_label: MySQL app user name
     default: 'app_user'
-    
+
   mysql_app_user_password:
     type: string
     display_label: Mysql app user password
     default: { get_secret: mysql_appuser_password }
 
-
 node_templates:
 
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
-  # we point the node to use particular infrastructure cloud provider within 
+  # we point the node to use particular infrastructure cloud provider within
   # main_file_name param by setting infra_name input as the file name value
   infrastructure:
     type: cloudify.nodes.Component
@@ -70,10 +67,10 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
-  
+
   # we setting the mariadb port to be open
   secrurity_group_rules:
     type: cloudify.nodes.Component
@@ -81,13 +78,13 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: security_group.zip
-          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
+          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -125,36 +122,31 @@ node_templates:
                         ansible_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
                         ansible_user: { get_attribute: [ infrastructure, capabilities, user ] }
                         ansible_ssh_private_key_file: { get_attribute: [ infrastructure, capabilities, key_content ] }
-                        ansible_become: True
+                        ansible_become: true
                         ansible_ssh_common_args: -o StrictHostKeyChecking=no
                 run_data:
                   pb_root_password: { get_input: mysql_root_password }
                   pb_appuser: { get_input: mysql_app_user }
                   pb_appuser_password: { get_input: mysql_app_user_password }
 
-
 capabilities:
 
   application_endpoint:
     description: The external endpoint of the DB application.
     value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':3306' ] }
-  
+
   mysql_endpoint:
     description: MySQL endpoint
     value: { concat: [ { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':3306' ] }
-  
+
   mysql_password:
     description: MYSQL root password
     value: { get_input: mysql_root_password }
-    
+
   mysql_app_user:
     description: MYSQL app user for outside access
     value: { get_input: mysql_app_user }
-    
+
   mysql_app_user_password:
     description: MYSQL app user for outside access
     value: { get_input: mysql_app_user_password }
-  
-
-
-

@@ -27,7 +27,7 @@ inputs:
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
 
   infra_exists:
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     type: string
@@ -46,7 +46,10 @@ node_templates:
         deployment: 
           inputs: 
             provider_name: { get_input: infra_name }
-  
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infra_prefix
+
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -63,7 +66,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -72,7 +75,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull elasticsearch:8.2.0
+              - docker pull elasticsearch:8.2.0
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -98,7 +101,7 @@ node_templates:
           host_config:
             restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
           environment: [ "discovery.type=single-node" ]
-          detach: True
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
@@ -113,4 +116,3 @@ outputs:
 
   elastic_port_2:
     value: { concat: [ 'https://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':9300' ] }
-

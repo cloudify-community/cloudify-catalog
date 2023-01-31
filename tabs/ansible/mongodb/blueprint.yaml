@@ -3,20 +3,19 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify MongoDB blueprint. Deploys MongoDB service with Ansible Cloduify plugin.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-ansible-plugin
 
 inputs:
 
-  user_name: 
-    type: string 
+  user_name:
+    type: string
     display_label: The user name to create database for
     description: The user name to create database for
     default: cloudify
 
-  db_name: 
+  db_name:
     type: string
     display_label: The database name to create
     description: The database name to create
@@ -40,7 +39,7 @@ inputs:
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
 
   infra_exists:
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     type: string
@@ -69,10 +68,10 @@ node_templates:
       digits: 2
       symbols: 3
       use_secret_if_exists: false
-  
+
   # deployment of the infrastructure, we pass the URL as a blueprint archive
   # the node will automatically fetch the file from the URL host and unzip it
-  # we point the node to use particular infrastructure cloud provider within 
+  # we point the node to use particular infrastructure cloud provider within
   # main_file_name param by setting infra_name input as the file name value
   infrastructure:
     type: cloudify.nodes.Component
@@ -82,10 +81,10 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
-  
+
   # we setting the postgres port to be open
   secrurity_group_rules:
     type: cloudify.nodes.Component
@@ -97,14 +96,14 @@ node_templates:
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
-  # deployment of the service is made by ansible plugin which run the code 
+  # deployment of the service is made by ansible plugin which run the code
   # inside the 'install_postgres.yaml' playbook
   # we enter few variables to the run_data dict in order to use them
   # as the playbook variables
@@ -135,26 +134,26 @@ node_templates:
                   user_password: { get_attribute: [ user_password, password ] }
                   user_name: { get_input: user_name }
                   db_name: { get_input: db_name }
-                  
+
 
 outputs:
 
   mongodb_endpoint:
     description: MongoDB Host IP
     value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
-  
+
   mongodb_port:
     description: MongoDB Port
-    value: "27017"
+    value: 27017
 
   master_password:
     description: MongoDB Master password
     value: { get_attribute: [ master_password, password ] }
-  
+
   user_password:
     description: MongoDB Master password
     value: { get_attribute: [ user_password, password ] }
-  
+
   master_login_command:
     description: Connection to mongo server by mongo client
     value: { concat : [ "mongo -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] },"/admin", "-u admin -p", { get_attribute: [ master_password, password ] } ] }
@@ -162,4 +161,4 @@ outputs:
   user_login_command:
     description: Connection to mongo server by mongo client
     value: { concat : [ "mongo -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] },"/", { get_input: db_name }, "-u", { get_input: user_name }, "-p", { get_attribute: [ user_password, password ] } ] }
-  
+

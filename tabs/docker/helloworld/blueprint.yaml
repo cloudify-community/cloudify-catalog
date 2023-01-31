@@ -27,7 +27,7 @@ inputs:
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/docker/vm/vm.zip
 
   infra_exists:
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     type: string
@@ -46,7 +46,7 @@ node_templates:
         deployment: 
           inputs: 
             provider_name: { get_input: infra_name }
-    
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -64,7 +64,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-    
+
   docker_wordpress_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -76,10 +76,11 @@ node_templates:
         container_args:
           command: 'hello'
           name: helloworld
-          detach: True
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
+        
 outputs:
   docker_api_url:
     description: Administration console URL

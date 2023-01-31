@@ -101,7 +101,7 @@ inputs:
     display_label: Enter desired admin username
     description: Enter desired admin username
     default: {get_secret: azure_admin_username}
-    
+
   admin_password:
     type: string
     display_label: Enter admin password
@@ -260,7 +260,7 @@ node_templates:
         target: public_ip
 
   lb:
-    type: cloudify.azure.nodes.network.LoadBalancer
+    type: cloudify.nodes.azure.network.LoadBalancer
     properties:
       client_config: *azure_credentials
       location: { get_input: location }

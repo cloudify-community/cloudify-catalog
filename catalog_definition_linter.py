@@ -56,9 +56,8 @@ def validate_path(value: str) -> bool:
     :param value: string to be validated
     :return: True if the value is a path
     """
-    regexp = re.compile('^[0-9a-zA-Z\-\_\/]+$')
+    regexp = re.compile('^[0-9a-zA-Z\-\_\/\.]+$')
     return value and regexp.search(value)
-
 
 def validate_path_exists(value: str) -> bool:
     """Validates if the value is a relative path within the directory
