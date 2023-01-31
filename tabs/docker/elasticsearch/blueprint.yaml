@@ -46,9 +46,6 @@ node_templates:
         deployment: 
           inputs: 
             provider_name: { get_input: infra_name }
-    relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
 
   secrurity_group_rules:
     type: cloudify.nodes.Component
