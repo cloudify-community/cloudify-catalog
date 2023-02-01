@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
@@ -29,7 +29,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -60,7 +60,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
-  
+
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -72,14 +72,14 @@ node_templates:
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, vpc_id ] }
+            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -88,16 +88,16 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull registry:2
+              - docker pull registry:2
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
+              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint ] }
               user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
               key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-    
+
   docker_registry_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -108,11 +108,11 @@ node_templates:
         image_tag: "registry:2.0"
         container_args:
           name: registry
-          detach: True
-          restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
+          detach: true
+          restart_policy: { "MaximumRetryCount": 0, "Name": "always" }
     relationships:
       - type: cloudify.relationships.depends_on
-        target: docker
+        target: image
 
 outputs:
   docker_api_url:
