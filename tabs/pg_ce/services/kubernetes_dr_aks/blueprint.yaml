@@ -5,7 +5,7 @@ imports:
   - plugin:cloudify-utilities-plugin
   - plugin:cloudify-azure-plugin?version= >=3.0.10
   - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
-  -https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/blueprints/6.4/custom_types.yaml
+  - https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/blueprints/6.4/custom_types.yaml
 
 labels:
   csys-obj-type:
