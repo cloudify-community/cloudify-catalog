@@ -3,6 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
@@ -28,7 +29,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -63,7 +64,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -72,7 +73,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull redis:7
+              - docker pull redis:7
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -81,7 +82,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-    
+
   docker_redis_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -97,7 +98,8 @@ node_templates:
             { '6379/tcp' : '6379' }
           host_config:
             restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
-          detach: True  
+          detach: true  
+
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
@@ -106,7 +108,7 @@ outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_capability: [ { get_input: infra_deployment_id }, endpoint] }, ':2375' ] }
-  
+
   redis_endpoint:
     description: redis endpoint
     value: { concat: [ { get_capability: [ { get_input: infra_deployment_id }, endpoint] }, ':6379' ] }

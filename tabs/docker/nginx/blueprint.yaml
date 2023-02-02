@@ -28,7 +28,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -60,10 +60,11 @@ node_templates:
             rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
             vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
             security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -72,11 +73,12 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull nginx:latest
+              - docker pull nginx:latest
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
               key: { get_attribute: [ infrastructure, capabilities, key_content ] }
+
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -107,8 +109,8 @@ node_templates:
         container_args:
           command: "/docker-entrypoint.sh nginx -g 'daemon off;'"
           name: nginx
-          detach: True
-          volumes: 
+          detach: true
+          volumes:
             - '/usr/share/nginx/html'
           volumes_mapping: 
             -  get_attribute: [ docker_container_files, destination ]

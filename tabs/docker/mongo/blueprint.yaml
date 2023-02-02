@@ -28,7 +28,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -38,7 +38,6 @@ inputs:
     display_label: The MongoDB user name
     description: The username to set for the system's initial super-user
     default: cloudify
-  
 
 node_templates:
 
@@ -70,7 +69,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -79,7 +78,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull docker pull mongo:4.4.14
+              - docker pull docker pull mongo:4.4.14
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -98,7 +97,7 @@ node_templates:
       digits: 2
       symbols: 3
       use_secret_if_exists: false
-    
+
   docker_redis_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -110,14 +109,14 @@ node_templates:
         container_args:
           name: mongodb
           environment: [
-           { concat: [ "MONGO_INITDB_ROOT_PASSWORD=", { get_attribute: [ password_generator, password ] } ] }, 
-           { concat: [ "MONGO_INITDB_ROOT_USERNAME=", { get_input: user_name } ] } 
+            { concat: [ "MONGO_INITDB_ROOT_PASSWORD=", { get_attribute: [ password_generator, password ] } ] },
+            { concat: [ "MONGO_INITDB_ROOT_USERNAME=", { get_input: user_name } ] }
           ]
           ports: 
             { '27017/tcp' : '27017' }
           host_config:
             restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
-          detach: True
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
@@ -128,11 +127,11 @@ outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':2375' ] }
-  
+
   mongodb_password:
     description: mongodb password
     value: { get_attribute: [ password_generator, password ] }
-  
+
   mongodb_user:
     description: mongodb user
     value: { get_input: user_name}

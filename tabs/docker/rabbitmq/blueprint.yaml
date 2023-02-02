@@ -28,7 +28,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -63,7 +63,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -72,7 +72,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull rabbitmq:3-management
+              - docker pull rabbitmq:3-management
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -91,7 +91,7 @@ node_templates:
       digits: 2
       symbols: 3
       use_secret_if_exists: false
-    
+
   docker_redis_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -105,8 +105,8 @@ node_templates:
           environment: [ 'RABBITMQ_DEFAULT_USER=cloudify', { concat: [ 'RABBITMQ_DEFAULT_PASS=', { get_attribute: [ password_generator, password ] } ] } ]
           ports: [ 5672 ]
           host_config:
-            port_bindings: { 5672 : 5672 }
-          detach: True
+            port_bindings: { 5672: 5672 }
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: image

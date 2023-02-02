@@ -28,7 +28,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -55,7 +55,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull memcached:latest
+              - docker pull memcached:latest
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -64,7 +64,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-    
+
   docker_memcached_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -75,7 +75,7 @@ node_templates:
         image_tag: 'memcached:latest'
         container_args:
           name: memcached
-          detach: True
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: image

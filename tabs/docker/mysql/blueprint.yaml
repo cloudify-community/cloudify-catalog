@@ -28,7 +28,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -46,7 +46,7 @@ node_templates:
         deployment: 
           inputs: 
             provider_name: { get_input: infra_name }
-  
+            
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -63,7 +63,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -72,7 +72,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull mysql:5.7
+              - docker pull mysql:5.7
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -91,15 +91,15 @@ node_templates:
       digits: 2
       symbols: 3
       use_secret_if_exists: false
-    
+
   docker_redis_container:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
         docker_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
-        docker_rest_port: '2375'
+        docker_rest_port: 2375
       resource_config:
-        image_tag: 'mysql:5.7'
+        image_tag: mysql:5.7
         container_args:
           name: mysql
           environment: [ { concat: [ 'MYSQL_ROOT_PASSWORD=', { get_attribute: [ password_generator, password ] } ] } ]
@@ -108,8 +108,7 @@ node_templates:
           host_config:
             restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
           command:  'docker-entrypoint.sh mysqld'
-          detach: True
-          
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
