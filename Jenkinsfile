@@ -145,6 +145,15 @@ pipeline{
         }
       }
     }
+    post{
+        failure {
+            script{
+                sh "exit 1"
+                //or
+                error "Deploy manager failed, not able to proceed with test execution..."
+            }
+        }
+    }
     stage('test_blueprints'){
       when { expression { params.TEST_BLUEPRINTS } }
       steps {
