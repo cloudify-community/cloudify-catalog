@@ -102,7 +102,7 @@ node_templates:
           - name: cloudProvider
             value: gce
           - name: autoDiscovery.clusterName
-            value:
+            value: ""
     relationships:
       - target: helm_install
         type: cloudify.helm.relationships.run_on_host
