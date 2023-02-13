@@ -94,7 +94,7 @@ node_templates:
   network_security_rule_1:
     type: cloudify.azure.nodes.network.NetworkSecurityRule
     properties:
-      name: { concat: [ 'influxdb', get_input: security_group_id  ] }
+      name: { concat: [ influxdb, get_input: security_group_id  ] }
       network_security_group_name: { get_input: security_group_id }
       location: { get_input: region_name }
       azure_config: *azure_config
@@ -113,7 +113,7 @@ node_templates:
   network_security_rule_2:
     type: cloudify.azure.nodes.network.NetworkSecurityRule
     properties:
-      name: { concat: [ 'grafana', get_input: security_group_id  ] }
+      name: { concat: [ grafana, get_input: security_group_id  ] }
       network_security_group_name: { get_input: security_group_id }
       location: { get_input: region_name }
       azure_config: *azure_config

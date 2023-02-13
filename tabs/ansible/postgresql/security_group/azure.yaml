@@ -94,7 +94,7 @@ node_templates:
   network_security_rule:
     type: cloudify.azure.nodes.network.NetworkSecurityRule
     properties:
-      name: { concat: [ 'postgres', get_input: security_group_id  ] }
+      name: { concat: [ postgres, get_input: security_group_id  ] }
       network_security_group_name: { get_input: security_group_id }
       location: { get_input: region_name }
       azure_config: *azure_config
