@@ -30,7 +30,7 @@ inputs:
       display_label: URL for secrets vallidation zip archive
       description: >
         URL of infra zip file.
-      default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/other/multicloud/secret_validation.zip
+      default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/other/secret_validation.zip
       hidden: true
     
     secrets_to_validate:

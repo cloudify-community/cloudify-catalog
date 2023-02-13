@@ -1005,7 +1005,7 @@ topics:
 
       - id: secret_validation
         name: Multicloud-SV-CFY
-        path: tabs/other/multicloud/secret_validation
+        path: tabs/other/secret_validation
         description: Create a SV deployment for choosed cloud provider
         
   - name: docker_services
