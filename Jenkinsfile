@@ -148,9 +148,7 @@ pipeline{
     post{
         failure {
             script{
-                sh "exit 1"
-                //or
-                error "Deploy manager failed, not able to proceed with test execution..."
+              error "Deploy manager failed, not able to proceed with test execution..."
             }
         }
     }
