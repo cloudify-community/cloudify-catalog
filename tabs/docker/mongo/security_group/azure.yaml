@@ -13,9 +13,13 @@ inputs:
     type: string
 
   vpc_id:
+    description: VPC id
+    display_label: Virtual network ID
     type: string
 
   security_group_id:
+    description: SG id
+    display_label: Security group id
     type: string
 
   location:

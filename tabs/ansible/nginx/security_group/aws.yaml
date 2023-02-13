@@ -15,10 +15,14 @@ inputs:
     type: string
     default: ''""
 
-  security_group_id:
+  vpc_id:
+    description: VPC ID
+    display_label: Virtual network ID
     type: string
 
-  vpc_id:
+  security_group_id:
+    description: SG ID
+    display_label: Security group ID
     type: string
     
   region_name:
