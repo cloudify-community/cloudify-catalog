@@ -4,7 +4,7 @@ imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin?version= >=2.5.6
   - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
-  - https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/blueprints/6.4/custom_types.yaml
+  - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
 
 dsl_definitions:
   aws_client: &aws_client
@@ -82,7 +82,7 @@ node_templates:
       resource_config:
         blueprint:
           id: { concat: [ { get_attribute: [ prefix, value ] }, '-network' ] }
-          blueprint_archive: https://github.com/cloudify-community/eaas-example/releases/download/2.0rc1/prod_network.zip
+          blueprint_archive: https://repository.cloudifysource.org/cloudify/blueprints/6.4/prod_network.zip
           main_file_name: aws-blueprint.yaml
         deployment:
           id: { get_secret: [ eaas_params, { get_environment_capability: cloud_type }, production, network, deployment ] }

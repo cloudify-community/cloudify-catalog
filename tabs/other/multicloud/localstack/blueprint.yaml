@@ -26,7 +26,7 @@ inputs:
   infra_archive:
      # Don't update this line - it is being updated automatically during merging. The getting-started.zip will have
      # the updated URL.
-    default: 'https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip'
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/virtual-machine.zip
   infra_exists:
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.

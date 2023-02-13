@@ -50,7 +50,7 @@ inputs:
     type: string
     display_label: Module source URL
     description: Module source URL
-    default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tf-source-main.zip
 
   module_source_path:
     type: string

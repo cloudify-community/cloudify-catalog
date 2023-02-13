@@ -55,7 +55,7 @@ inputs:
   location:
     type: string
     display_label: Location
-    default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tf-source-main.zip
     constraints:
       - pattern: ^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$
 

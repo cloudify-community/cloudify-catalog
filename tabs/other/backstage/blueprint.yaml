@@ -11,21 +11,21 @@ inputs:
     display_label: URL for vm zip archive
     description: >
       URL of infra zip file.
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/cloudify_manager/ec2/ec2.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/cloudify_manager/Cloudify-Manager-EC2.zip
 
   vm_archive:
     type: string
     display_label: URL for vm zip archive
     description: >
       URL of infra zip file.
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/aws/ec2_without_network/ec2.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/aws/EC2_WITHOUT_NETWORK.zip
 
   network_archive:
     type: string
     display_label: URL for network zip archive
     description: >
       URL of infra zip file.
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/aws/network/network.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/aws/AWS_VPC.zip
 
   region_name:
     type: string

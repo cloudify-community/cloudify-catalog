@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Installs Jenkins with Ansible on AWS/Azure environments.
 
 imports:
-  - https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/blueprints/6.4/custom_types.yaml
+  - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
 

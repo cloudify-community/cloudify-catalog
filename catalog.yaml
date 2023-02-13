@@ -1003,6 +1003,11 @@ topics:
         path: tabs/other/multicloud/vm
         description: Create a VM on choosed cloud provider
 
+      - id: secret_validation
+        name: Multicloud-SV-CFY
+        path: tabs/other/multicloud/secret_validation
+        description: Create a SV deployment for choosed cloud provider
+        
   - name: docker_services
     target_path: s3_json_file
     blueprints:

@@ -19,7 +19,7 @@ inputs:
     display_label: URL for vm zip archive
     description: >
       URL of vm zip file.
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/aws/ec2_without_network/ec2.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/aws/EC2_WITHOUT_NETWORK.zip
 
   region_name:
     type: string

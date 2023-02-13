@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Wordpress blueprint. Deploys Wordpress service with Ansible Cloudify plugin.
 
 imports:
-  - https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/blueprints/6.4/custom_types.yaml
+  - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
 
@@ -21,10 +21,10 @@ inputs:
 
   infra_archive:
     type: string
-    display_label: URL for infra zip archive
+    display_label: URL for infra zip archive    
     description: >
       URL of infra zip file.
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/other/multicloud/vm/vm.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/other/multicloud/multicloud_vm.zip
 
   infra_exists:
     display_label: Set if infra exists or not

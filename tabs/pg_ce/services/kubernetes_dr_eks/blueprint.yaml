@@ -2,7 +2,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/blueprints/6.4/custom_types.yaml
+  - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
 
 inputs:
 
@@ -95,7 +95,7 @@ node_templates:
             eks_cluster_name: { concat: [ { get_attribute: [ prefix , value ] }, '-eks-adr' ] }
             eks_nodegroup_name: { concat: [ 'eks_node_group', { get_attribute: [ prefix , value ] }, '-eks-adr' ] }
             service_account_name: "cloudify"
-            agent_key_name: { concat : [ agent_key_name, 'adr']}
+            agent_key_name: { concat : [ agent_key_name, 'adr'] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix
