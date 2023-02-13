@@ -17,7 +17,7 @@ inputs:
     
   region_name:
       type: string
-      default: 'us-east-1'
+      default: us-east-1
       constraints:
         - valid_values:
             - us-east-1

@@ -9,6 +9,12 @@ imports:
 
 inputs:
 
+  rg_id:
+    description: Mocked Resource group ID
+    display_label: mocked resource group id
+    type: string
+    default: ''
+
   security_group_id:
     type: string
 
@@ -17,7 +23,7 @@ inputs:
     
   region_name:
       type: string
-      default: 'us-east-1'
+      default: us-east-1
       constraints:
         - valid_values:
             - us-east-1
@@ -61,8 +67,8 @@ node_templates:
       resource_config:
         IpPermissions:
         - IpProtocol: tcp
-          FromPort:  27017
-          ToPort:  27017
+          FromPort: 27017
+          ToPort: 27017
           IpRanges:
           - CidrIp: 0.0.0.0/0
     relationships:

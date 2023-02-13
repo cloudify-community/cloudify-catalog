@@ -7,13 +7,22 @@ imports:
 
 inputs:
 
+  rg_id:
+    description: Resource group ID
+    display_label: resource group id
+    type: string
+
   vpc_id:
+    description: VPC id
+    display_label: resource group id
     type: string
 
   security_group_id:
+    description: SG id
+    display_label: security group id
     type: string
 
-  location:
+  region_name:
     type: string
     description: Your Azure Region.
     default: eastus2
@@ -64,7 +73,6 @@ inputs:
     type: integer
     default: 60
 
-
 dsl_definitions:
 
   azure_config: &azure_config
@@ -75,38 +83,54 @@ dsl_definitions:
 
 node_templates:
 
-  network_security_group:
-    type: cloudify.azure.nodes.network.NetworkSecurityGroup
+  resource_group:
+    type: cloudify.azure.nodes.ResourceGroup
     properties:
       use_external_resource: true
-      name: { get_input: security_group_id }
-      location: { get_input: location }
+      name: { get_input: rg_id }
+      location: { get_input: region_name }
+      azure_config: *azure_config
+
+  network_security_rule_1:
+    type: cloudify.azure.nodes.network.NetworkSecurityRule
+    properties:
+      name: { concat: [ sonarquebe1, get_input: security_group_id  ] }
+      network_security_group_name: { get_input: security_group_id }
+      location: { get_input: region_name }
       azure_config: *azure_config
       retry_after: { get_input: retry_after }
       resource_config:
-        securityRules:
-        - name: sonarquebe_1
-          properties:
-            description: HTTP access
-            protocol: Tcp
-            sourcePortRange: '*'
-            destinationPortRange: 9000
-            sourceAddressPrefix: '*'
-            destinationAddressPrefix: '*'
-            priority: 101
-            access: 'Allow'
-            direction: Inbound
-        - name: sonarquebe_2
-          properties:
-            description: HTTP access
-            protocol: Tcp
-            sourcePortRange: '*'
-            destinationPortRange: 9092
-            sourceAddressPrefix: '*'
-            destinationAddressPrefix: '*'
-            priority: 102
-            access: 'Allow'
-            direction: Inbound
+        description: Sonarqube1
+        protocol: Tcp
+        sourcePortRange: '*'
+        destinationPortRange: 9000
+        sourceAddressPrefix: '*'
+        destinationAddressPrefix: '*'
+        priority: 101
+        access: Allow
+        direction: Inbound
+    relationships:
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: resource_group
+
+  network_security_rule_2:
+    type: cloudify.azure.nodes.network.NetworkSecurityRule
+    properties:
+      name: { concat: [ sonarquebe2, get_input: security_group_id  ] }
+      network_security_group_name: { get_input: security_group_id }
+      location: { get_input: region_name }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+      resource_config:
+        description: Sonarquebe2
+        protocol: Tcp
+        sourcePortRange: '*'
+        destinationPortRange: 9092
+        sourceAddressPrefix: '*'
+        destinationAddressPrefix: '*'
+        priority: 102
+        access: Allow
+        direction: Inbound
     relationships:
     - type: cloudify.azure.relationships.contained_in_resource_group
       target: resource_group

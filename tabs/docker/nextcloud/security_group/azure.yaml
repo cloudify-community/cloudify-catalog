@@ -90,7 +90,7 @@ node_templates:
             description: HTTP access
             protocol: Tcp
             sourcePortRange: '*'
-            destinationPortRange: 80
+            destinationPortRange: 8080
             sourceAddressPrefix: '*'
             destinationAddressPrefix: '*'
             priority: 101

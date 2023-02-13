@@ -9,6 +9,12 @@ imports:
 
 inputs:
 
+  rg_id:
+    description: Resource group ID
+    display_label: Resource Group ID
+    type: string
+    default: ''
+
   security_group_id:
     type: string
 
@@ -17,7 +23,7 @@ inputs:
     
   aws_region_name:
       type: string
-      default: 'us-east-1'
+      default: us-east-1
       constraints:
         - valid_values:
             - us-east-1
@@ -44,7 +50,6 @@ inputs:
             - me-south-1
             - sa-east-1
     
-
 dsl_definitions:
 
   client_config: &client_config
@@ -79,4 +84,3 @@ node_templates:
         GroupName: CloudifyGettingStartedExample
         Description: Created by cloudify-getting-started-example.
         VpcId: { get_input: vpc_id }
-
