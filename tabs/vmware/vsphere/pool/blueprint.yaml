@@ -1,0 +1,56 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - https://cloudify.co/spec/cloudify/5.1.0/types.yaml
+  - plugin:cloudify-vsphere-plugin
+
+inputs:
+
+  pool_name:
+    type: string
+    default: cloudify_test_pool
+    description: Pool name to create
+    display_label: Pool name
+
+  cluster_name:
+    type: string
+    default: cloudify
+    description: Cluster name to deploy pool
+    display_label: Cluster name
+
+dsl_definitions:
+
+  connection_config: &connection_config
+    username: { get_secret: vsphere_username }
+    password: { get_secret: vsphere_password }
+    host: { get_secret: vsphere_host }
+    port: { get_secret: vsphere_port }
+    datacenter_name: { get_secret: vsphere_datacenter_name }
+    resource_pool_name: { get_secret: vsphere_resource_pool_name }
+    auto_placement: { get_secret: vsphere_auto_placement }
+    allow_insecure: { get_input: vsphere_allow_insecure }
+
+node_templates:
+
+  pool:
+    type: cloudify.vsphere.nodes.ResourcePool
+    properties:
+      use_external_resource: false
+      connection_config: *connection_config
+      name: { get_input: pool_name }
+      cluster_name: { get_input: cluster_name }
+      pool_spec:
+        cpuAllocation:
+          expandableReservation: True
+          limit: 2000
+          reservation: 0
+          shares:
+            level: 'normal'
+            shares: 4000
+        memoryAllocation:
+          expandableReservation: True
+          limit: 2048
+          reservation: 0
+          shares:
+            level: 'normal'
+            shares: 16000

@@ -1,83 +1,76 @@
 tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/6.4.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-vsphere-plugin
 
 inputs:
 
-  vsphere_port:
-    type: string
-    default: '443'
-
-  vsphere_allow_insecure:
-    type: string
-    default: true
-
-  env_name:
-    type: string
-    description: Control parameters for names in resources.
-    default: '1'
-
-  resource_suffix:
-    type: string
-    default: { get_input: env_name }
-
-  server_name:
-    type: string
-    default: { concat: [ 'example-vm-1', { get_input: resource_suffix } ] }
-
   template_name:
     type: string
-    default: CentOS-7.8.2003-tmpl
+    default: CentOS-7.9.2009-tmpl
+    description: VM template available in datastore for ESXi hosts
+    display_label: vSphere teamplate name
 
   cpus:
     type: string
     default: 1
+    description: Number of virutal CPUs allocated to the VM
+    display_label: CPUs
 
   memory:
     type: string
     default: 1024
+    description: Number of RAM megabytes allocated to the VM
+    display_label: Memory
 
   domain:
     type: string
     default: localdom
+    description: Networking VM domain
+    display_label: Domain
 
   dns_servers:
     type: list
     default: ['8.8.8.8']
+    description: Networking DNS servers provided to the configuration
+    display_label: DNS servers
 
   network_name:
     type: string
     default: Internal
+    description: Network to connect VM to
+    display_label: Network name
 
   switch_distributed:
     type: boolean
     default: false
+    description: Is connected network switch distributed
+    display_label: Distributed switch
 
   use_dhcp:
     type: boolean
-    default: true
+    default: false
+    description: Specifies if the connected network interface should use DHCP
+    display_label: Use DHCP
 
   network_cidr:
     type: string
     default: 172.16.168.0/24
+    description: Connected network address in CIDR format
+    display_label: Network CIDR
 
-  gateway:
+  gateway_ip:
     type: string
     default: 172.16.168.1
+    description: Connected network gateway IP
+    display_label: Gateway IP
 
-  ip:
+  vm_ip:
     type: string
     default: 172.16.168.201
-
-  agent_user:
-    type: string
-    default: centos
-
-  agent_key_private:
-    type: string
-    default: { get_secret: vsphere_private_key }
+    description: IP address assigned to the VM, if the DHCP is not in use
+    display_label: VM IP
 
 dsl_definitions:
 
@@ -85,17 +78,17 @@ dsl_definitions:
     username: { get_secret: vsphere_username }
     password: { get_secret: vsphere_password }
     host: { get_secret: vsphere_host }
-    port: { get_input: vsphere_port }
+    port: { get_secret: vsphere_port }
     datacenter_name: { get_secret: vsphere_datacenter_name }
     resource_pool_name: { get_secret: vsphere_resource_pool_name }
     auto_placement: { get_secret: vsphere_auto_placement }
-    allow_insecure: { get_input: vsphere_allow_insecure }
+    allow_insecure: { get_secret: vsphere_allow_insecure }
 
 node_templates:
-
   vm:
     type: cloudify.vsphere.nodes.Server
     properties:
+      use_external_resource: false
       connection_config: *connection_config
       agent_config:
         install_method: none
@@ -103,7 +96,6 @@ node_templates:
         template: { get_input: template_name }
         cpus: { get_input: cpus }
         memory: { get_input: memory }
-        name: { get_input: server_name }
       networking:
         domain: { get_input: domain }
         dns_servers: { get_input: dns_servers }
@@ -113,19 +105,14 @@ node_templates:
             switch_distributed: { get_input: switch_distributed }
             use_dhcp: { get_input: use_dhcp }
             network: { get_input: network_cidr }
-            gateway: { get_input: gateway }
-            ip: { get_input: ip }
+            gateway: { get_input: gateway_ip }
+            ip: { get_input: vm_ip }
 
 capabilities:
+  vm_ip:
+    description: VM IP address
+    value: { get_attribute: [ vm, ip ] }
 
-  endpoint:
-    description: The external endpoint of the application.
-    value: { get_attribute: [ vm, public_ip ] }
-
-  user:
-    description: user ID.
-    value: { get_input: agent_user }
-
-  key_content:
-    description: Private SSH key
-    value: { get_input: agent_key_private }
+  vm_name:
+    description: VM name
+    value: { get_attribute: [vm, name ] }
