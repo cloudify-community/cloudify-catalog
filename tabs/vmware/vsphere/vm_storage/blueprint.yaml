@@ -132,3 +132,12 @@ node_templates:
     relationships:
       - target: vm
         type: cloudify.vsphere.storage_connected_to_server
+
+capabilities:
+  vm_ip:
+    description: VM IP address
+    value: { get_attribute: [ vm, ip ] }
+
+  vm_name:
+    description: VM name
+    value: { get_attribute: [vm, name ] }
