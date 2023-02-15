@@ -27,19 +27,14 @@ cloudify-vsphere-plugin
 
 ## Inputs
 
-| Name               | Type    | Description                                               | Default               |
-| ------------------ | ------- | --------------------------------------------------------- | --------------------- |
-| template_name      | string  | VM template name available in datastore                   | CentOS-7.8.2003-tmpl  |
-| cpus               | string  | Number of virutal CPUs allocated to the VM                | 1                     |
-| memory             | string  | Number of megabytes allocated to the VM                   | 1024                  |
-| domain             | string  | VM network domain                                         | localdom              |
-| dns_servers        | list    | List of DNS server to configure VM with                   | ['8.8.8.8']           |
-| network_namei      | string  | Existing network to connect the VM to                     | Internal              |
-| switch_distributed | boolean | specifies if connected network switch distributed         | false                 |
-| use_dhcp           | boolean | specifies if VM should get IP from DHCP (if present)      | false                 |
-| network_cidr       | string  | Connected network address in CIDR format                  | 172.16.168.0/24       |
-| gateway_ip         | string  | Connected network gateway IP                              | 172.16.168.1          |
-| vm_ip              | string  |  IP address assigned to the VM, if the DHCP is not in use | 172.16.168.201        |
+| Name               | Type    | Description                      | Default          |
+| ------------------ | ------- | -------------------------------- | ---------------- |
+| switch_distributed | boolean | Network Interface configuration  | false            |
+| network_name       | string  | Network name to create           | cloudify_network |
+| vlan_id            | string  | Virtual network name to create   | false            |
+| vswitch_name       | string  | Virtual switch name to create    | vSwitch0         |
+
+
 
 ## Node Types
 
