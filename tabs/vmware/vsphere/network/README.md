@@ -35,7 +35,6 @@ cloudify-vsphere-plugin
 | vswitch_name       | string  | Virtual switch name to create    | vSwitch0         |
 
 
-
 ## Node Types
 
 ### Nic
@@ -49,6 +48,6 @@ The type is `cloudify.vsphere.nodes.Network`.
 ## Capabilities
 Two properties are exposed:
 
-| Name        | Description                                            |
-| ----------- | ------------------------------------------------------ |
-| net_id      | ID of provisioned network                              |
+| Name        | Description                 |
+| ----------- | --------------------------- |
+| net_id      | ID of provisioned network   |
