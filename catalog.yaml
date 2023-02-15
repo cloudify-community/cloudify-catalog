@@ -852,12 +852,12 @@ topics:
 
       - id: vsphere_vm
         name: VM-Centos-vSphere-CFY
-        path: tabs/vsphere/vm
+        path: tabs/vmware/vsphere/vm
         description: Create vSphere VM
 
       - id: vcloud_vm
         name: VM-vCloud-CFY
-        path: tabs/vcloud/vm
+        path: tabs/wmware/vcloud/vm
         description: Create vCloud VM
 
   - name: ansible_services
