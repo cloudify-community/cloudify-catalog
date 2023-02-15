@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/4.6/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-vsphere-plugin
 
@@ -29,13 +29,13 @@ inputs:
     type: string
     default: centos
     description: User name to create storage for
-    display_labe: User name
+    display_label: User name
 
   storage_size: 
     type: string
     default: 1
     description: Storage Size in GB to allocate
-    dsipaly_label: Storage
+    display_label: Storage
 
   template_name:
     type: string
@@ -79,11 +79,11 @@ dsl_definitions:
     username: { get_secret: vsphere_username }
     password: { get_secret: vsphere_password }
     host: { get_secret: vsphere_host }
-    port: { get_input: vsphere_port }
+    port: { get_secret: vsphere_port }
     datacenter_name: { get_secret: vsphere_datacenter_name }
     resource_pool_name: { get_secret: vsphere_resource_pool_name }
     auto_placement: { get_secret: vsphere_auto_placement }
-    allow_insecure: { get_input: vsphere_allow_insecure }
+    allow_insecure: { get_secret: vsphere_allow_insecure }
 
 node_templates:
 

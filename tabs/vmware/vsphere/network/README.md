@@ -43,13 +43,17 @@ cloudify-vsphere-plugin
 
 ## Node Types
 
-### VM
-The node type is responisble for manageing the lifecycle of the vSphere hosted VM.
-The type is `cloudify.vsphere.nodes.Server`. 
+### Nic
+The node type is responisble for manageing the lifecycle of the vSphere network interface.
+The type is `cloudify.vsphere.nodes.NIC`. 
+
+### Net
+The node type is responisble for manageing the lifecycle of the vSphere network.
+The type is `cloudify.vsphere.nodes.Network`. 
 
 ## Capabilities
 Two properties are exposed:
 
-| Name        | Description                                                |
-| ----------- | ---------------------------------------------------------- |
-| vm_ip       | the ip of the provisioned VM                               |
+| Name        | Description                                            |
+| ----------- | ------------------------------------------------------ |
+| net_id      | ID of provisioned network                              |

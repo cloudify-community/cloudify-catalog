@@ -1,9 +1,9 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/5.1.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-vsphere-plugin
-
+  
 inputs:
 
   pool_name:
@@ -28,7 +28,7 @@ dsl_definitions:
     datacenter_name: { get_secret: vsphere_datacenter_name }
     resource_pool_name: { get_secret: vsphere_resource_pool_name }
     auto_placement: { get_secret: vsphere_auto_placement }
-    allow_insecure: { get_input: vsphere_allow_insecure }
+    allow_insecure: { get_secret: vsphere_allow_insecure }
 
 node_templates:
 

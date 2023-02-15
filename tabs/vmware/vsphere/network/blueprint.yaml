@@ -1,7 +1,7 @@
-tosca_definitions_version: cloudify_dsl_1_3
+tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
-  - https://cloudify.co/spec/cloudify/5.0.5/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-vsphere-plugin
 
 inputs:
@@ -64,3 +64,8 @@ node_templates:
         vlan_id: { get_input: vlan_id }
         vswitch_name: { get_input: vswitch_name }
         switch_distributed: { get_input: switch_distributed }
+
+capabilities:
+  net_id:
+    description: Network ID
+    value: { get_attribute: [ net, vsphere_network_id, 0 ] }
