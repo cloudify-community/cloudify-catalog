@@ -855,7 +855,7 @@ topics:
         path: tabs/vmware/vsphere/vm
         description: Create vSphere VM from defined ISO image
       
-      - id: vsphere_pool
+      - id: vsphere_vm_storage
         name: VM-Storage-vSphere-CFY
         path: tabs/vmware/vsphere/vm_storage
         description: Craete vSphere VM from defined ISO image with storage unit
