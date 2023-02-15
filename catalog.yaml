@@ -857,7 +857,7 @@ topics:
 
       - id: vcloud_vm
         name: VM-vCloud-CFY
-        path: tabs/wmware/vcloud/vm
+        path: tabs/vmware/vcloud/vm
         description: Create vCloud VM
 
   - name: ansible_services
