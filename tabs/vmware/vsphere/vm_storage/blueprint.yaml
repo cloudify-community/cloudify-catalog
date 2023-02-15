@@ -1,0 +1,134 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - https://cloudify.co/spec/cloudify/4.6/types.yaml
+  - plugin:cloudify-fabric-plugin
+  - plugin:cloudify-vsphere-plugin
+
+inputs:
+
+  template_name:
+    type: string
+    default: CentOS-7.9.2009-tmpl
+    description: VM template available in datastore for ESXi hosts
+    display_label: vSphere teamplate name
+
+  cpus:
+    type: string
+    default: 1
+    description: Number of virutal CPUs allocated to the VM
+    display_label: CPUs
+
+  memory:
+    type: string
+    default: 1024
+    description: Number of RAM megabytes allocated to the VM
+    display_label: Memory
+
+  agent_user:
+    type: string
+    default: centos
+    description: User name to create storage for
+    display_labe: User name
+
+  storage_size: 
+    type: string
+    default: 1
+    description: Storage Size in GB to allocate
+    dsipaly_label: Storage
+
+  template_name:
+    type: string
+    default: CentOS-7.9.2009-tmpl
+    description: VM template available in datastore for ESXi hosts
+    display_label: vSphere teamplate name
+
+  network_name:
+    type: string
+    default: Internal
+    description: Network to connect VM to
+    display_label: Network name
+
+  switch_distributed:
+    type: boolean
+    default: false
+    description: Is connected network switch distributed
+    display_label: Distributed switch
+
+  network_cidr:
+    type: string
+    default: 172.16.168.0/24
+    description: Connected network address in CIDR format
+    display_label: Network CIDR
+
+  gateway_ip:
+    type: string
+    default: 172.16.168.1
+    description: Connected network gateway IP
+    display_label: Gateway IP
+
+  vm_ip:
+    type: string
+    default: 172.16.168.201
+    description: IP address assigned to the VM, if the DHCP is not in use
+    display_label: VM IP
+
+dsl_definitions:
+
+  connection_config: &connection_config
+    username: { get_secret: vsphere_username }
+    password: { get_secret: vsphere_password }
+    host: { get_secret: vsphere_host }
+    port: { get_input: vsphere_port }
+    datacenter_name: { get_secret: vsphere_datacenter_name }
+    resource_pool_name: { get_secret: vsphere_resource_pool_name }
+    auto_placement: { get_secret: vsphere_auto_placement }
+    allow_insecure: { get_input: vsphere_allow_insecure }
+
+node_templates:
+
+  vm:
+    type: cloudify.vsphere.nodes.Server
+    properties:
+      use_external_resource: false
+      connection_config: *connection_config
+      agent_config:
+        install_method: none
+      server:
+        template: { get_input: template_name }
+        cpus: { get_input: cpus }
+        memory: { get_input: memory }
+      networking:
+        connect_networks:
+          - name: { get_input: network_name }
+            management: true
+            external: true
+            switch_distributed: false
+            use_dhcp: false
+            network: 172.16.168.0/24
+            gateway: { get_input: gateway_ip }
+            ip: { get_input: vm_ip }
+      custom_attributes:
+        username: { get_secret: vsphere_username }
+
+  storage:
+    type: cloudify.vsphere.nodes.Storage
+    properties:
+      storage:
+        storage_size: { get_input: storage_size }
+      connection_config: *connection_config
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        configure:
+          implementation: fabric.fabric_plugin.tasks.run_task
+          inputs:
+            tasks_file: scripts/test_disk.py
+            task_name: configure
+            fabric_env:
+              user: { get_input: agent_user }
+              key: { get_secret: vsphere_private_key }
+              host_string: { get_attribute: [ vm, public_ip ] }
+              scsi_id: { get_attribute: [ SELF, scsi_id ] }
+    relationships:
+      - target: vm
+        type: cloudify.vsphere.storage_connected_to_server
