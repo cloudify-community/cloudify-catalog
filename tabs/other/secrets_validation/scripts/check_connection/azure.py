@@ -1,4 +1,5 @@
 from cloudify.exceptions import NonRecoverableError
+from cloudify.manager import get_rest_client
 from cloudify import ctx
 import requests
 import json
@@ -30,7 +31,8 @@ def authorize_with_azure(azure_tenant, azure_client_id, azure_secret):
 
 
 def list_resource_groups(azure_tenant, azure_client_id, azure_secret, azure_subscription_id):
-    azure_subscription_id = ctx.node.properties.get('azure_subscription_id', None)
+    client = get_rest_client()
+    azure_subscription_id = client.secrets.get('azure_subscription_id', None)
     url = "https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups?api-version=2022-09-01".format(
         subscriptionId=azure_subscription_id,
     )
@@ -48,14 +50,18 @@ def list_resource_groups(azure_tenant, azure_client_id, azure_secret, azure_subs
 
 
 def validate_azure():
-    azure_tenant = ctx.node.properties.get('azure_tenant_id', None)
-    azure_client_id = ctx.node.properties.get('azure_client_id', None)
-    azure_secret = ctx.node.properties.get('azure_client_secret', None)
-    azure_subscription_id = ctx.node.properties.get('azure_subscription_id', None)
+
+    client = get_rest_client()
+    azure_tenant = client.secrets.get('azure_tenant_id').get('value', None)
+    azure_client_id = client.secrets.get('azure_client_id').get('value', None)
+    azure_secret = client.secrets.get('azure_client_id').get('value', None)
+    azure_subscription_id = client.secrets.get('azure_subscription_id').get('value', None)
 
     if azure_tenant is None or azure_client_id is None or azure_secret is None or azure_subscription_id is None:
-        ctx.instance.runtime_properties['connection_status'] = 'Invalid Credentials'
-        ctx.instance.runtime_properties['debug_action'] = 'Check your input values'
+        msg = "Missing credentials for Azure cloud provider: azure_tenant_id, \
+            azure_client_id, azure_client_secret and azure_subscription_id"
+        ctx.logger.error(msg)
+        raise NonRecoverableError(msg)
 
     else:
 

@@ -1,3 +1,4 @@
+from cloudify.manager import get_rest_client
 from cryptography.hazmat.primitives.serialization import (
     load_pem_private_key,
     load_pem_public_key,
@@ -268,12 +269,15 @@ def list_machine_types(token, project_id):
     response = requests.get(url, headers=headers)
     return response.status_code, response.json()
 
+
 def validate_gcp():
-    gcp_credentials = ctx.node.properties.get('gcp_credentials', None)
+    client = get_rest_client()
+    gcp_credentials = client.secrets.get('gcp_credentials').get('value', None)
 
     if gcp_credentials is None:
-        ctx.instance.runtime_properties['connection_status'] = 'Invalid Credentials'
-        ctx.instance.runtime_properties['debug_action'] = 'Check your input values'
+        msg = "Missing credentials for GCP cloud provider: gcp_credentials"
+        ctx.logger.error(msg)
+        raise NonRecoverableError(msg)
     else:
         gcp_credentials_json = json.loads(gcp_credentials)
 
@@ -287,8 +291,9 @@ def validate_gcp():
         ))
 
         if issuer is None or private_key is None or private_key_id is None or project_id is None:
-            ctx.instance.runtime_properties['connection_status'] = 'Invalid Credentials'
-            ctx.instance.runtime_properties['debug_action'] = 'Check your input values'
+            msg = "Invalid credentials for GCP cloud provider, check your issuer, private key and project id"
+            ctx.logger.error(msg)
+            raise NonRecoverableError(msg)
         else:
 
             now = datetime.datetime.utcnow()
@@ -347,6 +352,6 @@ def validate_gcp():
 
             if status_code != 200:
                 ctx.logger.error(
-                    "Invalid Azure credentials : {}".format(response_content))
+                    "Invalid GCP credentials : {}".format(response_content))
                 raise NonRecoverableError(
-                    "Invalid Azure credentials : {}".format(response_content))
+                    "Invalid GCP credentials : {}".format(response_content))
