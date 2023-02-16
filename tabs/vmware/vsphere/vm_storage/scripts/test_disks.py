@@ -59,3 +59,6 @@ def configure(connection):
     ctx.logger.info('Attempting to create file on device...')
     connection.sudo('touch /mnt/testfile')
     ctx.logger.info('Successfully created test file on device')
+
+if __name__ == "__main__":
+    pass
