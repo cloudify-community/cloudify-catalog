@@ -37,12 +37,6 @@ inputs:
     description: Storage Size in GB to allocate
     display_label: Storage
 
-  template_name:
-    type: string
-    default: CentOS-7.9.2009-tmpl
-    description: VM template available in datastore for ESXi hosts
-    display_label: vSphere teamplate name
-
   network_name:
     type: string
     default: Internal
@@ -54,6 +48,12 @@ inputs:
     default: false
     description: Is connected network switch distributed
     display_label: Distributed switch
+
+  use_dhcp:
+    type: boolean
+    default: false
+    description: Specifies if the connected network interface should use DHCP
+    display_label: Use DHCP
 
   network_cidr:
     type: string
@@ -103,9 +103,9 @@ node_templates:
           - name: { get_input: network_name }
             management: true
             external: true
-            switch_distributed: false
-            use_dhcp: false
-            network: 172.16.168.0/24
+            switch_distributed: { get_input: switch_distributed }
+            use_dhcp: { get_input: use_dhcp }
+            network: { get_input: network_cidr }
             gateway: { get_input: gateway_ip }
             ip: { get_input: vm_ip }
       custom_attributes:
@@ -122,7 +122,7 @@ node_templates:
         configure:
           implementation: fabric.fabric_plugin.tasks.run_task
           inputs:
-            tasks_file: scripts/test_disk.py
+            tasks_file: scripts/validate_disk.py
             task_name: configure
             fabric_env:
               user: { get_input: agent_user }
