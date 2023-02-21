@@ -9,82 +9,88 @@ imports:
 inputs:
 
   region:
+    display_label: 'Region'
     type: string
     description: The GCP region to deploy the application in, such as europe-west1.
     default: 'europe-west1'
     constraints:
       - valid_values:
-        - asia-south1
-        - asia-south2
-        - asia-east1
-        - asia-east2
-        - asia-northeast1
-        - asia-northeast2
-        - asia-northeast3
-        - asia-southeast1
-        - australia-southeast1
-        - australia-southeast2
-        - europe-central2
-        - europe-north2
-        - europe-southwest1
-        - europe-west1
-        - europe-west2
-        - europe-west3
-        - europe-west4
-        - europe-west6
-        - europe-west8
-        - europe-west9
-        - northamerica-northeast1
-        - northamerica-northeast2
-        - southamerica-east1
-        - us-central1
-        - us-east1
-        - us-east4
-        - us-west1
-        - us-west2
-        - us-west3
-        - us-west4
+          - asia-south1
+          - asia-south2
+          - asia-east1
+          - asia-east2
+          - asia-northeast1
+          - asia-northeast2
+          - asia-northeast3
+          - asia-southeast1
+          - australia-southeast1
+          - australia-southeast2
+          - europe-central2
+          - europe-north2
+          - europe-southwest1
+          - europe-west1
+          - europe-west2
+          - europe-west3
+          - europe-west4
+          - europe-west6
+          - europe-west8
+          - europe-west9
+          - northamerica-northeast1
+          - northamerica-northeast2
+          - southamerica-east1
+          - us-central1
+          - us-east1
+          - us-east4
+          - us-west1
+          - us-west2
+          - us-west3
+          - us-west4
 
   zone:
+    display_label: 'Zone'
     type: string
     description: The GCP zone to deploy the application in, such as europe-west1-b.
-    default: { concat: [ { get_input: region }, -b ] } 
+    default: { concat: [ { get_input: region }, -b ] }
 
   image:
+    display_label: 'Image'
     type: string
     description: Centos image.
     default: https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-7-v20191210
 
-
   instance_type:
+    display_label: 'Instance Type'
     type: string
     description: A small GCP machine type.
     default: n1-standard-2
     constraints:
       - valid_values:
-        - n1-standard-1
-        - n1-standard-2
-        - n1-standard-4
-        - n1-standard-8
-        - n1-standard-16
-        - n1-standard-32
-        - n1-standard-64
-        - n1-standard-96
+          - n1-standard-1
+          - n1-standard-2
+          - n1-standard-4
+          - n1-standard-8
+          - n1-standard-16
+          - n1-standard-32
+          - n1-standard-64
+          - n1-standard-96
 
   agent_user:
+    display_label: 'Agent User'
+    type: string
     description: >
       The username of the agent running on the instance created from the image.
     default: 'centos'
 
   agent_key_name:
+    display_label: 'Agent Key Name'
     type: string
     default: agent_key
 
   env_name:
+    display_label: 'Env Name'
     type: string
     description: Control parameters for names in resources.
     default: 'example'
-
 
 dsl_definitions:
 
@@ -93,7 +99,6 @@ dsl_definitions:
     zone: { get_input: zone }
 
 node_templates:
-
 
   docker:
     type: cloudify.nodes.ApplicationServer
@@ -121,7 +126,7 @@ node_templates:
   vm:
     type: cloudify.gcp.nodes.Instance
     properties:
-      gcp_config: *gcp_config
+      client_config: *gcp_config
       agent_config:
         install_method: none
         key: { get_attribute: [agent_key, private_key_export] }
@@ -130,14 +135,14 @@ node_templates:
       zone: { get_input: zone }
       external_ip: true
     relationships:
-    - type: cloudify.relationships.connected_to
-      target: firewall
-    - type: cloudify.relationships.depends_on
-      target: subnet
-    - type: cloudify.relationships.depends_on
-      target: agent_key
-    - type: cloudify.relationships.depends_on
-      target: disk
+      - type: cloudify.relationships.connected_to
+        target: firewall
+      - type: cloudify.relationships.depends_on
+        target: subnet
+      - type: cloudify.relationships.depends_on
+        target: agent_key
+      - type: cloudify.relationships.depends_on
+        target: disk
     interfaces:
       cloudify.interfaces.lifecycle:
         create:
@@ -148,11 +153,10 @@ node_templates:
             ssh_keys:
               - { get_attribute: [agent_key, public_key_export] }
 
-
   disk:
     type: cloudify.gcp.nodes.Volume
     properties:
-      gcp_config: *gcp_config
+      client_config: *gcp_config
       image: { get_input: image }
       size: 20
       boot: true
@@ -160,7 +164,7 @@ node_templates:
   firewall:
     type: cloudify.gcp.nodes.FirewallRule
     properties:
-      gcp_config: *gcp_config
+      client_config: *gcp_config
       allowed:
         tcp:
           - 22
@@ -178,15 +182,15 @@ node_templates:
     properties:
       region: { get_input: region }
       subnet: 10.11.12.0/22
-      gcp_config: *gcp_config
+      client_config: *gcp_config
     relationships:
-    - type: cloudify.gcp.relationships.contained_in_network
-      target: network
+      - type: cloudify.gcp.relationships.contained_in_network
+        target: network
 
   network:
     type: cloudify.gcp.nodes.Network
     properties:
-      gcp_config: *gcp_config
+      client_config: *gcp_config
       auto_subnets: false
 
   agent_key:
@@ -208,8 +212,8 @@ groups:
 
   vm-group:
     members:
-    - vm
-    - disk
+      - vm
+      - disk
 
 policies:
 
@@ -233,7 +237,7 @@ capabilities:
     description: Private agent key
     value: { get_attribute: [agent_key, private_key_export] }
 
-  security_group_id: 
+  security_group_id:
     description: Security group resource ID.
     value: { get_attribute: [ firewall, resource_id ] }
 
@@ -241,10 +245,10 @@ capabilities:
     description: VPC resource ID.
     value: { get_attribute: [ network, resource_id ] }
 
-  vm_id: 
+  vm_id:
     description: VM resource ID.
     value: { get_attribute: [ vm, resource_id ] }
-  
-  rg_id: 
+
+  rg_id:
     description: Mock resource group id - to be compatible with Azure VM template
     value: 'mocked_resource_group_id'

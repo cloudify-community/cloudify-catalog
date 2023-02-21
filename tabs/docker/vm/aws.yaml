@@ -7,39 +7,39 @@ imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-aws-plugin
   - plugin:cloudify-fabric-plugin
-  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+  - plugin:cloudify-utilities-plugin
 
 inputs:
 
   region_name:
-      type: string
-      display_label: AWS region name
-      default: 'us-east-1'
-      constraints:
-        - valid_values:
-            - us-east-1
-            - us-east-2
-            - us-west-1
-            - us-west-2
-            - eu-central-1
-            - eu-west-1
-            - eu-west-2
-            - eu-south-1
-            - eu-west-3
-            - eu-north-1
-            - af-south-1
-            - ap-east-1
-            - ap-south-1
-            - ap-northeast-3
-            - ap-northeast-2
-            - ap-southeast-1
-            - ap-southeast-2
-            - ap-northeast-1
-            - ca-central-1
-            - cn-north-1
-            - cn-northwest-1
-            - me-south-1
-            - sa-east-1
+    type: string
+    display_label: AWS region name
+    default: us-east-1
+    constraints:
+      - valid_values:
+          - us-east-1
+          - us-east-2
+          - us-west-1
+          - us-west-2
+          - eu-central-1
+          - eu-west-1
+          - eu-west-2
+          - eu-south-1
+          - eu-west-3
+          - eu-north-1
+          - af-south-1
+          - ap-east-1
+          - ap-south-1
+          - ap-northeast-3
+          - ap-northeast-2
+          - ap-southeast-1
+          - ap-southeast-2
+          - ap-northeast-1
+          - ca-central-1
+          - cn-north-1
+          - cn-northwest-1
+          - me-south-1
+          - sa-east-1
 
   instance_type:
     type: string
@@ -55,15 +55,19 @@ inputs:
           - t2.2xlarge
 
   agent_user:
+    display_label: 'Agent User'
+    type: string
     description: >
       The username of the agent running on the instance created from the image.
-    default: 'centos'
+    default: centos
 
   agent_key_name:
+    display_label: 'Agent Key Name'
     type: string
     default: agent_key
 
   resource_prefix:
+    display_label: 'Resource Prefix'
     type: string
     description: Control parameters for names in resources.
     default: 'example'
@@ -121,14 +125,14 @@ node_templates:
       use_public_ip: true
       cloudify_tagging: true
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: ami
-    - type: cloudify.relationships.depends_on
-      target: nic
-    - type: cloudify.relationships.depends_on
-      target: ip
-    - type: cloudify.relationships.depends_on
-      target: cloud_init
+      - type: cloudify.relationships.depends_on
+        target: ami
+      - type: cloudify.relationships.depends_on
+        target: nic
+      - type: cloudify.relationships.depends_on
+        target: ip
+      - type: cloudify.relationships.depends_on
+        target: cloud_init
 
   ami:
     type: cloudify.nodes.aws.ec2.Image
@@ -136,12 +140,12 @@ node_templates:
       resource_config:
         kwargs:
           Filters:
-          - Name: name
-            Values:
-            - CentOS 7.9.2009 - HVM
-          - Name: owner-id
-            Values:
-            - 057448758665
+            - Name: name
+              Values:
+                - CentOS 7.9.2009 - HVM
+            - Name: owner-id
+              Values:
+                - 057448758665
       client_config: *client_config
 
   ip:
@@ -149,8 +153,8 @@ node_templates:
     properties:
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: nic
+      - type: cloudify.relationships.depends_on
+        target: nic
 
   nic:
     type: cloudify.nodes.aws.ec2.Interface
@@ -161,12 +165,12 @@ node_templates:
           Description: Created by cloudify-getting-started-example.
           SubnetId: { get_attribute: [ subnet, aws_resource_id ] }
           Groups:
-          - { get_attribute: [ security_group, aws_resource_id ] }
+            - { get_attribute: [ security_group, aws_resource_id ] }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: security_group
-    - type: cloudify.relationships.depends_on
-      target: subnet
+      - type: cloudify.relationships.depends_on
+        target: security_group
+      - type: cloudify.relationships.depends_on
+        target: subnet
 
   security_group_rules:
     type: cloudify.nodes.aws.ec2.SecurityGroupRuleIngress
@@ -174,19 +178,19 @@ node_templates:
       client_config: *client_config
       resource_config:
         IpPermissions:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 2375
-          ToPort: 2375
-          IpRanges:
-          - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 22
+            ToPort: 22
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 2375
+            ToPort: 2375
+            IpRanges:
+              - CidrIp: 0.0.0.0/0
     relationships:
-    - type: cloudify.relationships.contained_in
-      target: security_group
+      - type: cloudify.relationships.contained_in
+        target: security_group
 
   security_group:
     type: cloudify.nodes.aws.ec2.SecurityGroup
@@ -197,8 +201,8 @@ node_templates:
         Description: Created by cloudify-getting-started-example.
         VpcId: { get_attribute: [ vpc, aws_resource_id ] }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: vpc
+      - type: cloudify.relationships.depends_on
+        target: vpc
 
   route_public_subnet_internet_gateway:
     type: cloudify.nodes.aws.ec2.Route
@@ -208,10 +212,10 @@ node_templates:
           DestinationCidrBlock: '0.0.0.0/0'
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.contained_in
-      target: routetable
-    - type: cloudify.relationships.connected_to
-      target: internet_gateway
+      - type: cloudify.relationships.contained_in
+        target: routetable
+      - type: cloudify.relationships.connected_to
+        target: internet_gateway
     interfaces:
       cloudify.interfaces.lifecycle:
         stop: {}
@@ -221,10 +225,10 @@ node_templates:
     properties:
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.contained_in
-      target: vpc
-    - type: cloudify.relationships.connected_to
-      target: subnet
+      - type: cloudify.relationships.contained_in
+        target: vpc
+      - type: cloudify.relationships.connected_to
+        target: subnet
 
   subnet:
     type: cloudify.nodes.aws.ec2.Subnet
@@ -234,16 +238,16 @@ node_templates:
         CidrBlock: 10.10.4.0/24
         AvailabilityZone: { concat: [ { get_input: region_name }, 'b' ] }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: vpc
+      - type: cloudify.relationships.depends_on
+        target: vpc
 
   internet_gateway:
     type: cloudify.nodes.aws.ec2.InternetGateway
     properties:
       client_config: *client_config
     relationships:
-    - type: cloudify.relationships.connected_to
-      target: vpc
+      - type: cloudify.relationships.connected_to
+        target: vpc
 
   vpc:
     type: cloudify.nodes.aws.ec2.Vpc
@@ -257,11 +261,11 @@ node_templates:
     properties:
       resource_config:
         users:
-        - name: { get_input: agent_user }
-          shell: /bin/bash
-          sudo: ['ALL=(ALL) NOPASSWD:ALL']
-          ssh-authorized-keys:
-          - { get_attribute: [agent_key, public_key_export] }
+          - name: { get_input: agent_user }
+            shell: /bin/bash
+            sudo: ['ALL=(ALL) NOPASSWD:ALL']
+            ssh-authorized-keys:
+              - { get_attribute: [agent_key, public_key_export] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: agent_key
@@ -295,7 +299,7 @@ capabilities:
     description: Private agent key.
     value: { get_attribute: [agent_key, private_key_export] }
 
-  security_group_id: 
+  security_group_id:
     description: Security group resource ID.
     value: { get_attribute: [ security_group, aws_resource_id ] }
 
@@ -303,11 +307,11 @@ capabilities:
     description: VPC resource ID.
     value: { get_attribute: [ vpc, aws_resource_id ] }
 
-  vm_id: 
+  vm_id:
     description: VM resource ID.
     value: { get_attribute: [ vm, aws_resource_id ] }
-  
-  rg_id: 
+
+  rg_id:
     description: Mock resource group id - to be compatible with Azure VM template
     value: 'mocked_resource_group_id'
 
