@@ -21,8 +21,10 @@ host = 'ec2.amazonaws.com'
 region = ctx.node.properties.get('aws_region_name', 'us-east-1')
 service = 'ec2'
 
+
 def sign(key, msg):
     return hmac.new(key, msg.encode('utf-8'), hashlib.sha256).digest()
+
 
 def getSignatureKey(key, dateStamp, regionName, serviceName):
     kDate = sign(('AWS4{0}'.format(key)).encode('utf-8'), dateStamp)
@@ -30,6 +32,7 @@ def getSignatureKey(key, dateStamp, regionName, serviceName):
     kService = sign(kRegion, serviceName)
     kSigning = sign(kService, 'aws4_request')
     return kSigning
+
 
 class AWSRequestsAuth(requests.auth.AuthBase):
     def __init__(self,
@@ -140,8 +143,9 @@ class AWSRequestsAuth(requests.auth.AuthBase):
 
         return canonical_querystring
 
+
 def validate_aws():
-    client = get_rest_client() 
+    client = get_rest_client()
     access_key = client.secrets.get('aws_access_key_id').get('value')
     secret_key = client.secrets.get('aws_secret_access_key').get('value')
 
