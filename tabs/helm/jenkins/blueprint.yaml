@@ -10,6 +10,7 @@ imports:
 inputs:
 
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string
