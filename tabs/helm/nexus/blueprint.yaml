@@ -10,6 +10,7 @@ imports:
 inputs:
 
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string
@@ -20,7 +21,7 @@ node_templates:
     type: cloudify.nodes.helm.Binary
     properties:
       use_existing_resource: false
-      installation_source: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
+      installation_source: https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz
 
   repo:
     type: cloudify.nodes.helm.Repo
@@ -38,7 +39,7 @@ node_templates:
       client_config:
         configuration:
           api_options: &api_options
-            host:  { concat : [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
+            host: { concat: [ "https://", { get_environment_capability: kubernetes_cluster_host } ] }
             api_key: { get_environment_capability: token }
             ssl_ca_cert: { get_environment_capability: ssl_ca_cert }
       resource_config:
@@ -46,8 +47,8 @@ node_templates:
         chart: sonatype/nexus-repository-manager
         values_file: values.yaml
         set_values:
-           - name: service.type
-             value: LoadBalancer
+          - name: service.type
+            value: LoadBalancer
 
     relationships:
       - target: helm_install
@@ -55,23 +56,22 @@ node_templates:
       - target: repo
         type: cloudify.relationships.depends_on
 
-
   svc:
-     type: cloudify.kubernetes.resources.Service
-     properties:
-       client_config:
-         configuration:
-           api_options: *api_options
-       use_external_resource: true
-       allow_node_redefinition: false
-       definition:
-         apiVersion: v1
-         kind: Service
-         metadata:
-           name: {concat : [ { get_input: release_name }, -nexus-repository-manager ] }
-     relationships:
-       - type: cloudify.relationships.depends_on
-         target: release
+    type: cloudify.kubernetes.resources.Service
+    properties:
+      client_config:
+        configuration:
+          api_options: *api_options
+      use_external_resource: true
+      allow_node_redefinition: false
+      definition:
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: { concat: [ { get_input: release_name }, -nexus-repository-manager ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: release
 
 labels:
   obj-type:
@@ -81,5 +81,8 @@ labels:
 capabilities:
   url:
     description: URL
-    value: { concat: [ "http://", { get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, hostname ] },":8081" ] }
- 
+    value:
+      concat:
+        - "http://"
+        - get_attribute: [ svc, kubernetes, status, load_balancer, ingress, 0, hostname ]
+        - ":8081"
