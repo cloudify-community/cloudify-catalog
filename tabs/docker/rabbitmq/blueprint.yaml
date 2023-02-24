@@ -92,7 +92,7 @@ node_templates:
       symbols: 3
       use_secret_if_exists: false
 
-  docker_redis_container:
+  docker_rabbitmq_container:
     type: cloudify.nodes.docker.container
     properties:
       client_config:

@@ -104,7 +104,7 @@ node_templates:
         description: Nextcloud
         protocol: Tcp
         sourcePortRange: '*'
-        destinationPortRange: 8080
+        destinationPortRange: 80
         sourceAddressPrefix: '*'
         destinationAddressPrefix: '*'
         priority: 101

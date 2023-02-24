@@ -46,6 +46,23 @@ node_templates:
         deployment: 
           inputs: 
             provider_name: { get_input: infra_name }
+
+  secrurity_group_rules:
+    type: cloudify.nodes.Component
+    properties:
+      resource_config:
+        blueprint:
+          blueprint_archive: security_group.zip
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
+          external_resource: false
+        deployment:
+          inputs:
+            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
+            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
+            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: infrastructure
   
   image:
     type: cloudify.nodes.ApplicationServer
@@ -77,6 +94,10 @@ node_templates:
         container_args:
           name: nextcloud
           detach: true
+          ports: 
+            { '80/tcp' : '80' }
+          host_config:
+            restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
@@ -88,4 +109,4 @@ outputs:
 
   nextcloud_endpoint:
     description: Nextcloud URL
-    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':8080' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':80' ] }

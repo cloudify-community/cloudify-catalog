@@ -93,7 +93,7 @@ node_templates:
       symbols: 3
       use_secret_if_exists: false
 
-  docker_redis_container:
+  docker_postgres_container:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
@@ -107,7 +107,7 @@ node_templates:
           environment: [ { concat: [ 'POSTGRES_PASSWORD=', { get_attribute: [ password_generator, password ] } ] } ]
           detach: True
           ports: 
-            { '6379/tcp' : '6379' }
+            { '5432/tcp' : '5432' }
           host_config:
             restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
     relationships:
