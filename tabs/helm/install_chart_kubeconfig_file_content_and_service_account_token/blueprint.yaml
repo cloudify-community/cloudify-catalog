@@ -10,30 +10,36 @@ imports:
 inputs:
 
   repo_name:
+    display_label: Repo Name
     description: >
       Name of the repo to add.
     type: string
 
   chart_name:
+    display_label: Chart Name
     description: >
       Chart package name to deploy from repo.
+    type: string
+
   helm_installation_source:
+    display_label: Helm Installation Source
     description: >
       Helm download link.
     type: string
     default: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
 
   repo_url:
+    display_label: Repo URL
     description: >
       URL of the repo to add. For example:
       https://kubernetes-charts.storage.googleapis.com/
     type: string
 
   release_name:
+    display_label: Release Name
     description: >
       Name of the created release.
     type: string
-
 
 node_templates:
 
@@ -63,7 +69,7 @@ node_templates:
             api_key: { get_secret: kube_token }
       resource_config:
         name: { get_input: release_name }
-        chart: { concat: [ { get_input: repo_name },'/', { get_input: chart_name } ] }
+        chart: { concat: [ { get_input: repo_name }, '/', { get_input: chart_name } ] }
     relationships:
       - target: helm_install
         type: cloudify.helm.relationships.run_on_host

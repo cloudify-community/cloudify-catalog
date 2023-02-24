@@ -1,0 +1,118 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-vsphere-plugin
+
+inputs:
+
+  template_name:
+    type: string
+    default: CentOS-7.9.2009-tmpl
+    description: VM template available in datastore for ESXi hosts
+    display_label: vSphere teamplate name
+
+  cpus:
+    type: string
+    default: 1
+    description: Number of virutal CPUs allocated to the VM
+    display_label: CPUs
+
+  memory:
+    type: string
+    default: 1024
+    description: Number of RAM megabytes allocated to the VM
+    display_label: Memory
+
+  domain:
+    type: string
+    default: localdom
+    description: Networking VM domain
+    display_label: Domain
+
+  dns_servers:
+    type: list
+    default: ['8.8.8.8']
+    description: Networking DNS servers provided to the configuration
+    display_label: DNS servers
+
+  network_name:
+    type: string
+    default: Internal
+    description: Network to connect VM to
+    display_label: Network name
+
+  switch_distributed:
+    type: boolean
+    default: false
+    description: Is connected network switch distributed
+    display_label: Distributed switch
+
+  use_dhcp:
+    type: boolean
+    default: false
+    description: Specifies if the connected network interface should use DHCP
+    display_label: Use DHCP
+
+  network_cidr:
+    type: string
+    default: 172.16.168.0/24
+    description: Connected network address in CIDR format
+    display_label: Network CIDR
+
+  gateway_ip:
+    type: string
+    default: 172.16.168.1
+    description: Connected network gateway IP
+    display_label: Gateway IP
+
+  vm_ip:
+    type: string
+    default: 172.16.168.201
+    description: IP address assigned to the VM, if the DHCP is not in use
+    display_label: VM IP
+
+dsl_definitions:
+
+  connection_config: &connection_config
+    username: { get_secret: vsphere_username }
+    password: { get_secret: vsphere_password }
+    host: { get_secret: vsphere_host }
+    port: { get_secret: vsphere_port }
+    datacenter_name: { get_secret: vsphere_datacenter_name }
+    resource_pool_name: { get_secret: vsphere_resource_pool_name }
+    auto_placement: { get_secret: vsphere_auto_placement }
+    allow_insecure: { get_secret: vsphere_allow_insecure }
+
+node_templates:
+  vm:
+    type: cloudify.vsphere.nodes.Server
+    properties:
+      use_external_resource: false
+      connection_config: *connection_config
+      agent_config:
+        install_method: none
+      server:
+        template: { get_input: template_name }
+        cpus: { get_input: cpus }
+        memory: { get_input: memory }
+      networking:
+        domain: { get_input: domain }
+        dns_servers: { get_input: dns_servers }
+        connect_networks:
+          - name: { get_input: network_name }
+            management: true
+            switch_distributed: { get_input: switch_distributed }
+            use_dhcp: { get_input: use_dhcp }
+            network: { get_input: network_cidr }
+            gateway: { get_input: gateway_ip }
+            ip: { get_input: vm_ip }
+
+capabilities:
+  vm_ip:
+    description: VM IP address
+    value: { get_attribute: [ vm, ip ] }
+
+  vm_name:
+    description: VM name
+    value: { get_attribute: [vm, name ] }

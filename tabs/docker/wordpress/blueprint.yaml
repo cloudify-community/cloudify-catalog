@@ -29,7 +29,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -72,14 +72,14 @@ node_templates:
         deployment:
           id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , security_group_id ] }
+            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, vpc_id ] }
+            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, security_group_id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infra_prefix
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -88,16 +88,16 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull wordpress:latest
+              - docker pull wordpress:latest
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] } , endpoint ] }
+              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint ] }
               user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
               key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-    
+
   docker_wordpress_container:
     type: cloudify.nodes.docker.container
     properties:
@@ -108,12 +108,12 @@ node_templates:
         image_tag: "wordpress:latest"
         container_args:
           name: wordpress
-          detach: True
+          detach: true
           command: "docker-entrypoint.sh apache2-foreground"
           ports: [ 80 ]
           host_config:
-            port_bindings: { 80 : 80 }
-            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
+            port_bindings: { 80: 80 }
+            restart_policy: { "MaximumRetryCount": 0, "Name": "always" }
     relationships:
       - type: cloudify.relationships.depends_on
         target: image

@@ -10,28 +10,32 @@ imports:
 inputs:
 
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string
     default: example
 
   zookeeper_user:
+    display_label: Zookeeper User
     description: |
       Name of the zookeeper user
     type: string
     default: zkuser
 
   kafka_user:
+    display_label: Kafka User
     description: |
       Name of the kafka user
     type: string
     default: kafkauser
 
   access_port:
+    display_label: Access Port
     description: |
       The port number used for broker access
     type: string
-    default: "9094"
+    default: 9094
 
 node_templates:
 
@@ -69,7 +73,7 @@ node_templates:
     type: cloudify.nodes.helm.Binary
     properties:
       use_existing_resource: false
-      installation_source: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
+      installation_source: https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz
 
   repo:
     type: cloudify.nodes.helm.Repo
@@ -197,10 +201,14 @@ capabilities:
   kafka_access_points:
     description: Access point to Kafka
     value:
-      [
-        { concat: [ { get_attribute: [ kafka-first, kubernetes, status, load_balancer, ingress, 0, ip ] }, ":", { get_input: access_port } ] },
-        concat: [ { get_attribute: [ kafka-second, kubernetes, status, load_balancer, ingress, 0, ip ] }, ":", { get_input: access_port } ],
-      ]
+      - concat:
+          - get_attribute: [ kafka-first, kubernetes, status, load_balancer, ingress, 0, ip ]
+          - ":"
+          - get_input: access_port
+      - concat:
+          - get_attribute: [ kafka-second, kubernetes, status, load_balancer, ingress, 0, ip ]
+          - ":"
+          - get_input: access_port
 
   zookeeper_password:
     description: Zookeeper password

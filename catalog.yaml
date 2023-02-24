@@ -851,15 +851,30 @@ topics:
     blueprints:
 
       - id: vsphere_vm
-        name: VM-Centos-vSphere-CFY
-        path: tabs/vsphere/vm
-        description: Create vSphere VM
+        name: VM-vSphere-CFY
+        path: tabs/vmware/vsphere/vm
+        description: Create vSphere VM from defined ISO image
+      
+      - id: vsphere_vm_storage
+        name: VM-Storage-vSphere-CFY
+        path: tabs/vmware/vsphere/vm_storage
+        description: Craete vSphere VM from defined ISO image with storage unit
+
+      - id: vsphere_pool
+        name: Pool-vSphere-CFY
+        path: tabs/vmware/vsphere/pool
+        description: Craete vSphere Pool
+
+      - id: vsphere_network
+        name: Network-vSphere-CFY
+        path: tabs/vmware/vsphere/network
+        description: Craete vSphere Network
 
       - id: vcloud_vm
         name: VM-vCloud-CFY
-        path: tabs/vcloud/vm
+        path: tabs/vmware/vcloud/vm
         description: Create vCloud VM
-
+    
   - name: ansible_services
     target_path: s3_json_file
     blueprints:
