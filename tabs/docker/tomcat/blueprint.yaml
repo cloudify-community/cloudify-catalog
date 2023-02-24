@@ -28,7 +28,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -73,7 +73,7 @@ node_templates:
       digits: 2
       symbols: 3
       use_secret_if_exists: false
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -82,7 +82,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull tomcat:9.0
+              - docker pull tomcat:9.0
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -91,7 +91,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-    
+
   docker_tomcat_container:
     type: cloudify.nodes.docker.container
     properties:

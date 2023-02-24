@@ -28,7 +28,7 @@ inputs:
 
   infra_exists:
     type: string
-    display_label: Set if infra exists or not 
+    display_label: Set if infra exists or not
     description: >
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
@@ -63,7 +63,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -72,8 +72,8 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull traefik:v2.5
-            - docker pull traefik/whoami
+              - docker pull traefik:v2.5
+              - docker pull traefik/whoami
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -96,7 +96,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-    
+
   docker_traefik_front:
     type: cloudify.nodes.docker.container
     properties:
@@ -111,19 +111,19 @@ node_templates:
           ports: 
             { '8080/tcp' : '80' }
           working_dir: { get_attribute: [docker_container_files, storage_dir] }
-          volumes: 
+          volumes:
             - '/etc/traefik/'
             - '/var/run/docker.sock'
-          volumes_mapping: 
+          volumes_mapping:
             - { get_attribute: [ docker_container_files, destination ] }
             - '/var/run/docker.sock'
-          detach: True
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker_container_files
       - type: cloudify.relationships.depends_on
         target: image
-  
+
   docker_traefik_back:
     type: cloudify.nodes.docker.container
     properties:
@@ -135,14 +135,14 @@ node_templates:
         container_args:
           command: 'whoami'
           name: test
-          detach: True
+          detach: true
     relationships:
       - type: cloudify.relationships.depends_on
         target: docker_traefik_front
 
 outputs:
 
-  trafik_url: 
+  trafik_url:
     description: Access to traefik plane
     value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':8080' ] }
   docker_api_url:

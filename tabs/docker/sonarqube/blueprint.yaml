@@ -72,7 +72,7 @@ node_templates:
           implementation: fabric.fabric_plugin.tasks.run_commands
           inputs:
             commands:
-            - docker pull sonarqube:latest
+              - docker pull sonarqube:latest
             fabric_env: &fabric_env
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
@@ -103,9 +103,9 @@ node_templates:
         container_args:
           command: "/opt/sonarqube/bin/run.sh /opt/sonarqube/bin/sonar.sh"
           name: sonarquebe
-          detach: True 
+          detach: true 
           ports: 
-            { '9000/tcp' : 9000, '9092/tcp' : 9092 }
+            { '9000/tcp' : '9000', '9092/tcp' : '9092' }
           host_config:
             restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
     relationships:

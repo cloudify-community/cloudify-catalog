@@ -9,24 +9,28 @@ imports:
 
 inputs:
   username:
+    display_label: Username
     description: |
       Username to be set in application
     type: string
     default: admin
 
   password:
+    display_label: Password
     description: |
       Password to be set in application
     type: string
     default: Cl0ud1fY!
 
   email:
+    display_label: Email
     description: |
       Email to be set in application
     type: string
     default: user@cloudify.co
 
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string
@@ -37,7 +41,7 @@ node_templates:
     type: cloudify.nodes.helm.Binary
     properties:
       use_existing_resource: false
-      installation_source: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
+      installation_source: https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz
 
   repo:
     type: cloudify.nodes.helm.Repo
