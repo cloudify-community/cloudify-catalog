@@ -35,7 +35,7 @@ inputs:
     default: a
 
   resource_group_name:
-    display_label: 'Resource Group Name'
+    display_label: Resource Group Name
     description: Resource Group name, combination of prefix and suffix
     type: string
     default: { concat: [ { get_input: resource_group_name_preffix }, { get_input: resource_suffix } ] }
@@ -48,7 +48,7 @@ inputs:
     default: aks-test-mc
 
   managed_cluster_name:
-    display_label: 'Managed Cluster Name'
+    display_label: Managed Cluster Name
     description: Managed Cluster Name, combination of prefix and suffix
     type: string
     default: { concat: [ { get_input: managed_cluster_name_preffix }, { get_input: resource_suffix } ] }
