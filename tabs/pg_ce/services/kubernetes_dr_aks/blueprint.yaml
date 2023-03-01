@@ -115,7 +115,7 @@ node_templates:
           external_resource: false
         deployment:
           inputs:
-            resource_prefix: { concat: [ { get_attribute: [ prefixS, value ] }, 'adr' ] }
+            resource_prefix: { concat: [ { get_attribute: [ prefix, value ] }, 'adr' ] }
             cloud_credentials:
               azure_tenant_id: { get_secret: azure_tenant_id }
               azure_subscription_id: { get_secret: azure_subscription_id }
