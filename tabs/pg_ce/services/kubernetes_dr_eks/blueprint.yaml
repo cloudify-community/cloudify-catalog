@@ -2,7 +2,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 inputs:
 
@@ -13,22 +13,22 @@ inputs:
     default: us-east-1
     constraints:
       - valid_values:
-        - us-east-1 #US East (N. Virginia)
-        - us-east-2 #US East (Ohio) 
-        - us-west-1 #US West (N. California)  
-        - us-west-2 #US West (Oregon) 
-        - ca-central-1  #Canada (Central) 
-        - eu-central-1  #Europe (Frankfurt) 
-        - eu-west-1 #Europe (Ireland) 
-        - eu-west-2 #Europe (London)  
-        - eu-south-1  #Europe (Milan) 
-        - eu-west-3 #Europe (Paris) 
-        - eu-north-1  #Europe (Stockholm) 
-        - ap-northeast-3  #Asia Pacific (Osaka) 
-        - ap-northeast-2  #Asia Pacific (Seoul) 
-        - ap-southeast-1  #Asia Pacific (Singapore) 
-        - ap-southeast-2  #Asia Pacific (Sydney)  
-        - ap-northeast-1  #Asia Pacific (Tokyo) 
+          - us-east-1 #US East (N. Virginia)
+          - us-east-2 #US East (Ohio)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-central-1  #Europe (Frankfurt)
+          - eu-west-1 #Europe (Ireland)
+          - eu-west-2 #Europe (London)
+          - eu-south-1  #Europe (Milan)
+          - eu-west-3 #Europe (Paris)
+          - eu-north-1  #Europe (Stockholm)
+          - ap-northeast-3  #Asia Pacific (Osaka)
+          - ap-northeast-2  #Asia Pacific (Seoul)
+          - ap-southeast-1  #Asia Pacific (Singapore)
+          - ap-southeast-2  #Asia Pacific (Sydney)
+          - ap-northeast-1  #Asia Pacific (Tokyo)
 
   region_name_b:
     type: string
@@ -37,26 +37,26 @@ inputs:
     default: eu-west-1
     constraints:
       - valid_values:
-        - us-east-1 #US East (N. Virginia)
-        - us-east-2 #US East (Ohio) 
-        - us-west-1 #US West (N. California)  
-        - us-west-2 #US West (Oregon) 
-        - ca-central-1  #Canada (Central) 
-        - eu-central-1  #Europe (Frankfurt) 
-        - eu-west-1 #Europe (Ireland) 
-        - eu-west-2 #Europe (London)  
-        - eu-south-1  #Europe (Milan) 
-        - eu-west-3 #Europe (Paris) 
-        - eu-north-1  #Europe (Stockholm) 
-        - ap-northeast-3  #Asia Pacific (Osaka) 
-        - ap-northeast-2  #Asia Pacific (Seoul) 
-        - ap-southeast-1  #Asia Pacific (Singapore) 
-        - ap-southeast-2  #Asia Pacific (Sydney)  
-        - ap-northeast-1  #Asia Pacific (Tokyo)
+          - us-east-1 #US East (N. Virginia)
+          - us-east-2 #US East (Ohio)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-central-1  #Europe (Frankfurt)
+          - eu-west-1 #Europe (Ireland)
+          - eu-west-2 #Europe (London)
+          - eu-south-1  #Europe (Milan)
+          - eu-west-3 #Europe (Paris)
+          - eu-north-1  #Europe (Stockholm)
+          - ap-northeast-3  #Asia Pacific (Osaka)
+          - ap-northeast-2  #Asia Pacific (Seoul)
+          - ap-southeast-1  #Asia Pacific (Singapore)
+          - ap-southeast-2  #Asia Pacific (Sydney)
+          - ap-northeast-1  #Asia Pacific (Tokyo)
 
   domain_owned:
     type: string
-    description: | 
+    description: |
       Owned domain for load balancer creation
     display_label: |
       Owned domain for load balancer creation
@@ -77,7 +77,7 @@ node_templates:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: { get_input: resource_prefix }
-      
+
   eks_cluster_a:
     type: cloudify.nodes.ServiceComponent
     properties:
@@ -86,16 +86,16 @@ node_templates:
           blueprint_archive: blueprints/eks_network.zip
           external_resource: false
         deployment:
-          inputs: 
+          inputs:
             aws_access_key_id: { get_secret: aws_access_key_id }
             aws_secret_access_key: { get_secret: aws_secret_access_key }
             aws_region_name: { get_input: region_name_a }
-            availability_zone_1: { concat: [  { get_input: region_name_a  }, 'a' ] }
-            availability_zone_2: { concat: [  { get_input: region_name_a  }, 'c' ] }
-            eks_cluster_name: { concat: [ { get_attribute: [ prefix , value ] }, '-eks-adr' ] }
-            eks_nodegroup_name: { concat: [ 'eks_node_group', { get_attribute: [ prefix , value ] }, '-eks-adr' ] }
-            service_account_name: "cloudify"
-            agent_key_name: { concat : [ agent_key_name, 'adr']}
+            availability_zone_1: { concat: [ { get_input: region_name_a }, a ] }
+            availability_zone_2: { concat: [ { get_input: region_name_a }, c ] }
+            eks_cluster_name: { concat: [ { get_attribute: [ prefix, value ] }, '-eks-adr' ] }
+            eks_nodegroup_name: { concat: [ eks_node_group, { get_attribute: [ prefix, value ] }, -eks-adr ] }
+            service_account_name: cloudify
+            agent_key_name: { concat: [ agent_key_name, 'adr']}
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix
@@ -108,20 +108,20 @@ node_templates:
           blueprint_archive: blueprints/eks_network.zip
           external_resource: false
         deployment:
-          inputs: 
+          inputs:
             aws_access_key_id: { get_secret: aws_access_key_id }
             aws_secret_access_key: { get_secret: aws_secret_access_key }
             aws_region_name: { get_input: region_name_b }
-            availability_zone_1: { concat: [  { get_input: region_name_b  }, 'a' ] }
-            availability_zone_2: { concat: [  { get_input: region_name_b  }, 'c' ] }
-            eks_cluster_name: { concat: [ { get_attribute: [ prefix , value ] }, '-eks-bdr' ] }
-            eks_nodegroup_name: { concat: [ 'eks_node_group', { get_attribute: [ prefix , value ] }, '-eks-bdr' ] }
+            availability_zone_1: { concat: [ { get_input: region_name_b }, 'a' ] }
+            availability_zone_2: { concat: [ { get_input: region_name_b }, 'c' ] }
+            eks_cluster_name: { concat: [ { get_attribute: [ prefix, value ] }, '-eks-bdr' ] }
+            eks_nodegroup_name: { concat: [ 'eks_node_group', { get_attribute: [ prefix, value ] }, '-eks-bdr' ] }
             service_account_name: "cloudify"
-            agent_key_name: { concat : [ agent_key_name, 'bdr']}
+            agent_key_name: { concat: [ agent_key_name, 'bdr']}
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix
-  
+
   database:
     type: cloudify.nodes.ServiceComponent
     properties:
@@ -130,12 +130,12 @@ node_templates:
           blueprint_archive: blueprints/database.zip
           external_resource: false
         deployment:
-          inputs: 
+          inputs:
             aws_access_key_id: { get_secret: aws_access_key_id }
             aws_secret_access_key: { get_secret: aws_secret_access_key }
             aws_region_name_a: { get_input: region_name_a }
             aws_region_name_b: { get_input: region_name_b }
-            resource_prefix: { get_attribute: [ prefix , value ] }
+            resource_prefix: { get_attribute: [ prefix, value ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: eks_cluster_a
@@ -150,12 +150,12 @@ node_templates:
           blueprint_archive: blueprints/s3.zip
           external_resource: false
         deployment:
-          inputs: 
+          inputs:
             aws_access_key_id: { get_secret: aws_access_key_id }
             aws_secret_access_key: { get_secret: aws_secret_access_key }
             aws_region_name_a: { get_input: region_name_a }
             aws_region_name_b: { get_input: region_name_b }
-            resource_prefix: { get_attribute: [ prefix , value ] }
+            resource_prefix: { get_attribute: [ prefix, value ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: eks_cluster_a
@@ -170,48 +170,50 @@ node_templates:
           blueprint_archive: blueprints/lb.zip
           external_resource: false
         deployment:
-          inputs: 
+          inputs:
             aws_access_key_id: { get_secret: aws_access_key_id }
             aws_secret_access_key: { get_secret: aws_secret_access_key }
             domain_primary: { get_attribute: [ eks_cluster_a, capabilities, srv_hostname ] }
             domain_failover: { get_attribute: [ eks_cluster_b, capabilities, srv_hostname ] }
-            domain_owned:  { get_input: domain_owned }
+            domain_owned: { get_input: domain_owned }
     relationships:
       - type: cloudify.relationships.depends_on
         target: s3
-    
-            
+
 outputs:
 
   lb_endpoint:
+    description: Loadbalancer enpoint
     value: { get_attribute: [ load_balancer, capabilities, endpoint] }
-  
+
   s3_failover:
+    description: S3 failover
     value: { get_attribute: [ s3, capabilities, s3_failover ] }
 
   s3_primary:
+    description: S3 primary
     value: { get_attribute: [ s3, capabilities, s3_primary ] }
 
   database_login:
+    description: Database admin login
     value: { get_attribute: [ database, capabilities, admin_login ] }
 
   database_password:
+    description: Database admin password
     value: { get_attribute: [ database, capabilities, admin_password ] }
 
   database_name:
+    description: Database name
     value: { get_attribute: [ database, capabilities, db_name ] }
 
   database_port:
+    description: Database port
     value: { get_attribute: [ database, capabilities, db_port ] }
 
   db_conn_primary:
+    description: Primary database endpoint
     value: { get_attribute: [ database, capabilities, endpoint_primary ] }
 
   db_conn_failover:
+    description: Failover database endpoint
     value: { get_attribute: [ database, capabilities, endpoint_failover ] }
-
-
-  
-
-
-  
