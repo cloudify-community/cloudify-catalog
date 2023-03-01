@@ -111,6 +111,6 @@ capabilities:
     description: Wordpress login URL
     value: 
       concat:
-        - "http://", 
+        - "http://"
         - get_attribute: [svc, kubernetes, status, load_balancer, ingress, 0, hostname]
         - "/wp-login.php"
