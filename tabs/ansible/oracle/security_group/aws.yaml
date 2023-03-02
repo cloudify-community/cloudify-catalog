@@ -14,8 +14,7 @@ inputs:
     description: Resource group ID
     display_label: Resource Group ID
     type: string
-    default: ''
-
+  
   vm_id:
     type: string
   

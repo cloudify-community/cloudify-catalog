@@ -13,7 +13,6 @@ inputs:
     description: Resource group ID
     display_label: Resource Group ID
     type: string
-    default: ''
     
   vpc_id:
     description: VPC ID

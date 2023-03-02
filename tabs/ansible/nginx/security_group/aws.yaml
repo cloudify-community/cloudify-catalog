@@ -13,7 +13,6 @@ inputs:
     description: Resource group ID
     display_label: Resource Group ID
     type: string
-    default: ''""
 
   vpc_id:
     description: VPC ID
@@ -27,7 +26,7 @@ inputs:
     
   region_name:
       type: string
-      default: '''us-east-1'
+      'us-east-1'
       constraints:
         - valid_values:
             - us-east-1
