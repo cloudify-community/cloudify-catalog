@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-azure-plugin
-  - plugin:cloudify-utilities-plugin?version= >=1.25.0
+  - plugin:cloudify-utilities-plugin
 
 inputs:
 
@@ -14,16 +14,19 @@ inputs:
     default: azure_subscription_id
 
   tenant-id-secret:
+    display_label: Tenant ID Secret
     type: string
     required: false
     default: azure_tenant_id
 
   client-id-secret:
+    display_label: Client ID Secret
     type: string
     required: false
     default: azure_client_id
 
   client-secret-secret:
+    display_label: Client Secret Secret
     type: string
     required: false
     default: azure_client_secret

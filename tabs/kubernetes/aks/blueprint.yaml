@@ -5,9 +5,9 @@ description: >
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-azure-plugin?version= >=3.3.0
-  - plugin:cloudify-kubernetes-plugin?version= >=2.7.0
-  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+  - plugin:cloudify-azure-plugin
+  - plugin:cloudify-kubernetes-plugin
+  - plugin:cloudify-utilities-plugin
 
 labels:
   csys-obj-type:
@@ -35,6 +35,7 @@ inputs:
     default: a
 
   resource_group_name:
+    display_label: Resource Group Name
     description: Resource Group name, combination of prefix and suffix
     type: string
     default: { concat: [ { get_input: resource_group_name_preffix }, { get_input: resource_suffix } ] }
@@ -47,6 +48,7 @@ inputs:
     default: aks-test-mc
 
   managed_cluster_name:
+    display_label: Managed Cluster Name
     description: Managed Cluster Name, combination of prefix and suffix
     type: string
     default: { concat: [ { get_input: managed_cluster_name_preffix }, { get_input: resource_suffix } ] }

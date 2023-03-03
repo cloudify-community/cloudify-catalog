@@ -35,11 +35,13 @@ inputs:
     default: azure_client_secret
 
   resource_group_name:
+    display_label: Resource Group Name
     type: string
     display_name: Resource Group Name
     description: Resource Group Name
 
   managed_cluster_name:
+    display_label: Managed Cluster Name
     type: string
     display_name: Managed Cluster Name
     description: Managed Cluster Name
@@ -55,7 +57,7 @@ dsl_definitions:
 node_templates:
 
   managed_cluster:
-    type: cloudify.azure.nodes.compute.ManagedCluster
+    type: cloudify.nodes.azure.compute.ManagedCluster
     properties:
       use_external_resource: true
       resource_group: { get_input: resource_group_name }

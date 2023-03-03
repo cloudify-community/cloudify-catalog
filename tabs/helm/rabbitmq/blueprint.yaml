@@ -9,16 +9,18 @@ imports:
 
 inputs:
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string
     default: example
 
   replica_count:
+    display_label: Replica Count
     description: |
       Number of replcas
     type: string
-    default: "2"
+    default: 2
 
 node_templates:
   password_generator:
@@ -35,7 +37,7 @@ node_templates:
     type: cloudify.nodes.helm.Binary
     properties:
       use_existing_resource: false
-      installation_source: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
+      installation_source: https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz
 
   repo:
     type: cloudify.nodes.helm.Repo
