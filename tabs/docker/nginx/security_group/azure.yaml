@@ -9,7 +9,7 @@ inputs:
 
   rg_id:
     description: Resource group ID
-    display_label: resource group id
+    display_label: Resource group id
     type: string
 
   vpc_id:
