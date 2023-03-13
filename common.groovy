@@ -53,11 +53,11 @@ def terminateCloudifyManager(){
 def runCfyLinter(){
   sh """#!/bin/bash
       declare counter=0
-      declare regex="\s+ERROR\s+"
-      for filePath in $(find . -type f -name blueprint.yaml); do 
+      declare regex="\\s+ERROR\\s+"
+      for filePath in \$(find . -type f -name blueprint.yaml); do 
         echo \$filePath
         cfy-lint -b \$filePath |& tee cfy_lint_error.txt;
-        declare file_content=$( cat cfy_lint_error.txt )
+        declare file_content=\$( cat cfy_lint_error.txt )
         if [[ " \$file_content " =~ \$regex ]] 
           then
               echo "found"
