@@ -104,6 +104,7 @@ pipeline{
                 set -eux
                 pip install --upgrade pip
                 pip install -r requirements.txt
+                curl -sfL https://cloudify.co/get-lint | sh -
             """
             }
           }
