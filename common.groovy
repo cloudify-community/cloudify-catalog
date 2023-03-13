@@ -53,7 +53,7 @@ def terminateCloudifyManager(){
 def runCfyLinter(){
   sh """#!/bin/bash
     let counter=0
-    for file_path in $(find . -type f -name blueprint.yaml); do 
+    for file_path in \$(find . -type f -name blueprint.yaml); do 
       echo \$file_path
       cfy-lint -b \$file_path |& tee -a cfy_lint_errors.txt;
       ((counter+=1))
