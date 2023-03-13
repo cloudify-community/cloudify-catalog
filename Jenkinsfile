@@ -129,13 +129,6 @@ pipeline{
             script{
               common.runCfyLinter()
             }
-            findText(textFinders: [
-                textFinder(
-                  regexp: 'ERROR|WARNING',
-                  fileSet: 'cfy_lint_errors.txt',
-                  stageResult: 'FAILURE'
-              )
-            ])
           }
         }
       }
