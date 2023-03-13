@@ -121,96 +121,114 @@ pipeline{
         }
       }
     }
-    stage('deploy_cloudify_manager') {
-      when { expression { params.TEST_BLUEPRINTS } }
-      steps {
-        script {
-          buildState = 'FAILURE'
-          catchError(message: 'Failure on: Deploy Cloudify Manager', buildResult: 'SUCCESS', stageResult:
-          'FAILURE') {
-            container('cloudify') {
-              setupGithubSSHKey()
-              dir("${env.WORKSPACE}/${env.PROJECT}") {
-                withVault([configuration: configuration, vaultSecrets: secrets]){
-                  echo 'Create EC2 instance'
-                  common.createEc2Instance()
-                  echo 'Configure Cloudify Manager'
-                  common.configureCloudifyManager()
-                  }
-                }
-            }
-            // If we reach here that means all of the above passed
-            buildState = 'SUCCESS'
-          }
-        }
-      }
-    }
-    stage('test_blueprints'){
-      when { expression { params.TEST_BLUEPRINTS } }
-      steps {
-        script {
-          buildState = 'FAILURE'
-          catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
-          'FAILURE') {
-            container('cloudify') {
-              dir("${env.WORKSPACE}/${env.PROJECT}") {
-                withVault([configuration: configuration, vaultSecrets: secrets]){
-                  echo 'Test blueprints'
-                  common.testBlueprints()
-                }
-            }
-            // If we reach here that means all of the above passed
-            buildState = 'SUCCESS'
-          }
-        }
-      }
-    }
-    }
-    stage('build'){
+    stage('run_cfy_lint'){
       steps{
         container('cloudify'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-            export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
-            python catalog.py
-            """
-          }
-        }
-      }
-    }
-    stage('validate_built_catalogs'){
-      steps{
-        container('cloudify'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-              python catalog_linter.py
-            """
-          }
-        }
-      }
-    }
-    stage('upload_artifacts'){
-      steps{
-        withCredentials([
-              usernamePassword(
-                  credentialsId: 'aws-cli',
-                  usernameVariable: 'ID',
-                  passwordVariable: 'SECRET'
-                  )]) {
-              container('cloudify'){
-                dir("${env.WORKSPACE}/${env.PROJECT}"){
-                  setupGithubSSHKey()
-                  sh '''
-                    export ID="$ID"
-                    export SECRET="$SECRET"
-                    python upload_artifacts.py
-                  '''
+           dir("${env.WORKSPACE}/${env.PROJECT}"){
+            script{
+              common.runCfyLinter()
             }
+            findText(textFinders: [
+                textFinder(
+                  regexp: 'ERROR|WARNING',
+                  fileSet: 'cfy_lint_errors.txt',
+                  stageResult: 'FAILURE'
+              )
+            ])
           }
         }
       }
     }
+    // stage('deploy_cloudify_manager') {
+    //   when { expression { params.TEST_BLUEPRINTS } }
+    //   steps {
+    //     script {
+    //       buildState = 'FAILURE'
+    //       catchError(message: 'Failure on: Deploy Cloudify Manager', buildResult: 'SUCCESS', stageResult:
+    //       'FAILURE') {
+    //         container('cloudify') {
+    //           setupGithubSSHKey()
+    //           dir("${env.WORKSPACE}/${env.PROJECT}") {
+    //             withVault([configuration: configuration, vaultSecrets: secrets]){
+    //               echo 'Create EC2 instance'
+    //               common.createEc2Instance()
+    //               echo 'Configure Cloudify Manager'
+    //               common.configureCloudifyManager()
+    //               }
+    //             }
+    //         }
+    //         // If we reach here that means all of the above passed
+    //         buildState = 'SUCCESS'
+    //       }
+    //     }
+    //   }
+    // }
+    // stage('test_blueprints'){
+    //   when { expression { params.TEST_BLUEPRINTS } }
+    //   steps {
+    //     script {
+    //       buildState = 'FAILURE'
+    //       catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
+    //       'FAILURE') {
+    //         container('cloudify') {
+    //           dir("${env.WORKSPACE}/${env.PROJECT}") {
+    //             withVault([configuration: configuration, vaultSecrets: secrets]){
+    //               echo 'Test blueprints'
+    //               common.testBlueprints()
+    //             }
+    //         }
+    //         // If we reach here that means all of the above passed
+    //         buildState = 'SUCCESS'
+    //       }
+    //     }
+    //   }
+    // }
+    // }
+    // stage('build'){
+    //   steps{
+    //     container('cloudify'){
+    //       dir("${env.WORKSPACE}/${env.PROJECT}"){
+    //         setupGithubSSHKey()
+    //         sh """
+    //         export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+    //         python catalog.py
+    //         """
+    //       }
+    //     }
+    //   }
+    // }
+    // stage('validate_built_catalogs'){
+    //   steps{
+    //     container('cloudify'){
+    //       dir("${env.WORKSPACE}/${env.PROJECT}"){
+    //         setupGithubSSHKey()
+    //         sh """
+    //           python catalog_linter.py
+    //         """
+    //       }
+    //     }
+    //   }
+    // }
+    // stage('upload_artifacts'){
+    //   steps{
+    //     withCredentials([
+    //           usernamePassword(
+    //               credentialsId: 'aws-cli',
+    //               usernameVariable: 'ID',
+    //               passwordVariable: 'SECRET'
+    //               )]) {
+    //           container('cloudify'){
+    //             dir("${env.WORKSPACE}/${env.PROJECT}"){
+    //               setupGithubSSHKey()
+    //               sh '''
+    //                 export ID="$ID"
+    //                 export SECRET="$SECRET"
+    //                 python upload_artifacts.py
+    //               '''
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
   }
 }

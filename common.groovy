@@ -50,4 +50,24 @@ def terminateCloudifyManager(){
   """
 }
 
+def runCfyLinter(){
+  sh """#!/bin/bash
+    let counter=0
+    for file_path in $(find . -type f -name blueprint.yaml); do 
+      echo \$file_path
+      cfy-lint -b \$file_path |& tee -a cfy_lint_errors.txt;
+      ((counter+=1))
+    done
+
+    if [[ \$counter -gt 0 ]] 
+    then
+      echo "Cfy lint errors exist in \$counter blueprints."
+      exit 1
+    else
+      echo "No errors found in existing blueprints."
+      exit 0
+    fi
+  """
+}
+
 return this

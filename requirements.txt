@@ -3,3 +3,4 @@ pytest
 pytest-steps
 pygit2
 boto3
+cfy-lint
