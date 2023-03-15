@@ -5,8 +5,8 @@ description: >
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-gcp-plugin?version= >=1.6.0
-  - plugin:cloudify-kubernetes-plugin?version= !=2.11.0
+  - plugin:cloudify-gcp-plugin
+  - plugin:cloudify-kubernetes-plugin
 
 labels:
   csys-obj-type:
@@ -83,7 +83,7 @@ node_templates:
     type: cloudify.kubernetes.resources.ServiceAccount
     properties:
       client_config: &kube_client_config
-        authentication: 
+        authentication:
           gcp_service_account: { get_secret: gcp_credentials }
         configuration:
           api_options:
@@ -116,9 +116,9 @@ node_templates:
           kind: ClusterRole
           name: cluster-admin
         subjects:
-        - kind: ServiceAccount
-          name: { get_input: service_account_name }
-          namespace: { get_input: service_account_namespace }
+          - kind: ServiceAccount
+            name: { get_input: service_account_name }
+            namespace: { get_input: service_account_namespace }
       options:
         namespace: { get_input: service_account_namespace }
     relationships:
@@ -214,18 +214,19 @@ node_templates:
         postdelete: {}
 
 capabilities:
-
   kubernetes_cluster_host:
+    description: Kubernetes cluster host URI
     value: { concat: [ 'https://', { get_attribute: [kubernetes-cluster-attributes, endpoint] }]}
 
   token:
+    description: Kubernetes token
     value: { get_attribute: [ store_token_and_kubeconfig, token ] }
 
   ssl_ca_cert:
+    description: SSL CA Certificate for kubernetes
     value: { get_attribute: [ store_token_and_kubeconfig, ssl_ca_cert ] }
 
 outputs:
-
   kubernetes_cluster_host:
     description: Endpoint
     value: { concat: [ 'https://', { get_attribute: [kubernetes-cluster-attributes, endpoint] }]}

@@ -19,6 +19,7 @@ inputs:
     description: Zone
 
   kubernetes_cluster_name:
+    display_label: Kubernetes Cluster Name
     type: string
     display_name: Kubernetes Cluster Name
     description: Kubernetes Cluster Name
