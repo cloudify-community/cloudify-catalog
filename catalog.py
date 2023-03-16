@@ -13,13 +13,13 @@ from github import Github
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 TEST_RESULT_PATH = os.environ["TEST_RESULT_PATH"]
-GIT_TOKEN = os.environ["GH_TOKEN"]
 REPO_NAME = 'cloudify-community/cloudify-catalog'
 BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
 
 def get_changed_bps_path():
-    repo = Github(GIT_TOKEN).get_repo(REPO_NAME)
-    branch = Repository('.').head.shorthand
+    token = os.environ["GH_TOKEN"]
+    repo = Github(token).get_repo(REPO_NAME)
+    branch = set_head()
     pr = None
     pulls = repo.get_pulls(state = 'open', sort = 'created')
     for pull in pulls:
