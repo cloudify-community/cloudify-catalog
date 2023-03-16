@@ -7,21 +7,21 @@ import shutil
 import xml.etree.ElementTree as ET
 
 import yaml
-from pygit2 import Repository
 from github import Github
+from pygit2 import Repository
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 TEST_RESULT_PATH = os.environ["TEST_RESULT_PATH"]
 REPO_NAME = 'cloudify-community/cloudify-catalog'
 BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
+GH_TOKEN = os.environ["GH_TOKEN"]
 
 def get_changed_bps_path():
-    token = os.environ["GH_TOKEN"]
-    repo = Github(token).get_repo(REPO_NAME)
+    repo = Github(GH_TOKEN).get_repo(REPO_NAME)
     branch = set_head()
     pr = None
-    pulls = repo.get_pulls(state = 'open', sort = 'created')
+    pulls = repo.get_pulls(state='open', sort='created')
     for pull in pulls:
         if pull.head.ref == branch:
             pr = pull
@@ -33,6 +33,7 @@ def get_changed_bps_path():
             changed_files.append(file.filename)
     return changed_files
 
+
 def check_bp_changed(bp_path, changed_files):
     path = re.compile(bp_path)
     for file in changed_files:
@@ -41,12 +42,14 @@ def check_bp_changed(bp_path, changed_files):
             return True
     return False
 
+
 def get_packages_from_changed_files(changed_files):
     packages = []
     for file in changed_files:
         service = file.split('/')[1]
         packages.append(service)
     return packages
+
 
 def read_xml(path):
     try:
@@ -62,17 +65,19 @@ def read_xml(path):
         )
         return None
 
+
 def get_broken_bps_ids():
     test_suites = read_xml(TEST_RESULT_PATH)
     broken_bps = []
     if test_suites:
-        for suite in test_suites:   
+        for suite in test_suites:
             for test_case in suite:
                 if list(test_case):
                     match = BP_NAME.search(test_case.attrib.get('name'))
-                    if match: 
+                    if match:
                         broken_bps.append(match[0])
     return broken_bps
+
 
 def create_build_directories():
     """Creates a build directory and catalogs directory in it
@@ -175,6 +180,7 @@ def set_head():
             "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
     return head
 
+
 def main():
     with open("catalog.yaml", 'r') as stream:
         try:
@@ -196,20 +202,19 @@ def main():
     for package in catalog['topics']:
         catalog = []
         logging.info('processing catalog %s' % package['name'])
-        if 'blueprints' in package and package['name'].replace('_services','') in packages:
-            result = []
+        if 'blueprints' in package and package['name'].replace('_services', '') in packages:
             broken_bps = get_broken_bps_ids()
-            
+
             for blueprint in package['blueprints']:
                 logging.info("processing blueprint %s" % blueprint['id'])
-                
-                
+
                 zip_url = get_zip_url(blueprint, target_path)
                 html_url = get_html_url(blueprint, github_url)
                 readme_url = get_readme_url(blueprint, raw_github_url)
                 main_blueprint = get_main_blueprint(blueprint)
-                
-                image_url = get_image_url(blueprint, raw_github_url, broken_bps)
+
+                image_url = get_image_url(
+                    blueprint, raw_github_url, broken_bps)
                 if check_bp_changed(blueprint['path'], changed_files):
                     archive_blueprint(blueprint)
 
