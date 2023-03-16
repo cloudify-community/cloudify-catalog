@@ -8,11 +8,38 @@ import xml.etree.ElementTree as ET
 
 import yaml
 from pygit2 import Repository
+from github import Github
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 TEST_RESULT_PATH = os.environ["TEST_RESULT_PATH"]
+GIT_TOKEN = os.environ["GITHUB_TOKEN"]
+REPO_NAME = 'cloudify-community/cloudify-catalog'
 BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
+
+def get_changed_bps_path():
+    repo = Github(GIT_TOKEN).get_repo(REPO_NAME)
+    branch = Repository('.').head.shorthand
+    pr = None
+    pulls = repo.get_pulls(state = 'open', sort = 'created')
+    for pull in pulls:
+        if pull.head.ref == branch:
+            pr = pull
+            break
+
+    changed_files = []
+    for file in pr.get_files():
+        if 'tabs' in file.filename:
+            changed_files.append(file.filename)
+    return changed_files
+
+def check_bp_changed(bp_path, changed_files):
+    path = re.compile(bp_path)
+    for file in changed_files:
+        if path.findall(file):
+            logging.info('Found changes in {} file'.format(file))
+            return True
+    return False
 
 def read_xml(path):
     try:
@@ -21,6 +48,11 @@ def read_xml(path):
     except FileNotFoundError:
         logging.info(
             'The test result file was not found under: {} path'.format(path))
+        return None
+    except ET.ParseError:
+        logging.info(
+            'There is no element to parse in the test result file'
+        )
         return None
 
 def get_broken_bps_ids():
@@ -132,7 +164,7 @@ def set_head():
     except KeyError:
         # we are on local machine
         head = Repository('.').head.shorthand
-        print(
+        logging.info(
             "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
     return head
 
@@ -145,6 +177,7 @@ def main():
             print(exc)
 
     head = set_head()
+    changed_files = get_changed_bps_path()
     target_path_subfolder = get_target_sub_folder(head)
 
     git_url = catalog['git_url']
@@ -159,17 +192,19 @@ def main():
         if 'blueprints' in package:
             result = []
             broken_bps = get_broken_bps_ids()
+            
             for blueprint in package['blueprints']:
                 logging.info("processing blueprint %s" % blueprint['id'])
-
+                
+                
                 zip_url = get_zip_url(blueprint, target_path)
                 html_url = get_html_url(blueprint, github_url)
                 readme_url = get_readme_url(blueprint, raw_github_url)
                 main_blueprint = get_main_blueprint(blueprint)
                 
                 image_url = get_image_url(blueprint, raw_github_url, broken_bps)
-
-                archive_blueprint(blueprint)
+                if check_bp_changed(blueprint['path'], changed_files):
+                    archive_blueprint(blueprint)
 
                 catalog_item = {
                     "id": blueprint['id'],
@@ -190,3 +225,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    get_changed_bps_path()
