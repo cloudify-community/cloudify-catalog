@@ -96,10 +96,6 @@ pipeline{
 
   stages{
     stage('prepare'){
-      when { anyOf {
-        expression { params.BPS_SCOPE == 'all' } 
-        expression { common.checkChanges() > 0 } 
-      }}
       steps {
         script{
           container('cloudify'){
