@@ -81,7 +81,7 @@ pipeline{
     booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: true, description: 'Test blueprints from marketplace.')
     string(name: 'TEST_BLUEPRINT', defaultValue: '', description: 'Blueprint ID to test.')
     choice(name: 'TEST_CASE', choices: "upload\ninstall\nsingle_upload\nsingle_install", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true, single_{option} takes into account the value from TEST_BLUEPRINT')
-    choice(name: 'BPS_SCOPE', choices: "all\nchanged", description: 'Test all or only changed bps from Pull Request.')
+    choice(name: 'BPS_SCOPE', choices: "changed\nall", description: 'Test all or only changed bps from Pull Request.')
   }
 
   environment {
