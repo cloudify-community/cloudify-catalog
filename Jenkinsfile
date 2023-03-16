@@ -160,6 +160,9 @@ pipeline{
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
+                  sh """
+                    export GH_TOKEN=${env.GH_TOKEN}
+                  """
                   common.testBlueprints()
                 }
             }
