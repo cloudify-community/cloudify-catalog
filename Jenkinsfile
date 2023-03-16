@@ -132,7 +132,7 @@ pipeline{
               setupGithubSSHKey()
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
-                  if ( common.checkChanges() > 0 | params.BPS_SCOPE == 'all'){
+                  if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     echo 'Create EC2 instance'
                     common.createEc2Instance()
                     echo 'Configure Cloudify Manager'
@@ -160,7 +160,7 @@ pipeline{
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
-                  if ( common.checkChanges() > 0 | params.BPS_SCOPE == 'all'){
+                  if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     sh """
                       export GH_TOKEN=${env.GH_TOKEN}
                     """
