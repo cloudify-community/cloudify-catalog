@@ -13,7 +13,7 @@ from github import Github
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 TEST_RESULT_PATH = os.environ["TEST_RESULT_PATH"]
-GIT_TOKEN = os.environ["GITHUB_TOKEN"]
+GIT_TOKEN = os.environ["GH_TOKEN"]
 REPO_NAME = 'cloudify-community/cloudify-catalog'
 BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
 
