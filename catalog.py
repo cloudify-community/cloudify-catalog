@@ -41,6 +41,13 @@ def check_bp_changed(bp_path, changed_files):
             return True
     return False
 
+def get_packages_from_changed_files(changed_files):
+    packages = []
+    for file in changed_files:
+        service = file.split('/')[1]
+        packages.append(service)
+    return packages
+
 def read_xml(path):
     try:
         test_suites = ET.parse(path)
@@ -168,7 +175,6 @@ def set_head():
             "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
     return head
 
-
 def main():
     with open("catalog.yaml", 'r') as stream:
         try:
@@ -178,6 +184,7 @@ def main():
 
     head = set_head()
     changed_files = get_changed_bps_path()
+    packages = get_packages_from_changed_files(changed_files)
     target_path_subfolder = get_target_sub_folder(head)
 
     git_url = catalog['git_url']
@@ -189,7 +196,7 @@ def main():
     for package in catalog['topics']:
         catalog = []
         logging.info('processing catalog %s' % package['name'])
-        if 'blueprints' in package:
+        if 'blueprints' in package and package['name'].replace('_services','') in packages:
             result = []
             broken_bps = get_broken_bps_ids()
             
