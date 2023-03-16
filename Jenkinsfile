@@ -180,6 +180,7 @@ pipeline{
             setupGithubSSHKey()
             sh """
             export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+            export GH_TOKEN=${env.GH_TOKEN}
             python catalog.py
             """
           }
