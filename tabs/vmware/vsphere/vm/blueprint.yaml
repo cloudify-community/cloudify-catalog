@@ -17,7 +17,7 @@ inputs:
     default: 1
     description: Number of virutal CPUs allocated to the VM
     display_label: CPUs
-  
+
   memory:
     type: string
     default: 1024
