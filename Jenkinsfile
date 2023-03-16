@@ -123,10 +123,6 @@ pipeline{
       }
     }
     stage('deploy_cloudify_manager') {
-      when { anyOf {
-        expression { params.BPS_SCOPE == 'all' } 
-        expression { common.checkChanges() > 0 } 
-      }}
       steps {
         script {
           buildState = 'FAILURE'
@@ -136,12 +132,17 @@ pipeline{
               setupGithubSSHKey()
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
-                  echo 'Create EC2 instance'
-                  common.createEc2Instance()
-                  echo 'Configure Cloudify Manager'
-                  common.configureCloudifyManager()
+                  if ( common.checkChanges() > 0 | params.BPS_SCOPE == 'all'){
+                    echo 'Create EC2 instance'
+                    common.createEc2Instance()
+                    echo 'Configure Cloudify Manager'
+                    common.configureCloudifyManager()
+                  }
+                  else{
+                    echo 'PASS on STAGE deploy_cloudify_manager'
                   }
                 }
+              }
             }
             // If we reach here that means all of the above passed
             buildState = 'SUCCESS'
@@ -150,10 +151,6 @@ pipeline{
       }
     }
     stage('test_blueprints'){
-      when { anyOf {
-        expression { params.BPS_SCOPE == 'all' } 
-        expression { common.checkChanges() > 0 } 
-      }}
       steps {
         script {
           buildState = 'FAILURE'
@@ -163,10 +160,15 @@ pipeline{
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
-                  sh """
-                    export GH_TOKEN=${env.GH_TOKEN}
-                  """
-                  common.testBlueprints()
+                  if ( common.checkChanges() > 0 | params.BPS_SCOPE == 'all'){
+                    sh """
+                      export GH_TOKEN=${env.GH_TOKEN}
+                    """
+                    common.testBlueprints()
+                  }
+                  else{
+                    echo 'PASS on STAGE test_blueprints'
+                  }
                 }
             }
             // If we reach here that means all of the above passed
