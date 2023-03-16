@@ -12,10 +12,10 @@ from pygit2 import Repository
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
-TEST_RESULT_PATH = os.environ["TEST_RESULT_PATH"]
+TEST_RESULT_PATH = os.getenv("TEST_RESULT_PATH")
 REPO_NAME = 'cloudify-community/cloudify-catalog'
 BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
-GH_TOKEN = os.environ["GH_TOKEN"]
+GH_TOKEN = os.getenv("GH_TOKEN")
 
 def get_changed_bps_path():
     repo = Github(GH_TOKEN).get_repo(REPO_NAME)
