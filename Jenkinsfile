@@ -177,12 +177,14 @@ pipeline{
       steps{
         container('cloudify'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-            export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
-            export GH_TOKEN=${env.GH_TOKEN}
-            python catalog.py
-            """
+            withVault([configuration: configuration, vaultSecrets: secrets]){
+              setupGithubSSHKey()
+              sh """
+              export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+              export GH_TOKEN=${env.GH_TOKEN}
+              python catalog.py
+              """
+            }
           }
         }
       }
