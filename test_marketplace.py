@@ -5,7 +5,7 @@ import logging
 import pytest
 from pytest_steps import test_steps
 
-from parse_tests_yaml import ParseTestData
+from parse_tests import ParseTestData
 
 BPS_SCOPE = os.environ.get('BPS_SCOPE')
 

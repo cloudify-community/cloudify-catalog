@@ -180,20 +180,20 @@ def set_head():
             "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
     return head
 
+def load_catalog(path):
+    with open(path, 'r') as stream:
+        try:
+            return yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            logging.info(exc)
 
 def main():
-    with open("catalog.yaml", 'r') as stream:
-        try:
-            catalog = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-
+    catalog = load_catalog("catalog.yaml")
     head = set_head()
     changed_files = get_changed_bps_path()
     packages = get_packages_from_changed_files(changed_files)
     target_path_subfolder = get_target_sub_folder(head)
 
-    git_url = catalog['git_url']
     target_path = "{}/{}".format(catalog['target_path'], target_path_subfolder)
     github_url = "{}/{}".format(catalog['github_url'], head)
     raw_github_url = "{}/{}".format(catalog['raw_github_url'], head)
@@ -237,4 +237,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    get_changed_bps_path()

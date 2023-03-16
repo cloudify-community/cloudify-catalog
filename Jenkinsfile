@@ -78,7 +78,6 @@ pipeline{
   }
 
   parameters {
-    booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: true, description: 'Test blueprints from marketplace.')
     string(name: 'TEST_BLUEPRINT', defaultValue: '', description: 'Blueprint ID to test.')
     choice(name: 'TEST_CASE', choices: "upload\ninstall\nsingle_upload\nsingle_install", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true, single_{option} takes into account the value from TEST_BLUEPRINT')
     choice(name: 'BPS_SCOPE', choices: "changed\nall", description: 'Test all or only changed bps from Pull Request.')
@@ -90,7 +89,6 @@ pipeline{
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1"
     TEST_CASE = "${params.TEST_CASE}"
-    TEST_BLUEPRINT = "${params.TEST_BLUEPRINT}"
     TEST_RESULT_DIR = "/tmp/data"
     TEST_RESULT_PATH = "${env.TEST_RESULT_DIR}/junit_report.xml"
     EC2_META_DATA = "http://169.254.169.254/latest/meta-data/"
@@ -98,7 +96,10 @@ pipeline{
 
   stages{
     stage('prepare'){
-      when { expression { params.TEST_BLUEPRINTS } }
+      when { anyOf {
+        expression { params.BPS_SCOPE == 'all' } 
+        expression { common.checkChanges() > 0 } 
+      }}
       steps {
         script{
           container('cloudify'){
@@ -126,7 +127,10 @@ pipeline{
       }
     }
     stage('deploy_cloudify_manager') {
-      when { expression { params.TEST_BLUEPRINTS } }
+      when { anyOf {
+        expression { params.BPS_SCOPE == 'all' } 
+        expression { common.checkChanges() > 0 } 
+      }}
       steps {
         script {
           buildState = 'FAILURE'
@@ -150,7 +154,10 @@ pipeline{
       }
     }
     stage('test_blueprints'){
-      when { expression { params.TEST_BLUEPRINTS } }
+      when { anyOf {
+        expression { params.BPS_SCOPE == 'all' } 
+        expression { common.checkChanges() > 0 } 
+      }}
       steps {
         script {
           buildState = 'FAILURE'
