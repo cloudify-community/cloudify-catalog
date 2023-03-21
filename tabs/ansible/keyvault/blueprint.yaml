@@ -3,7 +3,6 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Nginx blueprint. Deploys Nginx service with Ansible Cloduify plugin.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
 
@@ -53,7 +52,7 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: security_group.zip
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
           inputs:
@@ -64,14 +63,14 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
-  redis:
+  vault:
     type: cloudify.nodes.Root
     interfaces:
       cloudify.interfaces.lifecycle:
         create:
           implementation: ansible.cloudify_ansible.tasks.run
           inputs:
-            site_yaml_path: playbooks/install_redis.yaml
+            site_yaml_path: playbooks/install_vault.yaml
             sources:
               foo_group:
                 hosts:
@@ -81,9 +80,6 @@ node_templates:
                     ansible_ssh_private_key_file: { get_attribute: [ infrastructure, capabilities, key_content ] }
                     ansible_become: true
                     ansible_ssh_common_args: -o StrictHostKeyChecking=no
-            run_data:
-              slave_password: { get_attribute: [ slave_password, master_password ] }
-              master_password: { get_attribute: [ master_password, master_password ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -91,21 +87,9 @@ node_templates:
 outputs:
 
   redis_endpoint:
-    description: Redis Host IP
+    description: Vault Host IP
     value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
 
-  redis_port:
-    description: Redis Port
-    value: 6379
-
-  slave_password:
-    description: Redis Slave password
-    value: { get_attribute: [ slave_password, master_password ] }
-
-  master_password:
-    description: Redis Master password
-    value: { get_attribute: [ master_password, master_password ] }
-
-  test_command:
-    description: Command to test service with the redis-cli tool
-    value: { concat: [ "redis-cli -h", { get_attribute: [ infrastructure, capabilities, endpoint ] }, "-p 6379 -a", { get_attribute: [ master_password, master_password ] } ]}
+  vault_port:
+    description: Vault Port
+    value: 8200

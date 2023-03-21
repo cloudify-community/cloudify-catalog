@@ -1,0 +1,56 @@
+
+- hosts: all
+  become: true
+  tasks:
+
+    - name: Creates directory
+      file:
+        path: "{{ dir }}"
+        state: directory
+      vars:
+        dir:
+        - /opt/vault
+        - /etc/vault.d
+
+    - name: Download vault
+      ansible.builtin.get_url:
+        url: https://releases.hashicorp.com/vault/1.4.0/vault_1.4.0_linux_amd64.zip
+        dest: /opt/vault/vault.zip
+
+    - name: Installing vault
+      ansible.builtin.yum:
+        name: unzip
+        state: present
+
+    - name: Unzipping
+      shell: |
+        unzip -d /opt/vault/ /opt/vault/vault.zip
+        chown root:root /opt/vault/vault
+        mv /opt/vault/vault /usr/local/bin
+
+    - name: Copy service properties
+      ansible.builtin.copy:
+        src: services/vault.service
+        dest: /etc/systemd/system/vault.service
+
+    - name: Copy service properties
+      ansible.builtin.copy:
+        src: config/vault.hcl
+        dest: /etc/vault.d/vault.hcl
+
+    - name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
+      ansible.builtin.user:
+        name: vault
+        system: true
+        home: /etc/vault.d
+        shell: /bin/false
+
+    - name: Daemon reload
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Ensure Vault service is started
+      ansible.builtin.service:
+        name: vault
+        state: started
+        enabled: true
