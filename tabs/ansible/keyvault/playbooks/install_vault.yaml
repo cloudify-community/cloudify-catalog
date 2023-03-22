@@ -3,18 +3,27 @@
   become: true
   tasks:
 
+    - name: Add the user 'vault'
+      ansible.builtin.user:
+        name: vault
+        system: true
+        home: /etc/vault.d
+        shell: /bin/false
+
     - name: Creates directory
       file:
-        path: "{{ dir }}"
+        path: "{{ item }}"
         state: directory
-      vars:
-        dir:
+        owner: vault
+        group: vault
+      loop:
+        - /mnt/vault/data
         - /opt/vault
         - /etc/vault.d
 
     - name: Download vault
       ansible.builtin.get_url:
-        url: https://releases.hashicorp.com/vault/1.4.0/vault_1.4.0_linux_amd64.zip
+        url: "{{ url_vault }}"
         dest: /opt/vault/vault.zip
 
     - name: Installing vault
@@ -26,7 +35,7 @@
       shell: |
         unzip -d /opt/vault/ /opt/vault/vault.zip
         chown root:root /opt/vault/vault
-        mv /opt/vault/vault /usr/local/bin
+        mv /opt/vault/vault /usr/local/bin 
 
     - name: Copy service properties
       ansible.builtin.copy:
@@ -38,13 +47,6 @@
         src: config/vault.hcl
         dest: /etc/vault.d/vault.hcl
 
-    - name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
-      ansible.builtin.user:
-        name: vault
-        system: true
-        home: /etc/vault.d
-        shell: /bin/false
-
     - name: Daemon reload
       ansible.builtin.systemd:
         daemon_reload: true
@@ -54,3 +56,29 @@
         name: vault
         state: started
         enabled: true
+
+    - name: Export seals to file
+      shell: |
+        export VAULT_ADDR="http://127.0.0.1:8200"
+        vault operator init > /tmp/seals
+      become_user: centos
+
+    - name: read the intial Admin password
+      command: cat /tmp/seals
+      register: seals
+
+    - name: "Set fact: output dictionary"
+      set_fact:
+        output_dict:
+          seals: "{{ seals.stdout }}"
+
+    - name: "Creates facts directory if it doesn't exist"
+      file:
+        path: "{{ lookup('ansible.builtin.env', 'ANSIBLE_FACT_PATH') }}"
+        state: directory
+
+    - name: "Insert custom fact file"
+      copy:
+        content: "{{ output_dict }}"
+        dest: "{{ lookup('ansible.builtin.env', 'ANSIBLE_FACT_PATH') }}/custom.fact"
+        mode: 0644
