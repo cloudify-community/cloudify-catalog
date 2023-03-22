@@ -72,9 +72,10 @@ node_templates:
         target: infrastructure
 
   vault:
-    type: cloudify.nodes.Root
+    type: cloudify.nodes.ansible.Playbook
     interfaces:
       cloudify.interfaces.lifecycle:
+        precreate: {}
         create:
           implementation: ansible.cloudify_ansible.tasks.run
           inputs: &ansible_inputs
@@ -92,6 +93,8 @@ node_templates:
                     ansible_ssh_common_args: -o StrictHostKeyChecking=no
             run_data:
               url_vault: { get_input: url_vault }
+        configure: {}
+        start: {}
         poststart:
           implementation: ansible.cloudify_ansible.tasks.store_facts
           inputs: *ansible_inputs
