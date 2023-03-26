@@ -1,13 +1,20 @@
 tosca_definitions_version: cloudify_dsl_1_4
 
-description: Cloudify Nginx blueprint. Deploys Nginx service with Ansible Cloduify plugin.
+description: Cloudify Hashicorp KeyVault blueprint. Deploys KeyVault service with Ansible Cloduify plugin.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
+  - plugin:cloudify-utilities-plugin
 
 inputs:
+
+  url_vault:
+    display_label: URL for vault download
+    description: >
+      URL for downloading hashicorp vault archive
+    type: string
+    default: https://releases.hashicorp.com/vault/1.4.0/vault_1.4.0_linux_amd64.zip
 
   infra_name:
     display_label: Name of the provider to deploy resources
@@ -53,7 +60,7 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: security_group.zip
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
           inputs:
@@ -64,14 +71,17 @@ node_templates:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
-  redis:
-    type: cloudify.nodes.Root
+  vault:
+    type: cloudify.nodes.ansible.Playbook
     interfaces:
       cloudify.interfaces.lifecycle:
+        precreate: {}
         create:
           implementation: ansible.cloudify_ansible.tasks.run
-          inputs:
-            site_yaml_path: playbooks/install_redis.yaml
+          inputs: &ansible_inputs
+            ansible_env_vars:
+              ANSIBLE_FACT_PATH: /tmp/facts.d
+            site_yaml_path: playbooks/install_vault.yaml
             sources:
               foo_group:
                 hosts:
@@ -82,30 +92,31 @@ node_templates:
                     ansible_become: true
                     ansible_ssh_common_args: -o StrictHostKeyChecking=no
             run_data:
-              slave_password: { get_attribute: [ slave_password, master_password ] }
-              master_password: { get_attribute: [ master_password, master_password ] }
+              url_vault: { get_input: url_vault }
+        configure: {}
+        start: {}
+        poststart:
+          implementation: ansible.cloudify_ansible.tasks.store_facts
+          inputs: *ansible_inputs
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
+  secret:
+    type: cloudify.nodes.secrets.Writer
+    properties:
+      entries:
+        seals: { get_attribute: [ vault, facts, ansible_local, custom, seals ] }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: vault
+
 outputs:
 
   redis_endpoint:
-    description: Redis Host IP
+    description: Vault Host IP
     value: { get_attribute: [ infrastructure, capabilities, endpoint ] }
 
-  redis_port:
-    description: Redis Port
-    value: 6379
-
-  slave_password:
-    description: Redis Slave password
-    value: { get_attribute: [ slave_password, master_password ] }
-
-  master_password:
-    description: Redis Master password
-    value: { get_attribute: [ master_password, master_password ] }
-
-  test_command:
-    description: Command to test service with the redis-cli tool
-    value: { concat: [ "redis-cli -h", { get_attribute: [ infrastructure, capabilities, endpoint ] }, "-p 6379 -a", { get_attribute: [ master_password, master_password ] } ]}
+  vault_port:
+    description: Vault Port
+    value: 8200
