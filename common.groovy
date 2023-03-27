@@ -53,7 +53,7 @@ def terminateCloudifyManager(){
 def checkChanges(){
     sh returnStdout: true, script: """#!/bin/bash
       export GH_TOKEN=${env.GH_TOKEN}
-      python count_changes.py
+      python3 get_changes.py | wc -l
     """
 }
 
@@ -61,7 +61,7 @@ def runCfyLinter(){
   sh """#!/bin/bash
       declare counter=0
       declare regex="\\s+ERROR\\s+"
-      for filePath in \$(find . -type f -name blueprint.yaml); do 
+      for filePath in \$(python3 get_changes.py | grep blueprint.yaml); do
         echo \$filePath
         cfy-lint -b \$filePath |& tee cfy_lint_error.txt;
         declare file_content=\$( cat cfy_lint_error.txt )
@@ -69,16 +69,16 @@ def runCfyLinter(){
           then
               echo "found"
           ((counter+=1))
+          echo "There is \$counter not properly formatted blueprint/s"
         fi
-        echo \$counter
       done
 
       if [[ \$counter -gt 0 ]] 
       then
-        echo "Cfy lint errors exist in \$counter blueprints."
+        echo "Errors found in \$counter blueprint/s."
         exit 1
       else
-        echo "No errors found in existing blueprints."
+        echo "No errors found in tested blueprint/s."
         exit 0
       fi
   """
