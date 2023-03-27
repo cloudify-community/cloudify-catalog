@@ -129,7 +129,12 @@ pipeline{
         container('cloudify'){
            dir("${env.WORKSPACE}/${env.PROJECT}"){
             script{
-              common.runCfyLinter()
+              if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
+                common.runCfyLinter()
+              }
+              else{
+                echo 'PASS on STAGE run_cfy_lint'
+              }
             }
           }
         }
