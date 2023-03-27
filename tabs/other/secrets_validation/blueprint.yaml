@@ -18,7 +18,7 @@ inputs:
           - gcp
   
   secrets: 
-    display_label: Secrets list type
+    display_label: Secrets list
     description: |
       Secret list to validate
     type: list
