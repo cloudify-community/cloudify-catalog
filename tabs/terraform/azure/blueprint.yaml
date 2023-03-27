@@ -4,8 +4,8 @@ description: >
   This blueprint creates infrastructure on Azure using Terraform.
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-terraform-plugin?version= >=0.15.0
-  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+  - plugin:cloudify-terraform-plugin
+  - plugin:cloudify-utilities-plugin
 
 inputs:
 
@@ -14,20 +14,67 @@ inputs:
       The username of the agent running on the instance created from the image.
     type: string
     display_label: Agent User
-    default: 'ubuntu'
+    default: ubuntu
 
   region_name:
     type: string
     display_label: Region Name
-    default: 'eastus'
+    default: eastus
     constraints:
-    - valid_values: [westus,westus2,eastus,centralus,centraluseuap,southcentralus,northcentralus,westcentralus,eastus2,eastus2euap,brazilsouth,brazilus,northeurope,westeurope,eastasia,southeastasia,japanwest,japaneast,koreacentral,koreasouth,southindia,westindia,centralindia,australiaeast,australiasoutheast,canadacentral,canadaeast,uksouth,ukwest,francecentral,francesouth,australiacentral,australiacentral2,uaecentral,uaenorth,southafricanorth,southafricawest,switzerlandnorth,switzerlandwest,germanynorth,germanywestcentral,norwayeast,norwaywest,brazilsoutheast,westus3,swedencentral,swedensouth]
+      - valid_values:
+          - westus
+          - westus2
+          - eastus
+          - centralus
+          - centraluseuap
+          - southcentralus
+          - northcentralus
+          - westcentralus
+          - eastus2
+          - eastus2euap
+          - brazilsouth
+          - brazilus
+          - northeurope
+          - westeurope
+          - eastasia
+          - southeastasia
+          - japanwest
+          - japaneast
+          - koreacentral
+          - koreasouth
+          - southindia
+          - westindia
+          - centralindia
+          - australiaeast
+          - australiasoutheast
+          - canadacentral
+          - canadaeast
+          - uksouth
+          - ukwest
+          - francecentral
+          - francesouth
+          - australiacentral
+          - australiacentral2
+          - uaecentral
+          - uaenorth
+          - southafricanorth
+          - southafricawest
+          - switzerlandnorth
+          - switzerlandwest
+          - germanynorth
+          - germanywestcentral
+          - norwayeast
+          - norwaywest
+          - brazilsoutheast
+          - westus3
+          - swedencentral
+          - swedensouth
 
   image:
     type: dict
     description: Azure Image reference
     display_label: Image
-    default: 
+    default:
       publisher: Canonical
       offer: UbuntuServer
       sku: 18.04-LTS
@@ -97,6 +144,7 @@ node_templates:
 
 capabilities:
   name:
+    description: The virtual machine Azure ID
     value: { get_attribute: [ cloud_resources, resources, vm, instances, 0, attributes, id ] }
 
   endpoint:

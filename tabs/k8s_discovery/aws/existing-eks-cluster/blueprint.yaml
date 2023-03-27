@@ -25,6 +25,7 @@ inputs:
     default: { get_secret: aws_region_name }
 
   resource_name:
+    display_label: Resource Name
     type: string
     display_name: Resource Name
     description: EKS Cluster resource id

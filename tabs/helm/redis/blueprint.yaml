@@ -9,6 +9,7 @@ imports:
 
 inputs:
   release_name:
+    display_label: Release Name
     description: |
       Name of the helm release
     type: string
@@ -25,12 +26,12 @@ node_templates:
       digits: 2
       symbols: 3
       use_secret_if_exists: false
-      
+
   helm_install:
     type: cloudify.nodes.helm.Binary
     properties:
       use_existing_resource: false
-      installation_source: 'https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz'
+      installation_source: https://get.helm.sh/helm-v3.9.0-linux-amd64.tar.gz
 
   repo:
     type: cloudify.nodes.helm.Repo

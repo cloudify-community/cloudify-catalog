@@ -7,12 +7,49 @@ import shutil
 import xml.etree.ElementTree as ET
 
 import yaml
+from github import Github
 from pygit2 import Repository
 
 logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
-TEST_RESULT_PATH = os.environ["TEST_RESULT_PATH"]
+TEST_RESULT_PATH = os.getenv("TEST_RESULT_PATH")
+REPO_NAME = 'cloudify-community/cloudify-catalog'
 BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
+GH_TOKEN = os.getenv("GH_TOKEN")
+
+def get_changed_bps_path():
+    repo = Github(GH_TOKEN).get_repo(REPO_NAME)
+    branch = set_head()
+    pr = None
+    pulls = repo.get_pulls(state='open', sort='created')
+    for pull in pulls:
+        if pull.head.ref == branch:
+            pr = pull
+            break
+
+    changed_files = []
+    for file in pr.get_files():
+        if 'tabs' in file.filename:
+            changed_files.append(file.filename)
+    return changed_files
+
+
+def check_bp_changed(bp_path, changed_files):
+    path = re.compile(bp_path)
+    for file in changed_files:
+        if path.findall(file):
+            logging.info('Found changes in {} file'.format(file))
+            return True
+    return False
+
+
+def get_packages_from_changed_files(changed_files):
+    packages = []
+    for file in changed_files:
+        service = file.split('/')[1]
+        packages.append(service)
+    return packages
+
 
 def read_xml(path):
     try:
@@ -22,18 +59,25 @@ def read_xml(path):
         logging.info(
             'The test result file was not found under: {} path'.format(path))
         return None
+    except ET.ParseError:
+        logging.info(
+            'There is no element to parse in the test result file'
+        )
+        return None
+
 
 def get_broken_bps_ids():
     test_suites = read_xml(TEST_RESULT_PATH)
     broken_bps = []
     if test_suites:
-        for suite in test_suites:   
+        for suite in test_suites:
             for test_case in suite:
                 if list(test_case):
                     match = BP_NAME.search(test_case.attrib.get('name'))
-                    if match: 
+                    if match:
                         broken_bps.append(match[0])
     return broken_bps
+
 
 def create_build_directories():
     """Creates a build directory and catalogs directory in it
@@ -132,22 +176,24 @@ def set_head():
     except KeyError:
         # we are on local machine
         head = Repository('.').head.shorthand
-        print(
+        logging.info(
             "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
     return head
 
+def load_catalog(path):
+    with open(path, 'r') as stream:
+        try:
+            return yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            logging.info(exc)
 
 def main():
-    with open("catalog.yaml", 'r') as stream:
-        try:
-            catalog = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-
+    catalog = load_catalog("catalog.yaml")
     head = set_head()
+    changed_files = get_changed_bps_path()
+    packages = get_packages_from_changed_files(changed_files)
     target_path_subfolder = get_target_sub_folder(head)
 
-    git_url = catalog['git_url']
     target_path = "{}/{}".format(catalog['target_path'], target_path_subfolder)
     github_url = "{}/{}".format(catalog['github_url'], head)
     raw_github_url = "{}/{}".format(catalog['raw_github_url'], head)
@@ -156,9 +202,9 @@ def main():
     for package in catalog['topics']:
         catalog = []
         logging.info('processing catalog %s' % package['name'])
-        if 'blueprints' in package:
-            result = []
+        if 'blueprints' in package and package['name'].replace('_services', '') in packages:
             broken_bps = get_broken_bps_ids()
+
             for blueprint in package['blueprints']:
                 logging.info("processing blueprint %s" % blueprint['id'])
 
@@ -166,10 +212,11 @@ def main():
                 html_url = get_html_url(blueprint, github_url)
                 readme_url = get_readme_url(blueprint, raw_github_url)
                 main_blueprint = get_main_blueprint(blueprint)
-                
-                image_url = get_image_url(blueprint, raw_github_url, broken_bps)
 
-                archive_blueprint(blueprint)
+                image_url = get_image_url(
+                    blueprint, raw_github_url, broken_bps)
+                if check_bp_changed(blueprint['path'], changed_files):
+                    archive_blueprint(blueprint)
 
                 catalog_item = {
                     "id": blueprint['id'],

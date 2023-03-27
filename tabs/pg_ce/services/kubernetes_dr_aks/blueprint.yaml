@@ -3,15 +3,15 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-utilities-plugin
-  - plugin:cloudify-azure-plugin?version= >=3.0.10
-  - plugin:cloudify-kubernetes-plugin?version= >=2.9.3
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - plugin:cloudify-azure-plugin
+  - plugin:cloudify-kubernetes-plugin
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 labels:
   csys-obj-type:
     values:
       - service
-      
+
 inputs:
 
   region_name_a:
@@ -21,31 +21,31 @@ inputs:
     default: EastUS
     constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
-        
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
+
   region_name_b:
     type: string
     display_label: Azure location for region B
@@ -53,30 +53,30 @@ inputs:
     default: WestEurope
     constraints:
       - valid_values:
-        - BrazilSouth
-        - FranceCentral
-        - SouthAfricaNorth
-        - AustraliaEast
-        - CanadaCentral
-        - GermanyWestCentral
-        - CentralIndia
-        - CentralUS
-        - NorthEurope
-        - JapanEast
-        - EastUS
-        - NorwayEast
-        - KoreaCentral
-        - EastUS2
-        - UKSouth
-        - SoutheastAsia
-        - SouthCentralUS
-        - WestEurope
-        - EastAsia
-        - USGovVirginia
-        - SwedenCentral
-        - ChinaNorth3
-        - WestUS2
-        - WestUS3
+          - BrazilSouth
+          - FranceCentral
+          - SouthAfricaNorth
+          - AustraliaEast
+          - CanadaCentral
+          - GermanyWestCentral
+          - CentralIndia
+          - CentralUS
+          - NorthEurope
+          - JapanEast
+          - EastUS
+          - NorwayEast
+          - KoreaCentral
+          - EastUS2
+          - UKSouth
+          - SoutheastAsia
+          - SouthCentralUS
+          - WestEurope
+          - EastAsia
+          - USGovVirginia
+          - SwedenCentral
+          - ChinaNorth3
+          - WestUS2
+          - WestUS3
 
   resource_prefix:
     type: string
@@ -105,7 +105,7 @@ node_templates:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: { get_input: resource_prefix }
-      
+
   aks_cluster_a:
     type: cloudify.nodes.ServiceComponent
     properties:
@@ -114,8 +114,8 @@ node_templates:
           blueprint_archive: blueprints/aks.zip
           external_resource: false
         deployment:
-          inputs: 
-            resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
+          inputs:
+            resource_prefix: { concat: [ { get_attribute: [ prefix, value ] }, 'adr' ] }
             cloud_credentials:
               azure_tenant_id: { get_secret: azure_tenant_id }
               azure_subscription_id: { get_secret: azure_subscription_id }
@@ -139,8 +139,8 @@ node_templates:
           blueprint_archive: blueprints/aks.zip
           external_resource: false
         deployment:
-          inputs: 
-            resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'bdr' ] }
+          inputs:
+            resource_prefix: { concat: [ { get_attribute: [ prefix, value ] }, 'bdr' ] }
             cloud_credentials:
               azure_tenant_id: { get_secret: azure_tenant_id }
               azure_subscription_id: { get_secret: azure_subscription_id }
@@ -155,7 +155,6 @@ node_templates:
         target: prefix
       - type: cloudify.relationships.depends_on
         target: key
-    
 
   load_balancer:
     type: cloudify.nodes.ServiceComponent
@@ -165,8 +164,8 @@ node_templates:
           blueprint_archive: blueprints/lb.zip
           external_resource: false
         deployment:
-          inputs: 
-            resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
+          inputs:
+            resource_prefix: { concat: [ { get_attribute: [ prefix, value ] }, 'adr' ] }
             cloud_credentials:
               azure_tenant_id: { get_secret: azure_tenant_id }
               azure_subscription_id: { get_secret: azure_subscription_id }
@@ -195,8 +194,8 @@ node_templates:
           blueprint_archive: blueprints/database.zip
           external_resource: false
         deployment:
-          inputs: 
-            resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
+          inputs:
+            resource_prefix: { concat: [ { get_attribute: [ prefix, value ] }, 'adr' ] }
             cloud_credentials:
               azure_tenant_id: { get_secret: azure_tenant_id }
               azure_subscription_id: { get_secret: azure_subscription_id }
@@ -213,10 +212,10 @@ node_templates:
             subnet_b: { get_attribute: [ aks_cluster_b, capabilities, private_subnet_ids, 0 ] }
           auto_inc_suffix: true
     relationships:
-     - type: cloudify.relationships.depends_on
-       target: aks_cluster_b
-     - type: cloudify.relationships.depends_on
-       target: aks_cluster_a
+      - type: cloudify.relationships.depends_on
+        target: aks_cluster_b
+      - type: cloudify.relationships.depends_on
+        target: aks_cluster_a
 
   storage:
     type: cloudify.nodes.ServiceComponent
@@ -227,8 +226,8 @@ node_templates:
           external_resource: false
         deployment:
           id: storage_dr
-          inputs: 
-            resource_prefix: { concat: [ { get_attribute: [ prefix , value ] }, 'adr' ] }
+          inputs:
+            resource_prefix: { concat: [ { get_attribute: [ prefix, value ] }, 'adr' ] }
             cloud_credentials:
               azure_tenant_id: { get_secret: azure_tenant_id }
               azure_subscription_id: { get_secret: azure_subscription_id }
@@ -243,39 +242,49 @@ node_templates:
             location_b: { get_input: region_name_b }
           auto_inc_suffix: true
     relationships:
-     - type: cloudify.relationships.depends_on
-       target: aks_cluster_b
-     - type: cloudify.relationships.depends_on
-       target: aks_cluster_a
+      - type: cloudify.relationships.depends_on
+        target: aks_cluster_b
+      - type: cloudify.relationships.depends_on
+        target: aks_cluster_a
 
 outputs:
 
   tm_endpoint:
+    description: TM Endpoint
     value: { get_attribute: [ load_balancer, capabilities, tm_endpoint ] }
-      
+
   database_enpoint:
+    description: Database endpoint
     value: { get_attribute: [ database, capabilities, sql_endpoint ] }
-  
+
   database_password:
+    description: Database password
     value: { get_attribute: [ database, capabilities, database_password ] }
 
-  database_login: 
+  database_login:
+    description: Database login
     value: { get_attribute: [ database, capabilities, database_login ] }
-  
-  database_name: 
+
+  database_name:
+    description: Database name
     value: { get_attribute: [ database, capabilities, database_name ] }
 
   database_port:
-    value: '1433'
+    description: Database port
+    value: 1433
 
-  primary_storage_id: 
+  primary_storage_id:
+    description: Primary storage ID
     value: { get_attribute: [ storage, capabilities, primary_storage_id ] }
 
-  failover_storage_id: 
+  failover_storage_id:
+    description: Failover storage ID
     value: { get_attribute: [ storage, capabilities, failover_storage_id ] }
-  
-  public_key_content: 
+
+  public_key_content:
+    description: Public key content
     value: { get_attribute: [ key, public_key_export ] }
-  
-  private_key_content:  
+
+  private_key_content:
+    description: Private key
     value: { get_attribute: [ key, private_key_export ] }
