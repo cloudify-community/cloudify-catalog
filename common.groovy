@@ -50,6 +50,13 @@ def terminateCloudifyManager(){
   """
 }
 
+def checkChanges(){
+    sh returnStdout: true, script: """#!/bin/bash
+      export GH_TOKEN=${env.GH_TOKEN}
+      python count_changes.py
+    """
+}
+
 def runCfyLinter(){
   sh """#!/bin/bash
       declare counter=0
