@@ -106,6 +106,7 @@ pipeline{
                 set -eux
                 pip install --upgrade pip
                 pip install -r requirements.txt
+                curl -sfL https://cloudify.co/get-lint | sh -
             """
             }
           }
@@ -123,61 +124,81 @@ pipeline{
         }
       }
     }
-    stage('deploy_cloudify_manager') {
-      steps {
-        script {
-          buildState = 'FAILURE'
-          catchError(message: 'Failure on: Deploy Cloudify Manager', buildResult: 'SUCCESS', stageResult:
-          'FAILURE') {
-            container('cloudify') {
-              setupGithubSSHKey()
-              dir("${env.WORKSPACE}/${env.PROJECT}") {
+    stage('run_tests'){
+      when { 
+        expression {  
+          anyOf {
+            common.checkChanges().trim() != '0'
+            params.BPS_SCOPE == 'all' 
+          }
+        }
+      }
+      parallel {
+        stage('run_cfy_lint'){
+          steps{
+            container('cloudify'){
+              dir("${env.WORKSPACE}/${env.PROJECT}"){
                 withVault([configuration: configuration, vaultSecrets: secrets]){
-                  if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
-                    echo 'Create EC2 instance'
-                    common.createEc2Instance()
-                    echo 'Configure Cloudify Manager'
-                    common.configureCloudifyManager()
-                  }
-                  else{
-                    echo 'PASS on STAGE deploy_cloudify_manager'
+                  script{
+                    common.runCfyLinter()
                   }
                 }
               }
             }
-            // If we reach here that means all of the above passed
-            buildState = 'SUCCESS'
           }
         }
-      }
-    }
-    stage('test_blueprints'){
-      steps {
-        script {
-          buildState = 'FAILURE'
-          catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
-          'FAILURE') {
-            container('cloudify') {
-              dir("${env.WORKSPACE}/${env.PROJECT}") {
-                withVault([configuration: configuration, vaultSecrets: secrets]){
-                  echo 'Test blueprints'
-                  if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
-                    sh """
-                      export GH_TOKEN=${env.GH_TOKEN}
-                    """
-                    common.testBlueprints()
-                  }
-                  else{
-                    echo 'PASS on STAGE test_blueprints'
+        stage('run_cm_tests'){
+          stages {
+            stage('deploy_cloudify_manager') {
+              steps {
+                script {
+                  buildState = 'FAILURE'
+                  catchError(message: 'Failure on: Deploy Cloudify Manager', buildResult: 'SUCCESS', stageResult:
+                  'FAILURE') {
+                    container('cloudify') {
+                      setupGithubSSHKey()
+                      dir("${env.WORKSPACE}/${env.PROJECT}") {
+                        withVault([configuration: configuration, vaultSecrets: secrets]){
+                          echo 'Create EC2 instance'
+                          common.createEc2Instance()
+                          echo 'Configure Cloudify Manager'
+                          common.configureCloudifyManager()
+                        }
+                      }
+                    }
+                    // If we reach here that means all of the above passed
+                    buildState = 'SUCCESS'
                   }
                 }
+              }
             }
-            // If we reach here that means all of the above passed
-            buildState = 'SUCCESS'
+            stage('test_blueprints'){
+              steps {
+                script {
+                  buildState = 'FAILURE'
+                  catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
+                  'FAILURE') {
+                    container('cloudify') {
+                      dir("${env.WORKSPACE}/${env.PROJECT}") {
+                        withVault([configuration: configuration, vaultSecrets: secrets]){
+                          echo 'Test blueprints'
+                          sh """
+                            set -x
+                            export GH_TOKEN=${env.GH_TOKEN}
+                          """
+                          common.testBlueprints()
+                        }
+                      }
+                      // If we reach here that means all of the above passed
+                      buildState = 'SUCCESS'
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
-    }
     }
     stage('build'){
       steps{
