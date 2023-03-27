@@ -14,7 +14,7 @@ inputs:
 
   image:
     type: string
-    description: centos UUID image.
+    description: Centos UUID image.
     default: { get_secret: base_image_id }
 
   flavor:
