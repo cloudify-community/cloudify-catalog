@@ -126,7 +126,12 @@ pipeline{
     }
     stage('run_tests'){
       when { 
-        expression {  common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all' }
+        expression {  
+          anyOf {
+            common.checkChanges().trim() != '0'
+            params.BPS_SCOPE == 'all' 
+          }
+        }
       }
       parallel {
         stage('run_cfy_lint'){
@@ -135,12 +140,7 @@ pipeline{
               dir("${env.WORKSPACE}/${env.PROJECT}"){
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   script{
-                    if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
-                      common.runCfyLinter()
-                    }
-                    else{
-                      echo 'PASS on STAGE run_cfy_lint'
-                    }
+                    common.runCfyLinter()
                   }
                 }
               }
@@ -159,15 +159,10 @@ pipeline{
                       setupGithubSSHKey()
                       dir("${env.WORKSPACE}/${env.PROJECT}") {
                         withVault([configuration: configuration, vaultSecrets: secrets]){
-                          if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
-                            echo 'Create EC2 instance'
-                            common.createEc2Instance()
-                            echo 'Configure Cloudify Manager'
-                            common.configureCloudifyManager()
-                          }
-                          else{
-                            echo 'PASS on STAGE deploy_cloudify_manager'
-                          }
+                          echo 'Create EC2 instance'
+                          common.createEc2Instance()
+                          echo 'Configure Cloudify Manager'
+                          common.configureCloudifyManager()
                         }
                       }
                     }
@@ -187,15 +182,11 @@ pipeline{
                       dir("${env.WORKSPACE}/${env.PROJECT}") {
                         withVault([configuration: configuration, vaultSecrets: secrets]){
                           echo 'Test blueprints'
-                          if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
-                            sh """
-                              export GH_TOKEN=${env.GH_TOKEN}
-                            """
-                            common.testBlueprints()
-                          }
-                          else{
-                            echo 'PASS on STAGE test_blueprints'
-                          }
+                          sh """
+                            set -x
+                            export GH_TOKEN=${env.GH_TOKEN}
+                          """
+                          common.testBlueprints()
                         }
                       }
                       // If we reach here that means all of the above passed
