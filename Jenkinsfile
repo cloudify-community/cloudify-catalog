@@ -126,11 +126,9 @@ pipeline{
     }
     stage('run_tests'){
       when { 
-        expression {  
-          anyOf {
-            common.checkChanges().trim() != '0'
-            params.BPS_SCOPE == 'all' 
-          }
+        anyOf {
+          expression { common.checkChanges().trim() != '0' }
+          expression { params.BPS_SCOPE == 'all' }
         }
       }
       parallel {
