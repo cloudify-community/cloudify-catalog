@@ -125,6 +125,9 @@ pipeline{
       }
     }
     stage('run_tests'){
+      when { 
+        expression {  common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all' }
+      }
       parallel {
         stage('run_cfy_lint'){
           steps{
