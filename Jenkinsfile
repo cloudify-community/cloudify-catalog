@@ -124,7 +124,7 @@ pipeline{
         }
       }
     }
-    stage('tests_build'){
+    stage('test_build_publish'){
       when { 
         anyOf {
           expression { common.checkChanges().trim() != '0' }
