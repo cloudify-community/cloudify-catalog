@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_4
+tosca_definitions_version: cloudify_dsl_1_5
 
 description: >
   The nested blueprint example illustrates how you can create a multi-tier or

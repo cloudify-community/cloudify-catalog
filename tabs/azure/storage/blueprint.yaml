@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_4
+tosca_definitions_version: cloudify_dsl_1_5
 description: >
   This blueprint creates an Azure storage account.  The resulting account name
   is exposed as a capability for use by other services

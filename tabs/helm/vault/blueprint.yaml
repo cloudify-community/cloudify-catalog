@@ -1,4 +1,4 @@
-tosca_definitions_version: cloudify_dsl_1_4
+tosca_definitions_version: cloudify_dsl_1_5
 
 description: Cloudify helm-vault blueprint. Installs Vault Helm chart on top of Kubernetes cluster.
 
