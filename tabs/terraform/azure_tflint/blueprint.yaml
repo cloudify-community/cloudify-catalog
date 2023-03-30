@@ -4,7 +4,7 @@ description: >
   This blueprint creates infrastructure using Terraform.
 
 imports:
-  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin
   - plugin:cloudify-utilities-plugin
 
@@ -17,7 +17,7 @@ inputs:
 
   azure_region_name:
     type: string
-    display_label: Azure location
+    display_label: Location
     description: Select Azure location name
     default: EastUS
     constraints:
@@ -36,7 +36,7 @@ inputs:
   module_source_path:
     type: string
     display_label: Terraform module path
-    default: "template/modules/azure/public_vm/"
+    default: template/modules/azure/public_vm/
 
   tflint_config:
     type: dict
@@ -48,8 +48,7 @@ inputs:
       When enable true you must add installation source:
       Example:
       enable: true
-      installation_source: 'https://github.com/terraform-linters/tflint/releases/download/v0.34.1/tflint_linux_amd64.zip'
-
+      installation_source: https://github.com/terraform-linters/tflint/releases/download/v0.34.1/tflint_linux_amd64.zip
 
 node_templates:
 
@@ -98,6 +97,8 @@ node_templates:
 
 capabilities:
   outputs:
+    description: Terraform outpus
     value: { get_attribute: [ terraform_module, outputs] }
   plan:
+    description: Terraform plan
     value: { get_attribute: [ terraform_module, plan] }

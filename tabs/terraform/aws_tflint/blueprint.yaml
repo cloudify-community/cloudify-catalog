@@ -4,7 +4,7 @@ description: >
   This blueprint creates infrastructure using Terraform.
 
 imports:
-  - http://cloudify.co/spec/cloudify/6.4.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin
   - plugin:cloudify-utilities-plugin
 
@@ -18,7 +18,7 @@ inputs:
   aws_region_name:
     type: string
     display_label: AWS Region Name
-    default: 'us-east-1'
+    default: us-east-1
     description: AWS region name
     constraints:
       - valid_values:
@@ -67,7 +67,6 @@ inputs:
     description: |
       TFlint source URL
 
-
 node_templates:
 
   key:
@@ -114,6 +113,8 @@ node_templates:
 
 capabilities:
   outputs:
+    description: Terraform outputs
     value: { get_attribute: [ terraform_module, outputs] }
   plan:
+    description: Terraform plan
     value: { get_attribute: [ terraform_module, plan] }

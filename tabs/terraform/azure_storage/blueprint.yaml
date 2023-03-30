@@ -2,7 +2,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-terraform-plugin?version= >=0.15.0
+  - plugin:cloudify-terraform-plugin
   - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
 
 labels:
@@ -15,17 +15,15 @@ inputs:
   resource_prefix:
     type: string
     description: The resource prefix for resources naming
-    display_label: The resource prefix for resources naming
-    default: ''
+    display_label: Resource Prefix
     constraints:
-      - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-      
+      - pattern: (^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)
+
   region_name:
     type: string
-    display_label: Region Name
+    display_label: Location
     description: Azure location name
-    default: 'westus'
-
+    default: westus
 
 node_templates:
   prefix:
@@ -63,4 +61,5 @@ node_templates:
 
 capabilities:
   bucket_url:
+    description: Storage Bucket URL
     value: { get_attribute: [ terraform_module, resources, blob, instances, 0, attributes, id ] }

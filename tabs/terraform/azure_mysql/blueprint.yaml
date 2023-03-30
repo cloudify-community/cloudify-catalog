@@ -2,7 +2,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-terraform-plugin?version= >=0.15.0
+  - plugin:cloudify-terraform-plugin
   - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
 
 labels:
@@ -14,38 +14,38 @@ inputs:
   password:
     type: string
     description: The password for database user
-    display_label: The password for database user
-    default: 'Cloudify193!'
+    display_label: DB Password
+    default: Cloudify193!
     constraints:
-      - pattern: '^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,16}$'
-  resource_prefix: 
+      - pattern: ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,16}$
+      
+  resource_prefix:
     type: string
     description: The resource prefix for resources naming
-    display_label: The resource prefix for resources naming
-    default: ''
+    display_label: Resource Prefix
     constraints:
-      - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
+      - pattern: (^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)
+      
   region:
     type: string
     description: Azure location name
-    display_label: Azure location name
+    display_label: Azure Location Name
     default: EastUS
     constraints:
       - valid_values:
-        - EastUS
-        - CentralUS
-        - WestUS
-        - WestEurope
-        - CanadaCentral
-        - UKSouth
-
+          - EastUS
+          - CentralUS
+          - WestUS
+          - WestEurope
+          - CanadaCentral
+          - UKSouth
 
 node_templates:
   prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: { get_input: resource_prefix }
-      
+
   terraform:
     type: cloudify.nodes.terraform
     properties:
@@ -65,8 +65,8 @@ node_templates:
           ARM_CLIENT_ID: { get_secret: azure_client_id }
           ARM_CLIENT_SECRET: { get_secret: azure_client_secret }
         variables:
-          prefix: { get_attribute : [prefix, value] } 
-          admin_password: { get_input : password } 
+          prefix: { get_attribute: [prefix, value] }
+          admin_password: { get_input: password }
           region: { get_input: region }
         source:
           location: templates/tf-mysql-master.zip

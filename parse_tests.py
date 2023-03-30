@@ -1,10 +1,13 @@
 import json
 import yaml
 import logging
+from catalog import check_bp_changed, get_changed_bps_path
+
+logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 class ParseTestData():
 
-    def __init__(self, catalog_path="./catalog.yaml", install_path= "./catalog_install.json", verbose = False):
+    def __init__(self, bps_scope='changed', catalog_path="./catalog.yaml", install_path= "./catalog_install.json", verbose = False):
         with open(catalog_path, "rb") as file_:
             self._yaml_data = yaml.load(file_, Loader=yaml.FullLoader)
         with open(install_path, "rb") as file_:
@@ -12,15 +15,28 @@ class ParseTestData():
         if(verbose):
             logging.info("YAML: {}".format(self._yaml_data))
             logging.info("JSON: {}".format(self._json_data))
+        if bps_scope == 'changed':
+            self._changed_bps_only = True
+        else:
+            self._changed_bps_only = False
 
     def get_tabs(self):
         tabs = [ item['name'] for item in self._yaml_data['topics'] ]
         return tabs
 
     def _get_bps(self):
+
         bps = [ item['blueprints'] for item in self._yaml_data['topics'] ]
         bps = [ item for itemw in bps for item in itemw ]
+        if self._changed_bps_only:
+            bps = [ bp for bp in self._filter_bps(bps) ] 
         return bps
+    
+    def _filter_bps(self, bps):
+        changed_files = get_changed_bps_path()
+        for bp in bps: 
+            if check_bp_changed( bp['path'], changed_files):
+                yield bp
 
     def get_create_deployment_args(self):
 
@@ -67,12 +83,15 @@ class ParseTestData():
         bps = self._get_bps()
         ids = []
         for blueprint in bps:
+            print(blueprint)
             ids.append(blueprint.get("id"))
         return list(set(ids))
 
-if __name__ =="__main__":
+def main():
 
-    tests = ParseTestData()
-    #print(tests.get_blueprints_ids())
-    #print(tests.get_upload_args())
-    print(tests.get_create_deployment_args())
+    tests = ParseTestData(True)
+    bps = tests.get_upload_args()
+    logging.info(bps)
+
+if __name__ =="__main__":
+    main() 
