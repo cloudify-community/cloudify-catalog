@@ -189,6 +189,7 @@ pipeline{
               setupGithubSSHKey()
               sh """
               export GH_TOKEN=${env.GH_TOKEN}
+              export BPS_SCOPE=${env.BPS_SCOPE}
               export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
               python catalog.py
               """
