@@ -4,7 +4,7 @@ description: >
   This blueprint creates infrastructure using Terraform.
 
 imports:
-  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin
   - plugin:cloudify-utilities-plugin
 
@@ -59,9 +59,9 @@ inputs:
     default: "template/modules/public_vm/"
 
   tfsec_config:
+    type: string
+    display_label: TFSec source URL
     default: 
-      type: string
-      display_label: TFSec source URL
       enable: true
       flags_override:
       - soft_fail
@@ -100,8 +100,8 @@ node_templates:
         variables:
           aws_region: { get_input: aws_region_name }
           aws_zone: { concat: [ get_input: aws_region_name, a ]}
-          secret_key: { get_secret: aws_secret_key }
-          access_key: { get_secret: aws_access_key }
+          access_key: { get_secret: aws_access_key_id }
+          secret_key: { get_secret: aws_secret_access_key }
           admin_key_public: { get_attribute: [key, public_key_export] }
           admin_user: admin
         source:

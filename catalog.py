@@ -28,9 +28,10 @@ def get_changed_bps_path():
             break
 
     changed_files = []
-    for file in pr.get_files():
-        if 'tabs' in file.filename:
-            changed_files.append(file.filename)
+    if pr:
+        for file in pr.get_files():
+            if 'tabs' in file.filename:
+                changed_files.append(file.filename)
     return changed_files
 
 
