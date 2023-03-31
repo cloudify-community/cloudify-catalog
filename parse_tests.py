@@ -15,10 +15,7 @@ class ParseTestData():
         if(verbose):
             logging.info("YAML: {}".format(self._yaml_data))
             logging.info("JSON: {}".format(self._json_data))
-        if bps_scope == 'changed':
-            self._changed_bps_only = True
-        else:
-            self._changed_bps_only = False
+        self._changed_bps_only = bps_scope =='changed'
 
     def get_tabs(self):
         tabs = [ item['name'] for item in self._yaml_data['topics'] ]

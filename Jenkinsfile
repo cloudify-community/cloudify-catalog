@@ -88,6 +88,7 @@ pipeline{
     WORKSPACE = "${env.WORKSPACE}"
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1"
+    BPS_SCOPE = "${params.BPS_SCOPE}"
     TEST_CASE = "${params.TEST_CASE}"
     TEST_BLUEPRINT = "${params.TEST_BLUEPRINT}"
     TEST_RESULT_DIR = "/tmp/data"
@@ -164,6 +165,7 @@ pipeline{
                   if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     sh """
                       export GH_TOKEN=${env.GH_TOKEN}
+                      export BPS_SCOPE=${env.BPS_SCOPE}
                     """
                     common.testBlueprints()
                   }
@@ -186,8 +188,8 @@ pipeline{
             withVault([configuration: configuration, vaultSecrets: secrets]){
               setupGithubSSHKey()
               sh """
-              export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
               export GH_TOKEN=${env.GH_TOKEN}
+              export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
               python catalog.py
               """
             }
