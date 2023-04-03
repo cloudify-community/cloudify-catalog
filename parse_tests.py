@@ -1,3 +1,4 @@
+import os
 import json
 import yaml
 import logging
@@ -54,6 +55,7 @@ class ParseTestData():
     def get_executions_start_args(self):
         args = {}
         for item in self._json_data:
+            path = os.path.join
             command = [ "cfy", "executions", "start", "install", "-d", item.get("id") ]
             args[item.get('id')] = command
         return args
@@ -65,14 +67,18 @@ class ParseTestData():
             args[item.get('id')] =  command
         return args
 
-    def get_upload_args(self):
+    def get_upload_args(self, from_build_cat = True):
         bps = self._get_bps()
         args = {}
         for blueprint in bps:
             blueprint_file = "blueprint.yaml"
             if "main_blueprint" in blueprint.keys():
                 blueprint_file = blueprint.get("main_blueprint")
-            command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file]
+            if from_build_cat:
+                path = os.path.join(['build', blueprint.get("id"), ".zip"])
+                command = [ "cfy", "blueprints", "upload", "-b", path ]
+            else:
+                command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file]
             args[ blueprint.get("id") ] = command
         return args
 
