@@ -1,0 +1,182 @@
+tosca_definitions_version: cloudify_dsl_1_4
+description: >
+  The blueprint creates VPC and all necessary network resources on AWS
+  in order to spin up EC2 instances.
+
+imports:
+  - https://cloudify.co/spec/cloudify/6.4.0/types.yaml
+
+inputs:
+  region_name:
+    type: string
+    display_label: AWS Region Name
+    default: eu-west-1
+
+  ssh_key_secret_name:
+    description: Name of a Secret that stores SSH Key
+    type: string
+    hidden: true
+    default: ec2_ssh_key
+
+  nodes_username:
+    type: string
+    hidden: true
+    default: ubuntu
+
+  longhorn_port:
+    type: string
+    display_label: Longhorn Port
+    description: Port which Longhorn should be exposed on.
+    default: 8080
+
+node_templates:
+  network:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: true
+          id: network_blueprint
+        deployment:
+          id: network
+          auto_inc_suffix: false
+          inputs:
+            region_name: { get_input: region_name }
+            ssh_key_secret_name: { get_input: ssh_key_secret_name }
+
+  ece_1:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: true
+          id: ece_blueprint
+        deployment:
+          id: ece_1
+          auto_inc_suffix: false
+          inputs:
+            network_deployment_name: { get_attribute: [network, deployment, id] }
+            ece_no: '1'
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+  ece_2:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: true
+          id: ece_blueprint
+        deployment:
+          id: ece_2
+          auto_inc_suffix: false
+          inputs:
+            network_deployment_name: { get_attribute: [network, deployment, id] }
+            ece_no: '2'
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+  ece_3:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: true
+          id: ece_blueprint
+        deployment:
+          id: ece_3
+          auto_inc_suffix: false
+          inputs:
+            network_deployment_name: { get_attribute: [network, deployment, id] }
+            ece_no: '3'
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: network
+
+  k3s_ha:
+    type: cloudify.nodes.ServiceComponent
+    properties:
+      resource_config:
+        blueprint:
+          external_resource: false
+          id: k3s_ece_ha_embedded_db
+          blueprint_archive: k3s_blueprints.zip
+          main_file_name: ece_ha_embedded_db.yaml
+        deployment:
+          id: k3s_ece_ha_embedded_db
+          auto_inc_suffix: false
+          inputs:
+            longhorn_port: { get_input: longhorn_port }
+            # ECE 1
+            ece_1_details:
+              endpoint_master:
+                get_attribute: [ece_1, capabilities, master, public_ip]
+              username_master: { get_input: nodes_username }
+              ssh_key_secret_name_master:
+                concat: [{ get_input: ssh_key_secret_name }, '_private']
+              private_ip_master:
+                get_attribute: [ece_1, capabilities, master, private_ip]
+              endpoint_worker:
+                get_attribute: [ece_1, capabilities, worker, public_ip]
+              username_worker: { get_input: nodes_username }
+              ssh_key_secret_name_worker:
+                concat: [{ get_input: ssh_key_secret_name }, '_private']
+            # ECE 2
+            ece_2_details:
+              endpoint_master:
+                get_attribute: [ece_2, capabilities, master, public_ip]
+              username_master: { get_input: nodes_username }
+              ssh_key_secret_name_master:
+                concat: [{ get_input: ssh_key_secret_name }, '_private']
+              private_ip_master:
+                get_attribute: [ece_2, capabilities, master, private_ip]
+              endpoint_worker:
+                get_attribute: [ece_2, capabilities, worker, public_ip]
+              username_worker: { get_input: nodes_username }
+              ssh_key_secret_name_worker:
+                concat: [{ get_input: ssh_key_secret_name }, '_private']
+            # ECE 3
+            ece_3_details:
+              endpoint_master:
+                get_attribute: [ece_3, capabilities, master, public_ip]
+              username_master: { get_input: nodes_username }
+              ssh_key_secret_name_master:
+                concat: [{ get_input: ssh_key_secret_name }, '_private']
+              private_ip_master:
+                get_attribute: [ece_3, capabilities, master, private_ip]
+              endpoint_worker:
+                get_attribute: [ece_3, capabilities, worker, public_ip]
+              username_worker: { get_input: nodes_username }
+              ssh_key_secret_name_worker:
+                concat: [{ get_input: ssh_key_secret_name }, '_private']
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: ece_1
+      - type: cloudify.relationships.depends_on
+        target: ece_2
+      - type: cloudify.relationships.depends_on
+        target: ece_3
+
+labels:
+  csys-obj-type:
+    values:
+      - environment
+
+outputs:
+  cluster_endpoint:
+    description: The endpoint of K3S cluster
+    value: { get_attribute: [k3s_ha, capabilities, cluster_endpoint] }
+
+  longhorn:
+    description: Longhorn endpoint
+    value: { get_attribute: [k3s_ha, capabilities, longhorn] }
+
+  cluster_k3s_token:
+    description: Token used for adding master and worker nodes to cluster
+    value: { get_attribute: [k3s_ha, capabilities, cluster_k3s_token] }
+
+  kubeconfig:
+    description: Kubeconfig file of the newly created cluster
+    value: { get_attribute: [k3s_ha, capabilities, kubeconfig] }
