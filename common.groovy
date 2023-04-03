@@ -51,16 +51,10 @@ def terminateCloudifyManager(){
 }
 
 def checkChanges(){
-  container('cloudify') {
-    dir("${env.WORKSPACE}/${env.PROJECT}"){
-      withVault([configuration: configuration, vaultSecrets: secrets]){
-        sh returnStdout: true, script: """#!/bin/bash
-          export GH_TOKEN=${env.GH_TOKEN}
-          python get_changes.py | wc -l
-        """
-      }
-    }
-  }
+    sh returnStdout: true, script: """#!/bin/bash
+      export GH_TOKEN=${env.GH_TOKEN}
+      python get_changes.py | wc -l
+    """
 }
 
 def runCfyLinter(){

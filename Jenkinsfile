@@ -156,7 +156,15 @@ pipeline{
     stage('test_build_publish'){
       when { 
         anyOf {
-          expression { common.checkChanges().trim() != '0' }
+          expression {
+            container('cloudify'){
+              dir("${env.WORKSPACE}/${env.PROJECT}"){
+                withVault([configuration: configuration, vaultSecrets: secrets]){
+                  common.checkChanges().trim() != '0' 
+                }
+              }
+            }
+          }
           expression { params.BPS_SCOPE == 'all' }
         }
       }
