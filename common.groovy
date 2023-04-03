@@ -51,10 +51,12 @@ def terminateCloudifyManager(){
 }
 
 def checkChanges(){
+  container('cloudify') {
     sh returnStdout: true, script: """#!/bin/bash
       export GH_TOKEN=${env.GH_TOKEN}
       python get_changes.py | wc -l
     """
+  }
 }
 
 def runCfyLinter(){
