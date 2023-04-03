@@ -75,7 +75,7 @@ class ParseTestData():
             if "main_blueprint" in blueprint.keys():
                 blueprint_file = blueprint.get("main_blueprint")
             if from_build_cat:
-                path = os.path.join(['build', blueprint.get("id"), ".zip"])
+                path = os.path.join('build', blueprint.get("id"), ".zip")
                 command = [ "cfy", "blueprints", "upload", "-b", path ]
             else:
                 command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file]
