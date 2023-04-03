@@ -1,6 +1,6 @@
-import os
 import json
 import yaml
+import pathlib
 import logging
 from catalog import check_bp_changed, get_changed_bps_path
 
@@ -27,7 +27,7 @@ class ParseTestData():
         bps = [ item['blueprints'] for item in self._yaml_data['topics'] ]
         bps = [ item for itemw in bps for item in itemw ]
         if self._changed_bps_only:
-            bps = [ bp for bp in self._filter_bps(bps) ] 
+            bps = [ bp for bp in self._filter_bps(bps) ]
         return bps
     
     def _filter_bps(self, bps):
@@ -55,7 +55,6 @@ class ParseTestData():
     def get_executions_start_args(self):
         args = {}
         for item in self._json_data:
-            path = os.path.join
             command = [ "cfy", "executions", "start", "install", "-d", item.get("id") ]
             args[item.get('id')] = command
         return args
@@ -67,19 +66,25 @@ class ParseTestData():
             args[item.get('id')] =  command
         return args
 
-    def get_upload_args(self, from_build_cat = True):
+    def get_upload_args(self):
         bps = self._get_bps()
         args = {}
         for blueprint in bps:
             blueprint_file = "blueprint.yaml"
             if "main_blueprint" in blueprint.keys():
                 blueprint_file = blueprint.get("main_blueprint")
-            if from_build_cat:
-                path = os.path.join('build', blueprint.get("id"), ".zip")
-                command = [ "cfy", "blueprints", "upload", "-b", path ]
-            else:
                 command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file]
             args[ blueprint.get("id") ] = command
+        return args
+    
+    def get_upload_args_from_build(self, build_catalog = 'build'):
+        args = {}
+        build = pathlib.Path(build_catalog)
+        for archive in build.rglob("*.zip"):
+            bp_path = str(archive)
+            bp_id = bp_path.split('/')[-1]
+            command = ["cfy", "blueprints", "upload", "-b", bp_id, bp_path ]
+            args[ bp_id ] = command
         return args
 
     def get_blueprints_ids(self):
@@ -93,7 +98,7 @@ class ParseTestData():
 def main():
 
     tests = ParseTestData(True)
-    bps = tests.get_upload_args()
+    bps = tests.get_upload_args_from_build()
     logging.info(bps)
 
 if __name__ =="__main__":
