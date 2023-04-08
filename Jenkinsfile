@@ -229,4 +229,9 @@ pipeline{
       }
     }
   }
+  post {
+    always {
+      common.terminateCloudifyManager()
+    }
+  }
 }
