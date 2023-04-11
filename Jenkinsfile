@@ -41,7 +41,7 @@ def terminateCloudifyManager(){
 pipeline{
   agent{
     kubernetes{
-      defaultContainer 'jnlp'
+      defaultContainer 'cloudify'
       yaml '''
           spec:
             volumes:
@@ -191,6 +191,11 @@ pipeline{
             buildState = 'SUCCESS'
           }
         }
+      }
+    }
+    post {
+      always {
+        terminateCloudifyManager()
       }
     }
     }
