@@ -27,10 +27,7 @@ def terminateCloudifyManager(){
     setupGithubSSHKey()
     dir("${env.WORKSPACE}/${env.PROJECT}") {
       sh """#!/bin/bash
-          dep_id=\$(cfy deployments list | grep ${env.BP_ID} | awk '{ print \$2 }')
-          cfy exec start uninstall --force -d \${dep_id}
-          cfy deployments delete -f \${dep_id}
-          cfy blueprints delete -f ${env.BP_ID}
+          cfy uninstall --force -d ${env.BP_ID}
       """
     }
   }
