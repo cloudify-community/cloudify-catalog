@@ -29,8 +29,8 @@ def terminateCloudifyManager(){
       sh """#!/bin/bash
           dep_id=\$(cfy deployments list | grep ${env.BP_ID} | awk '{ print \$2 }')
           cfy exec start uninstall --force -d \${dep_id}
-          cfy dep delete -f \${dep_id}
-          cfy blu delete -f ${env.BP_ID}
+          cfy deployments delete -f \${dep_id}
+          cfy blueprints delete -f ${env.BP_ID}
       """
     }
   }
