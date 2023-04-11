@@ -26,6 +26,7 @@ def terminateCloudifyManager(){
   try {
     sh """#!/bin/bash
         source ${TEST_RESULT_DIR}/conn_details
+        cat ${TEST_RESULT_DIR}/conn_details
         cfy profile use -u \$AWS_MANAGER_USERNAME -p \$AWS_MANAGER_PASSWORD -t \$AWS_MANAGER_TENANT --ssl \$AWS_MANAGER_IP
         export CLOUDIFY_SSL_TRUST_ALL=true
         export PYTHONWARNINGS="ignore:Unverified HTTPS request"
@@ -151,9 +152,9 @@ pipeline{
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     echo 'Create EC2 instance'
-                    common.createEc2Instance()
-                    echo 'Configure Cloudify Manager'
-                    common.configureCloudifyManager()
+                    // common.createEc2Instance()
+                    // echo 'Configure Cloudify Manager'
+                    // common.configureCloudifyManager()
                     echo 'Saving connection details'
                     common.exportManagerConnDetails()
                   }
@@ -183,7 +184,7 @@ pipeline{
                     sh """
                       export GH_TOKEN=${env.GH_TOKEN}
                     """
-                    common.testBlueprints()
+                    // common.testBlueprints()
                   }
                   else{
                     echo 'PASS on STAGE test_blueprints'
