@@ -26,7 +26,7 @@ def terminateCloudifyManager(){
   try {
     sh """#!/bin/bash
         source ${TEST_RESULT_DIR}/conn_details
-        cfy profile use \$AWS_MANAGER_IP -u \$AWS_MANAGER_USERNAME -p \$AWS_MANAGER_PASSWORD -t \$AWS_MANAGER_TENANT --ssl
+        cfy profile use -u \$AWS_MANAGER_USERNAME -p \$AWS_MANAGER_PASSWORD -t \$AWS_MANAGER_TENANT --ssl \$AWS_MANAGER_IP
         export CLOUDIFY_SSL_TRUST_ALL=true
         export PYTHONWARNINGS="ignore:Unverified HTTPS request"
         cfy uninstall --allow-custom-parameters -p force=True ${env.BP_ID}
