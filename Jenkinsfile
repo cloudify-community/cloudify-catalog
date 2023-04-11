@@ -27,7 +27,7 @@ def terminateCloudifyManager(){
     setupGithubSSHKey()
     dir("${env.WORKSPACE}/${env.PROJECT}") {
       sh """#!/bin/bash
-          cfy uninstall --force -d ${env.BP_ID}
+          cfy uninstall --allow-custom-parameters -p force ${env.BP_ID}
       """
     }
   }
