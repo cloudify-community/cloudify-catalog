@@ -152,9 +152,9 @@ pipeline{
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     echo 'Create EC2 instance'
-                    // common.createEc2Instance()
-                    // echo 'Configure Cloudify Manager'
-                    // common.configureCloudifyManager()
+                    common.createEc2Instance()
+                    echo 'Configure Cloudify Manager'
+                    common.configureCloudifyManager()
                   }
                   else{
                     echo 'PASS on STAGE deploy_cloudify_manager'
@@ -184,7 +184,7 @@ pipeline{
                     sh """
                       export GH_TOKEN=${env.GH_TOKEN}
                     """
-                    // common.testBlueprints()
+                    common.testBlueprints()
                   }
                   else{
                     echo 'PASS on STAGE test_blueprints'
