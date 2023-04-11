@@ -116,6 +116,7 @@ pipeline{
                 pip install --upgrade pip
                 pip install -r requirements.txt
             """
+            
             }
           }
         }
@@ -170,12 +171,14 @@ pipeline{
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
+                  sh """
+                  echo ${env.AWS_MANAGER_IP} > /tmp/data/ip
+                  """
                   if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     sh """
                       export GH_TOKEN=${env.GH_TOKEN}
                     """
                     common.testBlueprints()
-                    common.terminateCloudifyManager()
                   }
                   else{
                     echo 'PASS on STAGE test_blueprints'
@@ -190,7 +193,9 @@ pipeline{
     }
     post {
       always {
-        terminateCloudifyManager()
+        sh """
+          cat /tmp/data/ip
+        """
       }
     }
     }
