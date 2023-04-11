@@ -194,6 +194,15 @@ pipeline{
         }
       }
     }
+    post {
+      always {
+        container('cloudify'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            common.terminateCloudifyManager()
+          }
+        }
+      }
+    }
     }
     stage('build'){
       steps{
@@ -241,15 +250,6 @@ pipeline{
               '''
             }
           }
-        }
-      }
-    }
-  }
-  post {
-    always {
-      container('cloudify'){
-        dir("${env.WORKSPACE}/${env.PROJECT}"){
-          common.terminateCloudifyManager()
         }
       }
     }
