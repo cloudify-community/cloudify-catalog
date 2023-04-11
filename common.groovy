@@ -40,8 +40,19 @@ def testBlueprints(){
 """
 }
 
+
+def exportManagerConnDetails(){
+  sh """#!/bin/bash
+        AWS_MANAGER_USERNAME=${env.AWS_MANAGER_USERNAME} >> ${TEST_RESULT_DIR}/conn_details
+        AWS_MANAGER_TENANT=${env.AWS_MANAGER_TENANT} >> ${TEST_RESULT_DIR}/conn_details
+        AWS_MANAGER_IP=${AWS_MANAGER_IP} >> ${TEST_RESULT_DIR}/conn_details
+        AWS_MANAGER_PASSWORD=${AWS_MANAGER_PASSWORD} >> ${TEST_RESULT_DIR}/conn_details
+  """
+}
 def terminateCloudifyManager(){
   sh """#!/bin/bash
+    source ${TEST_RESULT_DIR}/conn_details
+    cfy profile use \$AWS_MANAGER_IP -u \$AWS_MANAGER_USERNAME -p \$AWS_MANAGER_PASSWORD -t \$AWS_MANAGER_TENANT --ssl
     cfy uninstall --allow-custom-parameters -p force=True -b ${env.BP_ID}
   """
 }

@@ -171,9 +171,6 @@ pipeline{
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
                   echo 'Test blueprints'
-                  sh """
-                  echo ${env.AWS_MANAGER_IP} > /tmp/data/ip
-                  """
                   if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     sh """
                       export GH_TOKEN=${env.GH_TOKEN}
@@ -193,9 +190,7 @@ pipeline{
     }
     post {
       always {
-        sh """
-          cat /tmp/data/ip
-        """
+        common.terminateCloudifyManager()
       }
     }
     }
