@@ -23,12 +23,11 @@ def secrets = [
 ]
 
 def terminateCloudifyManager(){
-
-      sh """#!/bin/bash
-          cfy uninstall --allow-custom-parameters -p force=True -b ${env.BP_ID}
-      """
-
-    
+    sh """#!/bin/bash
+        source ${TEST_RESULT_DIR}/conn_details
+        cfy profile use \$AWS_MANAGER_IP -u \$AWS_MANAGER_USERNAME -p \$AWS_MANAGER_PASSWORD -t \$AWS_MANAGER_TENANT --ssl
+        cfy uninstall --allow-custom-parameters -p force=True -b ${env.BP_ID}
+    """    
 }
 
 @Library('pipeline-shared-library') _
@@ -148,6 +147,8 @@ pipeline{
                     common.createEc2Instance()
                     echo 'Configure Cloudify Manager'
                     common.configureCloudifyManager()
+                    echo 'Saving connection details'
+                    common.exportManagerConnDetails()
                   }
                   else{
                     echo 'PASS on STAGE deploy_cloudify_manager'
@@ -190,7 +191,7 @@ pipeline{
     }
     post {
       always {
-        common.terminateCloudifyManager()
+        terminateCloudifyManager()
       }
     }
     }
