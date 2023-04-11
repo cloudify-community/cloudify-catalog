@@ -180,6 +180,7 @@ pipeline{
                       export GH_TOKEN=${env.GH_TOKEN}
                     """
                     common.testBlueprints()
+                    common.terminateCloudifyManager()
                   }
                   else{
                     echo 'PASS on STAGE test_blueprints'
