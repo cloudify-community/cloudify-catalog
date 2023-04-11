@@ -26,14 +26,12 @@ def terminateCloudifyManager(){
   container('cloudify') {
     setupGithubSSHKey()
     dir("${env.WORKSPACE}/${env.PROJECT}") {
-      // sh """#!/bin/bash
-      //   source .venv/bin/activate
-      //   dep_id=\$(cfy deployments list | grep ${env.BP_ID} | awk '{ print \$2 }')
-      //   cfy exec start uninstall --force -d \${dep_id}
-      //   cfy deplo del -f \${dep_id}
-      //   cfy blueprints delete -f ${env.BP_ID}
-      // """
-      common.terminateCloudifyManager()
+      sh """#!/bin/bash
+          dep_id=\$(cfy deployments list | grep ${env.BP_ID} | awk '{ print \$2 }')
+          cfy exec start uninstall --force -d \${dep_id}
+          cfy dep delete -f \${dep_id}
+          cfy blu delete -f ${env.BP_ID}
+      """
     }
   }
 }
@@ -196,11 +194,7 @@ pipeline{
     }
     post {
       always {
-        container('cloudify'){
-          dir("${env.WORKSPACE}/${env.PROJECT}"){
-            common.terminateCloudifyManager()
-          }
-        }
+        terminateCloudifyManager()
       }
     }
     }
