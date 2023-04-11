@@ -45,8 +45,8 @@ def exportManagerConnDetails(){
   sh """#!/bin/bash
         AWS_MANAGER_USERNAME=${env.AWS_MANAGER_USERNAME} >> ${TEST_RESULT_DIR}/conn_details
         AWS_MANAGER_TENANT=${env.AWS_MANAGER_TENANT} >> ${TEST_RESULT_DIR}/conn_details
-        AWS_MANAGER_IP=${AWS_MANAGER_IP} >> ${TEST_RESULT_DIR}/conn_details
-        AWS_MANAGER_PASSWORD=${AWS_MANAGER_PASSWORD} >> ${TEST_RESULT_DIR}/conn_details
+        AWS_MANAGER_IP=${env.AWS_MANAGER_IP} >> ${TEST_RESULT_DIR}/conn_details
+        AWS_MANAGER_PASSWORD=${env.AWS_MANAGER_PASSWORD} >> ${TEST_RESULT_DIR}/conn_details
   """
 }
 def terminateCloudifyManager(){
