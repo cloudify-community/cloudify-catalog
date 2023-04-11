@@ -155,8 +155,6 @@ pipeline{
                     // common.createEc2Instance()
                     // echo 'Configure Cloudify Manager'
                     // common.configureCloudifyManager()
-                    echo 'Saving connection details'
-                    common.exportManagerConnDetails()
                   }
                   else{
                     echo 'PASS on STAGE deploy_cloudify_manager'
@@ -179,6 +177,8 @@ pipeline{
             container('cloudify') {
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
+                  echo 'Saving connection details'
+                  common.exportManagerConnDetails()
                   echo 'Test blueprints'
                   if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     sh """
