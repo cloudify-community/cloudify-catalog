@@ -15,7 +15,7 @@ inputs:
   resource_prefix:
     type: string
     description: The resource prefix for resources naming
-    display_label: The resource prefix for resources naming
+    display_label: The resource prefix for resources namings
     default: ''
     constraints:
       - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
