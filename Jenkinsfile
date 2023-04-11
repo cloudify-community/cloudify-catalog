@@ -193,11 +193,6 @@ pipeline{
         }
       }
     }
-    post {
-      always {
-        terminateCloudifyManager()
-      }
-    }
     }
     stage('build'){
       steps{
