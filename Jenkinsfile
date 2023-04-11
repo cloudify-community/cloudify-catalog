@@ -247,7 +247,11 @@ pipeline{
   }
   post {
     always {
-      common.terminateCloudifyManager()
+      container('cloudify'){
+        dir("${env.WORKSPACE}/${env.PROJECT}"){
+          common.terminateCloudifyManager()
+        }
+      }
     }
   }
 }
