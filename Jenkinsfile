@@ -23,11 +23,16 @@ def secrets = [
 ]
 
 def terminateCloudifyManager(){
+  try {
     sh """#!/bin/bash
         source ${TEST_RESULT_DIR}/conn_details
         cfy profile use \$AWS_MANAGER_IP -u \$AWS_MANAGER_USERNAME -p \$AWS_MANAGER_PASSWORD -t \$AWS_MANAGER_TENANT --ssl
         cfy uninstall --allow-custom-parameters -p force=True -b ${env.BP_ID}
     """    
+  } catch(Exception e){
+    continuePipeline = true
+    currentBuild.result = 'SUCCESS'
+  }
 }
 
 @Library('pipeline-shared-library') _
