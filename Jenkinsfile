@@ -247,7 +247,7 @@ pipeline{
   }
   post {
     always {
-      terminateCloudifyManager()
+      common.terminateCloudifyManager()
     }
   }
 }
