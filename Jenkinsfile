@@ -27,6 +27,7 @@ def terminateCloudifyManager(){
     setupGithubSSHKey()
     dir("${env.WORKSPACE}/${env.PROJECT}") {
       sh """#!/bin/bash
+          cfy profile use ${env.AWS_MANAGER_IP} -u ${env.AWS_MANAGER_USERNAME} -p ${env.AWS_MANAGER_PASSWORD} -t ${env.AWS_MANAGER_TENANT} --ssl
           cfy uninstall --allow-custom-parameters -p force=True -b ${env.BP_ID}
       """
     }
