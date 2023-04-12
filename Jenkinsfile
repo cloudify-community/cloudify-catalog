@@ -22,12 +22,29 @@ def secrets = [
   ]
 ]
 
+def terminateCloudifyManager(){
+  try {
+    sh """#!/bin/bash
+        source ${TEST_RESULT_DIR}/conn_details
+        cat ${TEST_RESULT_DIR}/conn_details
+        cfy profile use -u \$AWS_MANAGER_USERNAME -p \$AWS_MANAGER_PASSWORD -t \$AWS_MANAGER_TENANT --ssl \$AWS_MANAGER_IP
+        export CLOUDIFY_SSL_TRUST_ALL=true
+        export PYTHONWARNINGS="ignore:Unverified HTTPS request"
+        cfy uninstall --allow-custom-parameters -p force=True ${env.BP_ID}
+    """    
+  } catch(Exception e){
+    echo 'Exception occurred: ' + e.toString()
+    continuePipeline = true
+    currentBuild.result = 'SUCCESS'
+  }
+}
+
 @Library('pipeline-shared-library') _
 
 pipeline{
   agent{
     kubernetes{
-      defaultContainer 'jnlp'
+      defaultContainer 'cloudify'
       yaml '''
           spec:
             volumes:
@@ -107,6 +124,7 @@ pipeline{
                 pip install --upgrade pip
                 pip install -r requirements.txt
             """
+            
             }
           }
         }
@@ -160,6 +178,8 @@ pipeline{
             container('cloudify') {
               dir("${env.WORKSPACE}/${env.PROJECT}") {
                 withVault([configuration: configuration, vaultSecrets: secrets]){
+                  echo 'Saving connection details to base manager'
+                  common.exportManagerConnDetails()
                   echo 'Test blueprints'
                   if ( common.checkChanges().trim() != '0' | params.BPS_SCOPE == 'all'){
                     sh """
@@ -176,6 +196,11 @@ pipeline{
             buildState = 'SUCCESS'
           }
         }
+      }
+    }
+    post {
+      always {
+        terminateCloudifyManager()
       }
     }
     }
@@ -210,19 +235,19 @@ pipeline{
     stage('upload_artifacts'){
       steps{
         withCredentials([
-              usernamePassword(
-                  credentialsId: 'aws-cli',
-                  usernameVariable: 'ID',
-                  passwordVariable: 'SECRET'
-                  )]) {
-              container('cloudify'){
-                dir("${env.WORKSPACE}/${env.PROJECT}"){
-                  setupGithubSSHKey()
-                  sh '''
-                    export ID="$ID"
-                    export SECRET="$SECRET"
-                    python upload_artifacts.py
-                  '''
+          usernamePassword(
+              credentialsId: 'aws-cli',
+              usernameVariable: 'ID',
+              passwordVariable: 'SECRET'
+              )]) {
+          container('cloudify'){
+            dir("${env.WORKSPACE}/${env.PROJECT}"){
+              setupGithubSSHKey()
+              sh '''
+                export ID="$ID"
+                export SECRET="$SECRET"
+                python upload_artifacts.py
+              '''
             }
           }
         }
