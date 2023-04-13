@@ -30,6 +30,12 @@ class ParseTestData():
             bps = [ bp for bp in self._filter_bps(bps) ]
         return bps
     
+    def _get_bps_kv(self):
+        kv = {}
+        for bp in self._get_bps():
+            kv[bp.get('id')] = bp
+        return kv
+    
     def _filter_bps(self, bps):
         changed_files = get_changed_bps_path()
         for bp in bps: 
@@ -79,12 +85,12 @@ class ParseTestData():
     
     def get_upload_args_from_build(self, build_catalog = 'build'):
         args = {}
-        bps = self._get_bps()
+        bps = self._get_bps_kv()
         build = pathlib.Path(build_catalog)
         for archive in build.rglob("*.zip"):
             bp_path = str(archive)
-            bp_id = bp_path.split('/')[-1]
-            if "main_blueprint" in bps[bp_id.replace(".zip","")].keys():
+            bp_id = bp_path.split('/')[-1].replace(".zip","")
+            if "main_blueprint" in bps[bp_id].keys():
                 command = ["cfy", "blueprints", "upload", "--blueprint-filename", bps[bp_id].get("main_blueprint"), "-b", bp_id, bp_path ]
             else:
                 command = ["cfy", "blueprints", "upload", "-b", bp_id, bp_path ]
