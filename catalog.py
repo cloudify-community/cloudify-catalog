@@ -208,7 +208,7 @@ def main():
     for package in catalog['topics']:
         catalog = []
         logging.info('processing catalog %s' % package['name'])
-        if 'blueprints' in package and (package['name'].replace('_services', '') in packages or BPS_SCOPE ):
+        if 'blueprints' in package and ( package['name'].replace('_services', '') in packages or BPS_SCOPE ):
             broken_bps = get_broken_bps_ids()
 
             for blueprint in package['blueprints']:
