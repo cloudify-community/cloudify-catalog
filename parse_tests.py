@@ -65,7 +65,7 @@ class ParseTestData():
             command = [ "cfy", "uninstall", "-f", item.get("id") ]
             args[item.get('id')] =  command
         return args
-
+    
     def get_upload_args(self):
         bps = self._get_bps()
         args = {}
@@ -73,17 +73,21 @@ class ParseTestData():
             blueprint_file = "blueprint.yaml"
             if "main_blueprint" in blueprint.keys():
                 blueprint_file = blueprint.get("main_blueprint")
-                command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file]
+                command = [ "cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file ]
             args[ blueprint.get("id") ] = command
         return args
     
     def get_upload_args_from_build(self, build_catalog = 'build'):
         args = {}
+        bps = self._get_bps()
         build = pathlib.Path(build_catalog)
         for archive in build.rglob("*.zip"):
             bp_path = str(archive)
             bp_id = bp_path.split('/')[-1]
-            command = ["cfy", "blueprints", "upload", "-b", bp_id, bp_path ]
+            if "main_blueprint" in bps[bp_id.replace(".zip","")].keys():
+                command = ["cfy", "blueprints", "upload", "--blueprint-filename", bps[bp_id].get("main_blueprint"), "-b", bp_id, bp_path ]
+            else:
+                command = ["cfy", "blueprints", "upload", "-b", bp_id, bp_path ]
             args[ bp_id ] = command
         return args
 
