@@ -134,7 +134,7 @@ pipeline{
               sh """
               export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
               export GH_TOKEN=${env.GH_TOKEN}
-              exrpot BPS_SCOPE=${env.BPS_SCOPE}
+              export BPS_SCOPE=${env.BPS_SCOPE}
               python catalog.py
               """
             }
