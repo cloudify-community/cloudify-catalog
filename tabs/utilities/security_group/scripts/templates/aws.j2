@@ -1,0 +1,8 @@
+{% for rule in rules %}
+  - IpProtocol: tcp
+    FromPort: {{ rule.from_port }}
+    ToPort: {{ rule.to_port }}
+    IpRanges:
+      - CidrIp: 0.0.0.0/0
+{% endfor %}
+

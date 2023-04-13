@@ -6,20 +6,32 @@ imports:
 
 inputs:
 
+  ports:
+    display_label: Ports list
+    description: |
+      Ports to open list
+    type: list
+    default: []
+
   rg_id:
-    type: string
     description: Resource group ID
-    display_label: Resource Group id
+    display_label: resource group id
+    type: string
+
+  vpc_id:
+    type: string
+    description: Virtual Network ID
+    display_label: VPC ID
 
   security_group_id:
     type: string
-    description: Security Group id
-    display_label: Security Group id
+    description: Security Group ID
+    display_label: SG ID
 
   region_name:
+    description: Your Azure Region.
+    display_label: 
     type: string
-    description: Azure Region Name
-    display_label: Azure Region Name
     default: eastus2
     constraints:
       - valid_values:
@@ -66,8 +78,6 @@ inputs:
 
   retry_after:
     type: integer
-    description: Retry After (seconds)
-    display_label: Retry After
     default: 60
 
 dsl_definitions:
@@ -80,16 +90,30 @@ dsl_definitions:
 
 node_templates:
 
+  #generate rules for security group
+  sg_rules:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/generate_bp.py
+          executor: central_deployment_agent
+          inputs:
+            ports: { get_input: ports }
+            provider: azure
+
+  #resource group containing sg
   resource_group:
-    type: cloudify.nodes.azure.ResourceGroup
+    type: cloudify.azure.nodes.ResourceGroup
     properties:
       use_external_resource: true
       name: { get_input: rg_id }
       location: { get_input: region_name }
       azure_config: *azure_config
 
+  #setup the rules
   network_security_group:
-    type: cloudify.nodes.azure.network.NetworkSecurityGroup
+    type: cloudify.azure.nodes.network.NetworkSecurityGroup
     properties:
       use_external_resource: true
       name: { get_input: security_group_id }
@@ -98,17 +122,9 @@ node_templates:
       retry_after: { get_input: retry_after }
       resource_config:
         securityRules:
-          - name: Http
-            properties:
-              description: HTTP access
-              protocol: Tcp
-              sourcePortRange: '*'
-              destinationPortRange: 8080
-              sourceAddressPrefix: '*'
-              destinationAddressPrefix: '*'
-              priority: 101
-              access: Allow
-              direction: Inbound
+          get_attribute: [ sg_rules, value ]
     relationships:
-      - type: cloudify.relationships.azure.contained_in_resource_group
-        target: resource_group
+    - type: cloudify.azure.relationships.contained_in_resource_group
+      target: 
+    - type: cloudify.relationships.depends_on
+      target: sg_rules
