@@ -125,6 +125,6 @@ node_templates:
           get_attribute: [ sg_rules, value ]
     relationships:
     - type: cloudify.azure.relationships.contained_in_resource_group
-      target: 
+      target: resource_group
     - type: cloudify.relationships.depends_on
       target: sg_rules
