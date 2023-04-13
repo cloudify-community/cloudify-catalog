@@ -53,7 +53,7 @@ def terminateCloudifyManager(){
 def checkChanges(){
     sh returnStdout: true, script: """#!/bin/bash
       export GH_TOKEN=${env.GH_TOKEN}
-      python3 get_changes.py | wc -l
+      python get_changes.py | wc -l
     """
 }
 
