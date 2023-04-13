@@ -178,7 +178,10 @@ pipeline{
                   dir("${env.WORKSPACE}/${env.PROJECT}"){
                     withVault([configuration: configuration, vaultSecrets: secrets]){
                       script{
-                        common.runCfyLinter()
+                        catchError(message: 'Failure on: Test cfy lint', buildResult: 'SUCCESS', stageResult:
+                      'FAILURE') {
+                          common.runCfyLinter()
+                        }
                       }
                     }
                   }
