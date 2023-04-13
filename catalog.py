@@ -192,9 +192,12 @@ def load_catalog(path):
 
 def main():
     catalog = load_catalog("catalog.yaml")
+    
     head = set_head()
     changed_files = get_changed_bps_path()
+
     packages = get_packages_from_changed_files(changed_files)
+    
     target_path_subfolder = get_target_sub_folder(head)
 
     target_path = "{}/{}".format(catalog['target_path'], target_path_subfolder)
@@ -205,7 +208,7 @@ def main():
     for package in catalog['topics']:
         catalog = []
         logging.info('processing catalog %s' % package['name'])
-        if 'blueprints' in package and package['name'].replace('_services', '') in packages:
+        if 'blueprints' in package and (package['name'].replace('_services', '') in packages or BPS_SCOPE ):
             broken_bps = get_broken_bps_ids()
 
             for blueprint in package['blueprints']:

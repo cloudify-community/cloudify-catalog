@@ -61,7 +61,13 @@ def runCfyLinter(){
   sh """#!/bin/bash
       declare counter=0
       declare regex="\\s+ERROR\\s+"
-      for filePath in \$(python3 get_changes.py | grep blueprint.yaml); do
+      if [[ " \$BPS_SCOPE "  =~ 'changed' ]]
+      then
+          export command=\$(python3 get_changes.py | grep blueprint.yaml)
+      else
+          export command=\$(find . | grep blueprint.yaml)
+      fi
+      for filePath in \$command; do
         echo \$filePath
         cfy-lint -b \$filePath |& tee cfy_lint_error.txt;
         declare file_content=\$( cat cfy_lint_error.txt )
