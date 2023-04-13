@@ -153,7 +153,7 @@ pipeline{
         }
       }
     }
-    stage('test_build_publish'){
+    stage('test'){
       when { 
         anyOf {
           expression {
@@ -169,7 +169,7 @@ pipeline{
         }
       }
       stages {
-        stage('run_tests'){
+        stage('run_cfy_lint_cm_tests'){
           parallel{
             stage('run_cfy_lint'){
               steps{
@@ -238,28 +238,24 @@ pipeline{
             }
           }
         }
-        stage('publish'){
-          stages {
-            stage('upload_artifacts'){
-              steps{
-                withCredentials([
-                      usernamePassword(
-                          credentialsId: 'aws-cli',
-                          usernameVariable: 'ID',
-                          passwordVariable: 'SECRET'
-                          )]) {
-                      container('cloudify'){
-                        dir("${env.WORKSPACE}/${env.PROJECT}"){
-                          setupGithubSSHKey()
-                          sh '''
-                            export ID="$ID"
-                            export SECRET="$SECRET"
-                            python upload_artifacts.py
-                          '''
-                    }
-                  }
-                }
-              }
+      }
+    }
+    stage('upload_artifacts'){
+      steps{
+        withCredentials([
+          usernamePassword(
+              credentialsId: 'aws-cli',
+              usernameVariable: 'ID',
+              passwordVariable: 'SECRET'
+              )]) {
+          container('cloudify'){
+            dir("${env.WORKSPACE}/${env.PROJECT}"){
+              setupGithubSSHKey()
+              sh '''
+                export ID="$ID"
+                export SECRET="$SECRET"
+                python upload_artifacts.py
+              '''
             }
           }
         }
