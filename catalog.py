@@ -19,7 +19,7 @@ GH_TOKEN = os.getenv("GH_TOKEN")
 
 def get_changed_bps_path():
     repo = Github(GH_TOKEN).get_repo(REPO_NAME)
-    branch = set_head()
+    branch = set_head(False)
     pr = None
     pulls = repo.get_pulls(state='open', sort='created')
     for pull in pulls:
@@ -168,7 +168,7 @@ def get_target_sub_folder(branch: str) -> str:
     return result.group(1) if result else "staging/{}".format(branch)
 
 
-def set_head():
+def set_head(verbose=True):
     try:
         head = os.environ["GIT_BRANCH"]
         if re.match("^PR-[\\d]{1,4}-(merge|head)$", head):
@@ -177,8 +177,9 @@ def set_head():
     except KeyError:
         # we are on local machine
         head = Repository('.').head.shorthand
-        logging.info(
-            "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
+        if verbose:
+            logging.info(
+                "No Jenkins pipeline environment variable. Setting the branch name to: {}".format(head))
     return head
 
 def load_catalog(path):
