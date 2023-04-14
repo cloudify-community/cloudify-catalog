@@ -108,6 +108,9 @@ pipeline{
                 pip install --upgrade pip
                 pip install -r requirements.txt
                 curl -sfL https://cloudify.co/get-lint | sh -
+                export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+                export GH_TOKEN=${env.GH_TOKEN}
+                export BPS_SCOPE=${env.BPS_SCOPE}
             """
             }
           }
@@ -132,9 +135,6 @@ pipeline{
             withVault([configuration: configuration, vaultSecrets: secrets]){
               setupGithubSSHKey()
               sh """
-              export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
-              export GH_TOKEN=${env.GH_TOKEN}
-              export BPS_SCOPE=${env.BPS_SCOPE}
               python catalog.py
               """
             }
@@ -223,11 +223,6 @@ pipeline{
                           dir("${env.WORKSPACE}/${env.PROJECT}") {
                             withVault([configuration: configuration, vaultSecrets: secrets]){
                               echo 'Test blueprints'
-                              sh """
-                                set -x
-                                export GH_TOKEN=${env.GH_TOKEN}
-                                export BPS_SCOPE=${env.BPS_SCOPE}
-                              """
                               common.testBlueprints()
                             }
                           }
