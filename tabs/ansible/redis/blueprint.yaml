@@ -90,7 +90,7 @@ node_templates:
         create:
           implementation: ansible.cloudify_ansible.tasks.run
           inputs:
-            site.yaml_path: playbooks/install_redis.yaml
+            site_yaml_path: playbooks/install_redis.yaml
             sources:
               foo_group:
                 hosts:

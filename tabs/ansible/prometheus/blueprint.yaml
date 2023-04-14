@@ -70,7 +70,7 @@ node_templates:
         create:
           implementation: ansible.cloudify_ansible.tasks.run
           inputs:
-            site.yaml_path: playbooks/install_prometheus.yaml
+            site_yaml_path: playbooks/install_prometheus.yaml
             sources:
               foo_group:
                 hosts:
