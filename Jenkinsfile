@@ -217,8 +217,6 @@ pipeline{
                   steps {
                     script {
                       buildState = 'FAILURE'
-                      catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
-                      'FAILURE') {
                         container('cloudify') {
                           dir("${env.WORKSPACE}/${env.PROJECT}") {
                             withVault([configuration: configuration, vaultSecrets: secrets]){
@@ -229,7 +227,6 @@ pipeline{
                           // If we reach here that means all of the above passed
                           buildState = 'SUCCESS'
                         }
-                      }
                     }
                   }
                 }
