@@ -16,6 +16,7 @@ TEST_RESULT_PATH = os.getenv("TEST_RESULT_PATH")
 REPO_NAME = 'cloudify-community/cloudify-catalog'
 BP_NAME = re.compile("(?<=\[)(.*)(?=\])")
 GH_TOKEN = os.getenv("GH_TOKEN")
+BPS_SCOPE = os.getenv('BPS_SCOPE') == 'all'
 
 def get_changed_bps_path():
     repo = Github(GH_TOKEN).get_repo(REPO_NAME)
@@ -191,9 +192,12 @@ def load_catalog(path):
 
 def main():
     catalog = load_catalog("catalog.yaml")
+    
     head = set_head()
     changed_files = get_changed_bps_path()
+
     packages = get_packages_from_changed_files(changed_files)
+    
     target_path_subfolder = get_target_sub_folder(head)
 
     target_path = "{}/{}".format(catalog['target_path'], target_path_subfolder)
@@ -204,7 +208,7 @@ def main():
     for package in catalog['topics']:
         catalog = []
         logging.info('processing catalog %s' % package['name'])
-        if 'blueprints' in package and package['name'].replace('_services', '') in packages:
+        if 'blueprints' in package and ( package['name'].replace('_services', '') in packages or BPS_SCOPE ):
             broken_bps = get_broken_bps_ids()
 
             for blueprint in package['blueprints']:
@@ -217,7 +221,7 @@ def main():
 
                 image_url = get_image_url(
                     blueprint, raw_github_url, broken_bps)
-                if check_bp_changed(blueprint['path'], changed_files):
+                if check_bp_changed(blueprint['path'], changed_files) or BPS_SCOPE:
                     archive_blueprint(blueprint)
 
                 catalog_item = {

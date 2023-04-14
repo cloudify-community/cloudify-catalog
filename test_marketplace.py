@@ -12,7 +12,7 @@ BPS_SCOPE = os.environ.get('BPS_SCOPE')
 test_data = ParseTestData(BPS_SCOPE)
 ids = test_data.get_blueprints_ids()
 # upload
-args_upload = test_data.get_upload_args()
+args_upload = test_data.get_upload_args_from_build()
 # install
 args_create_deployment = test_data.get_create_deployment_args()
 args_executions_start = test_data.get_executions_start_args()
