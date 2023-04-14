@@ -88,6 +88,7 @@ pipeline{
     WORKSPACE = "${env.WORKSPACE}"
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1"
+    BPS_SCOPE = "${params.BPS_SCOPE}"
     TEST_CASE = "${params.TEST_CASE}"
     TEST_BLUEPRINT = "${params.TEST_BLUEPRINT}"
     TEST_RESULT_DIR = "/tmp/data"
@@ -107,6 +108,9 @@ pipeline{
                 pip install --upgrade pip
                 pip install -r requirements.txt
                 curl -sfL https://cloudify.co/get-lint | sh -
+                export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+                export GH_TOKEN=${env.GH_TOKEN}
+                export BPS_SCOPE=${env.BPS_SCOPE}
             """
             }
           }
@@ -124,7 +128,33 @@ pipeline{
         }
       }
     }
-    stage('test_build_publish'){
+    stage('build'){
+      steps{
+        container('cloudify'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            withVault([configuration: configuration, vaultSecrets: secrets]){
+              setupGithubSSHKey()
+              sh """
+              python catalog.py
+              """
+            }
+          }
+        }
+      }
+    }
+    stage('validate_built_catalogs'){
+      steps{
+        container('cloudify'){
+          dir("${env.WORKSPACE}/${env.PROJECT}"){
+            setupGithubSSHKey()
+            sh """
+              python catalog_linter.py
+            """
+          }
+        }
+      }
+    }
+    stage('test'){
       when { 
         anyOf {
           expression {
@@ -140,7 +170,7 @@ pipeline{
         }
       }
       stages {
-        stage('run_tests'){
+        stage('run_cfy_lint_cm_tests'){
           parallel{
             stage('run_cfy_lint'){
               steps{
@@ -148,7 +178,10 @@ pipeline{
                   dir("${env.WORKSPACE}/${env.PROJECT}"){
                     withVault([configuration: configuration, vaultSecrets: secrets]){
                       script{
-                        common.runCfyLinter()
+                        catchError(message: 'Failure on: Test cfy lint', buildResult: 'SUCCESS', stageResult:
+                      'FAILURE') {
+                          common.runCfyLinter()
+                        }
                       }
                     }
                   }
@@ -184,23 +217,16 @@ pipeline{
                   steps {
                     script {
                       buildState = 'FAILURE'
-                      catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
-                      'FAILURE') {
                         container('cloudify') {
                           dir("${env.WORKSPACE}/${env.PROJECT}") {
                             withVault([configuration: configuration, vaultSecrets: secrets]){
                               echo 'Test blueprints'
-                              sh """
-                                set -x
-                                export GH_TOKEN=${env.GH_TOKEN}
-                              """
                               common.testBlueprints()
                             }
                           }
                           // If we reach here that means all of the above passed
                           buildState = 'SUCCESS'
                         }
-                      }
                     }
                   }
                 }
@@ -208,56 +234,24 @@ pipeline{
             }
           }
         }
-        stage('build_publish'){
-          stages {
-            stage('build'){
-              steps{
-                container('cloudify'){
-                  dir("${env.WORKSPACE}/${env.PROJECT}"){
-                    withVault([configuration: configuration, vaultSecrets: secrets]){
-                      setupGithubSSHKey()
-                      sh """
-                      export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
-                      export GH_TOKEN=${env.GH_TOKEN}
-                      python catalog.py
-                      """
-                    }
-                  }
-                }
-              }
-            }
-            stage('validate_built_catalogs'){
-              steps{
-                container('cloudify'){
-                  dir("${env.WORKSPACE}/${env.PROJECT}"){
-                    setupGithubSSHKey()
-                    sh """
-                      python catalog_linter.py
-                    """
-                  }
-                }
-              }
-            }
-            stage('upload_artifacts'){
-              steps{
-                withCredentials([
-                      usernamePassword(
-                          credentialsId: 'aws-cli',
-                          usernameVariable: 'ID',
-                          passwordVariable: 'SECRET'
-                          )]) {
-                      container('cloudify'){
-                        dir("${env.WORKSPACE}/${env.PROJECT}"){
-                          setupGithubSSHKey()
-                          sh '''
-                            export ID="$ID"
-                            export SECRET="$SECRET"
-                            python upload_artifacts.py
-                          '''
-                    }
-                  }
-                }
-              }
+      }
+    }
+    stage('upload_artifacts'){
+      steps{
+        withCredentials([
+          usernamePassword(
+              credentialsId: 'aws-cli',
+              usernameVariable: 'ID',
+              passwordVariable: 'SECRET'
+              )]) {
+          container('cloudify'){
+            dir("${env.WORKSPACE}/${env.PROJECT}"){
+              setupGithubSSHKey()
+              sh '''
+                export ID="$ID"
+                export SECRET="$SECRET"
+                python upload_artifacts.py
+              '''
             }
           }
         }
