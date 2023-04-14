@@ -99,5 +99,9 @@ capabilities:
     description: Mock resource group id - to be compatible with Azure VM template
     value: { get_attribute: [ virtual_machine, capabilities, rg_id ] }
 
+  region_name: 
+    description: Region name of the deployment
+    value: { get_attribute: [ virtual_machine, capabilities, region_name ] }
+
   
   
