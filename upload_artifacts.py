@@ -62,7 +62,7 @@ def upload_file(file_name: str, bucket: str, object_name: str = None) -> bool:
 
 
 def check_branch(directory: str):
-    for version in ['6.4', '6.3', '6.2']:
+    for version in ['7.0', '6.4', '6.3', '6.2']:
         if version in directory:
             return True
     return False
