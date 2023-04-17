@@ -4,7 +4,6 @@ description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
 
 inputs:
@@ -43,10 +42,9 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
-        
 
   secrurity_group_rules:
     type: cloudify.nodes.Component
@@ -85,14 +83,14 @@ node_templates:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
-        docker_host: { get_capability: [ { get_input: infra_deployment_id }, endpoint] }
+        docker_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
         docker_rest_port: '2375'
       resource_config:
         image_tag: 'registry:2.0'
         container_args:
           name: registry
           detach: true
-          restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
+          restart_policy: { 'MaximumRetryCount': 0, 'Name': 'always' }
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
@@ -100,4 +98,4 @@ node_templates:
 outputs:
   docker_api_url:
     description: Administration console URL
-    value: { concat: [ 'http://', { get_capability: [ { get_input: infra_deployment_id }, endpoint] }, ':2375' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':2375' ] }
