@@ -4,7 +4,6 @@ description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
 
 inputs:
@@ -49,10 +48,10 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
-  
+
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
@@ -110,10 +109,10 @@ node_templates:
             { concat: [ "MONGO_INITDB_ROOT_PASSWORD=", { get_attribute: [ password_generator, password ] } ] },
             { concat: [ "MONGO_INITDB_ROOT_USERNAME=", { get_input: user_name } ] }
           ]
-          ports: 
-            { '27017/tcp' : '27017' }
+          ports:
+            { '27017/tcp': '27017' }
           host_config:
-            restart_policy: { "MaximumRetryCount": 0,  "Name": "always" }
+            restart_policy: { "MaximumRetryCount": 0, "Name": "always" }
           detach: true
     relationships:
       - type: cloudify.relationships.depends_on

@@ -90,7 +90,7 @@ node_templates:
         container_args:
           name: nextcloud
           detach: true
-          ports: 
+          ports:
             { '80/tcp': '80' }
           host_config:
             restart_policy: { 'MaximumRetryCount': 0, 'Name': 'always' }

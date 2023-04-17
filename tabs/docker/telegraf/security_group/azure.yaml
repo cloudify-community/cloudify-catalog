@@ -31,7 +31,7 @@ node_templates:
       azure_config: *azure_config
 
   network_security_group:
-    type: cloudify.azure.nodes.network.NetworkSecurityGroup
+    type: cloudify.azure.nodes.network.NetworkSecurityRule
     properties:
       name: { concat: [ telegraf, { get_capability: [ { get_input: deployment_id }, security_group_id ] } ] }
       network_security_group_name: { get_capability: [ { get_input: deployment_id }, security_group_id ] }

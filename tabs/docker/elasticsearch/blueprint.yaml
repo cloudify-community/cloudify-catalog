@@ -4,7 +4,6 @@ description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
 
 inputs:
@@ -34,7 +33,7 @@ inputs:
     default: false
 
 node_templates:
-      
+
   infrastructure:
     type: cloudify.nodes.Component
     properties:
@@ -43,8 +42,8 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
 
   secrurity_group_rules:
@@ -91,10 +90,10 @@ node_templates:
         container_args:
           name: elastic
           command: '/bin/tini -- /usr/local/bin/docker-entrypoint.sh eswrapper'
-          ports: 
-            { '9200/tcp' : '9200', '9300/tcp' : '9300' }
+          ports:
+            { '9200/tcp': '9200', '9300/tcp': '9300' }
           host_config:
-            restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
+            restart_policy: { 'MaximumRetryCount': 0, 'Name': 'always' }
           environment: [ "discovery.type=single-node" ]
           detach: true
     relationships:
@@ -105,9 +104,11 @@ outputs:
   docker_api_url:
     description: Administration console URL
     value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':2375' ] }
-  
+
   elastic_port_1:
+    description: Elastic 9200 port
     value: { concat: [ 'https://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':9200' ] }
 
   elastic_port_2:
+    description: Elastic 9300 port
     value: { concat: [ 'https://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':9300' ] }
