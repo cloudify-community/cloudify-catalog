@@ -246,6 +246,8 @@ pipeline{
                                 export BPS_SCOPE=${env.BPS_SCOPE}
                               """
                               common.testBlueprints()
+                              echo 'Export connection details'
+                              common.exportManagerConnDetails()
                             }
                           }
                           // If we reach here that means all of the above passed
