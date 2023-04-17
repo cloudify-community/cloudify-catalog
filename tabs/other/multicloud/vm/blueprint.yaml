@@ -13,36 +13,36 @@ labels:
 
 inputs:
 
-    provider_name:
-      type: string
-      display_label: Provider name
-      description: |
-        "Provider name such: AWS, Azure or GCP"
-      default: aws
-      constraints:
-        - valid_values:
-            - azure
-            - aws
-            - gcp
+  provider_name:
+    type: string
+    display_label: Provider name
+    description: |
+      "Provider name such: AWS, Azure or GCP"
+    default: aws
+    constraints:
+      - valid_values:
+          - azure
+          - aws
+          - gcp
 
-    secrets_validation_archive:
-      type: string
-      display_label: URL for secrets vallidation zip archive
-      description: >
-        URL of infra zip file.
-      default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/secrets_validation/secrets_validation.zip
-      hidden: true
+  secrets_validation_archive:
+    type: string
+    display_label: URL for secrets vallidation zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/secrets_validation/secrets_validation.zip
+    hidden: true
 
-    secrets_to_validate:
-      type: dict
-      display_label: Secrets to validate
-      description: |
-        Provider secrets to check existence & values
-      default:
-        aws: [ aws_access_key_id, aws_secret_access_key ]
-        azure: [ azure_client_id, azure_client_secret, azure_subscription_id, azure_tenant_id ]
-        gcp: [ gcp_credentials ]
-      hidden: true
+  secrets_to_validate:
+    type: dict
+    display_label: Secrets to validate
+    description: |
+      Provider secrets to check existence & values
+    default:
+      aws: [ aws_access_key_id, aws_secret_access_key ]
+      azure: [ azure_client_id, azure_client_secret, azure_subscription_id, azure_tenant_id ]
+      gcp: [ gcp_credentials ]
+    hidden: true
 
 node_templates:
 
