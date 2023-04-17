@@ -8,11 +8,6 @@ imports:
 
 inputs:
 
-  rg_id:
-    description: Resource group ID
-    display_label: Resource Group ID
-    type: string
-
   infra_name:
     display_label: Name of the provider to deploy resources
     description: >
@@ -127,5 +122,4 @@ outputs:
 
   master_login_command:
     description: Connection to mongo server by mysql client
-    value: { concat: [ "mysql -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] },
-      " -u root -p ", { get_attribute: [ master_password, password ] } ] }
+    value: { concat: [ "mysql -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] }, " -u root -p ", { get_attribute: [ master_password, password ] } ] }
