@@ -22,12 +22,28 @@ def secrets = [
   ]
 ]
 
+def terminateCloudifyManager(){
+  try {
+    sh """#!/bin/bash
+        source ${TEST_RESULT_DIR}/conn_details
+        cfy profile use -u \$AWS_MANAGER_USERNAME -p \$AWS_MANAGER_PASSWORD -t \$AWS_MANAGER_TENANT --ssl \$AWS_MANAGER_IP
+        export CLOUDIFY_SSL_TRUST_ALL=true
+        export PYTHONWARNINGS="ignore:Unverified HTTPS request"
+        cfy uninstall --allow-custom-parameters -p force=True ${env.BP_ID}
+    """    
+  } catch(Exception e){
+    echo 'Exception occurred: ' + e.toString()
+    continuePipeline = true
+    currentBuild.result = 'SUCCESS'
+  }
+}
+
 @Library('pipeline-shared-library') _
 
 pipeline{
   agent{
     kubernetes{
-      defaultContainer 'jnlp'
+      defaultContainer 'cloudify'
       yaml '''
           spec:
             volumes:
@@ -109,6 +125,7 @@ pipeline{
                 pip install -r requirements.txt
                 curl -sfL https://cloudify.co/get-lint | sh -
             """
+            
             }
           }
         }
@@ -229,12 +246,19 @@ pipeline{
                                 export BPS_SCOPE=${env.BPS_SCOPE}
                               """
                               common.testBlueprints()
+                              echo 'Export connection details'
+                              common.exportManagerConnDetails()
                             }
                           }
                           // If we reach here that means all of the above passed
                           buildState = 'SUCCESS'
                         }
                       }
+                    }
+                  }
+                  post {
+                    always {
+                      terminateCloudifyManager()
                     }
                   }
                 }

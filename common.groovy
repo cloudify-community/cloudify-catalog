@@ -40,13 +40,13 @@ def testBlueprints(){
 """
 }
 
-def terminateCloudifyManager(){
+
+def exportManagerConnDetails(){
   sh """#!/bin/bash
-    source .venv/bin/activate
-    dep_id=\$(cfy deployments list | grep ${env.BP_ID} | awk '{ print \$2 }')
-    cfy exec start uninstall --force -d \${dep_id}
-    cfy dep del -f \${dep_id}
-    cfy blu del -f ${env.BP_ID}
+        echo AWS_MANAGER_USERNAME=${env.AWS_MANAGER_USERNAME} >> ${TEST_RESULT_DIR}/conn_details
+        echo AWS_MANAGER_TENANT=${env.AWS_MANAGER_TENANT} >> ${TEST_RESULT_DIR}/conn_details
+        echo AWS_MANAGER_IP=${env.AWS_MANAGER_IP} >> ${TEST_RESULT_DIR}/conn_details
+        echo AWS_MANAGER_PASSWORD=${env.AWS_MANAGER_PASSWORD} >> ${TEST_RESULT_DIR}/conn_details
   """
 }
 
