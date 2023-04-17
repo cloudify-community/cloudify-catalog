@@ -4,7 +4,6 @@ description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
 
 inputs:
@@ -43,8 +42,8 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
 
   secrurity_group_rules:
@@ -57,13 +56,11 @@ node_templates:
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities , rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities , vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities , security_group_id ] }
+            deployment_id: { get_attribute: [ infrastructure, deployment, id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
-  
+
   image:
     type: cloudify.nodes.ApplicationServer
     interfaces:
@@ -77,7 +74,6 @@ node_templates:
               host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
               user: { get_attribute: [ infrastructure, capabilities, user ] }
               key: { get_attribute: [ infrastructure, capabilities, key_content ] }
-
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -95,9 +91,9 @@ node_templates:
           name: nextcloud
           detach: true
           ports: 
-            { '80/tcp' : '80' }
+            { '80/tcp': '80' }
           host_config:
-            restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
+            restart_policy: { 'MaximumRetryCount': 0, 'Name': 'always' }
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
