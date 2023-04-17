@@ -4,6 +4,7 @@ description: Cloudify Docker blueprint. Deploys Sonarquebe by Docker.
 
 imports:
   - cloudify/types/types.yaml
+  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
 
 inputs:
