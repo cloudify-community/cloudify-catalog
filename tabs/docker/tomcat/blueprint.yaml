@@ -4,7 +4,6 @@ description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
 
 inputs:
@@ -43,8 +42,8 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
 
   secrurity_group_rules:
@@ -100,12 +99,12 @@ node_templates:
         image_tag: 'tomcat:9.0'
         container_args:
           name: tomcat
-          detach: True
+          detach: true
           command: 'catalina.sh run'
-          ports: 
-            { '80/tcp' : '8080' }
+          ports:
+            { '80/tcp': '8080' }
           host_config:
-            restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
+            restart_policy: { 'MaximumRetryCount': 0, 'Name': 'always' }
     relationships:
       - type: cloudify.relationships.depends_on
         target: password_generator
