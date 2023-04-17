@@ -95,7 +95,7 @@ node_templates:
           ports:
             { '80/tcp': '80' }
           host_config:
-            restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
+            restart_policy: { 'MaximumRetryCount': 0, 'Name': 'always' }
     relationships:
       - type: cloudify.relationships.depends_on
         target: image

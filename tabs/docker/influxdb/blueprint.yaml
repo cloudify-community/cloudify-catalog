@@ -51,13 +51,6 @@ inputs:
     description: The name to set for the system's initial organization
     default: cloudify
 
-  token:
-    type: string
-    display_label: Token to auth with the influxdb from telegraf
-    description: Token to auth with the influxdb from telegraf
-    default: 9859DAA6-3B3F-48FE-A981-AE9D31FBB334
-    hidden: true
-
 node_templates:
 
   infrastructure:
