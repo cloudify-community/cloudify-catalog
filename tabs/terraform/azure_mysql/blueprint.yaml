@@ -3,7 +3,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-terraform-plugin
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
+  - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
 
 labels:
   csys-obj-type:
@@ -18,12 +18,14 @@ inputs:
     default: Cloudify193!
     constraints:
       - pattern: ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,16}$
+      
   resource_prefix:
     type: string
     description: The resource prefix for resources naming
     display_label: Resource Prefix
     constraints:
       - pattern: (^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)
+      
   region:
     type: string
     description: Azure location name

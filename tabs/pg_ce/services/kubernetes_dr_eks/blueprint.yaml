@@ -2,7 +2,7 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
+  - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
 
 inputs:
 
@@ -92,10 +92,11 @@ node_templates:
             aws_region_name: { get_input: region_name_a }
             availability_zone_1: { concat: [ { get_input: region_name_a }, a ] }
             availability_zone_2: { concat: [ { get_input: region_name_a }, c ] }
-            eks_cluster_name: { concat: [ { get_attribute: [ prefix, value ] }, '-eks-adr' ] }
+            eks_cluster_name: { concat: [ { get_attribute: [ prefix, value ] }, -eks-adr ] }
             eks_nodegroup_name: { concat: [ eks_node_group, { get_attribute: [ prefix, value ] }, -eks-adr ] }
             service_account_name: cloudify
-            agent_key_name: { concat: [ agent_key_name, 'adr']}
+            agent_key_name: { concat: [ agent_key_name, adr ]}
+
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix
@@ -112,12 +113,12 @@ node_templates:
             aws_access_key_id: { get_secret: aws_access_key_id }
             aws_secret_access_key: { get_secret: aws_secret_access_key }
             aws_region_name: { get_input: region_name_b }
-            availability_zone_1: { concat: [ { get_input: region_name_b }, 'a' ] }
-            availability_zone_2: { concat: [ { get_input: region_name_b }, 'c' ] }
-            eks_cluster_name: { concat: [ { get_attribute: [ prefix, value ] }, '-eks-bdr' ] }
-            eks_nodegroup_name: { concat: [ 'eks_node_group', { get_attribute: [ prefix, value ] }, '-eks-bdr' ] }
+            availability_zone_1: { concat: [ { get_input: region_name_b }, a ] }
+            availability_zone_2: { concat: [ { get_input: region_name_b }, c ] }
+            eks_cluster_name: { concat: [ { get_attribute: [ prefix, value ] }, -eks-bdr ] }
+            eks_nodegroup_name: { concat: [ 'eks_node_group', { get_attribute: [ prefix, value ] }, -eks-bdr ] }
             service_account_name: "cloudify"
-            agent_key_name: { concat: [ agent_key_name, 'bdr']}
+            agent_key_name: { concat: [ agent_key_name, bdr ]}
     relationships:
       - type: cloudify.relationships.depends_on
         target: prefix

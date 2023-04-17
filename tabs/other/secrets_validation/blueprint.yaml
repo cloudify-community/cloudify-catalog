@@ -26,7 +26,7 @@ inputs:
 node_templates:
 
   #check if secrets exists
-  secrets_exists_validation:
+  secrets_validation:
     type: cloudify.nodes.Root
     interfaces:
       cloudify.interfaces.lifecycle:

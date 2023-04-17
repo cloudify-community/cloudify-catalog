@@ -6,6 +6,7 @@ imports:
   - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
   - plugin:cloudify-utilities-plugin
+  - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
 
 inputs:
 
@@ -31,7 +32,7 @@ inputs:
     display_label: URL for infra zip archive
     description: >
       URL of infra zip file.
-    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/other/multicloud/multicloud_vm.zip
 
   infra_exists:
     type: string

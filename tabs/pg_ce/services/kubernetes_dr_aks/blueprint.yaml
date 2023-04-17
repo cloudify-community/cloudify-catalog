@@ -5,7 +5,7 @@ imports:
   - plugin:cloudify-utilities-plugin
   - plugin:cloudify-azure-plugin
   - plugin:cloudify-kubernetes-plugin
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
+  - https://repository.cloudifysource.org/cloudify/blueprints/6.4/custom_types.yaml
 
 labels:
   csys-obj-type:

@@ -31,7 +31,7 @@ inputs:
   module_source:
     type: string
     display_label: Module URL source
-    default: https://github.com/cloudify-community/tf-source/archive/refs/heads/main.zip
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tf-source-main.zip
 
   module_source_path:
     type: string
