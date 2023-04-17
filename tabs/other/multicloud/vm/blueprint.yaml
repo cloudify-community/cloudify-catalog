@@ -20,10 +20,10 @@ inputs:
         "Provider name such: AWS, Azure or GCP"
       default: aws
       constraints:
-      - valid_values:
-          - azure
-          - aws
-          - gcp
+        - valid_values:
+            - azure
+            - aws
+            - gcp
 
     secrets_validation_archive:
       type: string
@@ -66,8 +66,8 @@ node_templates:
           blueprint_archive: "providers.zip"
           main_file_name: { concat: [ { get_input: provider_name }, ".yaml" ] }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: secrets_validation
+      - type: cloudify.relationships.depends_on
+        target: secrets_validation
 
 capabilities:
 
@@ -102,6 +102,3 @@ capabilities:
   region_name:
     description: Region name of the deployment
     value: { get_attribute: [ virtual_machine, capabilities, region_name ] }
-
-
-
