@@ -1,22 +1,24 @@
+import os
 import subprocess
 import logging
 
 import pytest
 from pytest_steps import test_steps
 
-from parse_tests_yaml import ParseTestData
+from parse_tests import ParseTestData
 
-test_data = ParseTestData()
+BPS_SCOPE = os.environ.get('BPS_SCOPE')
+
+test_data = ParseTestData(BPS_SCOPE)
 ids = test_data.get_blueprints_ids()
 # upload
-args_upload = test_data.get_upload_args()
+args_upload = test_data.get_upload_args_from_build()
 # install
 args_create_deployment = test_data.get_create_deployment_args()
 args_executions_start = test_data.get_executions_start_args()
 args_uninstall = test_data.get_uninstall_args()
 
-#single_blueprint
-import os
+# single_blueprint
 single_blueprint = [os.environ.get('TEST_BLUEPRINT')]
 
 
@@ -42,7 +44,7 @@ def test_upload(id):
 @test_steps("create_deployment", "install_deployment", "uninstall_deployment")
 @pytest.mark.parametrize("id", args_executions_start.keys())
 def test_install(id):
-    #assuming that install & update could be run separetely
+    # assuming that install & update could be run separetely
     try:
         upload_bp = subprocess.run(args_upload.get(id), stdout=subprocess.PIPE)
         logging.info(upload_bp.stdout)

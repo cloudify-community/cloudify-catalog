@@ -25,6 +25,12 @@ inputs:
       URL of infra zip file.
     default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/multicloud/vm/vm.zip
 
+  sg_archive:
+    type: string
+    display_label: SG archive
+    description: Security group archived blueprint
+    default: https://repository.cloudifysource.org/cloudify/blueprints/6.4/tabs/utilities/security-group.zip
+
   infra_exists:
     type: string
     display_label: Set if infra exists or not
@@ -63,11 +69,12 @@ node_templates:
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: security_group.zip
+          blueprint_archive: { get_input: sg_archive }
           main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
           external_resource: false
         deployment:
           inputs:
+            ports: [ 80 ]
             rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
             vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
             security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }

@@ -13,7 +13,8 @@
         "inputs" : {
             "infra_name" : "aws"
         }
-    },{
+    },
+    {
         "id" : "wordpress_docker",
         "inputs" : {
             "infra_name" : "aws"

@@ -17,6 +17,9 @@ def secrets = [
   [path: 'secret/jenkins/infracost', engineVersion: 2, secretValues: [
     [envVar: 'INFRACOST_API_KEY', vaultKey: 'api_key']]
   ],
+  [path: 'secret/jenkins/catalog', engineVersion: 2, secretValues: [
+    [envVar: 'GH_TOKEN', vaultKey: 'gh_token']]
+  ]
 ]
 
 @Library('pipeline-shared-library') _
@@ -75,9 +78,9 @@ pipeline{
   }
 
   parameters {
-    booleanParam(name: 'TEST_BLUEPRINTS', defaultValue: true, description: 'Test blueprints from marketplace.')
     string(name: 'TEST_BLUEPRINT', defaultValue: '', description: 'Blueprint ID to test.')
     choice(name: 'TEST_CASE', choices: "upload\ninstall\nsingle_upload\nsingle_install", description: 'Test case type, applicable only if TEST_BLUEPRINTS set to true, single_{option} takes into account the value from TEST_BLUEPRINT')
+    choice(name: 'BPS_SCOPE', choices: "changed\nall", description: 'Test all or only changed bps from Pull Request.')
   }
 
   environment {
@@ -85,6 +88,7 @@ pipeline{
     WORKSPACE = "${env.WORKSPACE}"
     BP_ID = "ec2-cloudify-catalog-blueprint-${env.GIT_BRANCH}-${env.BUILD_NUMBER}"
     SUFFIX = "6.4.0-.dev1"
+    BPS_SCOPE = "${params.BPS_SCOPE}"
     TEST_CASE = "${params.TEST_CASE}"
     TEST_BLUEPRINT = "${params.TEST_BLUEPRINT}"
     TEST_RESULT_DIR = "/tmp/data"
@@ -94,7 +98,6 @@ pipeline{
 
   stages{
     stage('prepare'){
-      when { expression { params.TEST_BLUEPRINTS } }
       steps {
         script{
           container('cloudify'){
@@ -104,6 +107,10 @@ pipeline{
                 set -eux
                 pip install --upgrade pip
                 pip install -r requirements.txt
+                curl -sfL https://cloudify.co/get-lint | sh -
+                export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
+                export GH_TOKEN=${env.GH_TOKEN}
+                export BPS_SCOPE=${env.BPS_SCOPE}
             """
             }
           }
@@ -121,60 +128,16 @@ pipeline{
         }
       }
     }
-    stage('deploy_cloudify_manager') {
-      when { expression { params.TEST_BLUEPRINTS } }
-      steps {
-        script {
-          buildState = 'FAILURE'
-          catchError(message: 'Failure on: Deploy Cloudify Manager', buildResult: 'SUCCESS', stageResult:
-          'FAILURE') {
-            container('cloudify') {
-              setupGithubSSHKey()
-              dir("${env.WORKSPACE}/${env.PROJECT}") {
-                withVault([configuration: configuration, vaultSecrets: secrets]){
-                  echo 'Create EC2 instance'
-                  common.createEc2Instance()
-                  echo 'Configure Cloudify Manager'
-                  common.configureCloudifyManager()
-                  }
-                }
-            }
-            // If we reach here that means all of the above passed
-            buildState = 'SUCCESS'
-          }
-        }
-      }
-    }
-    stage('test_blueprints'){
-      when { expression { params.TEST_BLUEPRINTS } }
-      steps {
-        script {
-          buildState = 'FAILURE'
-          catchError(message: 'Failure on: Test blueprints', buildResult: 'SUCCESS', stageResult:
-          'FAILURE') {
-            container('cloudify') {
-              dir("${env.WORKSPACE}/${env.PROJECT}") {
-                withVault([configuration: configuration, vaultSecrets: secrets]){
-                  echo 'Test blueprints'
-                  common.testBlueprints()
-                }
-            }
-            // If we reach here that means all of the above passed
-            buildState = 'SUCCESS'
-          }
-        }
-      }
-    }
-    }
     stage('build'){
       steps{
         container('cloudify'){
           dir("${env.WORKSPACE}/${env.PROJECT}"){
-            setupGithubSSHKey()
-            sh """
-            export TEST_RESULT_PATH=${env.TEST_RESULT_PATH}
-            python catalog.py
-            """
+            withVault([configuration: configuration, vaultSecrets: secrets]){
+              setupGithubSSHKey()
+              sh """
+              python catalog.py
+              """
+            }
           }
         }
       }
@@ -191,22 +154,104 @@ pipeline{
         }
       }
     }
+    stage('test'){
+      when { 
+        anyOf {
+          expression {
+            container('cloudify'){
+              dir("${env.WORKSPACE}/${env.PROJECT}"){
+                withVault([configuration: configuration, vaultSecrets: secrets]){
+                  common.checkChanges().trim() != '0' 
+                }
+              }
+            }
+          }
+          expression { params.BPS_SCOPE == 'all' }
+        }
+      }
+      stages {
+        stage('run_cfy_lint_cm_tests'){
+          parallel{
+            stage('run_cfy_lint'){
+              steps{
+                container('cloudify'){
+                  dir("${env.WORKSPACE}/${env.PROJECT}"){
+                    withVault([configuration: configuration, vaultSecrets: secrets]){
+                      script{
+                        catchError(message: 'Failure on: Test cfy lint', buildResult: 'SUCCESS', stageResult:
+                      'FAILURE') {
+                          common.runCfyLinter()
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            stage('run_cm_tests'){
+              stages {
+                stage('deploy_cloudify_manager') {
+                  steps {
+                    script {
+                      buildState = 'FAILURE'
+                      catchError(message: 'Failure on: Deploy Cloudify Manager', buildResult: 'SUCCESS', stageResult:
+                      'FAILURE') {
+                        container('cloudify') {
+                          setupGithubSSHKey()
+                          dir("${env.WORKSPACE}/${env.PROJECT}") {
+                            withVault([configuration: configuration, vaultSecrets: secrets]){
+                              echo 'Create EC2 instance'
+                              common.createEc2Instance()
+                              echo 'Configure Cloudify Manager'
+                              common.configureCloudifyManager()
+                            }
+                          }
+                        }
+                        // If we reach here that means all of the above passed
+                        buildState = 'SUCCESS'
+                      }
+                    }
+                  }
+                }
+                stage('test_blueprints'){
+                  steps {
+                    script {
+                      buildState = 'FAILURE'
+                        container('cloudify') {
+                          dir("${env.WORKSPACE}/${env.PROJECT}") {
+                            withVault([configuration: configuration, vaultSecrets: secrets]){
+                              echo 'Test blueprints'
+                              common.testBlueprints()
+                            }
+                          }
+                          // If we reach here that means all of the above passed
+                          buildState = 'SUCCESS'
+                        }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     stage('upload_artifacts'){
       steps{
         withCredentials([
-              usernamePassword(
-                  credentialsId: 'aws-cli',
-                  usernameVariable: 'ID',
-                  passwordVariable: 'SECRET'
-                  )]) {
-              container('cloudify'){
-                dir("${env.WORKSPACE}/${env.PROJECT}"){
-                  setupGithubSSHKey()
-                  sh '''
-                    export ID="$ID"
-                    export SECRET="$SECRET"
-                    python upload_artifacts.py
-                  '''
+          usernamePassword(
+              credentialsId: 'aws-cli',
+              usernameVariable: 'ID',
+              passwordVariable: 'SECRET'
+              )]) {
+          container('cloudify'){
+            dir("${env.WORKSPACE}/${env.PROJECT}"){
+              setupGithubSSHKey()
+              sh '''
+                export ID="$ID"
+                export SECRET="$SECRET"
+                python upload_artifacts.py
+              '''
             }
           }
         }

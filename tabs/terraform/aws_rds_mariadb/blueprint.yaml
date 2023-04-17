@@ -2,8 +2,8 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-terraform-plugin?version= >=0.15.0
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - plugin:cloudify-terraform-plugin
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 labels:
   csys-obj-type:
@@ -16,24 +16,23 @@ inputs:
     type: string
     description: The password for database user
     display_label: The password for database user
-    default: 'password'
+    default: password
     constraints:
-      - pattern: '^[a-zA-Z0-9_.-]*$'
-      
-  resource_prefix: 
+      - pattern: ^[a-zA-Z0-9_.-]*$
+
+  resource_prefix:
     type: string
     description: The resource prefix for resources naming
     display_label: The resource prefix for resources naming
-    default: ''
     constraints:
-      - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
+      - pattern: (^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)
 
 node_templates:
   prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: { get_input: resource_prefix }
-      
+
   terraform:
     type: cloudify.nodes.terraform
     properties:
@@ -49,10 +48,10 @@ node_templates:
       resource_config:
         environment_variables:
           AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
-          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
+          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key }
         variables:
-          prefix: { get_attribute : [prefix, value] } 
-          password: { get_input : password } 
+          prefix: { get_attribute: [prefix, value] }
+          password: { get_input: password }
         source:
           location: templates/tf_mariadb_master.zip
         source_path: tf_mariadb_master
@@ -75,7 +74,7 @@ capabilities:
     description: |
       RDS MariaDB hostname
     value: { get_attribute: [ terraform_module, outputs, rds_hostname ] }
-  rds_password: 
+  rds_password:
     description: |
       RDS MariaDB password
     value: { get_attribute: [ terraform_module, outputs, rds_password ] }

@@ -147,7 +147,7 @@ def main():
             if not blueprint.validate():
                 result = False
     if not result:
-        exist(1)
+        exit(1)
 
 
 if __name__ == "__main__":

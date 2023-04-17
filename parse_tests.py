@@ -1,10 +1,14 @@
 import json
 import yaml
+import pathlib
 import logging
+from catalog import check_bp_changed, get_changed_bps_path
+
+logging.basicConfig(format='%(levelname)s - %(message)s', level=logging.INFO)
 
 class ParseTestData():
 
-    def __init__(self, catalog_path="./catalog.yaml", install_path= "./catalog_install.json", verbose = False):
+    def __init__(self, bps_scope='changed', catalog_path="./catalog.yaml", install_path= "./catalog_install.json", verbose = False):
         with open(catalog_path, "rb") as file_:
             self._yaml_data = yaml.load(file_, Loader=yaml.FullLoader)
         with open(install_path, "rb") as file_:
@@ -12,15 +16,31 @@ class ParseTestData():
         if(verbose):
             logging.info("YAML: {}".format(self._yaml_data))
             logging.info("JSON: {}".format(self._json_data))
+        self._changed_bps_only = bps_scope =='changed'
 
     def get_tabs(self):
         tabs = [ item['name'] for item in self._yaml_data['topics'] ]
         return tabs
 
     def _get_bps(self):
+
         bps = [ item['blueprints'] for item in self._yaml_data['topics'] ]
         bps = [ item for itemw in bps for item in itemw ]
+        if self._changed_bps_only:
+            bps = [ bp for bp in self._filter_bps(bps) ]
         return bps
+    
+    def _get_bps_kv(self):
+        kv = {}
+        for bp in self._get_bps():
+            kv[bp.get('id')] = bp
+        return kv
+    
+    def _filter_bps(self, bps):
+        changed_files = get_changed_bps_path()
+        for bp in bps: 
+            if check_bp_changed( bp['path'], changed_files):
+                yield bp
 
     def get_create_deployment_args(self):
 
@@ -51,7 +71,7 @@ class ParseTestData():
             command = [ "cfy", "uninstall", "-f", item.get("id") ]
             args[item.get('id')] =  command
         return args
-
+    
     def get_upload_args(self):
         bps = self._get_bps()
         args = {}
@@ -59,20 +79,37 @@ class ParseTestData():
             blueprint_file = "blueprint.yaml"
             if "main_blueprint" in blueprint.keys():
                 blueprint_file = blueprint.get("main_blueprint")
-            command = ["cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file]
+                command = [ "cfy", "blueprints", "upload", "-b", blueprint.get("id"), blueprint.get("path") + "/" + blueprint_file ]
             args[ blueprint.get("id") ] = command
+        return args
+    
+    def get_upload_args_from_build(self, build_catalog = 'build'):
+        args = {}
+        bps = self._get_bps_kv()
+        build = pathlib.Path(build_catalog)
+        for archive in build.rglob("*.zip"):
+            bp_path = str(archive)
+            bp_id = bp_path.split('/')[-1].replace(".zip","")
+            if "main_blueprint" in bps[bp_id].keys():
+                command = ["cfy", "blueprints", "upload", "--blueprint-filename", bps[bp_id].get("main_blueprint"), "-b", bp_id, bp_path ]
+            else:
+                command = ["cfy", "blueprints", "upload", "-b", bp_id, bp_path ]
+            args[ bp_id ] = command
         return args
 
     def get_blueprints_ids(self):
         bps = self._get_bps()
         ids = []
         for blueprint in bps:
+            print(blueprint)
             ids.append(blueprint.get("id"))
         return list(set(ids))
 
-if __name__ =="__main__":
+def main():
 
-    tests = ParseTestData()
-    #print(tests.get_blueprints_ids())
-    #print(tests.get_upload_args())
-    print(tests.get_create_deployment_args())
+    tests = ParseTestData(True)
+    bps = tests.get_upload_args_from_build()
+    logging.info(bps)
+
+if __name__ =="__main__":
+    main() 

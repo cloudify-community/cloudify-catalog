@@ -2,8 +2,8 @@ tosca_definitions_version: cloudify_dsl_1_4
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-terraform-plugin?version= >=0.15.0
-  - https://raw.githubusercontent.com/cloudify-community/eaas-example/master/utils/custom_types.yaml
+  - plugin:cloudify-terraform-plugin
+  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
 
 labels:
   csys-obj-type:
@@ -16,10 +16,9 @@ inputs:
     type: string
     description: The resource prefix for resources naming
     display_label: The resource prefix for resources naming
-    default: ''
     constraints:
-      - pattern: '(^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)'
-      
+      - pattern: (^ *$)|(^[a-zA-Z][a-zA-Z0-9]+$)
+
   region_name:
     type: string
     description: AWS region name
@@ -27,29 +26,29 @@ inputs:
     default: us-west-1
     constraints:
       - valid_values:
-        - us-east-1 #US East (N. Virginia)
-        - us-east-2 #US East (Ohio) 
-        - us-west-1 #US West (N. California)  
-        - us-west-2 #US West (Oregon) 
-        - ca-central-1  #Canada (Central) 
-        - eu-central-1  #Europe (Frankfurt) 
-        - eu-west-1 #Europe (Ireland) 
-        - eu-west-2 #Europe (London)  
-        - eu-south-1  #Europe (Milan) 
-        - eu-west-3 #Europe (Paris) 
-        - eu-north-1  #Europe (Stockholm) 
-        - ap-northeast-3  #Asia Pacific (Osaka) 
-        - ap-northeast-2  #Asia Pacific (Seoul) 
-        - ap-southeast-1  #Asia Pacific (Singapore) 
-        - ap-southeast-2  #Asia Pacific (Sydney)  
-        - ap-northeast-1  #Asia Pacific (Tokyo) 
+          - us-east-1 #US East (N. Virginia)
+          - us-east-2 #US East (Ohio)
+          - us-west-1 #US West (N. California)
+          - us-west-2 #US West (Oregon)
+          - ca-central-1  #Canada (Central)
+          - eu-central-1  #Europe (Frankfurt)
+          - eu-west-1 #Europe (Ireland)
+          - eu-west-2 #Europe (London)
+          - eu-south-1  #Europe (Milan)
+          - eu-west-3 #Europe (Paris)
+          - eu-north-1  #Europe (Stockholm)
+          - ap-northeast-3  #Asia Pacific (Osaka)
+          - ap-northeast-2  #Asia Pacific (Seoul)
+          - ap-southeast-1  #Asia Pacific (Singapore)
+          - ap-southeast-2  #Asia Pacific (Sydney)
+          - ap-northeast-1  #Asia Pacific (Tokyo)
 
 node_templates:
   prefix:
     type: eaas.nodes.UniquePrefixGenerator
     properties:
       predefined_value: { get_input: resource_prefix }
-      
+
   terraform:
     type: cloudify.nodes.terraform
     properties:
@@ -62,7 +61,7 @@ node_templates:
       resource_config:
         environment_variables:
           AWS_ACCESS_KEY_ID: { get_secret: aws_access_key_id }
-          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key  }
+          AWS_SECRET_ACCESS_KEY: { get_secret: aws_secret_access_key }
         variables:
           bucket_name: { concat: [ { get_attribute: [ prefix, value ] }, bucket ] }
           bucket_region: { get_input: region_name }
@@ -77,4 +76,8 @@ node_templates:
 
 capabilities:
   bucket_url:
-    value: { concat: [ 'https://', { get_attribute: [ terraform_module, resources, bucket, instances, 0, attributes, bucket_regional_domain_name ] } ] }
+    description: S3 Bucket URL
+    value:
+      concat:
+        - https://
+        - get_attribute: [ terraform_module, resources, bucket, instances, 0, attributes, bucket_regional_domain_name ]

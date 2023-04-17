@@ -62,7 +62,7 @@ def upload_file(file_name: str, bucket: str, object_name: str = None) -> bool:
 
 
 def check_branch(directory: str):
-    for version in ['6.4', '6.3', '6.2']:
+    for version in ['7.0', '6.4', '6.3', '6.2']:
         if version in directory:
             return True
     return False
@@ -85,8 +85,7 @@ def upload_directory(source_directory: str, bucket: str, directory: str, without
     :param directory: the base directory in S3 bucket where to upload all the artifacts
     """
 
-    catalogs = []
-    for root, dirs, files in os.walk(source_directory):
+    for root, _, files in os.walk(source_directory):
         for file in files:
             if without_root:
                 target_file = set_target_path(directory, "", file)
@@ -104,7 +103,7 @@ def print_catalogs_urls(build_directory: str, base_url: str, directory: str, wit
     :param directory: the base directory in S3 bucket where to upload all the artifacts
     """
 
-    for root, dirs, files in os.walk(build_directory):
+    for root, _, files in os.walk(build_directory):
         for file in files:
             if without_root:
                 target_file = set_target_path(directory, "", file)
