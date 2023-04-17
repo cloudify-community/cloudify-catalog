@@ -4,7 +4,6 @@ description: Cloudify Docker blueprint. Deploys Sonarquebe by Docker.
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
 
 inputs:
@@ -43,8 +42,8 @@ node_templates:
           blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
-        deployment: 
-          inputs: 
+        deployment:
+          inputs:
             provider_name: { get_input: infra_name }
 
   secrurity_group_rules:
@@ -101,15 +100,15 @@ node_templates:
         container_args:
           command: "/opt/sonarqube/bin/run.sh /opt/sonarqube/bin/sonar.sh"
           name: sonarquebe
-          detach: true 
-          ports: 
-            { '9000/tcp' : '9000', '9092/tcp' : '9092' }
+          detach: true
+          ports:
+            { '9000/tcp': '9000', '9092/tcp': '9092' }
           host_config:
-            restart_policy: { 'MaximumRetryCount': 0,  'Name': 'always' }
+            restart_policy: { 'MaximumRetryCount': 0, 'Name': 'always' }
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
-        
+
 outputs:
   docker_api_url:
     description: Administration console URL
