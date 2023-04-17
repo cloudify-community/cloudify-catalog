@@ -91,5 +91,3 @@ outputs:
   grafana_port:
     description: InfluxDB Port
     value: 3000
-
-

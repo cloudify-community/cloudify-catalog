@@ -97,7 +97,7 @@ node_templates:
               inputs:
                 log_stdout: false
                 store_facts: false
-                secret_keys:
+                secret_keys: false
                 sources:
                   instances:
                     hosts:

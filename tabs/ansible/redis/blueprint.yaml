@@ -125,4 +125,5 @@ outputs:
 
   test_command:
     description: Command to test service with the redis-cli tool
-    value: { concat: [ "redis-cli -h", { get_attribute: [ infrastructure, capabilities, endpoint ] }, "-p 6379 -a", { get_attribute: [ master_password, password ] } ] }
+    value: { concat: [ "redis-cli -h", { get_attribute: [ infrastructure, capabilities, endpoint ] },
+      "-p 6379 -a", { get_attribute: [ master_password, password ] } ] }

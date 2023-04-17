@@ -4,7 +4,6 @@ description: Cloudify MongoDB blueprint. Deploys MongoDB service with Ansible Cl
 
 imports:
   - cloudify/types/types.yaml
-  - plugin:cloudify-fabric-plugin
   - plugin:cloudify-ansible-plugin
 
 inputs:
@@ -133,7 +132,6 @@ node_templates:
                   user_name: { get_input: user_name }
                   db_name: { get_input: db_name }
 
-
 outputs:
 
   mongodb_endpoint:
@@ -154,9 +152,10 @@ outputs:
 
   master_login_command:
     description: Connection to mongo server by mongo client
-    value: { concat : [ "mongo -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] },"/admin", "-u admin -p", { get_attribute: [ master_password, password ] } ] }
+    value: { concat: [ "mongo -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] },
+      "/admin", "-u admin -p", { get_attribute: [ master_password, password ] } ] }
 
   user_login_command:
     description: Connection to mongo server by mongo client
-    value: { concat : [ "mongo -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] },"/", { get_input: db_name }, "-u", { get_input: user_name }, "-p", { get_attribute: [ user_password, password ] } ] }
-
+    value: { concat: [ "mongo -h ", { get_attribute: [ infrastructure, capabilities, endpoint ] }, "/",
+      { get_input: db_name }, "-u", { get_input: user_name }, "-p", { get_attribute: [ user_password, password ] } ] }

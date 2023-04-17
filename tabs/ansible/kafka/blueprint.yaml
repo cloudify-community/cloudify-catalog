@@ -118,4 +118,3 @@ outputs:
   kafka_user_pwd:
     description: Kafka user pwd
     value: { get_attribute: [ master_password, password ] }
-
