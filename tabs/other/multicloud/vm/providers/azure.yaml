@@ -88,7 +88,6 @@ inputs:
     display_label: Virtual machine size
     description: >
        Name of Virtual Machine Size in Azure.
-    type: string
     default: Standard_B4ms
     constraints:
       - valid_values:
@@ -357,3 +356,7 @@ capabilities:
   rg_id:
     description: Name of the resource group
     value: { concat: [ { get_input: resource_prefix }, rg, { get_input: resource_suffix } ] }
+
+  region_name: 
+    description: Region name of the deployment
+    value: { get_input: location }

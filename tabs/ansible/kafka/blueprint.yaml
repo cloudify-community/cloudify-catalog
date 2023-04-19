@@ -3,7 +3,6 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Kafka blueprint. Deploys Kafka service with Ansible Cloudify plugin.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
 
@@ -70,13 +69,11 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: security_group.zip
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
+            deployment_id: { get_attribute: [ infrastructure, deployment, id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
@@ -121,4 +118,3 @@ outputs:
   kafka_user_pwd:
     description: Kafka user pwd
     value: { get_attribute: [ master_password, password ] }
-

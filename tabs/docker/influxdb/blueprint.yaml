@@ -3,7 +3,6 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
@@ -34,12 +33,6 @@ inputs:
     type: string
     default: false
 
-  infra_deployment_id:
-    display_label: The infrastructure deployment id
-    description: The blueprint name, the deployment name.
-    type: string
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
-
   user_name:
     type: string
     display_label: The username to set for the system's initial super-user
@@ -58,50 +51,32 @@ inputs:
     description: The name to set for the system's initial organization
     default: cloudify
 
-  token:
-    type: string
-    display_label: Token to auth with the influxdb from telegraf
-    description: Token to auth with the influxdb from telegraf
-    default: 9859DAA6-3B3F-48FE-A981-AE9D31FBB334
-    hidden: true
-
 node_templates:
-
-  infra_prefix:
-    type: eaas.nodes.UniquePrefixGenerator
-    properties:
-      predefined_value: ""
 
   infrastructure:
     type: cloudify.nodes.Component
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: { concat: [ { get_input: infra_name }, ".zip" ] }
+          blueprint_archive: { get_input: infra_archive }
           main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
-    relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
+          inputs:
+            provider_name: { get_input: infra_name }
 
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "security_group.zip"
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: security_group.zip
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, security_group_id ] }
+            deployment_id: { get_attribute: [ infrastructure, deployment, id ] }
     relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
@@ -115,9 +90,9 @@ node_templates:
             commands:
               - docker pull influxdb:2.0
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint ] }
-              user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
-              key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+              host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+              user: { get_attribute: [ infrastructure, capabilities, user ] }
+              key: { get_attribute: [ infrastructure, capabilities, key_content ] }
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -137,7 +112,7 @@ node_templates:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
-        docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+        docker_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
         docker_rest_port: '2375'
       resource_config:
         image_tag: "influxdb:2.0"
@@ -146,7 +121,8 @@ node_templates:
           host_config:
             port_bindings: {8086: 8086}
           name: influxdb
-          ports: [ 8086 ]
+          ports:
+            { '8086/tcp': '8086' }
           environment: [
             { concat: [ "DOCKER_INFLUXDB_INIT_PASSWORD=", { get_attribute: [ password_generator, password ] } ] },
             { concat: [ "DOCKER_INFLUXDB_INIT_MODE=setup" ] },
@@ -164,7 +140,7 @@ node_templates:
 outputs:
   docker_endpoint:
     description: Administration console URL
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':2375' ] }
 
   influxdb_password:
     description: Influxdb password
@@ -184,4 +160,4 @@ outputs:
 
   endpoint:
     description: Influxdb endpoint
-    value: { concat: [ "http://", { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':8086' ] }
+    value: { concat: [ "http://", { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':8086' ] }

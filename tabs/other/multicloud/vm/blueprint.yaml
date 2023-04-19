@@ -7,42 +7,42 @@ imports:
   - cloudify/types/types.yaml
 
 labels:
-  obj-type: 
-    values: 
+  obj-type:
+    values:
       - service
 
 inputs:
 
-    provider_name:
-      type: string
-      display_label: Provider name
-      description: | 
-        "Provider name such: AWS, Azure or GCP"
-      default: aws
-      constraints:
+  provider_name:
+    type: string
+    display_label: Provider name
+    description: |
+      "Provider name such: AWS, Azure or GCP"
+    default: aws
+    constraints:
       - valid_values:
           - azure
           - aws
           - gcp
-    
-    secrets_validation_archive:
-      type: string
-      display_label: URL for secrets vallidation zip archive
-      description: >
-        URL of infra zip file.
-      default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/secrets_validation/secrets_validation.zip
-      hidden: true
-    
-    secrets_to_validate:
-      type: dict
-      display_label: Secrets to validate
-      description: | 
-        Provider secrets to check existence & values
-      default:
-        aws: [ aws_access_key_id, aws_secret_access_key ]
-        azure: [ azure_client_id, azure_client_secret, azure_subscription_id, azure_tenant_id ] 
-        gcp: [ gcp_credentials ]
-      hidden: true
+
+  secrets_validation_archive:
+    type: string
+    display_label: URL for secrets vallidation zip archive
+    description: >
+      URL of infra zip file.
+    default: https://github.com/cloudify-community/cloudify-catalog/raw/6.4.0-build/tabs/other/secrets_validation/secrets_validation.zip
+    hidden: true
+
+  secrets_to_validate:
+    type: dict
+    display_label: Secrets to validate
+    description: |
+      Provider secrets to check existence & values
+    default:
+      aws: [ aws_access_key_id, aws_secret_access_key ]
+      azure: [ azure_client_id, azure_client_secret, azure_subscription_id, azure_tenant_id ]
+      gcp: [ gcp_credentials ]
+    hidden: true
 
 node_templates:
 
@@ -54,20 +54,20 @@ node_templates:
           blueprint_archive: { get_input: secrets_validation_archive }
           main_file_name: "blueprint.yaml"
         deployment:
-          inputs: 
+          inputs:
             secrets: { get_input: [ secrets_to_validate, { get_input: provider_name } ] }
             provider: { get_input: provider_name }
-  
+
   virtual_machine:
     type: cloudify.nodes.Component
-    properties: 
-      resource_config: 
-        blueprint: 
+    properties:
+      resource_config:
+        blueprint:
           blueprint_archive: "providers.zip"
           main_file_name: { concat: [ { get_input: provider_name }, ".yaml" ] }
     relationships:
-    - type: cloudify.relationships.depends_on
-      target: secrets_validation
+      - type: cloudify.relationships.depends_on
+        target: secrets_validation
 
 capabilities:
 
@@ -83,7 +83,7 @@ capabilities:
     description: Private agent key
     value: { get_attribute: [ virtual_machine, capabilities, key_content ] }
 
-  security_group_id: 
+  security_group_id:
     description: Security group resource ID.
     value: { get_attribute: [ virtual_machine, capabilities, security_group_id ] }
 
@@ -91,13 +91,14 @@ capabilities:
     description: VPC resource ID.
     value: { get_attribute: [ virtual_machine, capabilities, vpc_id ] }
 
-  vm_id: 
+  vm_id:
     description: VM resource ID.
     value: { get_attribute: [ virtual_machine, capabilities, vm_id ] }
-  
-  rg_id: 
+
+  rg_id:
     description: Mock resource group id - to be compatible with Azure VM template
     value: { get_attribute: [ virtual_machine, capabilities, rg_id ] }
 
-  
-  
+  region_name:
+    description: Region name of the deployment
+    value: { get_attribute: [ virtual_machine, capabilities, region_name ] }

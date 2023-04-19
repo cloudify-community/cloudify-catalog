@@ -32,12 +32,6 @@ inputs:
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
 
-  infra_deployment_id:
-    type: string
-    display_label: The infrastructure deployment id
-    description: The blueprint name, the deployment name.
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
-
   website_message:
     type: string
     display_label: A meesage to display on the NGINX home page
@@ -64,13 +58,11 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: security_group.zip
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
+            deployment_id: { get_attribute: [ infrastructure, deployment, id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure

@@ -3,7 +3,6 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Cloudify Docker blueprint. Deploys Docker.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-fabric-plugin
   - plugin:cloudify-docker-plugin
@@ -34,18 +33,7 @@ inputs:
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     default: false
 
-  infra_deployment_id:
-    type: string
-    display_label: The infrastructure deployment id
-    description: The blueprint name, the deployment name.
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
-
 node_templates:
-
-  infra_prefix:
-    type: eaas.nodes.UniquePrefixGenerator
-    properties:
-      predefined_value: ""
 
   infrastructure:
     type: cloudify.nodes.Component
@@ -53,30 +41,24 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: { get_input: infra_archive }
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: blueprint.yaml
           external_resource: { get_input: infra_exists }
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }
-    relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
+          inputs:
+            provider_name: { get_input: infra_name }
 
   secrurity_group_rules:
     type: cloudify.nodes.Component
     properties:
       resource_config:
         blueprint:
-          blueprint_archive: "security_group.zip"
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          blueprint_archive: security_group.zip
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
-          id: { concat: [ get_attribute: [ infra_prefix, value ], "-security-group" ] }
           inputs:
-            vpc_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, vpc_id ] }
-            security_group_id: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, security_group_id ] }
+            deployment_id: { get_attribute: [ infrastructure, deployment, id ] }
     relationships:
-      - type: cloudify.relationships.depends_on
-        target: infra_prefix
       - type: cloudify.relationships.depends_on
         target: infrastructure
 
@@ -90,9 +72,9 @@ node_templates:
             commands:
               - docker pull wordpress:latest
             fabric_env: &fabric_env
-              host_string: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint ] }
-              user: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, user ] }
-              key: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, key_content ] }
+              host_string: { get_attribute: [ infrastructure, capabilities, endpoint ] }
+              user: { get_attribute: [ infrastructure, capabilities, user ] }
+              key: { get_attribute: [ infrastructure, capabilities, key_content ] }
             use_sudo: true
     relationships:
       - type: cloudify.relationships.depends_on
@@ -102,18 +84,18 @@ node_templates:
     type: cloudify.nodes.docker.container
     properties:
       client_config:
-        docker_host: { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }
+        docker_host: { get_attribute: [ infrastructure, capabilities, endpoint ] }
         docker_rest_port: '2375'
       resource_config:
-        image_tag: "wordpress:latest"
+        image_tag: 'wordpress:latest'
         container_args:
           name: wordpress
           detach: true
-          command: "docker-entrypoint.sh apache2-foreground"
-          ports: [ 80 ]
+          command: 'docker-entrypoint.sh apache2-foreground'
+          ports:
+            { '80/tcp': '80' }
           host_config:
-            port_bindings: { 80: 80 }
-            restart_policy: { "MaximumRetryCount": 0, "Name": "always" }
+            restart_policy: { 'MaximumRetryCount': 0, 'Name': 'always' }
     relationships:
       - type: cloudify.relationships.depends_on
         target: image
@@ -121,8 +103,8 @@ node_templates:
 outputs:
   docker_api_url:
     description: Administration console URL
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':2375' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':2375' ] }
 
   wordpress_endpoint:
     description: Wordpress URL
-    value: { concat: [ 'http://', { get_capability: [ { concat: [ get_attribute: [ infra_prefix, value ], "-", { get_input: infra_deployment_id } ] }, endpoint] }, ':80' ] }
+    value: { concat: [ 'http://', { get_attribute: [ infrastructure, capabilities, endpoint ] }, ':80' ] }

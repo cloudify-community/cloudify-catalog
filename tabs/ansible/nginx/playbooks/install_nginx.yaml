@@ -1,6 +1,7 @@
 - hosts: all
   become: true
   tasks:
+
     - name: Activate the epel-release repository
       ansible.builtin.yum:
         name: epel-release

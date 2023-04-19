@@ -3,7 +3,6 @@ tosca_definitions_version: cloudify_dsl_1_4
 description: Installs MySQL with Ansible on AWS/Azure environments.
 
 imports:
-  - https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/6.4.0-build/tabs/utilities/eaas/custom_types.yaml
   - cloudify/types/types.yaml
   - plugin:cloudify-ansible-plugin
 
@@ -32,12 +31,6 @@ inputs:
       Whether a getting started infrastructure blueprint has already been uploaded to the manager or not.
     type: string
     default: false
-
-  infra_deployment_id:
-    display_label: The infrastructure deployment id
-    description: The blueprint name, the deployment name.
-    type: string
-    default: { concat: [ 'infra-', { get_input: infra_name } ] }
 
   mysql_root_password:
     type: string
@@ -83,9 +76,7 @@ node_templates:
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
+            deployment_id: { get_attribute: [ infrastructure, deployment, id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure

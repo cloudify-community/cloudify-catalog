@@ -305,6 +305,10 @@ capabilities:
   rg_id: 
     description: Mock resource group id - to be compatible with Azure VM template
     value: 'mocked_resource_group_id'
+  
+  region_name: 
+    description: Region name of the deployment
+    value: { get_input: region_name }
 
 groups:
 

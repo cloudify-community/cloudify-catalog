@@ -52,13 +52,11 @@ node_templates:
       resource_config:
         blueprint:
           blueprint_archive: security_group.zip
-          main_file_name: { concat: [ { get_input: infra_name }, '.yaml' ] }
+          main_file_name: { concat: [ { get_input: infra_name }, .yaml ] }
           external_resource: false
         deployment:
           inputs:
-            rg_id: { get_attribute: [ infrastructure, capabilities, rg_id ] }
-            vpc_id: { get_attribute: [ infrastructure, capabilities, vpc_id ] }
-            security_group_id: { get_attribute: [ infrastructure, capabilities, security_group_id ] }
+            deployment_id: { get_attribute: [ infrastructure, deployment, id ] }
     relationships:
       - type: cloudify.relationships.depends_on
         target: infrastructure
