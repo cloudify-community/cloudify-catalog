@@ -7,8 +7,9 @@ imports:
 inputs:
   validate_status:
     type: boolean
-    display_label:
+    display_label: Validate deployment status
     default: false # true
+
 dsl_definitions:
   client_config: &client_config
     configuration:
