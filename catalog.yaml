@@ -1018,6 +1018,11 @@ topics:
         path: tabs/other/multicloud/vm
         description: Create a VM on choosed cloud provider
 
+      - id: tensorflow
+        name: Tensorflow-Model-CFY
+        path: tabs/other/tensorflow
+        description: Create tensforflow Machine Learning model service in k8s
+
   - name: docker_services
     target_path: s3_json_file
     blueprints:
