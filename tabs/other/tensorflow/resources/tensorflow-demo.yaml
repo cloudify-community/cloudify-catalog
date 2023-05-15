@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tensorflow-demo
+  labels:
+    name: tensorflow-demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: tensorflow-demo
+  name: tensorflow-demo
+  labels:
+    app.kubernetes.io/name: tensorflow-demo
+    app.kubernetes.io/component: backend
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tensorflow-demo
+      app.kubernetes.io/component: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tensorflow-demo
+        app.kubernetes.io/component: backend
+    spec:
+      containers:
+      - name: tensorflow-demo
+        image: intel/intel-optimized-tensorflow:tf-2.3.0-imz-2.2.0-jupyter-performance
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8888
+        command: [ "sh", "-c" ]
+        args:
+        - apt-get update -y;
+          mkdir /root/.jupyter;
+          python3 -c "import base64; from notebook.auth import passwd; print(base64.b64decode('eyAiTm90ZWJvb2tBcHAiOiB7ICJwYXNzd29yZCI6ICJQV0QiIH0gfQ==').decode('ascii').replace('PWD',passwd('{{ JUPYTERNOTEBOOKPASSWORD }}')))" > /root/.jupyter/jupyter_notebook_config.json;
+          jupyter notebook --port=8888 --no-browser --ip="0.0.0.0" --allow-root;
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tensorflow-demo
+  namespace: tensorflow-demo
+  labels:
+    app.kubernetes.io/name: tensorflow-demo
+    app.kubernetes.io/component: backend
+spec:
+  ports:
+  - name: jupyter-service
+    port: 8888
+    targetPort: 8888
+  selector:
+    app.kubernetes.io/name: tensorflow-demo
+    app.kubernetes.io/component: backend
+  #type: LoadBalancer

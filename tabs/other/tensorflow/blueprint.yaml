@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+tosca_definitions_version: cloudify_dsl_1_3
+imports:
+  - 'https://cloudify.co/spec/cloudify/5.1.0/types.yaml'
+  - 'plugin:cloudify-kubernetes-plugin?version= >=2.7.0'
+inputs:
+  validate_status:
+    type: boolean
+    display_label: Validate deployment status
+    default: false # true
+
+dsl_definitions:
+  client_config: &client_config
+    configuration:
+      manager_file_path: { get_secret: kubernetes_config_path }
+node_templates:
+  tensorflow-demo:
+    type: cloudify.kubernetes.resources.FileDefinedResource
+    properties:
+      client_config: *client_config
+      validate_resource_status:
+        get_input: validate_status
+      file:
+        resource_path: resources/tensorflow-demo.yaml
+        template_variables:
+          JUPYTERNOTEBOOKPASSWORD: { get_secret: jupyter_notebook_password }
