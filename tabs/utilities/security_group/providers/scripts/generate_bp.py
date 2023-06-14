@@ -1,15 +1,16 @@
 import os
-import sys
 import shutil
+import sys
 import zipfile
-import yaml
 from os.path import dirname
-from string import ascii_lowercase
+from string import ascii_letters, ascii_lowercase
 
+import yaml
 from cloudify import ctx
 from cloudify.state import ctx_parameters as inputs
 from cloudify.utils import id_generator
 from jinja2 import Environment, FileSystemLoader
+
 
 def _handle_parent_directory(into_dir):
     extracted_files = os.listdir(into_dir)
@@ -19,6 +20,7 @@ def _handle_parent_directory(into_dir):
         if os.path.isdir(inner_dir):
             return inner_dir
     return into_dir
+
 
 def unzip_archive(archive_path, skip_parent_directory=True):
     """
@@ -47,22 +49,29 @@ def unzip_archive(archive_path, skip_parent_directory=True):
             os.remove(archive_path)
     return into_dir
 
+
 class_path = ctx.download_resource('scripts/templates.zip')
 unziped_class = unzip_archive(class_path, False)
-
-ctx.instance.runtime_properties['value'] =  id_ = id_generator(size=6, chars=ascii_lowercase)
 
 ports = inputs["ports"]
 provider = inputs["provider"]
 
 if provider == 'aws':
-    rules = [ {"from_port" : port, "to_port" : port } for port in ports ]
+    rules = [{"from_port": port, "to_port": port} for port in ports]
 elif provider == 'azure':
-    rules = [ {"port" : port, "description" : f"Access rule #{i}", \
-               "name" : f"Rule #{i}", "prority" : str(101+i) } for i, port in enumerate(ports) ]
+    rules = []
+    ids = []
+    while len(ids) < len(ports):
+        new_id = ''.join(id_generator(size=6, chars=ascii_lowercase))
+        if new_id not in ids:
+            ids.append(new_id)
+    rules = [
+        {"port": port, "description": "Access-rule-{0}".format(ids[i]),
+         "name": "Rule-{0}".format(ids[i]),
+         "prority": str(101 + i)} for i, port in enumerate(ports)]
 
 path = os.path.join(unziped_class, 'templates/')
-environment = Environment(loader=FileSystemLoader(path), autoescape = True)
+environment = Environment(loader=FileSystemLoader(path), autoescape=True)
 
 results_filename = "{}.j2".format(provider)
 results_template = environment.get_template(results_filename)
@@ -71,6 +80,6 @@ context = {
     "rules": rules
 }
 
-ctx.instance.runtime_properties['value'] = yaml.safe_load(results_template.render(context))
-
-
+ctx.instance.runtime_properties['value'] = yaml.safe_load(
+    results_template.render(context))
+ctx.instance.runtime_properties['sg_suffix'] = '-auto-gen-'+id_generator(size=6, chars=ascii_lowercase)

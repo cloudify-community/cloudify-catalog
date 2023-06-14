@@ -1,0 +1,13 @@
+{% for rule in rules %}
+  - name: {{ rule.name }}
+    properties:
+      description: {{ rule.description }}
+      protocol: Tcp
+      sourcePortRange: '*'
+      destinationPortRange: {{ rule.port }}
+      sourceAddressPrefix: '*'
+      destinationAddressPrefix: '*'
+      priority: {{ rule.prority }}
+      access: Allow
+      direction: Inbound
+{% endfor %}
