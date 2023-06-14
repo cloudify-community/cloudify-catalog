@@ -12,11 +12,15 @@ labels:
       - service
 
 inputs:
-
   deployment_id:
     type: string
     display_label: Deployment ID
-    description: Deployment ID of insfrastructure deployment
+    description: >
+      Deployment ID of insfrastructure deployment,
+      in case of AWS it should provide capabilities such:
+      region_name, vpc_id, security_group_id
+      in case of Azure it should provide capabilities such:
+      region_name, rg_id (resource group id), security_group_id
 
   provider_name:
     type: string

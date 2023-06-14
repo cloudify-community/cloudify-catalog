@@ -21,7 +21,7 @@ dsl_definitions:
   client_config: &client_config
     aws_access_key_id: { get_secret: aws_access_key_id }
     aws_secret_access_key: { get_secret: aws_secret_access_key }
-    region_name: { get_capability: [{ get_input: deployment_id }, region_name] }
+    region_name: { get_capability: [{ get_input: deployment_id }, region_name ] }
 
 node_templates:
   #generate rules for security group
