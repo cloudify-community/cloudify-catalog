@@ -224,6 +224,16 @@ topics:
         description: Creating SQS
         readme_url: https://raw.githubusercontent.com/cloudify-community/cloudify-catalog/master/aws/sqs/README.md
 
+      - id: K3S_HA_ON_EC2
+        name: K3S-HA-ON-EC2
+        path: tabs/aws/k3s_ha_on_ec2
+        description: Create K3S HA cluster on EC2 instances
+
+      - id: K3S_SINGLE_NODE_ON_EC2
+        name: K3S-SINGLE-NODE-ON-EC2
+        path: tabs/aws/k3s_single_node_on_ec2
+        description: Create K3S single node cluster on EC2 instances
+
       - id: tf_aws_vm
         name: VM-Ubuntu-AWS-TFM
         path: tabs/terraform/aws
@@ -825,6 +835,16 @@ topics:
         name: Optimized-Cluster-SpotOcean-TFM
         path: tabs/kubernetes/spot
         description: Create a Spot Ocean Kubernetes cost optimized Cluster
+
+      - id: K3S_HA_ON_EC2
+        name: K3S-HA-ON-EC2
+        path: tabs/kubernetes/k3s_ha_on_ec2
+        description: Create K3S HA cluster on EC2 instances
+
+      - id: K3S_SINGLE_NODE_ON_EC2
+        name: K3S-SINGLE-NODE-ON-EC2
+        path: tabs/kubernetes/k3s_single_node_on_ec2
+        description: Create K3S single node cluster on EC2 instances
 
   - name: K8S_Discovery
     target_path: s3_json_file
