@@ -1,0 +1,76 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+imports:
+  - cloudify/types/types.yaml
+  - plugin:cloudify-azure-plugin
+
+inputs:
+  deployment_id:
+    type: string
+    display_label: Deployment ID
+    description: Deployment ID of insfrastructure deployment
+
+  ports:
+    display_label: Ports list
+    description: |
+      Ports to open list
+    type: list
+    default: []
+
+  retry_after:
+    type: integer
+    default: 60
+
+dsl_definitions:
+  azure_config: &azure_config
+    subscription_id: { get_secret: azure_subscription_id }
+    tenant_id: { get_secret: azure_tenant_id }
+    client_id: { get_secret: azure_client_id }
+    client_secret: { get_secret: azure_client_secret }
+
+node_templates:
+  #generate rules for security group
+  sg_rules:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/generate_bp.py
+          executor: central_deployment_agent
+          inputs:
+            ports: { get_input: ports }
+            provider: azure
+
+  #resource group containing sg
+  resource_group:
+    type: cloudify.azure.nodes.ResourceGroup
+    properties:
+      use_external_resource: true
+      name: { get_capability: [{ get_input: deployment_id }, rg_id] }
+      location: { get_capability: [{ get_input: deployment_id }, region_name] }
+      azure_config: *azure_config
+
+  #setup the rules
+  network_security_group:
+    type: cloudify.azure.nodes.network.NetworkSecurityGroup
+    properties:
+      use_external_resource: false
+      name:
+        {
+          concat:
+            {
+              get_capability: [{ get_input: deployment_id }, security_group_id],
+            },
+          get_attribute: [sg_rules, sg_suffix],
+        }
+      location: { get_capability: [{ get_input: deployment_id }, region_name] }
+      azure_config: *azure_config
+      retry_after: { get_input: retry_after }
+      resource_config:
+        securityRules:
+          get_attribute: [sg_rules, value]
+    relationships:
+      - type: cloudify.azure.relationships.contained_in_resource_group
+        target: resource_group
+      - type: cloudify.relationships.depends_on
+        target: sg_rules
