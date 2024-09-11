@@ -24,7 +24,7 @@ inputs:
 
   cloudify_manager_suffix:
     type: string
-    default: "6.3.0-.dev1"
+    default: "7.0.5-.dev1"
 
   aws_subnet_id:
     type: string
